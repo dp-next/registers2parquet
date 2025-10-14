@@ -1,0 +1,134 @@
+---
+title: "family-relations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{family-relations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+NOTE: In development.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(registers2parquet)
+```
+
+```{r}
+# FTBARN and FTFORAEL cover a longer time window (1973-2018) than FTDB,FTDK &
+# FTDM
+
+# select columns of interest
+```
+
+At DST the suggested grouping is: 11-18 presumed non-biological
+relations between father 1 and child, 21-23, presumed biological
+relations, and 30-39 (children born aborad or born before 1973 or
+relationships without indicators for the type of relation)
+
+I'll keep codes 31, child is immigrant, 32 child's bird register abroad,
+33 child born before 1973, 35 child born abroad or before 1973 and
+subsequently adopted
+
+```{r}
+list_birth_or_adoption_categories() |>
+  filter(FOED_ADOP_NUMBER %in% selected_birth_or_adoption_categories) |>
+  rename(Number = FOED_ADOP_NUMBER, Description = FOED_ADOP_TEXT) |>
+  knitr::kable()
+```
+
+```{r}
+ftbarn <- load_register("ftbarn") |>
+  filter(cprtjek == 0) |>
+  select(
+    PNR, MOR1, MOR2, FAR1, FAR2, fdato, MOR_FOED_ADOP, MOR_KOEN,
+    FAR_FOED_ADOP, FAR_KOEN
+  )
+
+# select only fathers information
+ftbarn_father <- ftbarn |>
+  # Use `list_birth_or_adoption_categories()` to see what the numbers mean.
+  filter(FAR_FOED_ADOP %in% selected_birth_or_adoption_categories) |>
+  select(PNR, FAR1, FAR2, fdato, FAR_FOED_ADOP, FAR_KOEN)
+
+# Parents & children relation dataset
+ftforael <- load_register("ftforael") |>
+  # Remove observation with cpr problems
+  filter(cprtjek == 0)
+
+# Switch from long to wide so we get one column per parent
+ftforael_wide <- ftforael |>
+  select(PNR, FORAELDER_PNR, ADOP, MOR_FAR) |>
+  pivot_wider(
+    id_cols = PNR,
+    names_from = MOR_FAR,
+    values_from = c(FORAELDER_PNR, ADOP)
+  ) |>
+  rename(
+    FAR_ID_adopt = FORAELDER_PNR_1,
+    FAR_ADOP = ADOP_1,
+    MOR_ID_adopt = FORAELDER_PNR_2,
+    MOR_ADOP = ADOP_2
+  )
+
+ftforael_wide_father <- ftforael_wide |>
+  filter(FAR_ADOP %in% selected_birth_or_adoption_categories) |>
+  select(PNR, FAR_ID_adopt, FAR_ADOP)
+
+
+# I've put together fathers & mothers separately from both fertility database
+# and parents & childre relations
+# Father
+parents_father <- ftbarn_father |>
+  full_join(ftforael_wide_father, by = "PNR") |>
+  # I create a new father ID to get those missing IDs from the birth register and
+  # took them from the parent & children relation data base.
+  # For those mismatching parents IDs I will assume that the ID from the fertility
+  # database/birth register is the correct
+  mutate(FAR = if_else(is.na(FAR1), FAR_ID_adopt, FAR1)) |>
+  select(PNR, FAR)
+
+# select mothers information
+ftbarn_mother <- ftbarn |>
+  # Use `list_birth_or_adoption_categories()` to see what the numbers mean.
+  filter(MOR_FOED_ADOP %in% selected_birth_or_adoption_categories) |>
+  select(PNR, MOR1, MOR2, fdato, MOR_FOED_ADOP, MOR_KOEN)
+
+ftforael_wide_mother <- ftforael_wide |>
+  filter(MOR_ADOP %in% selected_birth_or_adoption_categories) |>
+  select(PNR, MOR_ID_adopt, MOR_ADOP)
+
+# Mothers processing (same steps as for fathers)
+parents_ft2 <- ftbarn_mother |>
+  full_join(ftforael_wide_mother, by = "PNR") |>
+  compute()
+
+parents_ft2 <- parents_ft2 |>
+  mutate(MOR = if_else(is.na(MOR1), MOR_ID_adopt, MOR1)) |>
+  compute()
+
+parents_ft2 <- parents_ft2 |>
+  select(PNR, MOR)
+
+# Join the population and the parental data sets
+Fathers <- Tot_population |>
+  full_join(parents_ft, by = "PNR")
+
+Parents <- Fathers |>
+  full_join(parents_ft2, by = "PNR")
+
+# Remove one missing value from cprtjek and keep only those IDs with any parent
+# information
+# Parents <- Parents |> filter(cprtjek=="0")
+
+Parents <- Parents |>
+  filter(!(is.na(FAR) & is.na(MOR))) |>
+  select(PNR, FAR, MOR, fdato)
+```

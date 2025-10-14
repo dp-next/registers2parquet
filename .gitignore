@@ -1,0 +1,12 @@
+.Rhistory
+.RData
+.Rproj.user
+inst/doc
+/Meta/
+_ignore
+.quarto
+*.out
+*.Rout
+*_files
+_freeze
+*_freeze

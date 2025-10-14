@@ -1,0 +1,24 @@
+project:
+  type: book
+  output-dir: ../docs
+
+book:
+  title: Manual for efficiently and effectively working with registers
+  output-file: "manual"
+  author: Luke W. Johnston
+  chapters:
+    - index.qmd
+    - saving-as-parquet.qmd
+    - import-parquet.qmd
+
+editor:
+  markdown:
+    wrap: 72
+    canonical: true
+
+format:
+  pdf:
+    pdf-engine: pdflatex
+
+execute:
+  freeze: auto

@@ -1,0 +1,80 @@
+# Saving the SAS databases in Parquet format
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+Based on the title, I'm taking the SAS database and converting it into
+the Parquet format. So... what is Parquet and why did I decide to use
+that instead of using the standard "import the SAS data into R and use
+it as normal there"? This document is meant to be used as an explanation
+and description for the reasons and than later will show the code used
+to generate the results.
+
+## What is Parquet?
+
+Parquet is a data storage format, like CSV, except instead of saving
+data where each line is a row of a dataset (which is what CSV does) it
+saves it where each line in the file is a *column*. This means that all
+data in a variable are on a single line. Parquet also saves data in
+multiple files instead of one. Each file is structured based on some
+grouping factor. In this case, we're keeping the same "register by year"
+file structure that DST has with their SAS files. This means that
+loading in data is faster if you for instance only want a few registers
+over specific periods of time.
+
+## Why did I choose to use Parquet?
+
+1.  Doesn't take up much disk space (unlike the SAS formats). This isn't
+    a super important reason for the person using and working with the
+    dataset, but from a sustainability and reduced impact on the server
+    point of view, it's better to have a lower impact than a higher
+    impact on resources.
+
+2.  Because of the way it is stored, reading it into R doesn't use up
+    much memory. Why is this a reason when the DST server has nearly 1TB
+    of RAM memory for it's users to use? Similar to the reason above,
+    the less memory used, the less impact on resources (both
+    sustainability but also from a speed perspective). And because it
+    takes up less memory, doing work on the data is faster.
+
+3.  It can be used by multiple "structured query languages" (SQL) for
+    doing common data wrangling tasks that is fast and that doesn't have
+    to import the data into memory. The typical way of working with data
+    in R is to load the data into memory and than do the data analysis
+    tasks. The HUGE bottle neck here, in the case of a server
+    environment like DST, is importing the data into memory can take a
+    pretty long time. And if you have to do it often, it quickly becomes
+    an issue. So we can instead do some early data wrangling tasks with
+    SQL to get the data into a smaller size that has exactly the data we
+    want, so that our memory use is smaller and we get work done faster.
+
+## Save SAS register files as Parquet
+
+All the code to convert the SAS files into Parquet are found in the
+`_targets.R` file. I'm using the targets package because it is very
+efficient at handling pipelines and using parallel processing. Look
+through that file if you are curious about it. Running the pipeline is
+done by using:
+
+```{r}
+targets::tar_make()
+```
+
+## Save other datasets as Parquet
+
+We don't want to save every data object we create into a Parquet
+dataset. But some processed data we'll end up using for several projects
+and that take a long time to run. In these situations, we'd want to
+create a Parquet dataset so we can make use of it at later points in
+time.
+
+For now, we are saving these datasets into a Parquet dataset:
+
+-   The Population database, as defined by DST for our project.
+-   The ICD8 and 10 disease groupings, using the LPR DIAG and LPR ADM
+    registers (for diagnosis and admission data)
