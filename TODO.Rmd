@@ -1,5 +1,0 @@
--   TODO: Check to make sure schemas work for each register at some
-    point. Maybe need to make separate schema file?
--   TODO: Extract SAS label from variable names and save as labels
-    inside Parquet file.
--   TODO: Re-build manual
