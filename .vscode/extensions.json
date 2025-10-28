@@ -1,0 +1,11 @@
+{
+	"recommendations": [
+		"GitHub.vscode-pull-request-github",
+		"quarto.quarto",
+		"vivaxy.vscode-conventional-commits",
+		"pshaddel.conventional-branch",
+		"Posit.air-vscode",
+		"tekumara.typos-vscode"
+	],
+	"unwantedRecommendations": []
+}
