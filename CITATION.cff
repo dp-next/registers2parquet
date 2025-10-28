@@ -1,5 +1,5 @@
 title: "registers2parquet: Convert Danish register SAS files into Parquet files"
-abstract: "This package takes SAS files from Statistics Denmark containing register data and converts them into the more modern and efficient Apache Parquet files."
+abstract: "This package takes SAS files from Statistics Denmark containing Danish register data and converts them into the more modern and efficient Apache Parquet files."
 authors:
   - family-names: Brødbæk
     given-names: Signe Kirk
