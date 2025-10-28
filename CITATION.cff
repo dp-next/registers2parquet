@@ -1,0 +1,22 @@
+title: "registers2parquet: Convert Danish register SAS files into Parquet files"
+abstract: "This package takes SAS files from Statistics Denmark containing Danish register data and converts them into the more modern and efficient Apache Parquet files."
+authors:
+  - family-names: Brødbæk
+    given-names: Signe Kirk
+    affiliation: "Steno Diabetes Center Aarhus"
+    orcid: "https://orcid.org/0009-0000-2208-7088"
+  - family-names: Johnston
+    given-names: Luke William
+    orcid: "https://orcid.org/0000-0003-4169-2616"
+    affiliation: "Steno Diabetes Center Aarhus"
+cff-version: 1.2.0
+date-released: "2025"
+# doi: 
+keywords:
+  - "sas"
+  - "parquet"
+  - "danish registers"
+license: MIT
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/dp-next/registers2parquet"
+# url: 
