@@ -19,9 +19,6 @@
     "chore", // Misc things, like renaming or deleting files
   ],
   "conventional-branch.format": "{Type}/{Branch}",
-  "r.session.levelOfObjectDetail": "Detailed",
-  "r.session.data.rowLimit": 1000,
-  "r.plot.useHttpgd": true,
   "[quarto]": {
     "editor.defaultFormatter": "REditorSupport.r",
     "editor.formatOnSave": true,
