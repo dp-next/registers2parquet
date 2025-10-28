@@ -20,11 +20,11 @@
   ],
   "conventional-branch.format": "{Type}/{Branch}",
   "[quarto]": {
-    "editor.defaultFormatter": "REditorSupport.r",
+    "editor.defaultFormatter": "Posit.air-vscode",
     "editor.formatOnSave": true,
   },
   "[r]": {
-    "editor.defaultFormatter": "REditorSupport.r",
+    "editor.defaultFormatter": "Posit.air-vscode",
     "editor.formatOnSave": true
   },
 }
