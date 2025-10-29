@@ -1,6 +1,5 @@
 ---
 title: "family-relations"
-output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{family-relations}
   %\VignetteEngine{knitr::rmarkdown}

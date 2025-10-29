@@ -9,3 +9,5 @@
 ^_ignore$
 ^vignettes/articles$
 ^dev$
+^vignettes/*_files$
+^\.github$

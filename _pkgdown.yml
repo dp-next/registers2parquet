@@ -1,0 +1,24 @@
+url: https://dp-next.github.io/registers2parquet/
+template:
+  bootstrap: 5
+
+navbar:
+ components:
+   articles:
+    text: Vignettes
+    menu:
+    - text: Design
+      href: articles/design.html
+
+reference:
+- title: Convert SAS register files to Parquet
+  desc: > 
+    Main functions for converting SAS files containing
+    Danish register data into Apache Parquet files.
+- contents:
+  - sas_to_parquet
+  - starts_with("list")
+  - starts_with("load")
+  - starts_with("path")
+  - starts_with("read")
+  - randomly_sample

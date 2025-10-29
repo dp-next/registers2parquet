@@ -8,7 +8,7 @@ on:
     types: [published]
   workflow_dispatch:
 
-name: Build the pkgdown website
+name: pkgdown.yaml
 
 permissions: read-all
 
