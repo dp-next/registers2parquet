@@ -1,11 +1,10 @@
 ---
+title: Welcome!
 vignette: >
-  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteIndexEntry{Welcome!}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
-
-# Welcome!
 
 ```{r, include=FALSE, eval=FALSE}
 # To trigger these as dependencies in `_targets.R` pipeline

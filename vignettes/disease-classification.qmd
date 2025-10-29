@@ -1,7 +1,7 @@
 ---
-title: "disease-classification"
+title: "Disease classification"
 vignette: >
-  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteIndexEntry{Disease classification}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---

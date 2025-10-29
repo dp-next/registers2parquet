@@ -1,11 +1,10 @@
 ---
+title: Design
 vignette: >
-  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteIndexEntry{Design}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
-
-# Design
 
 ## Conversion process
 
