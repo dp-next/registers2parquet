@@ -1,9 +1,8 @@
 ---
 title: "disease-classification"
-output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{disease-classification}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 

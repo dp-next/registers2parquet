@@ -1,3 +1,10 @@
+---
+vignette: >
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
 # Saving the SAS databases in Parquet format
 
 ```{r, include = FALSE}
