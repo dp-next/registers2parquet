@@ -8,7 +8,6 @@ gh:
 # registers2parquet: Converting the DST data into Parquet files
 
 <!-- badges: start -->
-[![GitHub License](https://img.shields.io/github/license/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/blob/main/LICENSE.md)
 [![GitHub Release](https://img.shields.io/github/v/release/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/releases/latest)
 [![Build](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml/badge.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main.svg)](https://results.pre-commit.ci/latest/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main)
