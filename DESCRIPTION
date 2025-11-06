@@ -1,13 +1,13 @@
 Package: registers2parquet
 Title: Denmark Statistics Registers Converted To Parquet
 Version: 0.2.0
-Authors@R: 
+Authors@R:
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4169-2616"))
 Description: Imports, prepares, and saves the original SAS data files into
     the Parquet format.
 License: MIT + file LICENSE
-Depends: 
+Depends:
     tidyverse
 Imports:
     arrow,
@@ -32,11 +32,11 @@ Imports:
     tibble,
     tictoc,
     withr
-Suggests: 
+Suggests:
     devtools,
     quarto,
     testthat (>= 3.0.0)
-VignetteBuilder: 
+VignetteBuilder:
     quarto
 Encoding: UTF-8
 Language: en-US
