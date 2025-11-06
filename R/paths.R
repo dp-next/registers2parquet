@@ -16,7 +16,13 @@
 NULL
 
 path_sas_formats <- function() {
-    fs::path("e:", "Formater", "SAS formater i Danmarks Statistik", "TXT_filer", "Times_Personstatistik")
+  fs::path(
+    "e:",
+    "Formater",
+    "SAS formater i Danmarks Statistik",
+    "TXT_filer",
+    "Times_Personstatistik"
+  )
 }
 
 path_parquet_external <- function(id = "708421") {
