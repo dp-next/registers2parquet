@@ -8,8 +8,6 @@
 License](https://img.shields.io/github/license/dp-next/registers2parquet.svg)](https://github.com/dp-next/registers2parquet/blob/main/LICENSE.md)
 [![GitHub
 Release](https://img.shields.io/github/v/release/dp-next/registers2parquet.svg)](https://github.com/dp-next/registers2parquet/releases/latest)
-[![Supported Python Version from PEP 621
-TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/dp-next/registers2parquet/refs/heads/main/pyproject.toml)](https://github.com/dp-next/registers2parquet/blob/main/pyproject.toml)
 [![Build](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml)
 [![pre-commit.ci
 status](https://results.pre-commit.ci/badge/github/dp-next/registers2parquet/main.svg)](https://results.pre-commit.ci/latest/github/dp-next/registers2parquet/main)
