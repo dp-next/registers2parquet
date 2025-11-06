@@ -21,4 +21,3 @@ reference:
   - starts_with("load")
   - starts_with("path")
   - starts_with("read")
-  - randomly_sample
