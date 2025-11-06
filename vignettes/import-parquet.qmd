@@ -133,31 +133,3 @@ ftf_db |>
   count(year) |>
   compute()
 ```
-
-When you finally decide to load the data into R and hence into memory,
-its good practice to make the dataset smaller first. Here we can use the
-`"population"` database of the PNR numbers for our project and combine
-it with the `randomly_sample()` function from this registers2parquet package
-(which basically is a wrapper around `slice_sample()`) to take a random
-sample, of about a million people (you can do less or more). The
-`population` database is found within `list_databases()` and loaded with
-`load_database()`
-
-```{r}
-population <- load_database("pop_case")
-ftf_smaller <- population |>
-  randomly_sample(ftf_db) |>
-  compute()
-ftf_smaller |> count()
-```
-
-Then, when we do later analyses, we can convert it into a data.table or
-tibble. Depending on the size of the smaller dataset, I would recommend
-using data.table and continue using dplyr verbs since they can be
-translated into data.table syntax automatically with the dtplyr package.
-
-```{r}
-ftf_smaller |>
-  data.table::as.data.table() |>
-  summarize(mean_adop = mean(ADOP, na.rm = TRUE))
-```
