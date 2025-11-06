@@ -11,6 +11,7 @@ Depends:
     tidyverse
 Imports:
     arrow,
+    checkmate,
     cli,
     data.table,
     DBI,
