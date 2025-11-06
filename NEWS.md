@@ -15,3 +15,9 @@ often, sometimes several times in a day. This also means that any
 individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
+
+## 0.2.0 (2025-11-06)
+
+### Feat
+
+- :tada: start of project (copied from DST servers)
