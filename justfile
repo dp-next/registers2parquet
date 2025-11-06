@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: clean install-package-dependencies document spell-check style test build-website check install-package
+run-all: clean install-package-dependencies document spell-check style test build-website build-readme check install-package
 
 # Clean up auto-generated files
 clean:
@@ -53,6 +53,10 @@ style:
 build-website:
   #!/usr/bin/env Rscript
   pkgdown::build_site()
+
+# Re-build the README file from the Quarto version
+build-readme:
+  uvx --from quarto quarto render README.Rmd --to gfm
 
 # Run local CRAN checks
 check:
