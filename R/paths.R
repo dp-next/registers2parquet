@@ -18,8 +18,8 @@ NULL
 path_sas_formats <- function() {
   fs::path(
     "e:",
-    "Formater",
-    "SAS formater i Danmarks Statistik",
+    "Formatter",
+    "SAS formatter i Danmarks Statistik",
     "TXT_filer",
     "Times_Personstatistik"
   )

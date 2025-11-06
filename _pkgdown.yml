@@ -12,7 +12,7 @@ navbar:
 
 reference:
 - title: Convert SAS register files to Parquet
-  desc: > 
+  desc: >
     Main functions for converting SAS files containing
     Danish register data into Apache Parquet files.
 - contents:
