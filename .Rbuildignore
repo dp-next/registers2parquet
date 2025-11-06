@@ -11,3 +11,15 @@
 ^dev$
 ^vignettes/*_files$
 ^\.github$
+^air\.toml$
+^\.cz\.toml$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^README\.Rmd$
+^justfile$
+^CITATION\.cgg$
+^\.vscode$
+^\.editorconfig$
+^\.pre-commit-config\.yaml$
+^\.typos\.toml$
+^_targets\.R$
