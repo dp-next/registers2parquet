@@ -43,9 +43,13 @@ sas_to_parquet <- function(input_path, output_path) {
     arrow::write_parquet(output_path)
 
   if (length(input_path) > 1) {
-    cli::cli_alert_success("Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file.")
+    cli::cli_alert_success(
+      "Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file."
+    )
   } else {
-    cli::cli_alert_success("Finished saving {.val {fs::path_file(input_path)}} as a Parquet file.")
+    cli::cli_alert_success(
+      "Finished saving {.val {fs::path_file(input_path)}} as a Parquet file."
+    )
   }
 
   output_path

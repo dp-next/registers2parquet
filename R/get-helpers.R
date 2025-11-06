@@ -11,18 +11,22 @@ get_database_year_external <- function(path) {
   path |>
     get_filename_no_ext() |>
     stringr::str_match_all("\\d{4}") |>
-    purrr::map_chr(~ {
-      if (length(.x[, 1]) == 0) {
-        NA
-      } else if (nrow(.x) == 1) {
-        .x[1, 1]
-      } else if (.x[1, 1] == .x[2, 1]) {
-        .x[1, 1]
-      } else {
-        cli::cli_warn("A database has different years: {.val {.x[1, 1]}} vs {.val {.x[2, 2]}}. Using NA instead.")
-        NA
+    purrr::map_chr(
+      ~ {
+        if (length(.x[, 1]) == 0) {
+          NA
+        } else if (nrow(.x) == 1) {
+          .x[1, 1]
+        } else if (.x[1, 1] == .x[2, 1]) {
+          .x[1, 1]
+        } else {
+          cli::cli_warn(
+            "A database has different years: {.val {.x[1, 1]}} vs {.val {.x[2, 2]}}. Using NA instead."
+          )
+          NA
+        }
       }
-    })
+    )
 }
 
 get_database_year <- function(path) {

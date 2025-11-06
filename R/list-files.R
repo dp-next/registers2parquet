@@ -42,7 +42,7 @@ list_parquet_files <- function(dir) {
 #' list_databases()
 list_databases <- function(full_path = FALSE) {
   database_paths <- path_parquet_dirs("708421") |>
-    purrr::map(~fs::dir_ls(.x, type = "directory")) |>
+    purrr::map(~ fs::dir_ls(.x, type = "directory")) |>
     unlist()
 
   if (!full_path) {

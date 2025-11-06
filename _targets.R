@@ -25,7 +25,9 @@ tar_option_set(
     workers = 12
   ),
   # Sometimes saving to drive is slow to respond, increase time-out
-  resources = tar_resources(network = tar_resources_network(seconds_timeout = 180)),
+  resources = tar_resources(
+    network = tar_resources_network(seconds_timeout = 180)
+  ),
   # To keep running the pipeline even with errors
   error = "null",
   memory = "transient",
@@ -66,7 +68,9 @@ list(
       list_sas_files() |>
       path_as_df() |>
       # These are huge, need to do them outside of targets (see end of this script)
-      dplyr::filter(!get_database_name(file) %in% c("lab_forsker", "lab_dm_forsker")) |>
+      dplyr::filter(
+        !get_database_name(file) %in% c("lab_forsker", "lab_dm_forsker")
+      ) |>
       dplyr::pull(path) |>
       path_duplicates_as_list()
   ),
@@ -75,11 +79,13 @@ list(
     command = sas_to_parquet(
       input_path = sas_database_paths_external,
       output_path = sas_database_paths_external |>
-        purrr::map_chr(~ {
-          .x |>
-            path_alter_to_cleaned_dir("parquet-external") |>
-            unique()
-        })
+        purrr::map_chr(
+          ~ {
+            .x |>
+              path_alter_to_cleaned_dir("parquet-external") |>
+              unique()
+          }
+        )
     ),
     format = "file",
     pattern = map(sas_database_paths_external),
@@ -98,11 +104,13 @@ list(
     command = sas_to_parquet(
       input_path = sas_database_paths_grunddata,
       output_path = sas_database_paths_grunddata |>
-        purrr::map_chr(~ {
-          .x |>
-            path_alter_to_cleaned_dir("parquet-registers") |>
-            unique()
-        })
+        purrr::map_chr(
+          ~ {
+            .x |>
+              path_alter_to_cleaned_dir("parquet-registers") |>
+              unique()
+          }
+        )
     ),
     format = "file",
     pattern = map(sas_database_paths_grunddata),

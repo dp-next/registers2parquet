@@ -94,8 +94,14 @@ test_that("multiple paths with or without years are converted as well", {
   actual_year_dir <- actual_path |>
     fs::path_dir()
 
-  expect_identical(fs::path_file(actual_path), c("part-0.parquet", "part-0.parquet"))
-  expect_identical(fs::path_file(actual_year_dir), c("year=2020", "database-no-year"))
+  expect_identical(
+    fs::path_file(actual_path),
+    c("part-0.parquet", "part-0.parquet")
+  )
+  expect_identical(
+    fs::path_file(actual_year_dir),
+    c("year=2020", "database-no-year")
+  )
   expect_identical(fs::path_file(actual_parent_dir), c("database", "new-dir"))
   expect_identical(actual_root_dir, c(expected_dir, fs::path_dir(expected_dir)))
 })
