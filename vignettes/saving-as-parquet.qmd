@@ -1,4 +1,10 @@
-# Saving the SAS databases in Parquet format
+---
+title: Saving the SAS databases in Parquet format
+vignette: >
+  %\VignetteIndexEntry{Saving the SAS databases in Parquet format}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

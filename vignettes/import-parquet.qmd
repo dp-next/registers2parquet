@@ -1,4 +1,12 @@
-# Loading the data: Importing the Parquet format using DuckDB
+---
+title: "Loading the data: Importing the Parquet format using DuckDB"
+vignette: >
+  %\VignetteIndexEntry{Loading the data: Importing the Parquet format using DuckDB}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+execute:
+  eval: false
+---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
