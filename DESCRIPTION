@@ -26,7 +26,6 @@ Imports:
     job,
     knitr,
     lifecycle,
-    quarto,
     rlang,
     rmarkdown,
     stringr,
@@ -35,10 +34,12 @@ Imports:
     withr
 Suggests: 
     devtools,
+    quarto,
     testthat (>= 3.0.0)
 VignetteBuilder: 
-    knitr
+    quarto
 Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+URL: https://dp-next.github.io/registers2parquet/
