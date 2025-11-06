@@ -75,7 +75,7 @@ jobs:
 
 
   pkgdown:
-    uses: dp-next/.github/.github/workflows/reusable-pkgdown.yml
+    uses: dp-next/.github/.github/workflows/reusable-pkgdown.yml@main
     needs: cran-checks
     permissions:
       contents: write
