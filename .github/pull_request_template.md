@@ -4,7 +4,7 @@ EXPLANATION
 
 Closes #
 
-Needs quick/deep review.
+Needs a quick/thorough review.
 
 ## Checklist
 
