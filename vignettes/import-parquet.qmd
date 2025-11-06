@@ -1,7 +1,7 @@
 ---
 title: Loading the data: Importing the Parquet format using DuckDB
 vignette: >
-  %\VignetteIndexEntry{lLoading the data: Importing the Parquet format using DuckDB}
+  %\VignetteIndexEntry{Loading the data: Importing the Parquet format using DuckDB}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 execute:
