@@ -1,6 +1,12 @@
-# Welcome!
+---
+title: Welcome!
+vignette: >
+  %\VignetteIndexEntry{Welcome!}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 # To trigger these as dependencies in `_targets.R` pipeline
 targets::tar_load(
   c(
