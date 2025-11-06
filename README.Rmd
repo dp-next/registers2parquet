@@ -10,7 +10,6 @@ gh:
 <!-- badges: start -->
 [![GitHub License](https://img.shields.io/github/license/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/blob/main/LICENSE.md)
 [![GitHub Release](https://img.shields.io/github/v/release/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/releases/latest)
-[![Supported Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/refs/heads/main/pyproject.toml)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/blob/main/pyproject.toml)
 [![Build](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml/badge.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main.svg)](https://results.pre-commit.ci/latest/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
