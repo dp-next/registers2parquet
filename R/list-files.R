@@ -7,10 +7,10 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' list_sas_files(path_grunddata_dir())
 #' list_sas_files(path_eksterne_dir())
-#'
+#' }
 list_sas_files <- function(dir) {
   fs::dir_ls(dir, glob = "*.sas7bdat", recurse = TRUE) |>
     sort()
@@ -141,8 +141,8 @@ path_duplicates_as_list <- function(path) {
 #' @inheritParams path_set_dir
 #'
 #' @returns A character vector.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' fs::file_temp(ext = ".sas7bdat") |> path_ext_set_parquet_partition()
 path_ext_set_parquet_partition <- function(path) {
@@ -156,8 +156,8 @@ path_ext_set_parquet_partition <- function(path) {
 #' @param output_dir New directory the file should be in.
 #'
 #' @returns A character vector.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' fs::file_temp(ext = ".sas7bdat") |> path_set_dir(fs::path_temp())
 path_set_dir <- function(path, output_dir) {
@@ -173,8 +173,8 @@ path_set_dir <- function(path, output_dir) {
 #' @inheritParams path_set_dir
 #'
 #' @returns A character vector.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
 #'   path_alter_filename_year_as_dir()
@@ -191,8 +191,8 @@ path_alter_filename_year_as_dir <- function(path) {
 #' @inheritParams path_set_dir
 #'
 #' @returns A character vector.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' fs::file_temp(pattern = "database", ext = ".sas7bdat") |>
 #'   path_alter_filename_as_dir()
@@ -214,8 +214,8 @@ path_alter_filename_as_dir <- function(path) {
 #' @inheritParams path_set_dir
 #'
 #' @returns A character vector.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' fs::path_temp("database.sas7bdat") |>
 #'   path_alter_to_output_parquet_partition(fs::path_temp("new-dir"))
@@ -247,7 +247,9 @@ path_alter_to_output_parquet_partition <- function(path, output_dir) {
 #'
 #' @export
 #' @examples
-#'
+#' \dontrun{
+#' path_alter_to_cleaned_dir("test/path", "dir/")
+#' }
 path_alter_to_cleaned_dir <- function(path, dir) {
   dir <- rlang::arg_match(dir, fs::path_file(path_parquet_dirs("708421")))
   output_dir <- path_parquet_dirs("708421") |>

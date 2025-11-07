@@ -17,8 +17,8 @@ A character vector of file paths.
 List all the SAS register databases recursively in a folder
 }
 \examples{
-
+\dontrun{
 list_sas_files(path_grunddata_dir())
 list_sas_files(path_eksterne_dir())
-
+}
 }
