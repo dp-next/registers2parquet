@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{list_databases}
 \alias{list_databases}
-\title{Lists all the cleaned Parquet databases in the `cleaned-data` folder.}
+\title{Lists all the cleaned Parquet databases in the `cleaned-data` folder}
 \usage{
 list_databases(full_path = FALSE)
 }
@@ -10,8 +10,10 @@ list_databases(full_path = FALSE)
 A character vector.
 }
 \description{
-Lists all the cleaned Parquet databases in the `cleaned-data` folder.
+Lists all the cleaned Parquet databases in the `cleaned-data` folder
 }
 \examples{
+\dontrun{
 list_databases()
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{list_sas_files}
 \alias{list_sas_files}
-\title{List all the SAS register databases recursively in a folder.}
+\title{List all the SAS register databases recursively in a folder}
 \usage{
 list_sas_files(dir)
 }
@@ -14,7 +14,7 @@ list_sas_files(dir)
 A character vector of file paths.
 }
 \description{
-List all the SAS register databases recursively in a folder.
+List all the SAS register databases recursively in a folder
 }
 \examples{
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_set_dir}
 \alias{path_set_dir}
-\title{Alter the path of a file to a Parquet partition in another directory.}
+\title{Alter the path of a file to a Parquet partition in another directory}
 \usage{
 path_set_dir(path, output_dir)
 }
@@ -15,7 +15,7 @@ path_set_dir(path, output_dir)
 A character vector.
 }
 \description{
-Alter the path of a file to a Parquet partition in another directory.
+Alter the path of a file to a Parquet partition in another directory
 }
 \examples{
 fs::file_temp(ext = ".sas7bdat") |> path_set_dir(fs::path_temp())

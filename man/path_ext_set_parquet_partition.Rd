@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_ext_set_parquet_partition}
 \alias{path_ext_set_parquet_partition}
-\title{Convert file path to end as a Parquet Partition.}
+\title{Convert file path to Parquet Partition}
 \usage{
 path_ext_set_parquet_partition(path)
 }
@@ -13,7 +13,7 @@ path_ext_set_parquet_partition(path)
 A character vector.
 }
 \description{
-Convert file path to end as a Parquet Partition.
+Convert file path to Parquet Partition
 }
 \examples{
 fs::file_temp(ext = ".sas7bdat") |> path_ext_set_parquet_partition()
