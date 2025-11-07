@@ -5,8 +5,6 @@
 <!-- badges: start -->
 
 [![GitHub
-License](https://img.shields.io/github/license/dp-next/registers2parquet.svg)](https://github.com/dp-next/registers2parquet/blob/main/LICENSE.md)
-[![GitHub
 Release](https://img.shields.io/github/v/release/dp-next/registers2parquet.svg)](https://github.com/dp-next/registers2parquet/releases/latest)
 [![Build](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml)
 [![pre-commit.ci
