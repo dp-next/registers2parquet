@@ -1,11 +1,11 @@
-#' Load a specific Parquet database into the R session.
+#' Load a specific Parquet database into the R session
 #'
-#' The loaded database will be converted into DuckDB so it can use it, via
+#' The loaded database will be converted into DuckDB so it can be used via
 #' [arrow::to_duckdb()].
 #'
 #' @param name Name of the database to load.
 #'
-#' @return Opens the database as a Arrow dataset.
+#' @returns The database as an Arrow dataset.
 #' @export
 #'
 load_database <- function(name) {
@@ -19,16 +19,16 @@ load_database <- function(name) {
 
 # Register Parquet DB -----------------------------------------------------
 
-#' Load a specific register into the R session.
+#' Load a specific register into the R session
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' The loaded register will be converted into DuckDB so it can use it, via
+#' The loaded register will be converted into DuckDB so it can be used via
 #' [arrow::to_duckdb()].
 #'
 #' @param name Name of the register to load.
 #'
-#' @return Opens the register dataset as a Arrow dataset.
+#' @returns The register dataset as an Arrow dataset.
 #' @export
 #'
 load_register <- function(name) {
@@ -42,16 +42,16 @@ load_register <- function(name) {
 
 # Misc Parquet DB ---------------------------------------------------------
 
-#' Load a specific misc database into the R session.
+#' Load a specific misc database into the R session
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' The loaded database will be converted into DuckDB so it can use it, via
+#' The loaded database will be converted into DuckDB so it can be used via
 #' [arrow::to_duckdb()].
 #'
 #' @param name Name of the register to load.
 #'
-#' @return Opens the register dataset as a Arrow dataset.
+#' @returns The register dataset as an Arrow dataset.
 #' @export
 #'
 load_misc_db <- function(name) {

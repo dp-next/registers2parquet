@@ -1,4 +1,4 @@
-#' List important paths for projects on DST.
+#' List important paths for projects on DST
 #'
 #' @rdname paths
 #' @name paths

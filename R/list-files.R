@@ -1,9 +1,9 @@
-#' List all the SAS register databases recursively in a folder.
+#' List all the SAS register databases recursively in a folder
 #'
 #' @param dir Directory to list (recursively) all SAS database files (e.g. in
 #'   `Grunddata/`).
 #'
-#' @return A character vector of file paths.
+#' @returns A character vector of file paths.
 #' @export
 #'
 #' @examples
@@ -16,31 +16,34 @@ list_sas_files <- function(dir) {
     sort()
 }
 
-#' List all the Parquet database files recursively in a folder.
+#' List all the Parquet database files recursively in a folder
 #'
 #' @param dir Directory to list (recursively) all Parquet files.
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' list_parquet_files(path_parquet_dirs()[1])
 #' list_parquet_files(path_parquet_dirs()[2])
-#'
+#' }
 list_parquet_files <- function(dir) {
   fs::dir_ls(dir, glob = "*.parquet", recurse = TRUE) |>
     sort()
 }
 
-#' Lists all the cleaned Parquet databases in the `cleaned-data` folder.
+#' Lists all the cleaned Parquet databases in the `cleaned-data` folder
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' list_databases()
+#' }
 list_databases <- function(full_path = FALSE) {
+  # TODO: Change hardcoding of "708421"
   database_paths <- path_parquet_dirs("708421") |>
     purrr::map(~ fs::dir_ls(.x, type = "directory")) |>
     unlist()
@@ -97,6 +100,18 @@ list_massive_files <- function() {
 
 # Helpers -----------------------------------------------------------------
 
+#' Create dataframe with path and file name
+#'
+#' Create a dataframe (tibble) with columns "path" and "file", with the
+#' full path and file name respectively.
+#'
+#' @param path Path to data.
+#'
+#' @returns A tibble with the path(s).
+#'
+#' @export
+#' @examples
+#' path_as_df(c("path/data.parquet", "path/another.parquet"))
 path_as_df <- function(path) {
   tibble::tibble(
     path = path,
@@ -104,6 +119,16 @@ path_as_df <- function(path) {
   )
 }
 
+
+#' Get duplicate paths as a list
+#'
+#' @param path Paths to list.
+#'
+#' @returns A list with input path(s) where duplicate file names are grouped in the same list.
+#'
+#' @export
+#' @examples
+#' path_duplicates_as_list(c("path/data.parquet", "path/another.parquet", "path/to/another.parquet"))
 path_duplicates_as_list <- function(path) {
   path |>
     path_as_df() |>
@@ -111,11 +136,11 @@ path_duplicates_as_list <- function(path) {
     purrr::map(~ dplyr::pull(.x, path))
 }
 
-#' Convert file path to end as a Parquet Partition.
+#' Convert file path to Parquet Partition
 #'
 #' @inheritParams path_set_dir
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @keywords internal
 #'
 #' @examples
@@ -125,12 +150,12 @@ path_ext_set_parquet_partition <- function(path) {
     fs::path("part-0.parquet")
 }
 
-#' Alter the path of a file to a Parquet partition in another directory.
+#' Alter the path of a file to a Parquet partition in another directory
 #'
 #' @param path A file path.
 #' @param output_dir New directory the file should be in.
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @keywords internal
 #'
 #' @examples
@@ -141,13 +166,13 @@ path_set_dir <- function(path, output_dir) {
   fs::path(output_dir, fs::path_file(path))
 }
 
-#' Convert file name of a path to end in `/year=YYYY`.
+#' Convert file name of a path to end in `/year=YYYY`
 #'
 #' To follow the Parquet partitioning style (`{input_path_dir}/year=####/`).
 #'
 #' @inheritParams path_set_dir
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @keywords internal
 #'
 #' @examples
@@ -161,11 +186,11 @@ path_alter_filename_year_as_dir <- function(path) {
   )
 }
 
-#' Convert file name of a path to end in `filename/`.
+#' Convert path to end with `filename/`
 #'
 #' @inheritParams path_set_dir
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @keywords internal
 #'
 #' @examples
@@ -179,7 +204,7 @@ path_alter_filename_as_dir <- function(path) {
   )
 }
 
-#' Change the path to represent a Parquet Partition in another directory.
+#' Convert the path to represent a Parquet Partition in another directory
 #'
 #' Converts the file path to the pattern:
 #' `{output_dir}/{file_name}/part-0.parquet`, since this is the style used to
@@ -188,7 +213,7 @@ path_alter_filename_as_dir <- function(path) {
 #'
 #' @inheritParams path_set_dir
 #'
-#' @return A character vector.
+#' @returns A character vector.
 #' @keywords internal
 #'
 #' @examples
@@ -211,6 +236,18 @@ path_alter_to_output_parquet_partition <- function(path, output_dir) {
     path_ext_set_parquet_partition()
 }
 
+#' Convert path to cleaned directory.
+#'
+#' A cleaned directory in this context means a Parquet partition.
+#'
+#' @param path Path to convert.
+#' @param dir Directory to output to.
+#'
+#' @returns The clean directory.
+#'
+#' @export
+#' @examples
+#'
 path_alter_to_cleaned_dir <- function(path, dir) {
   dir <- rlang::arg_match(dir, fs::path_file(path_parquet_dirs("708421")))
   output_dir <- path_parquet_dirs("708421") |>

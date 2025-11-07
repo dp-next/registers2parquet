@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_alter_filename_year_as_dir}
 \alias{path_alter_filename_year_as_dir}
-\title{Convert file name of a path to end in `/year=YYYY`.}
+\title{Convert file name of a path to end in `/year=YYYY`}
 \usage{
 path_alter_filename_year_as_dir(path)
 }

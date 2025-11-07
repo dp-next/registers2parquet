@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-parquet.R
 \name{load_misc_db}
 \alias{load_misc_db}
-\title{Load a specific misc database into the R session.}
+\title{Load a specific misc database into the R session}
 \usage{
 load_misc_db(name)
 }
@@ -10,12 +10,12 @@ load_misc_db(name)
 \item{name}{Name of the register to load.}
 }
 \value{
-Opens the register dataset as a Arrow dataset.
+The register dataset as an Arrow dataset.
 }
 \description{
 `r lifecycle::badge("deprecated")`
 }
 \details{
-The loaded database will be converted into DuckDB so it can use it, via
+The loaded database will be converted into DuckDB so it can be used via
 [arrow::to_duckdb()].
 }

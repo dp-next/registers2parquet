@@ -1,15 +1,15 @@
-#' Read the raw SAS database file and save to a Parquet format.
+#' Read the raw SAS database file and save to a Parquet format
 #'
 #' Parquet is a format for saving data in an efficient way and that allows you
 #' to easily import it either with `arrow::read_arrow()` function or with
-#' any SQL-based language. In this case, I'm recommending using DuckDB
+#' any SQL-based language. In this case, we recommend using DuckDB
 #' via `arrow::to_duckdb()` since it is a SQL language that is fast and is
 #' designed for data analysis tasks.
 #'
 #' @param input_path The path to the raw SAS file.
 #' @param output_path The path to save the Parquet file.
 #'
-#' @return Returns a character vector of the created Parquet files (from
+#' @returns Returns a character vector of the created Parquet files (from
 #'   `output_path`), so as to be designed to work with targets.
 #' @export
 #'

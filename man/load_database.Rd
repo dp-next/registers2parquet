@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-parquet.R
 \name{load_database}
 \alias{load_database}
-\title{Load a specific Parquet database into the R session.}
+\title{Load a specific Parquet database into the R session}
 \usage{
 load_database(name)
 }
@@ -10,9 +10,9 @@ load_database(name)
 \item{name}{Name of the database to load.}
 }
 \value{
-Opens the database as a Arrow dataset.
+The database as an Arrow dataset.
 }
 \description{
-The loaded database will be converted into DuckDB so it can use it, via
+The loaded database will be converted into DuckDB so it can be used via
 [arrow::to_duckdb()].
 }

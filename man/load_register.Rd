@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-parquet.R
 \name{load_register}
 \alias{load_register}
-\title{Load a specific register into the R session.}
+\title{Load a specific register into the R session}
 \usage{
 load_register(name)
 }
@@ -10,12 +10,12 @@ load_register(name)
 \item{name}{Name of the register to load.}
 }
 \value{
-Opens the register dataset as a Arrow dataset.
+The register dataset as an Arrow dataset.
 }
 \description{
 `r lifecycle::badge("deprecated")`
 }
 \details{
-The loaded register will be converted into DuckDB so it can use it, via
+The loaded register will be converted into DuckDB so it can be used via
 [arrow::to_duckdb()].
 }

@@ -2,14 +2,14 @@
 % Please edit documentation in R/paths.R
 \name{paths}
 \alias{paths}
-\title{List important paths for projects on DST.}
+\title{List important paths for projects on DST}
 \arguments{
 \item{id}{The Project ID.}
 
 \item{dir}{The directory name to get the path for.}
 }
 \description{
-List important paths for projects on DST.
+List important paths for projects on DST
 }
 \examples{
 path_rawdata("708421")

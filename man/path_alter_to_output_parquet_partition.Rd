@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_alter_to_output_parquet_partition}
 \alias{path_alter_to_output_parquet_partition}
-\title{Change the path to represent a Parquet Partition in another directory.}
+\title{Convert the path to represent a Parquet Partition in another directory}
 \usage{
 path_alter_to_output_parquet_partition(path, output_dir)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read-parquet.R
 \name{read_parquet_partition}
 \alias{read_parquet_partition}
-\title{Read an individual Parquet partitioned database.}
+\title{Read an individual Parquet partitioned database}
 \usage{
 read_parquet_partition(dir)
 }
@@ -13,6 +13,6 @@ read_parquet_partition(dir)
 A DuckDB database connection.
 }
 \description{
-Read an individual Parquet partitioned database.
+Read an individual Parquet partitioned database
 }
 \keyword{internal}

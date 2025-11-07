@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{list_parquet_files}
 \alias{list_parquet_files}
-\title{List all the Parquet database files recursively in a folder.}
+\title{List all the Parquet database files recursively in a folder}
 \usage{
 list_parquet_files(dir)
 }
@@ -13,11 +13,11 @@ list_parquet_files(dir)
 A character vector.
 }
 \description{
-List all the Parquet database files recursively in a folder.
+List all the Parquet database files recursively in a folder
 }
 \examples{
-
+\dontrun{
 list_parquet_files(path_parquet_dirs()[1])
 list_parquet_files(path_parquet_dirs()[2])
-
+}
 }

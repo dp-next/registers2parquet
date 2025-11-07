@@ -2,7 +2,7 @@
 % Please edit documentation in R/sas-to-parquet.R
 \name{sas_to_parquet}
 \alias{sas_to_parquet}
-\title{Read the raw SAS database file and save to a Parquet format.}
+\title{Read the raw SAS database file and save to a Parquet format}
 \usage{
 sas_to_parquet(input_path, output_path)
 }
@@ -18,7 +18,7 @@ Returns a character vector of the created Parquet files (from
 \description{
 Parquet is a format for saving data in an efficient way and that allows you
 to easily import it either with `arrow::read_arrow()` function or with
-any SQL-based language. In this case, I'm recommending using DuckDB
+any SQL-based language. In this case, we recommend using DuckDB
 via `arrow::to_duckdb()` since it is a SQL language that is fast and is
 designed for data analysis tasks.
 }
