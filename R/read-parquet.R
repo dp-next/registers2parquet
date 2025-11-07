@@ -1,4 +1,4 @@
-#' Read an individual Parquet partitioned database.
+#' Read an individual Parquet partitioned database
 #'
 #' @param dir The folder that holds the Parquet database.
 #'
