@@ -7,8 +7,12 @@
 #' @param database_name The name of the database taken from the file path.
 #'
 #' @returns A character vector of years.
-#' @keywords internal
-#'
+
+#' @export
+#' @examples
+#' \dontrun{
+#' get_database_year_external("path/to/external/database2025.csv")
+#' }
 get_database_year_external <- function(path) {
   path |>
     get_filename_no_ext() |>
@@ -38,8 +42,8 @@ get_database_year_external <- function(path) {
 #' @param path Path to the database file.
 #'
 #' @returns An integer with the year.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_database_year("path/to/database2025.sas")
 get_database_year <- function(path) {
@@ -57,8 +61,8 @@ get_database_year <- function(path) {
 #' @param path Path to the parquet file.
 #'
 #' @returns An integer with the year.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_parquet_year("path/to/year=2025/file.parquet")
 get_parquet_year <- function(path) {
@@ -73,8 +77,8 @@ get_parquet_year <- function(path) {
 #' @param path Path to the database file.
 #'
 #' @returns A character with the database name.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_database_name("path/to/database.ext")
 get_database_name <- function(path) {
@@ -88,8 +92,8 @@ get_database_name <- function(path) {
 #' @param path Path to the file.
 #'
 #' @returns A character with the filename without a file extension.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_filename_no_ext("path/to/file name.ext")
 get_filename_no_ext <- function(path) {
@@ -106,8 +110,8 @@ get_filename_no_ext <- function(path) {
 #' @param path Path to look for duplicate file names in.
 #'
 #' @returns A character with duplicate paths, an empty character if no duplicates.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_path_duplicates(c("path/duplicate.parquet", "path/duplicate.parquet"))
 #' get_path_duplicates(c("path/no/duplicate.parquet", "path/no/identical.parquet"))
@@ -129,8 +133,8 @@ get_path_duplicates <- function(path) {
 #' @param path Path to to get if there's a year in the file name.
 #'
 #' @returns The path, if the file name contains a year.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_path_with_year(c("path/with/year2025", "path/without/year"))
 get_path_with_year <- function(path) {
@@ -142,8 +146,8 @@ get_path_with_year <- function(path) {
 #' @param path Path to to get if there's not a year in the file name.
 #'
 #' @returns The path, if the file name doesn't contain a year.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_path_with_year(c("path/with/year2025", "path/without/year"))
 get_path_without_year <- function(path) {
@@ -155,8 +159,8 @@ get_path_without_year <- function(path) {
 #' @param path Path to look for non-duplicate file names in.
 #'
 #' @returns A character with unique paths, an empty character if duplicates.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_path_no_duplicates(c("path/duplicate.parquet", "path/duplicate.parquet"))
 #' get_path_no_duplicates(c("path/no/duplicate.parquet", "path/no/identical.parquet"))
@@ -183,8 +187,8 @@ get_path_no_duplicates <- function(path) {
 #' @param name Name of the specific database to look for.
 #'
 #' @returns A character containing a path with the specific database.
-#' @keywords internal
 #'
+#' @export
 #' @examples
 #' get_path_specific_database("path/to/bef2025.sas", "bef")
 #' get_path_specific_database("path/to/bef2025.sas", "lpr2")

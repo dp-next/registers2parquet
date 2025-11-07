@@ -18,4 +18,3 @@ This function extracts the year of the database from the file name.
 \examples{
 get_parquet_year("path/to/year=2025/file.parquet")
 }
-\keyword{internal}

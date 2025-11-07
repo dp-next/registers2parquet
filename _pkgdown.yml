@@ -17,6 +17,7 @@ reference:
     Danish register data into Apache Parquet files.
 - contents:
   - sas_to_parquet
+  - starts_with("get")
   - starts_with("list")
   - starts_with("load")
   - starts_with("path")

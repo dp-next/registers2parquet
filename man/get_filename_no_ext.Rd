@@ -18,4 +18,3 @@ Get the filename without its file extension
 \examples{
 get_filename_no_ext("path/to/file name.ext")
 }
-\keyword{internal}

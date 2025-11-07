@@ -21,4 +21,3 @@ Get path with specific database file
 get_path_specific_database("path/to/bef2025.sas", "bef")
 get_path_specific_database("path/to/bef2025.sas", "lpr2")
 }
-\keyword{internal}
