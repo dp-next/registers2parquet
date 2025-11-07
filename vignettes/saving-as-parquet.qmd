@@ -82,5 +82,3 @@ time.
 For now, we are saving these datasets into a Parquet dataset:
 
 -   The Population database, as defined by DST for our project.
--   The ICD8 and 10 disease groupings, using the LPR DIAG and LPR ADM
-    registers (for diagnosis and admission data)
