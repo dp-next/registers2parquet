@@ -19,4 +19,3 @@ To follow the Parquet partitioning style (`{input_path_dir}/year=####/`).
 fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
   path_alter_filename_year_as_dir()
 }
-\keyword{internal}
