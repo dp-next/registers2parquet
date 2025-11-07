@@ -218,17 +218,3 @@ path_alter_to_cleaned_dir <- function(path, dir) {
   path |>
     path_alter_to_output_parquet_partition(output_dir)
 }
-
-path_alter_for_icd <- function(path) {
-  base_path <- path |>
-    fs::path_dir() |>
-    fs::path_dir() |>
-    path_set_dir(path_parquet_external()) |>
-    fs::path_dir()
-
-  year_path <- path |>
-    fs::path_dir() |>
-    fs::path_file()
-
-  fs::path(base_path, "icd", year_path, "part-0.parquet")
-}
