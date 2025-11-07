@@ -17,4 +17,8 @@ Only for the external raw data files.
 Only years with four digits (e.g., 2025, 1990) are recognised as years.
 Digits like 25 and 90 are not recognised as years and will not be included.
 }
-\keyword{internal}
+\examples{
+\dontrun{
+get_database_year_external("path/to/external/database2025.csv")
+}
+}

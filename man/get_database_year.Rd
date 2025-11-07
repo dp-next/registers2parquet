@@ -18,4 +18,3 @@ This function extracts the year of the database from the file name.
 \examples{
 get_database_year("path/to/database2025.sas")
 }
-\keyword{internal}
