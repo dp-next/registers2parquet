@@ -18,4 +18,3 @@ Convert file path to Parquet Partition
 \examples{
 fs::file_temp(ext = ".sas7bdat") |> path_ext_set_parquet_partition()
 }
-\keyword{internal}

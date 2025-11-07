@@ -17,3 +17,8 @@ The clean directory.
 \description{
 A cleaned directory in this context means a Parquet partition.
 }
+\examples{
+\dontrun{
+path_alter_to_cleaned_dir("test/path", "dir/")
+}
+}

@@ -26,4 +26,3 @@ fs::path_temp("database.sas7bdat") |>
 fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
   path_alter_to_output_parquet_partition(fs::path_temp("new-dir"))
 }
-\keyword{internal}

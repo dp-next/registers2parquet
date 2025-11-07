@@ -19,4 +19,3 @@ Convert path to end with `filename/`
 fs::file_temp(pattern = "database", ext = ".sas7bdat") |>
   path_alter_filename_as_dir()
 }
-\keyword{internal}
