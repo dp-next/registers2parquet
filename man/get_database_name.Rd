@@ -18,4 +18,3 @@ Get the name of the database from the file name
 \examples{
 get_database_name("path/to/database.ext")
 }
-\keyword{internal}

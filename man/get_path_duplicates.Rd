@@ -19,4 +19,3 @@ Get paths with duplicate file names
 get_path_duplicates(c("path/duplicate.parquet", "path/duplicate.parquet"))
 get_path_duplicates(c("path/no/duplicate.parquet", "path/no/identical.parquet"))
 }
-\keyword{internal}
