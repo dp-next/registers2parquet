@@ -18,4 +18,3 @@ Get path without year in the file name
 \examples{
 get_path_with_year(c("path/with/year2025", "path/without/year"))
 }
-\keyword{internal}
