@@ -20,4 +20,3 @@ Alter the path of a file to a Parquet partition in another directory
 \examples{
 fs::file_temp(ext = ".sas7bdat") |> path_set_dir(fs::path_temp())
 }
-\keyword{internal}
