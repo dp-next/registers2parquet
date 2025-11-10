@@ -1,12 +1,17 @@
 Package: registers2parquet
-Title: Denmark Statistics Registers Converted To Parquet
+Title: "registesr2parquet: Convert Danish register SAS files into Parquet files"
 Version: 0.2.2
-Authors@R:
+Authors@R: c(
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-4169-2616"))
-Description: Imports, prepares, and saves the original SAS data files into
-    the Parquet format.
+           comment = c(ORCID = "0000-0003-4169-2616", affiliation="Steno Diabetes Center Aarhus")),
+    person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut"),
+           comment = c(ORCID = "0009-0000-2208-7088", affiliation="Steno Diabetes Center Aarhus"))
+    )
+Description: A tool for converting SAS files containing Danish register data into
+    the more modern and efficient Apache Parquet format.
 License: MIT + file LICENSE
+URL: https://dp-next.github.io/registers2parquet/ https://github.com/dp-next/registers2parquet
+BugReports: https://github.com/dp-next/registers2parquet/issues
 Depends:
     tidyverse
 Imports:
@@ -42,4 +47,3 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
-URL: https://dp-next.github.io/registers2parquet/
