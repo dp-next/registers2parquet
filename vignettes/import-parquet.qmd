@@ -89,10 +89,6 @@ Everyone on this project folder *should theoretically* have this package
 installed, but let me know if you don't.
 
 ```{r setup}
-library(fs)
-library(duckdb)
-library(arrow)
-library(tidyverse, quietly = TRUE)
 library(registers2parquet)
 # devtools::load_all()
 ```
