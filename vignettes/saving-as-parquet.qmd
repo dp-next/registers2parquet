@@ -6,14 +6,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
-)
-```
-
 Based on the title, I'm taking the SAS database and converting it into
 the Parquet format. So... what is Parquet and why did I decide to use
 that instead of using the standard "import the SAS data into R and use
@@ -67,7 +59,7 @@ efficient at handling pipelines and using parallel processing. Look
 through that file if you are curious about it. Running the pipeline is
 done by using:
 
-```{r}
+```r
 targets::tar_make()
 ```
 
