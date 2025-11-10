@@ -12,6 +12,8 @@ Description: A tool for converting SAS files containing Danish register data int
 License: MIT + file LICENSE
 URL: https://dp-next.github.io/registers2parquet/ https://github.com/dp-next/registers2parquet
 BugReports: https://github.com/dp-next/registers2parquet/issues
+Depends:
+    R (>= 4.1.0)
 Imports:
     arrow,
     checkmate,
