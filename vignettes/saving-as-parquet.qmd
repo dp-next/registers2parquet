@@ -59,7 +59,7 @@ efficient at handling pipelines and using parallel processing. Look
 through that file if you are curious about it. Running the pipeline is
 done by using:
 
-```{r}
+```r
 targets::tar_make()
 ```
 
