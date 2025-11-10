@@ -12,31 +12,19 @@ Description: A tool for converting SAS files containing Danish register data int
 License: MIT + file LICENSE
 URL: https://dp-next.github.io/registers2parquet/ https://github.com/dp-next/registers2parquet
 BugReports: https://github.com/dp-next/registers2parquet/issues
-Depends:
-    tidyverse
 Imports:
     arrow,
     checkmate,
     cli,
-    data.table,
-    DBI,
-    desc,
-    distill,
+    dplyr,
     fs,
-    furrr,
-    future,
-    future.callr,
+    glue,
     haven,
-    here,
-    job,
-    knitr,
     lifecycle,
+    purrr,
     rlang,
-    rmarkdown,
     stringr,
-    tibble,
-    tictoc,
-    withr
+    tibble
 Suggests:
     devtools,
     quarto,
