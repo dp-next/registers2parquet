@@ -8,13 +8,6 @@ execute:
   eval: false
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
 Now that we have the data stored in the Parquet format, we want some way
 of loading it into R to use it. Here I recommend and show how to use the
 SQL-variant DuckDB to work with the data. I'll explain about DuckDB, why
@@ -96,10 +89,6 @@ Everyone on this project folder *should theoretically* have this package
 installed, but let me know if you don't.
 
 ```{r setup}
-library(fs)
-library(duckdb)
-library(arrow)
-library(tidyverse, quietly = TRUE)
 library(registers2parquet)
 # devtools::load_all()
 ```
@@ -138,6 +127,6 @@ pipeline you want the query to actually get sent.
 
 ```{r}
 ftf_db |>
-  count(year) |>
-  compute()
+  dplyr::count(year) |>
+  dplyr::compute()
 ```
