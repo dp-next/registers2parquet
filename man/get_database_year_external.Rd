@@ -7,7 +7,7 @@
 get_database_year_external(path)
 }
 \arguments{
-\item{database_name}{The name of the database taken from the file path.}
+\item{path}{Path to the database.}
 }
 \value{
 A character vector of years.

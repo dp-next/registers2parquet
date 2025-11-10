@@ -6,6 +6,9 @@
 \usage{
 list_databases(full_path = FALSE)
 }
+\arguments{
+\item{full_path}{Full path to directory to list databases based on.}
+}
 \value{
 A character vector.
 }
