@@ -16,9 +16,9 @@ A character vector.
 }
 \description{
 Converts the file path to the pattern:
-`{output_dir}/{file_name}/part-0.parquet`, since this is the style used to
+\verb{\{output_dir\}/\{file_name\}/part-0.parquet}, since this is the style used to
 tell Parquet the file is part of a partition. This includes converting to a
-year partition as `{output_dir}/{file_name}/style={year}/part-0.parquet`.
+year partition as \verb{\{output_dir\}/\{file_name\}/style=\{year\}/part-0.parquet}.
 }
 \examples{
 fs::path_temp("database.sas7bdat") |>

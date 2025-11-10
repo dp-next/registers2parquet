@@ -13,12 +13,12 @@ sas_to_parquet(input_path, output_path)
 }
 \value{
 Returns a character vector of the created Parquet files (from
-  `output_path`), so as to be designed to work with targets.
+\code{output_path}), so as to be designed to work with targets.
 }
 \description{
 Parquet is a format for saving data in an efficient way and that allows you
-to easily import it either with `arrow::read_arrow()` function or with
+to easily import it either with \code{arrow::read_arrow()} function or with
 any SQL-based language. In this case, we recommend using DuckDB
-via `arrow::to_duckdb()` since it is a SQL language that is fast and is
+via \code{arrow::to_duckdb()} since it is a SQL language that is fast and is
 designed for data analysis tasks.
 }

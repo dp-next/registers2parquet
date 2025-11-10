@@ -13,9 +13,9 @@ load_register(name)
 The register dataset as an Arrow dataset.
 }
 \description{
-`r lifecycle::badge("deprecated")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
 The loaded register will be converted into DuckDB so it can be used via
-[arrow::to_duckdb()].
+\code{\link[arrow:to_duckdb]{arrow::to_duckdb()}}.
 }
