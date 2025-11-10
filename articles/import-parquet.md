@@ -1,0 +1,127 @@
+# Loading the data: Importing the Parquet format using DuckDB
+
+Now that we have the data stored in the Parquet format, we want some way
+of loading it into R to use it. Here I recommend and show how to use the
+SQL-variant DuckDB to work with the data. I’ll explain about DuckDB, why
+I’m suggesting using it, and how to use it.
+
+## What is SQL and DuckDB?
+
+I mention SQL briefly in the
+[`vignette("saving-as-parquet")`](https://dp-next.github.io/registers2parquet/articles/saving-as-parquet.md),
+but I’ll expand more here. SQL stands for “Structured Query Language”
+and is a widely used and well established way of working and interacting
+with databases. There are a couple of potentially terms here that I
+should clarify what they mean.
+
+- Database: Also called a “relational database”. This specifically
+  refers a file that contains to one or more “tables” of data. A table
+  is a rectangular data object, like what you would see in a spreadsheet
+  (rows and columns). So a database can contain multiple tables of data
+  that are connected. In our case, a database of the registers would
+  have the PNR (unique personal ID) that connects all the tables
+  together.
+
+- Query: To query something means to request something from something
+  else. In the case of querying a database, it means we want to get some
+  data from the database. For instance, if we hypothetically want PNR,
+  income, and diabetes status of those born after 2000, we would query
+  the database tables for the columns PNR, income, and diabetes status
+  of all persons whose birth date was after 2000.
+
+- Structured: In this case, this means that it is a well defined way of
+  querying a database that is the most efficient. Because “structured”
+  is part of SQL, this is not something you as the user have to think
+  about, SQL (mostly) automatically makes the query efficient for you.
+
+- Language: Here this means that SQL is a programming language that you
+  write code to do actions. Thankfully, we R users don’t need to
+  actually know how to write SQL because dplyr converts many of its
+  commands automatically into SQL commands when the dataset we are
+  working on is a SQL database. More on this later.
+
+Ok, but what is DuckDB? Well, SQL is a generic term for any programming
+language that interacts with databases. There are dozens of SQL variants
+out there, with common ones being MySQL, SQLite, or Postgres. However, a
+main disadvantage of these other variants is that they aren’t designed
+for data analysis in mind. Many of them are designed with needs that
+businesses and industry people have, not researchers or data scientists.
+DuckDB is a variant that is designed specifically with data analysis in
+mind. Plus, DuckDB can easily interact with our Parquet data files.
+
+## Why should you use SQL/DuckDB?
+
+Alright, now that you know what SQL and DuckDB are, why should you use
+it? Why not load in the data with
+[`haven::read_sas()`](https://haven.tidyverse.org/reference/read_sas.html)
+or (if it is a csv file) with data.table or readr? In our particular
+case, registers are MASSIVE databases and loading the data into R and
+thus into memory can take quite a long time. The big advantage of
+SQL/DuckDB is that it doesn’t load anything into memory and any
+computation done on the data is done in an efficient, fast, and
+low-memory way. So we can do a lot of initial data cleaning, wrangling,
+summarizing, and preparing in DuckDB before finally loading it into
+memory to do the final statistical analysis with R’s functions. So
+basically, the reasons are:
+
+- It doesn’t need to be loaded into R, so you can right away start doing
+  data wrangling for your specific project.
+- Its super fast to do wrangling, joining, and basic summarizing, so you
+  can quickly get to the more intensive data analysis sooner.
+- It doesn’t use as much computer resources like memory, so is from a
+  cost and environmental sustainability perspective better.
+
+**But most importantly**, it is stupid easy to work with DuckDB within R
+through dplyr (technically dbplyr) and I’ll show you how!
+
+## Working with the data while in R
+
+The key packages you’ll want to use are the duckdb and arrow packages.
+So we can load them up. There’s also a custom function within this
+registers2parquet package that helps with loading the register
+databases. Everyone on this project folder *should theoretically* have
+this package installed, but let me know if you don’t.
+
+``` r
+library(registers2parquet)
+# devtools::load_all()
+```
+
+To see the list of registers available in the Parquet database, use this
+function:
+
+``` r
+list_databases()
+```
+
+Let’s take a simple register as an example. The “ftforael” will do. Use
+the custom
+[`load_database()`](https://dp-next.github.io/registers2parquet/reference/load_database.md)
+function from this registers2parquet package. After that, we need assign
+
+``` r
+ftf_db <- load_database("ftforael")
+ftf_db
+```
+
+You’ll see that the printed output of this object says
+`# Source: table<arrow_002> [?? x 12]`, or something similar. What this
+means is that it is showing you a small output of an arrow table (the
+Parquet data format), that it has 12 columns and an unknown number of
+rows. Why unknown? Because DuckDB doesn’t store anything on memory and
+because of the way it processes the query to the database, it can’t
+actually tell you how many rows are in the database unless you
+specifically ask for it. For us, we don’t really need to know at this
+point.
+
+What if you want to do some wrangling. You can use almost all dplyr
+functions and when you end the pipe with `compute()`, it sends the query
+to the database to get processed. You don’t have to end with
+`compute()`, but its good practice to use it to indicate where in the
+pipeline you want the query to actually get sent.
+
+``` r
+ftf_db |>
+  dplyr::count(year) |>
+  dplyr::compute()
+```
