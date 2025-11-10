@@ -121,7 +121,7 @@ get_path_duplicates <- function(path) {
 
   duplicates <- path_df |>
     dplyr::count(file) |>
-    dplyr::filter(n > 1)
+    dplyr::filter(.data$n > 1)
 
   path_df |>
     dplyr::right_join(duplicates, by = "file") |>
@@ -173,7 +173,7 @@ get_path_no_duplicates <- function(path) {
 
   no_duplicates <- path_df |>
     dplyr::count(file) |>
-    dplyr::filter(n == 1)
+    dplyr::filter(.data$n == 1)
 
   path_df |>
     dplyr::right_join(no_duplicates, by = "file") |>

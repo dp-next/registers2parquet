@@ -112,8 +112,8 @@ path_population_file <- function(id = "708421") {
     path_subdir("Population") |>
     fs::dir_ls(type = "file", recurse = TRUE) |>
     fs::file_info() |>
-    dplyr::filter(modification_time == max(modification_time)) |>
-    dplyr::pull(path)
+    dplyr::filter(.data$modification_time == max(.data$modification_time)) |>
+    dplyr::pull(.data$path)
 }
 
 #' Path to rawdata directory
