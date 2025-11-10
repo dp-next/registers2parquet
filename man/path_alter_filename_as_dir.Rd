@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_alter_filename_as_dir}
 \alias{path_alter_filename_as_dir}
-\title{Convert path to end with `filename/`}
+\title{Convert path to end with \verb{filename/}}
 \usage{
 path_alter_filename_as_dir(path)
 }
@@ -13,7 +13,7 @@ path_alter_filename_as_dir(path)
 A character vector.
 }
 \description{
-Convert path to end with `filename/`
+Convert path to end with \verb{filename/}
 }
 \examples{
 fs::file_temp(pattern = "database", ext = ".sas7bdat") |>

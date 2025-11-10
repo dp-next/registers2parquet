@@ -8,7 +8,7 @@ list_sas_files(dir)
 }
 \arguments{
 \item{dir}{Directory to list (recursively) all SAS database files (e.g. in
-`Grunddata/`).}
+\verb{Grunddata/}).}
 }
 \value{
 A character vector of file paths.

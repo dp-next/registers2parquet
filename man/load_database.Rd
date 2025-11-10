@@ -14,5 +14,5 @@ The database as an Arrow dataset.
 }
 \description{
 The loaded database will be converted into DuckDB so it can be used via
-[arrow::to_duckdb()].
+\code{\link[arrow:to_duckdb]{arrow::to_duckdb()}}.
 }

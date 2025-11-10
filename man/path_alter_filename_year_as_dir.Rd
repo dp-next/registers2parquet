@@ -2,7 +2,7 @@
 % Please edit documentation in R/list-files.R
 \name{path_alter_filename_year_as_dir}
 \alias{path_alter_filename_year_as_dir}
-\title{Convert file name of a path to end in `/year=YYYY`}
+\title{Convert file name of a path to end in \verb{/year=YYYY}}
 \usage{
 path_alter_filename_year_as_dir(path)
 }
@@ -13,7 +13,7 @@ path_alter_filename_year_as_dir(path)
 A character vector.
 }
 \description{
-To follow the Parquet partitioning style (`{input_path_dir}/year=####/`).
+To follow the Parquet partitioning style (\verb{\{input_path_dir\}/year=####/}).
 }
 \examples{
 fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
