@@ -115,6 +115,7 @@ get_filename_no_ext <- function(path) {
 #' @examples
 #' get_path_duplicates(c("path/duplicate.parquet", "path/duplicate.parquet"))
 #' get_path_duplicates(c("path/no/duplicate.parquet", "path/no/identical.parquet"))
+#' @importFrom rlang .data
 get_path_duplicates <- function(path) {
   path_df <- path_as_df(path)
 
