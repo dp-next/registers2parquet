@@ -7,7 +7,7 @@ Authors@R:
 Description: Imports, prepares, and saves the original SAS data files into
     the Parquet format.
 License: MIT + file LICENSE
-Depends: 
+Depends:
     R (>= 4.1.0)
 Imports:
     arrow,
