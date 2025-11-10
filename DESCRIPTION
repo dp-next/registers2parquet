@@ -1,5 +1,5 @@
 Package: registers2parquet
-Title: "registesr2parquet: Convert Danish register SAS files into Parquet files"
+Title: Convert Danish register SAS files into Parquet files
 Version: 0.2.2
 Authors@R: c(
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut", "cre"),
