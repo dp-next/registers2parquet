@@ -7,31 +7,19 @@ Authors@R:
 Description: Imports, prepares, and saves the original SAS data files into
     the Parquet format.
 License: MIT + file LICENSE
-Depends:
-    tidyverse
 Imports:
     arrow,
     checkmate,
     cli,
-    data.table,
-    DBI,
-    desc,
-    distill,
+    dplyr,
     fs,
-    furrr,
-    future,
-    future.callr,
+    glue,
     haven,
-    here,
-    job,
-    knitr,
     lifecycle,
+    purrr,
     rlang,
-    rmarkdown,
     stringr,
-    tibble,
-    tictoc,
-    withr
+    tibble
 Suggests:
     devtools,
     quarto,
