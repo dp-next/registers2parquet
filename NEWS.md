@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.2.3 (2025-11-10)
+
+### Fix
+
+- :bug:no visible binding for global variable (#62)
+
 ## 0.2.2 (2025-11-07)
 
 ### Refactor
