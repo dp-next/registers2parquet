@@ -1,7 +1,3 @@
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
-})
-
 test_that("extension changes to a Parquet partition format", {
   actual <- fs::file_temp(ext = ".sas7bdat") |>
     path_ext_set_parquet_partition() |>
