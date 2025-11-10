@@ -4,7 +4,7 @@
 #' Only years with four digits (e.g., 2025, 1990) are recognised as years.
 #' Digits like 25 and 90 are not recognised as years and will not be included.
 #'
-#' @param database_name The name of the database taken from the file path.
+#' @param path Path to the database.
 #'
 #' @returns A character vector of years.
 

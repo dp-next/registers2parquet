@@ -35,9 +35,11 @@ list_parquet_files <- function(dir) {
 
 #' Lists all the cleaned Parquet databases in the `cleaned-data` folder
 #'
-#' @returns A character vector.
-#' @export
+#' @param full_path Full path to directory to list databases based on.
 #'
+#' @returns A character vector.
+#'
+#' @export
 #' @examples
 #' \dontrun{
 #' list_databases()
