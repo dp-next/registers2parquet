@@ -127,6 +127,6 @@ pipeline you want the query to actually get sent.
 
 ```{r}
 ftf_db |>
-  count(year) |>
-  compute()
+  dplyr::count(year) |>
+  dplyr::compute()
 ```
