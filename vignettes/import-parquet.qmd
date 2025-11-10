@@ -8,13 +8,6 @@ execute:
   eval: false
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
 Now that we have the data stored in the Parquet format, we want some way
 of loading it into R to use it. Here I recommend and show how to use the
 SQL-variant DuckDB to work with the data. I'll explain about DuckDB, why
