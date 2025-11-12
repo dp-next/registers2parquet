@@ -8,9 +8,9 @@ vignette: >
 
 ## Conversion process
 
-::: {.columns}
-::: {.column}
-```
+::::: columns
+::: column
+```         
 bef2018.sas7bdat
 bef2019.sas7bdat
 bef2020.sas7bdat
@@ -20,8 +20,9 @@ December_2023/bef2022.sas7bdat
 December_2023/bef2023.sas7bdat
 ```
 :::
-::: {.column}
-```
+
+::: column
+```         
 bef/
 ├── year=2018/
 │   └── part-0.parquet
@@ -37,20 +38,20 @@ bef/
     └── part-0.parquet
 ```
 :::
-:::
-
+:::::
 
 ## Parallel processing
 
-Each register-year pairing (including duplicate years) are sent to a separate process.
-That way, rather than converting 1000+ registers one after the other, it can be split
-into chunks based on the number of available CPU cores. For instance, if you set the
-number of "workers" (cores) to 4, than the 1000+ registers will be split into 4 groups
-and each group will be processed simultaneously on its own core.
+Each register-year pairing (including duplicate years) are sent to a
+separate process. That way, rather than converting 1000+ registers one
+after the other, it can be split into chunks based on the number of
+available CPU cores. For instance, if you set the number of "workers"
+(cores) to 4, than the 1000+ registers will be split into 4 groups and
+each group will be processed simultaneously on its own core.
 
-There are some overheads to parallel processing, so it works best with a large number of
-files and when the files are also relatively large, or if the processing time per file is
-substantial.
+There are some overheads to parallel processing, so it works best with a
+large number of files and when the files are also relatively large, or
+if the processing time per file is substantial.
 
 ## Visual representation of data flow
 
