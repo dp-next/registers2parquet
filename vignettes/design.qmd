@@ -95,7 +95,7 @@ that the functions operate on.
 | Object | Description |
 |------------------------|------------------------------------------------|
 | output_path | A path to the directory where the Parquet file created using `registers2parquet` should be written to. |
-| path | A path to a file or directory. Can be a single path or multiple paths as a character vector or list. Is used in `list` functions to list available files and in `registers2parquet` to specify input files. |
+| path | A path to a file or directory. Can be a single path or multiple paths as a character vector. Is used in `list` functions to list available files and in `registers2parquet` to specify input files. |
 | register_name | A name of a register used in the file name (without a path), e.g., "bef". Used in `list` functions to retrieve the paths of objects including that name. |
 
 : Objects used in `registers2parquet`.
