@@ -15,6 +15,7 @@ package:
     efficient Parquet format.
 2.  Provides functions to list available files (e.g., SAS or Parquet)
     directly from R, based on e.g., a specified register name or path.
+3.  Read register Parquet files into R as a DuckDB table.
 
 ## Conversion process
 
@@ -82,6 +83,7 @@ that the functions operate on.
 | Action | Description |
 |------------------------|------------------------------------------------|
 | List | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
+| Read | Read a Parquet register into R as a DuckDB table. |
 | registers2parquet | Convert a register SAS file (or multiple) to Parquet. |
 
 : Actions used in `registers2parquet`.
