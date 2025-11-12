@@ -6,6 +6,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## Core functionality
+
+This is the list of the core functionality in the `registers2parquet`
+package:
+
+1.  Converts Danish register data from SAS files to the modern and
+    efficient Parquet format.
+2.  Provides functions to list available files (e.g., SAS or Parquet)
+    directly from R, based on e.g., a specified register name or path.
+
 ## Conversion process
 
 ::: {.columns}
