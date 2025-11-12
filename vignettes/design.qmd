@@ -10,7 +10,7 @@ vignette: >
 
 ::::: columns
 ::: column
-```         
+```
 bef2018.sas7bdat
 bef2019.sas7bdat
 bef2020.sas7bdat
@@ -22,7 +22,7 @@ December_2023/bef2023.sas7bdat
 :::
 
 ::: column
-```         
+```
 bef/
 ├── year=2018/
 │   └── part-0.parquet
@@ -85,7 +85,7 @@ flowchart TD
     convert_register_to_parquet --> output
 
     %% Styling
-    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5 
+    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
 We expect a flow of reading a Parquet register created by the
