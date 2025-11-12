@@ -88,3 +88,19 @@ flowchart TD
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5 
 ```
 
+We expect a flow of reading a Parquet register created by the
+`registers2parquet` package into an R session to be as follows:
+
+```{mermaid}
+%%| label: fig-flow-use
+%%| fig-cap: "Flow of the expected flow of reading a Parquet register that was created with the `registers2parquet` package."
+%%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the `registers2parquet` package. It includes using the register name to read a specific register into the R session using the `read_register_parquet()` function, which outputs the register as a DuckDB table."
+flowchart TD
+
+    path[/"path<br>[Character vector]"<br>Path to register dir/]
+    read_register_parquet("read_register_parquet()")
+    output[/"Output<br>[DuckDB table]"/]
+
+    %% Edges
+    path --> read_register_parquet --> output
+```
