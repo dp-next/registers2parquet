@@ -23,5 +23,5 @@ A character vector.
 ``` r
 fs::file_temp(pattern = "database", ext = ".sas7bdat") |>
   path_alter_filename_as_dir()
-#> /tmp/RtmpSOUXq8/database
+#> /tmp/Rtmpe3WQL1/database
 ```

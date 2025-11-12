@@ -37,7 +37,7 @@ There are some overheads to parallel processing, so it works best with a
 large number of files and when the files are also relatively large, or
 if the processing time per file is substantial.
 
-## Visual representation
+## Visual representation of data flow
 
 ``` mermaid
 flowchart LR
