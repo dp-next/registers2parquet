@@ -6,40 +6,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Conversion process
-
-::::: columns
-::: column
-```         
-bef2018.sas7bdat
-bef2019.sas7bdat
-bef2020.sas7bdat
-bef2021.sas7bdat
-bef2022.sas7bdat
-December_2023/bef2022.sas7bdat
-December_2023/bef2023.sas7bdat
-```
-:::
-
-::: column
-```         
-bef/
-├── year=2018/
-│   └── part-0.parquet
-├── year=2019/
-│   └── part-0.parquet
-├── year=2020/
-│   └── part-0.parquet
-├── year=2021/
-│   └── part-0.parquet
-├── year=2022/
-│   └── part-0.parquet
-└── year=2023/
-    └── part-0.parquet
-```
-:::
-:::::
-
 ## Parallel processing
 
 Each register-year pairing (including duplicate years) are sent to a
