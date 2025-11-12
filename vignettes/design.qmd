@@ -67,3 +67,34 @@ substantial.
 ```{mermaid}
 %%| file: flow.mmd
 ```
+
+## Naming conventions
+
+In the sections below, we outline the naming conventions of actions and
+objects in the package. **Actions** are verbs that describe what a
+function does, while **objects** are nouns that represent the parameters
+that the functions operate on.
+
+### Actions
+
+| Action | Description |
+|---------------------|---------------------------------------------------|
+| List | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
+| registers2parquet | Convert a register SAS file (or multiple) to Parquet. |
+
+: Actions used in `registers2parquet`.
+
+<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? -->
+
+### Objects
+
+| Object | Description |
+|---------------------|---------------------------------------------------|
+| output_path | A path to the directory where the Parquet file created using `registers2parquet` should be written to. |
+| path | A path to a file or directory. Can be a single path or multiple paths as a character vector or list. Is used in `list` functions to list available files and in `registers2parquet` to specify input files. |
+| register_name | A name of a register used in the file name (without a path), e.g., "bef". Used in `list` functions to retrieve the paths of objects including that name. |
+
+: Objects used in `registers2parquet`.
+
+<!-- TODO: Are path and output path be relative or absolute? -->
+
