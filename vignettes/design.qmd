@@ -55,5 +55,6 @@ substantial.
 ## Visual representation
 
 ```{mermaid}
+%%| fig-alt: "A flowchart showing the data flow within `registers2parquet`, showing how SAS files are imported, potentially joined, and then exported as Parquet files with a year partitioning."
 %%| file: flow.mmd
 ```
