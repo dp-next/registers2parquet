@@ -97,4 +97,3 @@ that the functions operate on.
 : Objects used in `registers2parquet`.
 
 <!-- TODO: Are path and output path be relative or absolute? -->
-
