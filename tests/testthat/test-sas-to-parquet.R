@@ -25,7 +25,7 @@ test_that("column names and data types are properly converted without year parti
     purrr::map_chr(class) |>
     sort()
 
-  expected_columns <- purrr::map_chr(co2_df, class) |>
+  expected <- purrr::map_chr(co2_df, class) |>
     sort()
 
   # Same column names with same data types.
@@ -46,7 +46,7 @@ test_that("column names and data types are properly converted with year partitio
     purrr::map_chr(class) |>
     sort()
 
-  expected_columns <- co2_df |>
+  expected <- co2_df |>
     mutate(year = 2019L) |>
     purrr::map_chr(class) |>
     sort()
