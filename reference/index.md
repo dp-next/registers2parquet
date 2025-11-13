@@ -46,26 +46,14 @@ into Apache Parquet files.
 - [`list_dirs()`](https://dp-next.github.io/registers2parquet/reference/list_dirs.md)
   : List directories at given path
 
-- [`list_misc_db()`](https://dp-next.github.io/registers2parquet/reference/list_misc_db.md)
-  **\[deprecated\]** : List all the available misc Parquet databases.
-
 - [`list_parquet_files()`](https://dp-next.github.io/registers2parquet/reference/list_parquet_files.md)
   : List all the Parquet database files recursively in a folder
-
-- [`list_registers()`](https://dp-next.github.io/registers2parquet/reference/list_registers.md)
-  **\[deprecated\]** : List all the available registers.
 
 - [`list_sas_files()`](https://dp-next.github.io/registers2parquet/reference/list_sas_files.md)
   : List all the SAS register databases recursively in a folder
 
 - [`load_database()`](https://dp-next.github.io/registers2parquet/reference/load_database.md)
   : Load a specific Parquet database into the R session
-
-- [`load_misc_db()`](https://dp-next.github.io/registers2parquet/reference/load_misc_db.md)
-  **\[deprecated\]** : Load a specific misc database into the R session
-
-- [`load_register()`](https://dp-next.github.io/registers2parquet/reference/load_register.md)
-  **\[deprecated\]** : Load a specific register into the R session
 
 - [`path_alter_filename_as_dir()`](https://dp-next.github.io/registers2parquet/reference/path_alter_filename_as_dir.md)
   :
