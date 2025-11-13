@@ -71,16 +71,15 @@ register SAS files to Parquet files will be as follows:
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the `registers2parquet` package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_register_to_parquet()`, which then outputs the path to the written Parquet files."
 flowchart TD
 
-    identify_paths("Identify register path(s)<br>from within R<br>with list helper functions")
+    identify_paths("Identify register path(s)<br>with helper functions")
     path[/"path<br>[Character vector]"/]
     output_path[/"output_path<br>[Character vector]"/]
     convert_register_to_parquet("convert_register_to_parquet()")
-    output[/"Output<br>[Character vector]<br>Path to written Parquet file"/]
+    output[/"Output<br>[Character vector]<br>Path to Parquet file(s)"/]
+
 
     %% Edges
     identify_paths -.-> path --> convert_register_to_parquet
-    output_path --> convert_register_to_parquet
-
     output_path --> convert_register_to_parquet
     convert_register_to_parquet --> output
 
@@ -97,10 +96,14 @@ We expect a flow of reading a Parquet register created by the
 %%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the `registers2parquet` package. It includes using the register name to read a specific register into the R session using the `read_register_parquet()` function, which outputs the register as a DuckDB table."
 flowchart TD
 
-    path[/"path<br>[Character vector]"<br>Path to register dir/]
-    read_register_parquet("read_register_parquet()")
+    project_id[/"project_id<br>[Character scalar]"/]
+    path[/"path<br>[Character scalar]<br>Path to register folder"/]
+
+    read_register("read_register()")
+
     output[/"Output<br>[DuckDB table]"/]
 
     %% Edges
-    path --> read_register_parquet --> output
+    path & project_id --> read_register --> output
+
 ```
