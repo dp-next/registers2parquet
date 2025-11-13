@@ -6,21 +6,70 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include=FALSE, eval=FALSE}
-# To trigger these as dependencies in `_targets.R` pipeline
-targets::tar_load(
-  c(
-    targets::starts_with("external_parquet_database"),
-    targets::starts_with("grunddata_parquet_database"),
-    targets::starts_with("population_parquet_database")
-  ),
-  store = here::here("_targets")
-)
-```
+## Overview
 
-I wrote this documentation to help me with thinking how take the SAS
-files and convert them into something that's more modern, powerful, and
-faster. But I also wrote it to make it easier to share what I've done
-and why I've done it. This manual contains some documents related to
-what Parquet is, what DuckDB is, and some examples of how to use these
-database formats when doing data analysis.
+The `registers2parquet` package is designed to convert Danish register
+data from the SAS file format to the [Apache Parquet
+format](https://parquet.apache.org/), also commonly referred to as Parquet.
+This vignette provides an introduction to the package, its purpose, and
+the benefits of using Parquet for data storage and analysis.
+
+For an in-depth look at the package design, please refer to the
+`vignette("design")`.
+
+::: hidden
+For an introduction to using the package, please see the guides.
+<!-- TODO: Add links to guides when they are created -->
+:::
+
+## Purpose
+
+The primary purpose of the `registers2parquet` package is to
+simplify the process of converting the large Danish registers into
+the more modern Parquet storage format as well as to simplify reading
+these Parquet files.
+
+By converting data from SAS to the more modern and efficient Parquet
+format, the package reduces storage costs and aims to improve
+performance in data analysis workflows.
+
+## Why Parquet?
+
+[Parquet](https://parquet.apache.org/) is a columnar storage file format
+that is optimized for use with big data processing frameworks. There are
+several advantages of using Parquet for Danish register data instead of
+[SAS](https://fileinfo.com/extension/sas7bdat) files:
+
+<!-- TODO: Find other/better link to SAS file format? -->
+
+-   **Reduced storage costs**: Parquet's efficient compression can lead
+    to significant savings in storage costs, especially for large
+    datasets.
+-   **Faster data processing**: The columnar format of Parquet can lead
+    to faster data processing times, particularly for analytical queries
+    that only require a subset of the data.
+-   **Easier integration with modern data tools**: Parquet's wide
+    support across various data processing frameworks makes it easier to
+    integrate Danish register data into modern data analysis workflows,
+    like [R](https://www.r-project.org/) or
+    [Python](https://www.python.org/).
+
+Apache also offers several advantages over traditional row-based file
+formats (like
+[CSV](https://en.wikipedia.org/wiki/Comma-separated_values)),
+particularly when dealing with large datasets:
+
+-   **Efficient data compression**: Parquet uses efficient compression
+
+    algorithms, which can significantly reduce the amount of disk space
+    required to store large datasets.
+-   **Improved query performance**: By storing data in a columnar
+    format, Parquet allows for more efficient querying and data
+    retrieval, especially when only a subset of columns is needed.
+-   **Interoperability**: Parquet is widely supported by various data
+    processing frameworks and tools, making it a versatile choice for
+    data storage and analysis.
+
+<!-- TODO: Expand on this section with more details, potentially reuse from @lwjohnst86's presentation in October 2025? -->
+
+<!-- TODO: Add examples/comparison of computational performance and storage efficiency between Parquet and SAS -->
