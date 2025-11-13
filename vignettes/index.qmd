@@ -25,7 +25,7 @@ For an introduction to using the package, please see the guides.
 ## Purpose
 
 The primary purpose of the `registers2parquet` package is to
-simplify the process of converting the large Danish registers into 
+simplify the process of converting the large Danish registers into
 the more modern Parquet storage format as well as to simplify reading
 these Parquet files.
 
