@@ -10,7 +10,7 @@ vignette: >
 
 The `registers2parquet` package is designed to convert Danish register
 data from the SAS file format to the [Apache Parquet
-format](https://parquet.apache.org/), hereafter referred to as Parquet.
+format](https://parquet.apache.org/), also commonly referred to as Parquet.
 This vignette provides an introduction to the package, its purpose, and
 the benefits of using Parquet for data storage and analysis.
 
@@ -25,8 +25,9 @@ For an introduction to using the package, please see the guides.
 ## Purpose
 
 The primary purpose of the `registers2parquet` package is to
-**facilitate easier and more efficient data handling for researchers and
-data managers working with large Danish register datasets**.
+simplify the process of converting the large Danish registers into 
+the more modern Parquet storage format as well as to simplify reading
+these Parquet files.
 
 By converting data from SAS to the more modern and efficient Parquet
 format, the package reduces storage costs and aims to improve
@@ -41,13 +42,13 @@ several advantages of using Parquet for Danish register data instead of
 
 <!-- TODO: Find other/better link to SAS file format? -->
 
--   **Reduced Storage Costs**: Parquet's efficient compression can lead
+-   **Reduced storage costs**: Parquet's efficient compression can lead
     to significant savings in storage costs, especially for large
     datasets.
--   **Faster Data Processing**: The columnar format of Parquet can lead
+-   **Faster data processing**: The columnar format of Parquet can lead
     to faster data processing times, particularly for analytical queries
     that only require a subset of the data.
--   **Easier Integration with Modern Data Tools**: Parquet's wide
+-   **Easier integration with modern data tools**: Parquet's wide
     support across various data processing frameworks makes it easier to
     integrate Danish register data into modern data analysis workflows,
     like [R](https://www.r-project.org/) or
@@ -58,10 +59,11 @@ formats (like
 [CSV](https://en.wikipedia.org/wiki/Comma-separated_values)),
 particularly when dealing with large datasets:
 
--   **Efficient Data Compression**: Parquet uses efficient compression
+-   **Efficient data compression**: Parquet uses efficient compression
+
     algorithms, which can significantly reduce the amount of disk space
     required to store large datasets.
--   **Improved Query Performance**: By storing data in a columnar
+-   **Improved query performance**: By storing data in a columnar
     format, Parquet allows for more efficient querying and data
     retrieval, especially when only a subset of columns is needed.
 -   **Interoperability**: Parquet is widely supported by various data
