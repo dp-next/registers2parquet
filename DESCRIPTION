@@ -22,7 +22,6 @@ Imports:
     fs,
     glue,
     haven,
-    lifecycle,
     purrr,
     rlang,
     stringr,
