@@ -54,17 +54,18 @@ test_that("column names and data types are properly converted with year partitio
   # Same column names with same data types.
   expect_identical(actual, expected)
 })
-  expect_error(sas_to_parquet(
-    rep(temp_sas_file, times = 2),
-    rep(temp_parquet_file, times = 2)
-  ))
-  expect_error(sas_to_parquet(1, 1))
-  expect_error(sas_to_parquet(fs::file_temp(), temp_parquet_file))
 
-  expect_error(sas_to_parquet_with_year(fs::file_temp(), temp_parquet_file))
-  expect_error(sas_to_parquet_year(1, 1))
-  expect_error(sas_to_parquet_year(
-    rep(temp_sas_file_year, times = 2),
+test_that("incorrect argument types generates errors", {
+  # Non-character arguments.
+  expect_error(sas_to_parquet(1, temp_parquet_file))
+  expect_error(sas_to_parquet(temp_sas_file, 1))
+  # Non-scalar output_path.
+  expect_error(sas_to_parquet(
+    temp_sas_file,
     rep(temp_parquet_file, times = 2)
   ))
+})
+
+test_that("input_path must exist", {
+  expect_error(sas_to_parquet(fs::file_temp(), temp_parquet_file))
 })
