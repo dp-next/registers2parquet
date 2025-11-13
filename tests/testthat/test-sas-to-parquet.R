@@ -28,14 +28,8 @@ test_that("column names and data types are properly converted without year parti
   expected_columns <- purrr::map_chr(co2_df, class) |>
     sort()
 
-  # Same data types for columns
-  expect_setequal(unname(actual), unname(expected_columns))
-
-  # Same names
-  expect_setequal(
-    names(actual),
-    names(expected_columns)
-  )
+  # Same column names with same data types.
+  expect_identical(actual, expected)
 })
 
 test_that("column names and data types are properly converted with year partition", {
@@ -57,17 +51,9 @@ test_that("column names and data types are properly converted with year partitio
     purrr::map_chr(class) |>
     sort()
 
-  # Same data types for columns
-  expect_setequal(unname(actual), unname(expected_columns))
-
-  # Same names
-  expect_setequal(
-    names(actual),
-    names(expected_columns)
-  )
+  # Same column names with same data types.
+  expect_identical(actual, expected)
 })
-
-test_that("argument types are correct", {
   expect_error(sas_to_parquet(
     rep(temp_sas_file, times = 2),
     rep(temp_parquet_file, times = 2)
