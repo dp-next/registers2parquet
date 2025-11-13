@@ -1,4 +1,3 @@
-library(dplyr)
 # Prepare paths to temporary files.
 temp_sas_file <- fs::path_temp("test.sas7bdat")
 temp_sas_file_year <- fs::path_temp("test2019.sas7bdat")
@@ -6,8 +5,8 @@ temp_parquet_file <- fs::path_temp("test.parquet")
 temp_parquet_partition <- fs::path_temp("test", "year=2019", "part-0.parquet")
 
 co2_df <- CO2 |>
-  mutate(across(where(is.factor), as.character)) |>
-  as_tibble()
+  dplyr::mutate(across(where(is.factor), as.character)) |>
+  dplyr::as_tibble()
 
 # Write temporary SAS files.
 # Suppress warnings needed since write_sas() is deprecated.
@@ -48,12 +47,12 @@ test_that("column names and data types are properly converted with year partitio
     partition_dir,
     unify_schemas = TRUE
   ) |>
-    as_tibble() |>
+    dplyr::as_tibble() |>
     purrr::map_chr(class) |>
     sort()
 
   expected <- co2_df |>
-    mutate(year = 2019L) |>
+    dplyr::mutate(year = 2019L) |>
     purrr::map_chr(class) |>
     sort()
 
