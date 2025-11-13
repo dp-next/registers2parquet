@@ -20,7 +20,7 @@ test_that("expected Parquet file with year partition exists after conversion", {
   expect_true(fs::file_exists(temp_parquet_partition))
 })
 
-test_that("data types are properly converted (no years)", {
+test_that("column names and data types are properly converted without year partition", {
   actual <- arrow::read_parquet(temp_parquet_file) |>
     purrr::map_chr(class) |>
     sort()
@@ -38,7 +38,7 @@ test_that("data types are properly converted (no years)", {
   )
 })
 
-test_that("data types are properly converted (with years)", {
+test_that("column names and data types are properly converted with year partition", {
   partition_dir <- temp_parquet_partition |>
     # Twice to go two levels up.
     fs::path_dir() |>
