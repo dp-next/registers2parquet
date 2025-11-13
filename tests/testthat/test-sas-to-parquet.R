@@ -1,5 +1,5 @@
 library(dplyr)
-
+# Prepare paths to temporary files.
 temp_sas_file <- fs::path_temp("test.sas7bdat")
 temp_sas_file_year <- fs::path_temp("test2019.sas7bdat")
 temp_parquet_file <- fs::path_temp("test.parquet")
@@ -9,8 +9,14 @@ co2_df <- CO2 |>
   mutate(across(where(is.factor), as.character)) |>
   as_tibble()
 
+# Write temporary SAS files.
+# Suppress warnings needed since write_sas() is deprecated.
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file))
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year))
+
+# Convert SAS to Parquet. Used throughout the tests below.
+sas_to_parquet(temp_sas_file, temp_parquet_file)
+sas_to_parquet(temp_sas_file_year, temp_parquet_partition)
 
 test_that("expected Parquet without year partition file exists after conversion", {
   expect_true(fs::file_exists(temp_parquet_file))
