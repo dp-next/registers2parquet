@@ -12,8 +12,11 @@ co2_df <- CO2 |>
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file))
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year))
 
-test_that("conversion from SAS to Parquet happens correctly", {
+test_that("expected Parquet without year partition file exists after conversion", {
   expect_true(fs::file_exists(temp_parquet_file))
+})
+
+test_that("expected Parquet file with year partition exists after conversion", {
   expect_true(fs::file_exists(temp_parquet_partition))
 })
 
