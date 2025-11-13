@@ -68,11 +68,39 @@
 
 
 
-    <p>I wrote this documentation to help me with thinking how take the SAS files and convert them into something that’s more modern, powerful, and faster. But I also wrote it to make it easier to share what I’ve done and why I’ve done it. This manual contains some documents related to what Parquet is, what DuckDB is, and some examples of how to use these database formats when doing data analysis.</p>
-
-
-
-<script id="quarto-html-after-body" type="application/javascript">
+    <section class="level2"><h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>The <code>registers2parquet</code> package is designed to convert Danish register data from the SAS file format to the <a href="https://parquet.apache.org/" class="external-link">Apache Parquet format</a>, also commonly referred to as Parquet. This vignette provides an introduction to the package, its purpose, and the benefits of using Parquet for data storage and analysis.</p>
+<p>For an in-depth look at the package design, please refer to the <code><a href="../articles/design.html">vignette("design")</a></code>.</p>
+<div class="hidden">
+<p>For an introduction to using the package, please see the guides. <!-- TODO: Add links to guides when they are created --></p>
+</div>
+</section><section class="level2"><h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
+</h2>
+<p>The primary purpose of the <code>registers2parquet</code> package is to simplify the process of converting the large Danish registers into the more modern Parquet storage format as well as to simplify reading these Parquet files.</p>
+<p>By converting data from SAS to the more modern and efficient Parquet format, the package reduces storage costs and aims to improve performance in data analysis workflows.</p>
+</section><section class="level2"><h2 id="why-parquet">Why Parquet?<a class="anchor" aria-label="anchor" href="#why-parquet"></a>
+</h2>
+<p><a href="https://parquet.apache.org/" class="external-link">Parquet</a> is a columnar storage file format that is optimized for use with big data processing frameworks. There are several advantages of using Parquet for Danish register data instead of <a href="https://fileinfo.com/extension/sas7bdat" class="external-link">SAS</a> files:</p>
+<!-- TODO: Find other/better link to SAS file format? -->
+<ul>
+<li>
+<strong>Reduced storage costs</strong>: Parquet’s efficient compression can lead to significant savings in storage costs, especially for large datasets.</li>
+<li>
+<strong>Faster data processing</strong>: The columnar format of Parquet can lead to faster data processing times, particularly for analytical queries that only require a subset of the data.</li>
+<li>
+<strong>Easier integration with modern data tools</strong>: Parquet’s wide support across various data processing frameworks makes it easier to integrate Danish register data into modern data analysis workflows, like <a href="https://www.r-project.org/" class="external-link">R</a> or <a href="https://www.python.org/" class="external-link">Python</a>.</li>
+</ul>
+<p>Apache also offers several advantages over traditional row-based file formats (like <a href="https://en.wikipedia.org/wiki/Comma-separated_values" class="external-link">CSV</a>), particularly when dealing with large datasets:</p>
+<ul>
+<li>
+<p><strong>Efficient data compression</strong>: Parquet uses efficient compression</p>
+<p>algorithms, which can significantly reduce the amount of disk space required to store large datasets.</p>
+</li>
+<li><p><strong>Improved query performance</strong>: By storing data in a columnar format, Parquet allows for more efficient querying and data retrieval, especially when only a subset of columns is needed.</p></li>
+<li><p><strong>Interoperability</strong>: Parquet is widely supported by various data processing frameworks and tools, making it a versatile choice for data storage and analysis.</p></li>
+</ul>
+<!-- TODO: Expand on this section with more details, potentially reuse from @lwjohnst86's presentation in October 2025? --><!-- TODO: Add examples/comparison of computational performance and storage efficiency between Parquet and SAS --></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -155,7 +183,8 @@
       }
     }
   });
-  </script></main>
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
