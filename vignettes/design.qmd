@@ -86,7 +86,7 @@ that the functions operate on.
 | list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
 | read | Read a Parquet register into R as a DuckDB table. |
 | convert | Convert a register SAS file (or multiple) to Parquet. |
-Maybe? 
+Maybe?
 
 : Actions used in `registers2parquet`.
 
