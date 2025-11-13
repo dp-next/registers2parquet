@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.2.4 (2025-11-13)
+
+### Refactor
+
+- :fire: remove deprecated functions (#70)
+
 ## 0.2.3 (2025-11-10)
 
 ### Fix

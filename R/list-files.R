@@ -57,42 +57,6 @@ list_databases <- function(full_path = FALSE) {
   sort(database_paths)
 }
 
-#' List all the available misc Parquet databases.
-#'
-#' `r lifecycle::badge("deprecated")`
-#'
-#' @param full_path Whether to list the full path to the database.
-#'
-#' @return Vector of file paths.
-#' @export
-#'
-list_misc_db <- function(full_path = FALSE) {
-  lifecycle::deprecate_warn(
-    when = "0.1.0",
-    what = "list_misc_db()",
-    with = "list_databases()"
-  )
-  list_databases()
-}
-
-#' List all the available registers.
-#'
-#' `r lifecycle::badge("deprecated")`
-#'
-#' @param full_path Whether to list the full path to the register.
-#'
-#' @return Vector of file paths.
-#' @export
-#'
-list_registers <- function(full_path = FALSE) {
-  lifecycle::deprecate_warn(
-    when = "0.1.0",
-    what = "list_registers()",
-    with = "list_databases()"
-  )
-  list_databases()
-}
-
 list_massive_files <- function() {
   path_workdata("708421") |>
     path_subdir("cleaned-data") |>
