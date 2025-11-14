@@ -97,9 +97,7 @@ created Parquet file(s) as specified by the `output_path` parameter.
 #' @export
 #' @examples
 #' \dontrun{
-#' convert_register_to_parquet(c("bef2018.sas7bdat",
-#'      "bef2019.sas7bdat",
-#'      "Demember2023bef2019.sas7bdat"), "output_directory/")
+#' convert_register_to_parquet(list_sas_registers("202020")), "output_directory/")
 #' }
 convert_register_to_parquet <- function(input_path, output_path) {
   # Initial setup and checks.
