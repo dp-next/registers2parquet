@@ -167,7 +167,7 @@ DuckDB table.
 
 ### Helper functions
 
-#### `list_sas_files(path)`
+#### `list_sas_registers(project_id)`
 
 Lists all SAS files in a given directory. It returns a character vector
 of file paths with the `.sas7bdat` extension at the given directory.
