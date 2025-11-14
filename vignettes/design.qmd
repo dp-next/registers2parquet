@@ -174,7 +174,7 @@ of file paths with the `.sas7bdat` extension at the given directory.
 
 <!-- TODO: Add link to reference documentation when ready -->
 
-#### `list_parquet_files(path)`
+#### `list_parquet_registers(project_id)`
 
 Lists all Parquet files in a given directory. It returns a character
 vector of file paths with the `.parquet` or `.parq` extension at the
