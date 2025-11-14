@@ -82,3 +82,50 @@ flowchart LR
     style SAS fill:#FFFFFF, color:#000000
     style Parquet fill:#FFFFFF, color:#000000
 ```
+
+## Expected flow
+
+We expect the flow of using the `registers2parquet` package to convert
+register SAS files to Parquet files will be as follows:
+
+``` mermaid
+flowchart TD
+
+    identify_paths("Identify register path(s)<br>with helper functions")
+    path[/"path<br>[Character vector]"/]
+    output_path[/"output_path<br>[Character vector]"/]
+    convert_to_parquet("convert_to_parquet()")
+    output[/"Output<br>[Character vector]<br>Path to Parquet file(s)"/]
+
+
+    %% Edges
+    identify_paths -.-> path --> convert_to_parquet
+    output_path --> convert_to_parquet
+    convert_to_parquet --> output
+
+    %% Styling
+    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+```
+
+Figure 1: Flow of the expected flow using the `convert_to_parquet()`
+package to convert register SAS files to Parquet files.
+
+We expect a flow of reading a Parquet register created by the
+`registers2parquet` package into an R session to be as follows:
+
+``` mermaid
+flowchart TD
+
+    project_id[/"project_id<br>[Character scalar]"/]
+    path[/"path<br>[Character scalar]"/]
+
+    read_register("read_register()")
+
+    output[/"Output<br>[DuckDB table]"/]
+
+    %% Edges
+    path & project_id --> read_register --> output
+```
+
+Figure 2: Flow of the expected flow of reading a Parquet register that
+was created with the `registers2parquet` package.

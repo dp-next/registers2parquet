@@ -156,6 +156,66 @@
 </div>
 </div>
 </div>
+</section><section class="level2"><h2 id="expected-flow">Expected flow<a class="anchor" aria-label="anchor" href="#expected-flow"></a>
+</h2>
+<p>We expect the flow of using the <code>registers2parquet</code> package to convert register SAS files to Parquet files will be as follows:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-flow" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-flow">flowchart TD
+
+    identify_paths("Identify register path(s)&lt;br&gt;with helper functions")
+    path[/"path&lt;br&gt;[Character vector]"/]
+    output_path[/"output_path&lt;br&gt;[Character vector]"/]
+    convert_to_parquet("convert_to_parquet()")
+    output[/"Output&lt;br&gt;[Character vector]&lt;br&gt;Path to Parquet file(s)"/]
+
+
+    %% Edges
+    identify_paths -.-&gt; path --&gt; convert_to_parquet
+    output_path --&gt; convert_to_parquet
+    convert_to_parquet --&gt; output
+
+    %% Styling
+    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1: Flow of the expected flow using the <code>convert_to_parquet()</code> package to convert register SAS files to Parquet files.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>We expect a flow of reading a Parquet register created by the <code>registers2parquet</code> package into an R session to be as follows:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-flow-use" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-flow-use">flowchart TD
+
+    project_id[/"project_id&lt;br&gt;[Character scalar]"/]
+    path[/"path&lt;br&gt;[Character scalar]"/]
+
+    read_register("read_register()")
+
+    output[/"Output&lt;br&gt;[DuckDB table]"/]
+
+    %% Edges
+    path &amp; project_id --&gt; read_register --&gt; output
+
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: Flow of the expected flow of reading a Parquet register that was created with the <code>registers2parquet</code> package.
+</figcaption></figure>
+</div>
+</div>
+</div>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
