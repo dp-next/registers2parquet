@@ -97,7 +97,7 @@ We expect a flow of reading a Parquet register created by the
 flowchart TD
 
     project_id[/"project_id<br>[Character scalar]"/]
-    path[/"path<br>[Character scalar]<br>Path to register folder"/]
+    path[/"path<br>[Character scalar]"/]
 
     read_register("read_register()")
 
