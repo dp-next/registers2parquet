@@ -5,7 +5,7 @@ temp_parquet_file <- fs::path_temp("test.parquet")
 temp_parquet_partition <- fs::path_temp("test", "year=2019", "part-0.parquet")
 
 co2_df <- CO2 |>
-  dplyr::mutate(across(where(is.factor), as.character)) |>
+  dplyr::mutate(dplyr::across(tidyselect::where(is.factor), as.character)) |>
   dplyr::as_tibble()
 
 # Write temporary SAS files.
