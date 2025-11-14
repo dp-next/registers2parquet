@@ -69,7 +69,14 @@
 
 
 
-    <section class="level2"><h2 id="conversion-process">Conversion process<a class="anchor" aria-label="anchor" href="#conversion-process"></a>
+    <section class="level2"><h2 id="core-functionality">Core functionality<a class="anchor" aria-label="anchor" href="#core-functionality"></a>
+</h2>
+<p>This is the list of the core functionality in the <code>registers2parquet</code> package:</p>
+<ol type="1">
+<li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
+<li>Read register Parquet files into R as a DuckDB table.</li>
+<li>Provides functions to list available SAS or Parquet register files (e.g., SAS or Parquet) directly from R.</li>
+</ol></section><section class="level2"><h2 id="conversion-process">Conversion process<a class="anchor" aria-label="anchor" href="#conversion-process"></a>
 </h2>
 <div class="columns">
 <div class="column">
@@ -156,7 +163,175 @@
 </div>
 </div>
 </div>
-</section><section class="level2"><h2 id="expected-flow">Expected flow<a class="anchor" aria-label="anchor" href="#expected-flow"></a>
+</section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
+</h2>
+<p>In the sections below, we outline the naming conventions of actions and objects in the package. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on.</p>
+<section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
+</h3>
+<table class="table caption-top">
+<caption>Actions used in <code>registers2parquet</code>.</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead><tr class="header">
+<th>Action</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>convert</td>
+<td>Convert a register SAS file (or multiple) to Parquet.</td>
+</tr>
+<tr class="even">
+<td>get</td>
+<td>Used for internal helper functions to e.g., get or extract the year from a file name.</td>
+</tr>
+<tr class="odd">
+<td>list</td>
+<td>List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name.</td>
+</tr>
+<tr class="even">
+<td>read</td>
+<td>Read a Parquet register into R as a DuckDB table.</td>
+</tr>
+</tbody>
+</table>
+<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? --></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
+</h3>
+<table class="table caption-top">
+<caption>Objects used in <code>registers2parquet</code>.</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead><tr class="header">
+<th>Object</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>output_path</code></td>
+<td>A character scalar with the absolute path to the directory where the Parquet file should be created in.</td>
+</tr>
+<tr class="even">
+<td><code>path</code></td>
+<td>A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files.</td>
+</tr>
+<tr class="odd">
+<td><code>project_id</code></td>
+<td>A character scalar with the DST project number to the folder containing the raw or work data.</td>
+</tr>
+<tr class="even">
+<td><code>register_name</code></td>
+<td>A character scalar with the name of a register used in the file name (without a path), e.g., “bef”. It’s used in <code>list</code> functions to retrieve the paths of objects including that name.</td>
+</tr>
+</tbody>
+</table></section></section><section class="level2"><h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
+</h2>
+<p><code>registers2parquet</code> includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
+<section class="level3"><h3 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
+</h3>
+<section class="level4"><h4 id="convert_to_parquet">
+<code>convert_to_parquet()</code><a class="anchor" aria-label="anchor" href="#convert_to_parquet"></a>
+</h4>
+<p>This is the main function of the package. It takes as input one or more SAS files, reads them, merges them if necessary, and saves them as a Parquet file. If multiple files are given, the function looks for a year in the file names to use as partitioning. The function also removes any duplicate rows before saving the data. The output is the path to the created Parquet file(s) as specified by the <code>output_path</code> parameter.</p>
+<!-- TODO: Add link to reference documentation when ready -->
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' Convert register SAS file(s) and save to Parquet format</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' If multiple paths are given, the function looks for a year (4 digits) in the</span></span>
+<span><span class="co">#' file names to use the year as partition, see `vignettes("design")` for more</span></span>
+<span><span class="co">#' information about the partitioning.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' If multiple files are given with the same year, they are merged with a full join.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' If any duplicate rows found, they are removed before saving to Parquet.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param input_path A character vector with the absolute path to the register SAS file(s).</span></span>
+<span><span class="co">#' @param output_path The path with the directory to save the output Parquet file to.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @returns Returns a character vector with the path to the created Parquet file(s)</span></span>
+<span><span class="co">#'   (from `output_path`), so it can easily be used in a targets pipeline.</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="co">#' @examples</span></span>
+<span><span class="co">#' \dontrun{</span></span>
+<span><span class="co">#' convert_to_parquet(list_sas_registers("202020")), "output_directory/")</span></span>
+<span><span class="co">#' }</span></span>
+<span><span class="va">convert_to_parquet</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input_path</span>, <span class="va">output_path</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
+<span>  <span class="co"># Initial setup and checks.</span></span>
+<span>  <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_access.html" class="external-link">file_exists</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span></span>
+<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkCharacter.html" class="external-link">assert_character</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span></span>
+<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkCharacter.html" class="external-link">assert_character</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
+<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkScalar.html" class="external-link">assert_scalar</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
+<span>  <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_dir</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Read SAS file(s) and full join.</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">read_sas_files</span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># Add year column if possible.</span></span>
+<span>    <span class="fu">add_year_col</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># Deduplicate identical columns.</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># TODO: How to handle history/almost-duplicate rows?</span></span>
+<span>    <span class="co"># Write to Parquet.</span></span>
+<span>    <span class="co"># TODO: Might have to do some processing of the dates. If so, create a helper function for this.</span></span>
+<span>    <span class="co"># mutate(across(where(~inherits(.x, what = "date")), as.character))</span></span>
+<span>    <span class="co"># mutate(across(where(lubridate::is.Date), as.character))</span></span>
+<span>    <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/write_parquet.html" class="external-link">write_parquet</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
+<span>    <span class="co"># TODO: How is the year partitioning handled in/passed to arrow::write_parquet()?</span></span>
+<span></span>
+<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_success</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file."</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_success</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Finished saving {.val {fs::path_file(input_path)}} as a Parquet file."</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="va">output_path</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">read_sas_files</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">input_path</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu">haven</span><span class="fu">::</span><span class="va"><a href="https://haven.tidyverse.org/reference/read_sas.html" class="external-link">read_sas</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">add_year_col</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_database_year.html">get_database_year</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">1969</span><span class="op">:</span><span class="fl">2030</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_info</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Could not determine year from file name(s). Will not partition by year."</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">data</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</section><section class="level4"><h4 id="read_registerregister_name-project_id">
+<code>read_register(register_name, project_id)</code><a class="anchor" aria-label="anchor" href="#read_registerregister_name-project_id"></a>
+</h4>
+<p>Reads a Parquet register from the specified path and returns it as a DuckDB table.</p>
+<!-- TODO: Add link to reference documentation when ready -->
+</section></section><section class="level3"><h3 id="helper-functions">Helper functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a>
+</h3>
+<section class="level4"><h4 id="list_sas_registersproject_id">
+<code>list_sas_registers(project_id)</code><a class="anchor" aria-label="anchor" href="#list_sas_registersproject_id"></a>
+</h4>
+<p>Lists all SAS files in a given directory. It returns a character vector of file paths with the <code>.sas7bdat</code> extension at the given directory.</p>
+<!-- TODO: Add link to reference documentation when ready -->
+</section><section class="level4"><h4 id="list_parquet_registersproject_id">
+<code>list_parquet_registers(project_id)</code><a class="anchor" aria-label="anchor" href="#list_parquet_registersproject_id"></a>
+</h4>
+<p>Lists all Parquet files in a given directory. It returns a character vector of file paths with the <code>.parquet</code> or <code>.parq</code> extension at the given directory.</p>
+<!-- TODO: Add link to reference documentation when ready -->
+</section></section></section><section class="level2"><h2 id="expected-flow">Expected flow<a class="anchor" aria-label="anchor" href="#expected-flow"></a>
 </h2>
 <p>We expect the flow of using the <code>registers2parquet</code> package to convert register SAS files to Parquet files will be as follows:</p>
 <div class="cell" data-layout-align="default">
