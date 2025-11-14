@@ -96,7 +96,7 @@ that the functions operate on.
 | Object | Description |
 |------------------|------------------------------------------------------|
 | `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
-| `path` | A character scalar with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
+| `path` | A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
 | `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
 | `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., "bef". It's used in `list` functions to retrieve the paths of objects including that name. |
 
