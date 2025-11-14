@@ -13,9 +13,9 @@ package:
 
 1.  Converts Danish register data from SAS files to the modern and
     efficient Parquet format.
-2.  Provides functions to list available files (e.g., SAS or Parquet)
-    directly from R, based on e.g., a specified register name or path.
-3.  Read register Parquet files into R as a DuckDB table.
+2.  Read register Parquet files into R as a DuckDB table.
+3.  Provides functions to list available SAS or Parquet register files
+    (e.g., SAS or Parquet) directly from R.
 
 ## Conversion process
 
@@ -81,7 +81,7 @@ that the functions operate on.
 ### Actions
 
 | Action | Description |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | convert | Convert a register SAS file (or multiple) to Parquet. |
 | get | Used for internal helper functions to e.g., get or extract the year from a file name. |
 | list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
@@ -94,7 +94,7 @@ that the functions operate on.
 ### Objects
 
 | Object | Description |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
 | `path` | A character scalar with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
 | `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
