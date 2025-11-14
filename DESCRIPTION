@@ -29,7 +29,8 @@ Imports:
 Suggests:
     devtools,
     quarto,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyselect
 VignetteBuilder:
     quarto
 Encoding: UTF-8
