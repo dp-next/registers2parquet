@@ -67,21 +67,21 @@ register SAS files to Parquet files will be as follows:
 
 ```{mermaid}
 %%| label: fig-flow
-%%| fig-cap: "Flow of the expected flow using the `convert_register_to_parquet()` package to convert register SAS files to Parquet files."
-%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the `registers2parquet` package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_register_to_parquet()`, which then outputs the path to the written Parquet files."
+%%| fig-cap: "Flow of the expected flow using the `convert_to_parquet()` package to convert register SAS files to Parquet files."
+%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the `registers2parquet` package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_to_parquet()`, which then outputs the path to the written Parquet files."
 flowchart TD
 
     identify_paths("Identify register path(s)<br>with helper functions")
     path[/"path<br>[Character vector]"/]
     output_path[/"output_path<br>[Character vector]"/]
-    convert_register_to_parquet("convert_register_to_parquet()")
+    convert_to_parquet("convert_to_parquet()")
     output[/"Output<br>[Character vector]<br>Path to Parquet file(s)"/]
 
 
     %% Edges
-    identify_paths -.-> path --> convert_register_to_parquet
-    output_path --> convert_register_to_parquet
-    convert_register_to_parquet --> output
+    identify_paths -.-> path --> convert_to_parquet
+    output_path --> convert_to_parquet
+    convert_to_parquet --> output
 
     %% Styling
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
