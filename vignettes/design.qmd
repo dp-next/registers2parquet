@@ -165,34 +165,7 @@ DuckDB table.
 
 <!-- TODO: Add link to reference documentation when ready -->
 
-
 ### Helper functions
-
-<!-- TODO: Do we want to include the helper functions for duplicate and non-duplicate paths? -->
-
-#### `list_files_with_year(path)`
-
-Lists all files in a given directory that contain a year (four
-consecutive digits) in their filenames. It returns a character vector of
-file paths that match this criterion.
-
-<!-- TODO: Add link to reference documentation when ready -->
-
-#### `list_files_without_year(path)`
-
-Lists all files in a given directory that **do not** contain a year
-(four consecutive digits) in their filenames. It returns a character
-vector of file paths that match this criterion.
-
-<!-- TODO: Add link to reference documentation when ready -->
-
-#### `list_register_files(path, register_name)`
-
-Lists all files (independently of file format) in a given directory that
-match a specific register name. It returns a character vector of file
-paths that match the specified register.
-
-<!-- TODO: Add link to reference documentation when ready -->
 
 #### `list_sas_files(path)`
 
@@ -206,12 +179,5 @@ of file paths with the `.sas7bdat` extension at the given directory.
 Lists all Parquet files in a given directory. It returns a character
 vector of file paths with the `.parquet` or `.parq` extension at the
 given directory.
-
-<!-- TODO: Add link to reference documentation when ready -->
-
-#### `list_dirs(path)`
-
-Lists all directories in a given directory. It returns a character
-vector of paths (subdirectories and files) at the given directory.
 
 <!-- TODO: Add link to reference documentation when ready -->
