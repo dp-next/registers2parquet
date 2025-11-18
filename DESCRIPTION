@@ -1,6 +1,6 @@
 Package: registers2parquet
 Title: Convert Danish register SAS files into Parquet files
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: c(
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4169-2616", affiliation="Steno Diabetes Center Aarhus")),
@@ -22,7 +22,6 @@ Imports:
     fs,
     glue,
     haven,
-    lifecycle,
     purrr,
     rlang,
     stringr,
@@ -30,7 +29,8 @@ Imports:
 Suggests:
     devtools,
     quarto,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyselect
 VignetteBuilder:
     quarto
 Encoding: UTF-8
