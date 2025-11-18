@@ -11,30 +11,6 @@ package:
 3.  Provides functions to list available SAS or Parquet register files
     (e.g., SAS or Parquet) directly from R.
 
-## Conversion process
-
-    bef2018.sas7bdat
-    bef2019.sas7bdat
-    bef2020.sas7bdat
-    bef2021.sas7bdat
-    bef2022.sas7bdat
-    December_2023/bef2022.sas7bdat
-    December_2023/bef2023.sas7bdat
-
-    bef/
-    ├── year=2018/
-    │   └── part-0.parquet
-    ├── year=2019/
-    │   └── part-0.parquet
-    ├── year=2020/
-    │   └── part-0.parquet
-    ├── year=2021/
-    │   └── part-0.parquet
-    ├── year=2022/
-    │   └── part-0.parquet
-    └── year=2023/
-        └── part-0.parquet
-
 ## Parallel processing
 
 Each register-year pairing (including duplicate years) are sent to a
@@ -93,6 +69,78 @@ flowchart LR
     style SAS fill:#FFFFFF, color:#000000
     style Parquet fill:#FFFFFF, color:#000000
 ```
+
+## Interface
+
+### Input
+
+`registers2parquet` has one main function
+`convert_register_to_parquet()`, which this section will focus on.
+
+> **Note**
+>
+> The package also provides helper functions for locating relevant files
+> and paths in R, and for importing Parquet register files as DuckDB
+> tables. See their respective documentation under
+> [Reference](https://dp-next.github.io/registers2parquet/articles/reference/index.md)
+> for details.
+
+The inputs, parameters, accepted by the `convert_register_to_parquet()`
+are:
+
+- **path**: A character vector with path(s) to one or several files that
+  should be converted.
+- **output_path**: A character vector with the path to the directory
+  where the Parquet file(s) should be written to.
+
+### Output
+
+The output of `convert_register_to_parquet()` is the character vector
+given as input in `output_path`. This allows for easy integration into a
+targets pipeline.
+
+Eventhough the function doesn’t return the written Parquet register, its
+creation is confirmed with a message in the R console.
+
+The created Parquet files will be stored in a directory structure that
+reflects the register name and a year partitioning if a year can be
+determined from the file name(s).
+
+Below is shown an example of the input and output for a collection of
+SAS files for the `bef` register:
+
+#### Input: Register SAS files
+
+    bef2018.sas7bdat
+    bef2019.sas7bdat
+    bef2020.sas7bdat
+    bef2021.sas7bdat
+    bef2022.sas7bdat
+    December_2023/bef2022.sas7bdat
+    December_2023/bef2023.sas7bdat
+
+#### Output: Parquet files
+
+    bef/
+    ├── year=2018/
+    │   └── part-0.parquet
+    ├── year=2019/
+    │   └── part-0.parquet
+    ├── year=2020/
+    │   └── part-0.parquet
+    ├── year=2021/
+    │   └── part-0.parquet
+    ├── year=2022/
+    │   └── part-0.parquet
+    └── year=2023/
+        └── part-0.parquet
+
+As shown above, the Parquet files will be stored in a directory named
+after the register (e.g., `bef/`), with subdirectories for each year
+(e.g., `year=2018/`, `year=2019/`, etc.) if the year can be determined
+from the file name. Each year directory contains a Parquet file
+(`part-0.parquet`). This structure allows for efficient querying and
+retrieval of data based on the year.
 
 ## Naming conventions
 

@@ -76,35 +76,7 @@
 <li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
 <li>Read register Parquet files into R as a DuckDB table.</li>
 <li>Provides functions to list available SAS or Parquet register files (e.g., SAS or Parquet) directly from R.</li>
-</ol></section><section class="level2"><h2 id="conversion-process">Conversion process<a class="anchor" aria-label="anchor" href="#conversion-process"></a>
-</h2>
-<div class="columns">
-<div class="column">
-<pre><code><span><span class="va">bef2018.sas7bdat</span></span>
-<span><span class="va">bef2019.sas7bdat</span></span>
-<span><span class="va">bef2020.sas7bdat</span></span>
-<span><span class="va">bef2021.sas7bdat</span></span>
-<span><span class="va">bef2022.sas7bdat</span></span>
-<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2022.sas7bdat</span></span>
-<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2023.sas7bdat</span></span></code></pre>
-</div>
-<div class="column">
-<pre><code>bef/
-├── year=2018/
-│   └── part-0.parquet
-├── year=2019/
-│   └── part-0.parquet
-├── year=2020/
-│   └── part-0.parquet
-├── year=2021/
-│   └── part-0.parquet
-├── year=2022/
-│   └── part-0.parquet
-└── year=2023/
-    └── part-0.parquet</code></pre>
-</div>
-</div>
-</section><section class="level2"><h2 id="parallel-processing">Parallel processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
+</ol></section><section class="level2"><h2 id="parallel-processing">Parallel processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h2>
 <p>Each register-year pairing (including duplicate years) are sent to a separate process. That way, rather than converting 1000+ registers one after the other, it can be split into chunks based on the number of available CPU cores. For instance, if you set the number of “workers” (cores) to 4, than the 1000+ registers will be split into 4 groups and each group will be processed simultaneously on its own core.</p>
 <p>There are some overheads to parallel processing, so it works best with a large number of files and when the files are also relatively large, or if the processing time per file is substantial.</p>
@@ -163,7 +135,63 @@
 </div>
 </div>
 </div>
-</section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
+</section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
+</h2>
+<section class="level3"><h3 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
+</h3>
+<p><code>registers2parquet</code> has one main function <code>convert_register_to_parquet()</code>, which this section will focus on.</p>
+<div>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>The package also provides helper functions for locating relevant files and paths in R, and for importing Parquet register files as DuckDB tables. See their respective documentation under <a href="./reference/index.html">Reference</a> for details. <!-- TODO: I'm not sure if the link to Reference above is correct --></p>
+</blockquote>
+</div>
+<p>The inputs, parameters, accepted by the <code>convert_register_to_parquet()</code> are:</p>
+<ul>
+<li>
+<strong>path</strong>: A character vector with path(s) to one or several files that should be converted.</li>
+<li>
+<strong>output_path</strong>: A character vector with the path to the directory where the Parquet file(s) should be written to.</li>
+</ul></section><section class="level3"><h3 id="output">Output<a class="anchor" aria-label="anchor" href="#output"></a>
+</h3>
+<p>The output of <code>convert_register_to_parquet()</code> is the character vector given as input in <code>output_path</code>. This allows for easy integration into a targets pipeline.</p>
+<p>Eventhough the function doesn’t return the written Parquet register, its creation is confirmed with a message in the R console.</p>
+<p>The created Parquet files will be stored in a directory structure that reflects the register name and a year partitioning if a year can be determined from the file name(s).</p>
+<p>Below is shown an example of the input and output for a collection of SAS files for the <code>bef</code> register:</p>
+<div class="columns">
+<div class="column">
+<section class="level4"><h4 id="input-register-sas-files">Input: Register SAS files<a class="anchor" aria-label="anchor" href="#input-register-sas-files"></a>
+</h4>
+<pre><code><span><span class="va">bef2018.sas7bdat</span></span>
+<span><span class="va">bef2019.sas7bdat</span></span>
+<span><span class="va">bef2020.sas7bdat</span></span>
+<span><span class="va">bef2021.sas7bdat</span></span>
+<span><span class="va">bef2022.sas7bdat</span></span>
+<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2022.sas7bdat</span></span>
+<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2023.sas7bdat</span></span></code></pre>
+</section>
+</div>
+<div class="column">
+<section class="level4"><h4 id="output-parquet-files">Output: Parquet files<a class="anchor" aria-label="anchor" href="#output-parquet-files"></a>
+</h4>
+<pre><code>bef/
+├── year=2018/
+│   └── part-0.parquet
+├── year=2019/
+│   └── part-0.parquet
+├── year=2020/
+│   └── part-0.parquet
+├── year=2021/
+│   └── part-0.parquet
+├── year=2022/
+│   └── part-0.parquet
+└── year=2023/
+    └── part-0.parquet</code></pre>
+</section>
+</div>
+</div>
+<p>As shown above, the Parquet files will be stored in a directory named after the register (e.g., <code>bef/</code>), with subdirectories for each year (e.g., <code>year=2018/</code>, <code>year=2019/</code>, etc.) if the year can be determined from the file name. Each year directory contains a Parquet file (<code>part-0.parquet</code>). This structure allows for efficient querying and retrieval of data based on the year.</p>
+</section></section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
 </h2>
 <p>In the sections below, we outline the naming conventions of actions and objects in the package. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on.</p>
 <section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
