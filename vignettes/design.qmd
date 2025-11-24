@@ -105,9 +105,7 @@ creation is confirmed with a message in the R console.
 
 The created Parquet files will be stored in a directory structure that
 reflects the register name and a year partitioning if a year can be
-determined from the file name(s).
-
-Below is shown an example of the input and output for a collection of
+determined from the file name(s). Below is shown an example of the input and output for a collection of
 SAS files for the `bef` register:
 
 ::::: columns
