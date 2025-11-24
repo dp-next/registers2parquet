@@ -269,9 +269,9 @@ flowchart TD
 
     identify_paths("Identify register path(s)<br>with helper functions")
     path[/"path<br>[Character vector]"/]
-    output_path[/"output_path<br>[Character vector]"/]
+    output_path[/"output_path<br>[Character scalar]"/]
     convert_to_parquet("convert_to_parquet()")
-    output[/"Output<br>[Character vector]<br>Path to Parquet file(s)"/]
+    output[/"Output<br>[Character scalar]<br>Path to Parquet file(s)"/]
 
 
     %% Edges
