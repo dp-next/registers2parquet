@@ -47,7 +47,7 @@ that the functions operate on.
 ### Actions
 
 | Action | Description |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | convert | Convert a register SAS file (or multiple) to Parquet. |
 | get | Used for internal helper functions to e.g., get or extract the year from a file name. |
 | list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
@@ -60,7 +60,7 @@ that the functions operate on.
 ### Objects
 
 | Object | Description |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
 | `path` | A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
 | `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
@@ -74,27 +74,27 @@ that the functions operate on.
 functions. Each function is listed below with a short description.
 
 ::: callout-tip
-See the [Reference documentation](/reference/index.html) for more details.
+See the [Reference documentation](/reference/index.html) for more
+details.
 :::
-
 
 ### Main functions
 
 #### `convert_to_parquet()`
 
-This is the main function of the package that converts register SAS file(s)
-to Parquet format.
+This is the main function of the package that converts register SAS
+file(s) to Parquet format.
 
 The function requires two inputs:
 
 -   **path**: A character vector with path(s) to one or several files
-    that should be converted. 
+    that should be converted.
 -   **output_path**: A character vector with the path to the directory
     where the Parquet file(s) should be written to.
 
-If multiple files are given, the function looks for a year
-in the file names to use as partitioning. The function also removes any
-duplicate rows before saving the data.
+If multiple files are given, the function looks for a year in the file
+names to use as partitioning. The function also removes any duplicate
+rows before saving the data.
 
 The output of `convert_register_to_parquet()` is the character vector
 given as input in `output_path`. This allows for easy integration into a
@@ -105,14 +105,14 @@ creation is confirmed with a message in the R console.
 
 The created Parquet files will be stored in a directory structure that
 reflects the register name and a year partitioning if a year can be
-determined from the file name(s). Below is shown an example of the input and output for a collection of
-SAS files for the `bef` register:
+determined from the file name(s). Below is shown an example of the input
+and output for a collection of SAS files for the `bef` register:
 
 ::::: columns
 ::: column
 #### Input: Register SAS files
 
-```
+```         
 bef2018.sas7bdat
 bef2019.sas7bdat
 bef2020.sas7bdat
@@ -126,7 +126,7 @@ December_2023/bef2023.sas7bdat
 ::: column
 #### Output: Parquet files
 
-```
+```         
 bef/
 ├── year=2018/
 │   └── part-0.parquet
