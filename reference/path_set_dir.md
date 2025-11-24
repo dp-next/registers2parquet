@@ -26,5 +26,5 @@ A character vector.
 
 ``` r
 fs::file_temp(ext = ".sas7bdat") |> path_set_dir(fs::path_temp())
-#> /tmp/Rtmp5p3NQ0/file194c58501cc0.sas7bdat
+#> /tmp/RtmpYJE6lV/file196d701b0a66.sas7bdat
 ```

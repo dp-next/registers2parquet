@@ -75,7 +75,7 @@
 <ol type="1">
 <li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
 <li>Read register Parquet files into R as a DuckDB table.</li>
-<li>Provides functions to list available SAS or Parquet register files (e.g., SAS or Parquet) directly from R.</li>
+<li>Provides functions to list available SAS or Parquet register files directly from R.</li>
 </ol></section><section class="level2"><h2 id="parallel-processing">Parallel processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
 </h2>
 <p>Each register-year pairing (including duplicate years) are sent to a separate process. That way, rather than converting 1000+ registers one after the other, it can be split into chunks based on the number of available CPU cores. For instance, if you set the number of “workers” (cores) to 4, than the 1000+ registers will be split into 4 groups and each group will be processed simultaneously on its own core.</p>
@@ -135,30 +135,97 @@
 </div>
 </div>
 </div>
-</section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
+</section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
 </h2>
-<section class="level3"><h3 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
+<p>In the sections below, we outline the naming conventions of actions and objects in the package. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on.</p>
+<section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
 </h3>
-<p><code>registers2parquet</code> has one main function <code>convert_register_to_parquet()</code>, which this section will focus on.</p>
+<table class="table caption-top">
+<caption>Actions used in <code>registers2parquet</code>.</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 73%">
+</colgroup>
+<thead><tr class="header">
+<th>Action</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>convert</td>
+<td>Convert a register SAS file (or multiple) to Parquet.</td>
+</tr>
+<tr class="even">
+<td>get</td>
+<td>Used for internal helper functions to e.g., get or extract the year from a file name.</td>
+</tr>
+<tr class="odd">
+<td>list</td>
+<td>List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name.</td>
+</tr>
+<tr class="even">
+<td>read</td>
+<td>Read a Parquet register into R as a DuckDB table.</td>
+</tr>
+</tbody>
+</table>
+<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? --></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
+</h3>
+<table class="table caption-top">
+<caption>Objects used in <code>registers2parquet</code>.</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 73%">
+</colgroup>
+<thead><tr class="header">
+<th>Object</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>output_path</code></td>
+<td>A character scalar with the absolute path to the directory where the Parquet file should be created in.</td>
+</tr>
+<tr class="even">
+<td><code>path</code></td>
+<td>A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files.</td>
+</tr>
+<tr class="odd">
+<td><code>project_id</code></td>
+<td>A character scalar with the DST project number to the folder containing the raw or work data.</td>
+</tr>
+<tr class="even">
+<td><code>register_name</code></td>
+<td>A character scalar with the name of a register used in the file name (without a path), e.g., “bef”. It’s used in <code>list</code> functions to retrieve the paths of objects including that name.</td>
+</tr>
+</tbody>
+</table></section></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
+</h2>
+<p><code>registers2parquet</code> includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
 <div>
 <blockquote>
-<p><strong>Note</strong></p>
-<p>The package also provides helper functions for locating relevant files and paths in R, and for importing Parquet register files as DuckDB tables. See their respective documentation under <a href="./reference/index.html">Reference</a> for details. <!-- TODO: I'm not sure if the link to Reference above is correct --></p>
+<p><strong>Tip</strong></p>
+<p>See the <a href="./reference/index.html">Reference documentation</a> for more details.</p>
 </blockquote>
 </div>
-<p>The inputs, parameters, accepted by the <code>convert_register_to_parquet()</code> are:</p>
+<section class="level3"><h3 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
+</h3>
+<section class="level4"><h4 id="convert_to_parquet">
+<code>convert_to_parquet()</code><a class="anchor" aria-label="anchor" href="#convert_to_parquet"></a>
+</h4>
+<p>This is the main function of the package that converts register SAS file(s) to Parquet format.</p>
+<p>The function requires two inputs:</p>
 <ul>
 <li>
 <strong>path</strong>: A character vector with path(s) to one or several files that should be converted.</li>
 <li>
 <strong>output_path</strong>: A character vector with the path to the directory where the Parquet file(s) should be written to.</li>
-</ul></section><section class="level3"><h3 id="output">Output<a class="anchor" aria-label="anchor" href="#output"></a>
-</h3>
+</ul>
+<p>If multiple files are given, the function looks for a year in the file names to use as partitioning. The function also removes any duplicate rows before saving the data.</p>
 <p>The output of <code>convert_register_to_parquet()</code> is the character vector given as input in <code>output_path</code>. This allows for easy integration into a targets pipeline.</p>
 <p>Eventhough the function doesn’t return the written Parquet register, its creation is confirmed with a message in the R console.</p>
-<p>The created Parquet files will be stored in a directory structure that reflects the register name and a year partitioning if a year can be determined from the file name(s).</p>
-<p>Below is shown an example of the input and output for a collection of SAS files for the <code>bef</code> register:</p>
-<div class="columns">
+<p>The created Parquet files will be stored in a directory structure that reflects the register name and a year partitioning if a year can be determined from the file name(s). Below is shown an example of the input and output for a collection of SAS files for the <code>bef</code> register:</p>
+</section><div class="columns">
 <div class="column">
 <section class="level4"><h4 id="input-register-sas-files">Input: Register SAS files<a class="anchor" aria-label="anchor" href="#input-register-sas-files"></a>
 </h4>
@@ -191,79 +258,6 @@
 </div>
 </div>
 <p>As shown above, the Parquet files will be stored in a directory named after the register (e.g., <code>bef/</code>), with subdirectories for each year (e.g., <code>year=2018/</code>, <code>year=2019/</code>, etc.) if the year can be determined from the file name. Each year directory contains a Parquet file (<code>part-0.parquet</code>). This structure allows for efficient querying and retrieval of data based on the year.</p>
-</section></section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
-</h2>
-<p>In the sections below, we outline the naming conventions of actions and objects in the package. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on.</p>
-<section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
-</h3>
-<table class="table caption-top">
-<caption>Actions used in <code>registers2parquet</code>.</caption>
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead><tr class="header">
-<th>Action</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>convert</td>
-<td>Convert a register SAS file (or multiple) to Parquet.</td>
-</tr>
-<tr class="even">
-<td>get</td>
-<td>Used for internal helper functions to e.g., get or extract the year from a file name.</td>
-</tr>
-<tr class="odd">
-<td>list</td>
-<td>List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name.</td>
-</tr>
-<tr class="even">
-<td>read</td>
-<td>Read a Parquet register into R as a DuckDB table.</td>
-</tr>
-</tbody>
-</table>
-<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? --></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
-</h3>
-<table class="table caption-top">
-<caption>Objects used in <code>registers2parquet</code>.</caption>
-<colgroup>
-<col style="width: 25%">
-<col style="width: 75%">
-</colgroup>
-<thead><tr class="header">
-<th>Object</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>output_path</code></td>
-<td>A character scalar with the absolute path to the directory where the Parquet file should be created in.</td>
-</tr>
-<tr class="even">
-<td><code>path</code></td>
-<td>A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files.</td>
-</tr>
-<tr class="odd">
-<td><code>project_id</code></td>
-<td>A character scalar with the DST project number to the folder containing the raw or work data.</td>
-</tr>
-<tr class="even">
-<td><code>register_name</code></td>
-<td>A character scalar with the name of a register used in the file name (without a path), e.g., “bef”. It’s used in <code>list</code> functions to retrieve the paths of objects including that name.</td>
-</tr>
-</tbody>
-</table></section></section><section class="level2"><h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
-</h2>
-<p><code>registers2parquet</code> includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
-<section class="level3"><h3 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
-</h3>
-<section class="level4"><h4 id="convert_to_parquet">
-<code>convert_to_parquet()</code><a class="anchor" aria-label="anchor" href="#convert_to_parquet"></a>
-</h4>
-<p>This is the main function of the package. It takes as input one or more SAS files, reads them, merges them if necessary, and saves them as a Parquet file. If multiple files are given, the function looks for a year in the file names to use as partitioning. The function also removes any duplicate rows before saving the data. The output is the path to the created Parquet file(s) as specified by the <code>output_path</code> parameter.</p>
 <!-- TODO: Add link to reference documentation when ready -->
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Convert register SAS file(s) and save to Parquet format</span></span>
@@ -342,7 +336,7 @@
 <span>  <span class="op">}</span></span>
 <span>  <span class="va">data</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-</section><section class="level4"><h4 id="read_registerregister_name-project_id">
+<section class="level4"><h4 id="read_registerregister_name-project_id">
 <code>read_register(register_name, project_id)</code><a class="anchor" aria-label="anchor" href="#read_registerregister_name-project_id"></a>
 </h4>
 <p>Reads a Parquet register from the specified path and returns it as a DuckDB table.</p>
@@ -371,9 +365,9 @@
 
     identify_paths("Identify register path(s)&lt;br&gt;with helper functions")
     path[/"path&lt;br&gt;[Character vector]"/]
-    output_path[/"output_path&lt;br&gt;[Character vector]"/]
+    output_path[/"output_path&lt;br&gt;[Character scalar]"/]
     convert_to_parquet("convert_to_parquet()")
-    output[/"Output&lt;br&gt;[Character vector]&lt;br&gt;Path to Parquet file(s)"/]
+    output[/"Output&lt;br&gt;[Character scalar]&lt;br&gt;Path to Parquet file(s)"/]
 
 
     %% Edges
