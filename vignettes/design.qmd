@@ -15,7 +15,7 @@ package:
     efficient Parquet format.
 2.  Read register Parquet files into R as a DuckDB table.
 3.  Provides functions to list available SAS or Parquet register files
-    (e.g., SAS or Parquet) directly from R.
+    directly from R.
 
 ## Parallel processing
 
