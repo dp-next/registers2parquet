@@ -132,8 +132,8 @@ The output of `convert_register_to_parquet()` is the character vector
 given as input in `output_path`. This allows for easy integration into a
 targets pipeline.
 
-Eventhough the function doesn’t return the written Parquet register, its
-creation is confirmed with a message in the R console.
+Even though the function doesn’t return the written Parquet register,
+its creation is confirmed with a message in the R console.
 
 The created Parquet files will be stored in a directory structure that
 reflects the register name and a year partitioning if a year can be
