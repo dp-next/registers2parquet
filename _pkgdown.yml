@@ -16,7 +16,7 @@ reference:
     Main functions for converting SAS files containing
     Danish register data into Apache Parquet files.
 - contents:
-  - sas_to_parquet
+  - convert_to_parquet
   - starts_with("get")
   - starts_with("list")
   - starts_with("load")
