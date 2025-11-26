@@ -15,7 +15,7 @@ package:
     efficient Parquet format.
 2.  Read register Parquet files into R as a DuckDB table.
 3.  Provides functions to list available SAS or Parquet register files
-    (e.g., SAS or Parquet) directly from R.
+    directly from R.
 
 ## Parallel processing
 
@@ -37,44 +37,78 @@ if the processing time per file is substantial.
 %%| file: flow.mmd
 ```
 
+## Naming conventions
+
+In the sections below, we outline the naming conventions of actions and
+objects in the package. **Actions** are verbs that describe what a
+function does, while **objects** are nouns that represent the parameters
+that the functions operate on.
+
+### Actions
+
+| Action | Description |
+|-------------------|-----------------------------------------------------|
+| convert | Convert a register SAS file (or multiple) to Parquet. |
+| get | Used for internal helper functions to e.g., get or extract the year from a file name. |
+| list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
+| read | Read a Parquet register into R as a DuckDB table. |
+
+: Actions used in `registers2parquet`.
+
+<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? -->
+
+### Objects
+
+| Object | Description |
+|-------------------|-----------------------------------------------------|
+| `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
+| `path` | A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
+| `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
+| `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., "bef". It's used in `list` functions to retrieve the paths of objects including that name. |
+
+: Objects used in `registers2parquet`.
+
 ## Interface
 
-### Input
+`registers2parquet` includes two main functions and multiple helper
+functions. Each function is listed below with a short description.
 
-`registers2parquet` has one main function
-`convert_register_to_parquet()`, which this section will focus on.
-
-::: callout-note
-The package also provides helper functions for locating relevant files
-and paths in R, and for importing Parquet register files as DuckDB
-tables. See their respective documentation under
-[Reference](./reference/index.html) for details.
-<!-- TODO: I'm not sure if the link to Reference above is correct -->
+::: callout-tip
+See the [Reference documentation](/reference/index.html) for more
+details.
 :::
 
-The inputs, parameters, accepted by the `convert_register_to_parquet()`
-are:
+### Main functions
+
+#### `convert_to_parquet()`
+
+This function takes one or more register SAS files and converts them to
+a Parquet file or a Parquet dataset partitioned by year.
+
+See `help(convert_to_parquet)` for more details.
+
+The function requires two inputs:
 
 -   **path**: A character vector with path(s) to one or several files
     that should be converted.
 -   **output_path**: A character vector with the path to the directory
     where the Parquet file(s) should be written to.
 
-### Output
+If multiple files are given, the function looks for a year in the file
+names to use as partitioning. The function also removes any duplicate
+rows before saving the data.
 
 The output of `convert_register_to_parquet()` is the character vector
 given as input in `output_path`. This allows for easy integration into a
 targets pipeline.
 
-Eventhough the function doesn't return the written Parquet register, its
+Even though the function doesn't return the written Parquet register, its
 creation is confirmed with a message in the R console.
 
 The created Parquet files will be stored in a directory structure that
 reflects the register name and a year partitioning if a year can be
-determined from the file name(s).
-
-Below is shown an example of the input and output for a collection of
-SAS files for the `bef` register:
+determined from the file name(s). Below is shown an example of the input
+and output for a collection of SAS files for the `bef` register:
 
 ::::: columns
 ::: column
@@ -119,50 +153,6 @@ from the file name. Each year directory contains a Parquet file
 (`part-0.parquet`). This structure allows for efficient querying and
 retrieval of data based on the year.
 
-## Naming conventions
-
-In the sections below, we outline the naming conventions of actions and
-objects in the package. **Actions** are verbs that describe what a
-function does, while **objects** are nouns that represent the parameters
-that the functions operate on.
-
-### Actions
-
-| Action | Description |
-|------------------|------------------------------------------------------|
-| convert | Convert a register SAS file (or multiple) to Parquet. |
-| get | Used for internal helper functions to e.g., get or extract the year from a file name. |
-| list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
-| read | Read a Parquet register into R as a DuckDB table. |
-
-: Actions used in `registers2parquet`.
-
-<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? -->
-
-### Objects
-
-| Object | Description |
-|------------------|------------------------------------------------------|
-| `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
-| `path` | A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
-| `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
-| `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., "bef". It's used in `list` functions to retrieve the paths of objects including that name. |
-
-: Objects used in `registers2parquet`.
-
-## Functions
-
-`registers2parquet` includes two main functions and multiple helper
-functions. Each function is listed below with a short description.
-
-### Main functions
-
-#### `convert_to_parquet()`
-
-This function takes one or more SAS files and converts them to a Parquet
-file or a Parquet dataset partitioned by year.
-
-See `help(convert_to_parquet)` for more details.
 
 #### `read_register(register_name, project_id)`
 
@@ -201,9 +191,9 @@ flowchart TD
 
     identify_paths("Identify register path(s)<br>with helper functions")
     path[/"path<br>[Character vector]"/]
-    output_path[/"output_path<br>[Character vector]"/]
+    output_path[/"output_path<br>[Character scalar]"/]
     convert_to_parquet("convert_to_parquet()")
-    output[/"Output<br>[Character vector]<br>Path to Parquet file(s)"/]
+    output[/"Output<br>[Character scalar]<br>Path to Parquet file(s)"/]
 
 
     %% Edges
