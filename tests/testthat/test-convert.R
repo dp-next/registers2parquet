@@ -1,60 +1,91 @@
-# Prepare paths to temporary files.
-temp_sas_file <- fs::path_temp("test.sas7bdat")
-temp_sas_file_year <- fs::path_temp("test2019.sas7bdat")
-temp_parquet_file <- fs::path_temp("test.parquet")
-temp_parquet_partition <- fs::path_temp("test", "year=2019", "part-0.parquet")
+# Prepare temp file without year.
+temp_sas_file_no_year <- fs::path_temp("test.sas7bdat")
+temp_parquet_file_no_year <- fs::path_temp("test.parquet")
+temp_output_no_year <- fs::path_temp("test")
 
+# Prepare temp files with year.
+temp_sas_file_year_2019 <- fs::path_temp("test_year2019.sas7bdat")
+temp_sas_file_year_2020 <- fs::path_temp("test_year2020.sas7bdat")
+temp_parquet_year_2019 <- fs::path_temp(
+  "test_year",
+  "year=2019",
+  "part-0.parquet"
+)
+temp_parquet_year_2020 <- fs::path_temp(
+  "test_year",
+  "year=2020",
+  "part-0.parquet"
+)
+temp_output_year <- fs::path_temp("test_year")
+
+# Prepare CO2 dataset with character columns instead of factors.
 co2_df <- CO2 |>
   dplyr::mutate(dplyr::across(tidyselect::where(is.factor), as.character)) |>
   dplyr::as_tibble()
 
+
 # Write temporary SAS files.
 # Suppress warnings needed since write_sas() is deprecated.
-suppressWarnings(haven::write_sas(co2_df, temp_sas_file))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year))
+suppressWarnings(haven::write_sas(co2_df, temp_sas_file_no_year))
+suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year_2019))
+suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year_2020))
 
 # Convert SAS to Parquet. Used throughout the tests below.
-sas_to_parquet(temp_sas_file, temp_parquet_file)
-sas_to_parquet(temp_sas_file_year, temp_parquet_partition)
+parquet_no_year <- convert_to_parquet(
+  path = temp_sas_file_no_year,
+  output_path = temp_output_no_year
+)
+parquet_year_partitioned <- convert_to_parquet(
+  path = c(temp_sas_file_year_2019, temp_sas_file_year_2020),
+  output_path = temp_output_year
+)
+parquet_year_not_partitioned <- convert_to_parquet(
+  path = c(temp_sas_file_year_2019),
+  output_path = temp_output_year
+)
 
-test_that("expected Parquet without year partition file exists after conversion", {
-  expect_true(fs::file_exists(temp_parquet_file))
+test_that("expected Parquet file without year in file name exists after conversion", {
+  expect_true(fs::file_exists(parquet_no_year))
 })
 
-test_that("expected Parquet file with year partition exists after conversion", {
-  expect_true(fs::file_exists(temp_parquet_partition))
+test_that("expected Parquet file with year exists after conversion when only one path is given", {
+  expect_true(fs::file_exists(parquet_year_not_partitioned))
+})
+
+test_that("expected Parquet files with year partition exists after conversion", {
+  expect_true(fs::dir_exists(temp_output_year))
+  expect_true(fs::file_exists(temp_parquet_year_2019))
+  expect_true(fs::file_exists(temp_parquet_year_2020))
 })
 
 test_that("column names and data types are properly converted without year partition", {
-  actual <- arrow::read_parquet(temp_parquet_file) |>
-    purrr::map_chr(class) |>
-    sort()
+  actual <- arrow::read_parquet(parquet_no_year) |>
+    purrr::map_chr(class)
 
-  expected <- purrr::map_chr(co2_df, class) |>
-    sort()
+  expected <- co2_df |>
+    dplyr::mutate(
+      source_file = as.character(parquet_no_year),
+    ) |>
+    purrr::map_chr(class)
 
   # Same column names with same data types.
   expect_identical(actual, expected)
 })
 
 test_that("column names and data types are properly converted with year partition", {
-  partition_dir <- temp_parquet_partition |>
-    # Twice to go two levels up.
-    fs::path_dir() |>
-    fs::path_dir()
-
   actual <- arrow::open_dataset(
-    partition_dir,
+    temp_output_year,
     unify_schemas = TRUE
   ) |>
     dplyr::as_tibble() |>
-    purrr::map_chr(class) |>
-    sort()
+    purrr::map_chr(class)
 
   expected <- co2_df |>
-    dplyr::mutate(year = 2019L) |>
-    purrr::map_chr(class) |>
-    sort()
+    dplyr::mutate(
+      source_file = as.character(temp_output_year),
+      year = 2019L
+    ) |>
+    purrr::map_chr(class)
 
   # Same column names with same data types.
   expect_identical(actual, expected)
@@ -62,15 +93,15 @@ test_that("column names and data types are properly converted with year partitio
 
 test_that("incorrect argument types generates errors", {
   # Non-character arguments.
-  expect_error(sas_to_parquet(1, temp_parquet_file))
-  expect_error(sas_to_parquet(temp_sas_file, 1))
+  expect_error(convert_to_parquet(1, temp_parquet_file_no_year))
+  expect_error(convert_to_parquet(temp_sas_file_no_year, 1))
   # Non-scalar output_path.
-  expect_error(sas_to_parquet(
-    temp_sas_file,
-    rep(temp_parquet_file, times = 2)
+  expect_error(convert_to_parquet(
+    temp_sas_file_no_year,
+    rep(temp_parquet_file_no_year, times = 2)
   ))
 })
 
 test_that("input_path must exist", {
-  expect_error(sas_to_parquet(fs::file_temp(), temp_parquet_file))
+  expect_error(convert_to_parquet(fs::file_temp(), temp_parquet_file_no_year))
 })
