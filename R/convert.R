@@ -1,56 +1,132 @@
-#' Read the raw SAS database file and save to a Parquet format
+#' Convert register SAS file(s) and save to Parquet format
 #'
-#' Parquet is a format for saving data in an efficient way and that allows you
-#' to easily import it either with `arrow::read_arrow()` function or with
-#' any SQL-based language. In this case, we recommend using DuckDB
-#' via `arrow::to_duckdb()` since it is a SQL language that is fast and is
-#' designed for data analysis tasks.
+#' @description
+#' If multiple paths are given, the function looks for a year (4 digits) in the
+#' file names to use the year as partition, see `vignettes("design")` for more
+#' information about the partitioning. If a year is found, the data is saved
+#' partitioned by year in the output directory, e.g.,
+#' `path/to/register_name/year=2020/part-0.parquet`.
 #'
-#' @param input_path The path to the raw SAS file.
-#' @param output_path The path to save the Parquet file.
+#' If no year can be found or only one path is given, the data is converted
+#' without partitioning and saved as a Parquet file with the name specified in
+#' the output path. E.g., if output_path is `path/to/register`, the Parquet file
+#' will be saved as `path/to/register.parquet`.
 #'
-#' @returns Returns a character vector of the created Parquet files (from
-#'   `output_path`), so as to be designed to work with targets.
+#' If any duplicate rows are found from the same file, they are de-duplicated
+#' before saving to Parquet. Identical rows across different files are kept,
+#' since choosing between them requires domain knowledge.
+#'
+#' @param path A character vector with the absolute path to the register SAS
+#'    file(s).
+#' @param output_path A character scalar with the path to the directory to save
+#'    the output Parquet file to. Should include the register name as the last
+#'    part of the path. E.g., `path/to/register_name/`.
+#'
+#' @returns Returns a character scalar with the path to the created Parquet
+#'    file(s) (`output_path`), so it can be used in a targets pipeline.
+#'
 #' @export
-#'
-sas_to_parquet <- function(input_path, output_path) {
-  if (is.list(input_path)) {
-    input_path <- unlist(input_path)
-  }
-  fs::file_exists(input_path)
-  checkmate::assert_character(input_path)
+#' @examples
+#' \dontrun{
+#' convert_to_parquet(
+#'   list_sas_registers(project_id="202020")),
+#'   "output/path/to/register_name")
+#' }
+convert_to_parquet <- function(path, output_path) {
+  # Initial checks.
+  fs::file_exists(path)
+  checkmate::assert_character(path)
   checkmate::assert_character(output_path)
   checkmate::assert_scalar(output_path)
 
-  fs::dir_create(fs::path_dir(output_path))
+  # Read SAS files.
+  data <- read_sas_files(path) |>
+    # Add year column if possible.
+    add_year_col() |>
+    # Removes duplicates from the same source file.
+    dplyr::distinct()
+  # TODO: Might have to do some processing of the dates. If so, create a helper
+  # function for this.
+  # mutate(across(where(~inherits(.x, what = "date")), as.character))
+  # mutate(across(where(lubridate::is.Date), as.character))
 
-  merged_data <- input_path |>
-    purrr::map(haven::read_sas) |>
-    purrr::reduce(dplyr::full_join)
-
-  # When given a vector with duplicate files
-  year <- get_database_year(input_path) |>
-    unique()
-  if (!is.na(year) & year %in% 1969:2030) {
-    merged_data <- merged_data |>
-      dplyr::mutate(year = year)
-  }
-
-  merged_data |>
-    # TODO: Might have to do some processing of the dates.
-    # mutate(across(where(~inherits(.x, what = "date")), as.character))
-    # mutate(across(where(lubridate::is.Date), as.character))
-    arrow::write_parquet(output_path)
-
-  if (length(input_path) > 1) {
-    cli::cli_alert_success(
-      "Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file."
+  # Write to Parquet, partitioned by year if year column exists.
+  if (length(path) > 1 & any(colnames(data) == "year")) {
+    fs::dir_create(fs::path(output_path))
+    arrow::write_dataset(
+      dataset = data,
+      path = output_path,
+      format = "parquet",
+      partitioning = "year"
     )
   } else {
-    cli::cli_alert_success(
-      "Finished saving {.val {fs::path_file(input_path)}} as a Parquet file."
+    output_path <- paste0(output_path, ".parquet")
+    arrow::write_parquet(
+      x = data,
+      sink = output_path,
     )
   }
 
+  # Success message.
+  cli::cli_alert_success(
+    "Successfully converted {.val {fs::path_file(path)}} to Parquet format and saved it in {.path {output_path}}."
+  )
+
   output_path
+}
+
+#' Read SAS files
+#'
+#' This function reads one or more SAS files and add a `source_file` column
+#' indicating the file each row came from. This column is useful for tracking
+#' the origin of the row when combining multiple files. It also ensures that
+#' duplicate rows across different files are not removed during the
+#' de-duplication step in `convert_to_parquet()`.
+#'
+#' @param path A character vector with the absolute path to the SAS file(s).
+#'
+#' @returns A data frame with the contents of the SAS file(s) plus a
+#'    `source_file` column.
+#' @keywords internal
+read_sas_files <- function(path) {
+  purrr::map(path, \(file_path) {
+    haven::read_sas(file_path) |>
+      dplyr::mutate(source_file = as.character(file_path))
+  }) |>
+    purrr::reduce(dplyr::full_join)
+}
+
+#' Add year column to data if possible
+#'
+#' @param data A data frame with a `source_file` column to extract year from.
+#'
+#' @returns A data frame with a year column added if the year could be
+#'    determined.
+#' @keywords internal
+add_year_col <- function(data) {
+  year <- get_year_from_col(data$source_file)
+
+  if (all(!is.na(year) & year %in% 1969:2030)) {
+    data <- data |> dplyr::mutate(year = year)
+  } else {
+    cli::cli_alert_info(
+      "Could not determine year from file name(s) {.path {unique(fs::path_file(data$source_file))}}. Will not partition by year."
+    )
+  }
+  data
+}
+
+#' Get year from column values
+#'
+#' @param data_col A character vector with file paths to extract year from.
+#'
+#' @returns An integer vector with the extracted years, or `NA` if no year
+#'    found.
+#' @keywords internal
+get_year_from_col <- function(data_col) {
+  data_col |>
+    get_filename_no_ext() |>
+    stringr::str_extract("\\d{4,6}") |>
+    stringr::str_extract("^\\d{4}") |>
+    as.integer()
 }
