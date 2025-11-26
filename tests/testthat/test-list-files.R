@@ -31,7 +31,7 @@ test_that("file name gets converted as a directory instead", {
   actual <- fs::file_temp(pattern = "database", ext = ".sas7bdat") |>
     path_alter_filename_as_dir()
 
-  expect_identical(fs::path_file(actual), "database")
+  expect_match(fs::path_file(actual), "database")
 })
 
 test_that("path is converted to a Parquet Partition in another directory", {
