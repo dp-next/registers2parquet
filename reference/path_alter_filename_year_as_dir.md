@@ -24,5 +24,5 @@ A character vector.
 ``` r
 fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
   path_alter_filename_year_as_dir()
-#> /tmp/Rtmp6tApRg/database/year=2020
+#> /tmp/Rtmp4ei20N/database/year=2020
 ```
