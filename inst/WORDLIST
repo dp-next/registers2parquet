@@ -9,6 +9,7 @@ callout
 ci
 csv
 dbplyr
+deduplicated
 dplyr
 duckdb
 ftforael
