@@ -117,9 +117,9 @@ functions. Each function is listed below with a short description.
 This function takes one or more register SAS files and converts them to
 a Parquet file or a Parquet dataset partitioned by year.
 
-See
-[`help(convert_to_parquet)`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
-for more details.
+See the
+[`convert_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
+reference for more details.
 
 The function requires two inputs:
 
