@@ -87,6 +87,7 @@ convert_to_parquet <- function(path, output_path) {
 #'
 #' @returns A data frame with the contents of the SAS file(s) plus a
 #'    `source_file` column.
+#'
 #' @keywords internal
 read_sas_files <- function(path) {
   purrr::map(path, \(file_path) {
@@ -102,6 +103,7 @@ read_sas_files <- function(path) {
 #'
 #' @returns A data frame with a year column added if the year could be
 #'    determined.
+#'
 #' @keywords internal
 add_year_col <- function(data) {
   year <- get_year_from_col(data$source_file)
@@ -123,6 +125,7 @@ add_year_col <- function(data) {
 #'
 #' @returns An integer vector with the extracted years, or `NA` if no year
 #'    found.
+#'
 #' @keywords internal
 get_year_from_col <- function(data_col) {
   data_col |>
