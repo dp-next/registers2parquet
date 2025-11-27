@@ -12,9 +12,12 @@
 #' the output path. E.g., if output_path is `path/to/register`, the Parquet file
 #' will be saved as `path/to/register.parquet`.
 #'
-#' If any duplicate rows are found from the same file, they are de-duplicated
-#' before saving to Parquet. Rows that are almost identical across different files (e.g. different years) but that have a difference in values are kept,
-#' as determining which is the correct value requires domain knowledge.
+#' If any duplicate rows are found, they are deduplicated before saving to
+#' Parquet. If duplicate rows are found in multiple source files, the row from
+#' the file that appears first in `path` is kept. Rows that are almost identical
+#' across different files (e.g. different years) but that have a difference in
+#' values are kept, as determining which is the correct value requires domain
+#' knowledge.
 #'
 #' @param path A character vector with the absolute path to the register SAS
 #'    file(s).
@@ -78,10 +81,7 @@ convert_to_parquet <- function(path, output_path) {
 #' Read SAS files
 #'
 #' This function reads one or more SAS files and adds a `source_file` column
-#' indicating the file each row came from. This column is useful for tracking
-#' the origin of the row when combining multiple files. It also ensures that
-#' duplicate rows across different files are not removed during the
-#' de-duplication step in `convert_to_parquet()`.
+#' indicating the file each row came from.
 #'
 #' @param path A character vector with the absolute path to the SAS file(s).
 #'
