@@ -12,7 +12,7 @@ temp_parquet_year_2020 <- fs::path_temp(
   "year=2020",
   "part-0.parquet"
 )
-paths = c(
+paths <- c(
   temp_parquet_no_year,
   temp_parquet_year_2019,
   temp_parquet_year_2020
