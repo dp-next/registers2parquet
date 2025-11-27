@@ -1,14 +1,65 @@
-#' Read an individual Parquet partitioned database
+#' Read a Parquet register
 #'
-#' @param dir The folder that holds the Parquet database.
+#' If you want to read a partitioned Parquet register, provide the path to the
+#' directory (e.g., `path/to/parquet/register/`).
+#' If you want to read a single Parquet file, provide the path to the file
+#' (e.g., `path/to/parquet/register.parquet`).
 #'
-#' @return A DuckDB database connection.
+#' @param path A character scalar with the path to the Parquet register.
+#'
+#' @returns The register as a DuckDB table.
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' read_register("/path/to/parquet/register")
+#' read_register("/path/to/parquet/register.parquet")
+#' }
+read_register <- function(
+  path
+) {
+  # Check input.
+  checkmate::assert_character(path)
+  checkmate::assert_scalar(path)
+  checkmate::assert(
+    checkmate::check_file_exists(path),
+    checkmate::check_directory_exists(path)
+  )
+
+  # If input path is a directory
+  if (fs::is_dir(path)) {
+    data <- read_parquet_partition_as_duckdb(path)
+  } else {
+    data <- read_parquet_file_as_duckdb(path)
+  }
+
+  data
+}
+
+
+#' Read a partitioned Parquet register as DuckDB table
+#'
+#' @param dir_path A character scalar with the path to the Parquet register
+#'    directory.
+#'
+#' @returns The register as a DuckDB table.
+#'
 #' @keywords internal
-#'
-read_parquet_partition <- function(dir) {
-  checkmate::assert_scalar(dir)
-  fs::dir_exists(dir)
-  dir |>
+read_parquet_partition_as_duckdb <- function(dir_path) {
+  dir_path |>
     arrow::open_dataset(unify_schemas = TRUE) |>
+    arrow::to_duckdb()
+}
+
+#' Read a Parquet file as DuckDB table
+#'
+#' @param file_path A character scalar with the path to the Parquet file.
+#'
+#' @returns The register as a DuckDB table.
+#'
+#' @keywords internal
+read_parquet_file_as_duckdb <- function(file_path) {
+  file_path |>
+    arrow::read_parquet() |>
     arrow::to_duckdb()
 }
