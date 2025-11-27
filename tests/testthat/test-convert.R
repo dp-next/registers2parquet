@@ -1,11 +1,11 @@
 # Prepare temp file without year.
-temp_sas_file_no_year <- fs::path_temp("test.sas7bdat")
-temp_parquet_file_no_year <- fs::path_temp("test.parquet")
+temp_sas_no_year <- fs::path_temp("test.sas7bdat")
+temp_parquet_no_year <- fs::path_temp("test.parquet")
 temp_output_no_year <- fs::path_temp("test")
 
 # Prepare temp files with year.
-temp_sas_file_year_2019 <- fs::path_temp("test_year2019.sas7bdat")
-temp_sas_file_year_2020 <- fs::path_temp("test_year2020.sas7bdat")
+temp_sas_year_2019 <- fs::path_temp("test_year2019.sas7bdat")
+temp_sas_year_2020 <- fs::path_temp("test_year2020.sas7bdat")
 temp_parquet_year_2019 <- fs::path_temp(
   "test_year",
   "year=2019",
@@ -35,24 +35,24 @@ co2_df_with_distinct_row <- co2_df |>
 
 # Write temporary SAS files.
 # Suppress warnings needed since write_sas() is deprecated.
-suppressWarnings(haven::write_sas(co2_df, temp_sas_file_no_year))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year_2019))
+suppressWarnings(haven::write_sas(co2_df, temp_sas_no_year))
+suppressWarnings(haven::write_sas(co2_df, temp_sas_year_2019))
 suppressWarnings(haven::write_sas(
   co2_df_with_distinct_row,
-  temp_sas_file_year_2020
+  temp_sas_year_2020
 ))
 
 # Convert SAS to Parquet. Used throughout the tests below.
 parquet_no_year <- convert_to_parquet(
-  path = temp_sas_file_no_year,
+  path = temp_sas_no_year,
   output_path = temp_output_no_year
 )
 parquet_year_partitioned <- convert_to_parquet(
-  path = c(temp_sas_file_year_2019, temp_sas_file_year_2020),
+  path = c(temp_sas_year_2019, temp_sas_year_2020),
   output_path = temp_output_year
 )
 parquet_year_not_partitioned <- convert_to_parquet(
-  path = c(temp_sas_file_year_2019),
+  path = c(temp_sas_year_2019),
   output_path = temp_output_year
 )
 
@@ -105,7 +105,7 @@ test_that("column names and data types are properly converted with year partitio
 
 test_that("duplicates are removed without year partition", {
   actual <- arrow::read_parquet(
-    temp_parquet_file_no_year
+    temp_parquet_no_year
   ) |>
     dplyr::as_tibble()
 
@@ -134,15 +134,15 @@ test_that("duplicates are removed with year partition", {
 
 test_that("incorrect argument types generates errors", {
   # Non-character arguments.
-  expect_error(convert_to_parquet(1, temp_parquet_file_no_year))
-  expect_error(convert_to_parquet(temp_sas_file_no_year, 1))
+  expect_error(convert_to_parquet(1, temp_parquet_no_year))
+  expect_error(convert_to_parquet(temp_sas_no_year, 1))
   # Non-scalar output_path.
   expect_error(convert_to_parquet(
-    temp_sas_file_no_year,
-    rep(temp_parquet_file_no_year, times = 2)
+    temp_sas_no_year,
+    rep(temp_parquet_no_year, times = 2)
   ))
 })
 
 test_that("input_path must exist", {
-  expect_error(convert_to_parquet(fs::file_temp(), temp_parquet_file_no_year))
+  expect_error(convert_to_parquet(fs::file_temp(), temp_parquet_no_year))
 })
