@@ -26,11 +26,11 @@ read_register <- function(
     checkmate::check_directory_exists(path)
   )
 
-  # If input path is a directory
+  # If input path is a directory.
   if (fs::is_dir(path)) {
-    data <- read_parquet_partition_as_duckdb(path)
+    data <- read_register_partition(path)
   } else {
-    data <- read_parquet_file_as_duckdb(path)
+    data <- read_register_file(path)
   }
 
   data
@@ -45,7 +45,7 @@ read_register <- function(
 #' @returns The register as a DuckDB table.
 #'
 #' @keywords internal
-read_parquet_partition_as_duckdb <- function(dir_path) {
+read_register_partition <- function(dir_path) {
   dir_path |>
     arrow::open_dataset(unify_schemas = TRUE) |>
     arrow::to_duckdb()
@@ -58,7 +58,7 @@ read_parquet_partition_as_duckdb <- function(dir_path) {
 #' @returns The register as a DuckDB table.
 #'
 #' @keywords internal
-read_parquet_file_as_duckdb <- function(file_path) {
+read_register_file <- function(file_path) {
   file_path |>
     arrow::read_parquet() |>
     arrow::to_duckdb()
