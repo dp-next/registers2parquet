@@ -16,7 +16,7 @@ part of the path. E.g., \verb{path/to/register_name/}.}
 }
 \value{
 Returns a character scalar with the path to the created Parquet
-file(s) (\code{output_path}), so it can be used in a targets pipeline.
+file(s) (\code{output_path}), so it can be used in a \href{https://books.ropensci.org/targets/}{targets} pipeline.
 }
 \description{
 If multiple paths are given, the function looks for a year (4 digits) in the
@@ -30,9 +30,12 @@ without partitioning and saved as a Parquet file with the name specified in
 the output path. E.g., if output_path is \code{path/to/register}, the Parquet file
 will be saved as \code{path/to/register.parquet}.
 
-If any duplicate rows are found within the same file, they are de-duplicated
-before saving to Parquet. Identical rows across different files are kept,
-since choosing between them requires domain knowledge.
+If any duplicate rows are found, they are deduplicated before saving to
+Parquet. If duplicate rows are found in multiple source files, the row from
+the file that appears first in \code{path} is kept. Rows that are almost identical
+across different files (e.g. different years) but that have a difference in
+values are kept, as determining which is the correct value requires domain
+knowledge.
 }
 \examples{
 \dontrun{

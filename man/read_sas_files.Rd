@@ -14,10 +14,7 @@ A data frame with the contents of the SAS file(s) plus a
 \code{source_file} column.
 }
 \description{
-This function reads one or more SAS files and add a \code{source_file} column
-indicating the file each row came from. This column is useful for tracking
-the origin of the row when combining multiple files. It also ensures that
-duplicate rows across different files are not removed during the
-de-duplication step in \code{convert_to_parquet()}.
+This function reads one or more SAS files and adds a \code{source_file} column
+indicating the file each row came from.
 }
 \keyword{internal}
