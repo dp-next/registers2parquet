@@ -18,8 +18,8 @@ to use a language (DuckDB SQL) to do your work faster.
 Main functions for converting SAS files containing Danish register data
 into Apache Parquet files.
 
-- [`sas_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/sas_to_parquet.md)
-  : Read the raw SAS database file and save to a Parquet format
+- [`convert_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
+  : Convert register SAS file(s) and save to Parquet format
 
 - [`get_database_name()`](https://dp-next.github.io/registers2parquet/reference/get_database_name.md)
   : Get the name of the database from the file name

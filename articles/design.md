@@ -114,8 +114,12 @@ functions. Each function is listed below with a short description.
 
 #### `convert_to_parquet()`
 
-This is the main function of the package that converts register SAS
-file(s) to Parquet format.
+This function takes one or more register SAS files and converts them to
+a Parquet file or a Parquet dataset partitioned by year.
+
+See
+[`help(convert_to_parquet)`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
+for more details.
 
 The function requires two inputs:
 
@@ -173,85 +177,6 @@ from the file name. Each year directory contains a Parquet file
 (`part-0.parquet`). This structure allows for efficient querying and
 retrieval of data based on the year.
 
-``` r
-#' Convert register SAS file(s) and save to Parquet format
-#'
-#' If multiple paths are given, the function looks for a year (4 digits) in the
-#' file names to use the year as partition, see `vignettes("design")` for more
-#' information about the partitioning.
-#'
-#' If multiple files are given with the same year, they are merged with a full join.
-#'
-#' If any duplicate rows found, they are removed before saving to Parquet.
-#'
-#' @param input_path A character vector with the absolute path to the register SAS file(s).
-#' @param output_path The path with the directory to save the output Parquet file to.
-#'
-#' @returns Returns a character vector with the path to the created Parquet file(s)
-#'   (from `output_path`), so it can easily be used in a targets pipeline.
-#' @export
-#' @examples
-#' \dontrun{
-#' convert_to_parquet(list_sas_registers("202020")), "output_directory/")
-#' }
-convert_to_parquet <- function(input_path, output_path) {
-
-  # Initial setup and checks.
-  fs::file_exists(input_path)
-  checkmate::assert_character(input_path)
-  checkmate::assert_character(output_path)
-  checkmate::assert_scalar(output_path)
-  fs::dir_create(fs::path_dir(output_path))
-
-  # Read SAS file(s) and full join.
-  data <- read_sas_files(input_path) |>
-    # Add year column if possible.
-    add_year_col() |>
-    # Deduplicate identical columns.
-    dplyr::distinct() |>
-    # TODO: How to handle history/almost-duplicate rows?
-    # Write to Parquet.
-    # TODO: Might have to do some processing of the dates. If so, create a helper function for this.
-    # mutate(across(where(~inherits(.x, what = "date")), as.character))
-    # mutate(across(where(lubridate::is.Date), as.character))
-    arrow::write_parquet(output_path)
-    # TODO: How is the year partitioning handled in/passed to arrow::write_parquet()?
-
-
-  if (length(input_path) > 1) {
-    cli::cli_alert_success(
-      "Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file."
-    )
-  } else {
-    cli::cli_alert_success(
-      "Finished saving {.val {fs::path_file(input_path)}} as a Parquet file."
-    )
-  }
-
-  output_path
-}
-
-read_sas_files <- function(input_path) {
-  input_path |>
-    purrr::map(haven::read_sas) |>
-    purrr::reduce(dplyr::full_join)
-}
-
-add_year_col <- function(data) {
-  year <- get_database_year(input_path) |>
-    unique()
-  if (!is.na(year) & year %in% 1969:2030) {
-    data <- data |>
-      dplyr::mutate(year = year)
-  } else {
-    cli::cli_alert_info(
-      "Could not determine year from file name(s). Will not partition by year."
-    )
-  }
-  data
-}
-```
-
 #### `read_register(register_name, project_id)`
 
 Reads a Parquet register from the specified path and returns it as a
@@ -294,7 +219,8 @@ flowchart TD
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-Figure 1: Flow of the expected flow using the `convert_to_parquet()`
+Figure 1: Flow of the expected flow using the
+[`convert_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
 package to convert register SAS files to Parquet files.
 
 We expect a flow of reading a Parquet register created by the

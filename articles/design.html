@@ -213,7 +213,8 @@
 <section class="level4"><h4 id="convert_to_parquet">
 <code>convert_to_parquet()</code><a class="anchor" aria-label="anchor" href="#convert_to_parquet"></a>
 </h4>
-<p>This is the main function of the package that converts register SAS file(s) to Parquet format.</p>
+<p>This function takes one or more register SAS files and converts them to a Parquet file or a Parquet dataset partitioned by year.</p>
+<p>See <code><a href="../reference/convert_to_parquet.html">help(convert_to_parquet)</a></code> for more details.</p>
 <p>The function requires two inputs:</p>
 <ul>
 <li>
@@ -258,84 +259,6 @@
 </div>
 </div>
 <p>As shown above, the Parquet files will be stored in a directory named after the register (e.g., <code>bef/</code>), with subdirectories for each year (e.g., <code>year=2018/</code>, <code>year=2019/</code>, etc.) if the year can be determined from the file name. Each year directory contains a Parquet file (<code>part-0.parquet</code>). This structure allows for efficient querying and retrieval of data based on the year.</p>
-<!-- TODO: Add link to reference documentation when ready -->
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' Convert register SAS file(s) and save to Parquet format</span></span>
-<span><span class="co">#'</span></span>
-<span><span class="co">#' If multiple paths are given, the function looks for a year (4 digits) in the</span></span>
-<span><span class="co">#' file names to use the year as partition, see `vignettes("design")` for more</span></span>
-<span><span class="co">#' information about the partitioning.</span></span>
-<span><span class="co">#'</span></span>
-<span><span class="co">#' If multiple files are given with the same year, they are merged with a full join.</span></span>
-<span><span class="co">#'</span></span>
-<span><span class="co">#' If any duplicate rows found, they are removed before saving to Parquet.</span></span>
-<span><span class="co">#'</span></span>
-<span><span class="co">#' @param input_path A character vector with the absolute path to the register SAS file(s).</span></span>
-<span><span class="co">#' @param output_path The path with the directory to save the output Parquet file to.</span></span>
-<span><span class="co">#'</span></span>
-<span><span class="co">#' @returns Returns a character vector with the path to the created Parquet file(s)</span></span>
-<span><span class="co">#'   (from `output_path`), so it can easily be used in a targets pipeline.</span></span>
-<span><span class="co">#' @export</span></span>
-<span><span class="co">#' @examples</span></span>
-<span><span class="co">#' \dontrun{</span></span>
-<span><span class="co">#' convert_to_parquet(list_sas_registers("202020")), "output_directory/")</span></span>
-<span><span class="co">#' }</span></span>
-<span><span class="va">convert_to_parquet</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input_path</span>, <span class="va">output_path</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span>  <span class="co"># Initial setup and checks.</span></span>
-<span>  <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_access.html" class="external-link">file_exists</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkCharacter.html" class="external-link">assert_character</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkCharacter.html" class="external-link">assert_character</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
-<span>  <span class="fu">checkmate</span><span class="fu">::</span><span class="fu"><a href="https://mllg.github.io/checkmate/reference/checkScalar.html" class="external-link">assert_scalar</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
-<span>  <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_file.html" class="external-link">path_dir</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co"># Read SAS file(s) and full join.</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">read_sas_files</span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="co"># Add year column if possible.</span></span>
-<span>    <span class="fu">add_year_col</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="co"># Deduplicate identical columns.</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="co"># TODO: How to handle history/almost-duplicate rows?</span></span>
-<span>    <span class="co"># Write to Parquet.</span></span>
-<span>    <span class="co"># TODO: Might have to do some processing of the dates. If so, create a helper function for this.</span></span>
-<span>    <span class="co"># mutate(across(where(~inherits(.x, what = "date")), as.character))</span></span>
-<span>    <span class="co"># mutate(across(where(lubridate::is.Date), as.character))</span></span>
-<span>    <span class="fu">arrow</span><span class="fu">::</span><span class="fu"><a href="https://arrow.apache.org/docs/r/reference/write_parquet.html" class="external-link">write_parquet</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span>
-<span>    <span class="co"># TODO: How is the year partitioning handled in/passed to arrow::write_parquet()?</span></span>
-<span></span>
-<span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_success</a></span><span class="op">(</span></span>
-<span>      <span class="st">"Finished merging and saving the duplicate {.val {fs::path_file(input_path)[1]}} files as a Parquet file."</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_success</a></span><span class="op">(</span></span>
-<span>      <span class="st">"Finished saving {.val {fs::path_file(input_path)}} as a Parquet file."</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="va">output_path</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">read_sas_files</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">input_path</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu">haven</span><span class="fu">::</span><span class="va"><a href="https://haven.tidyverse.org/reference/read_sas.html" class="external-link">read_sas</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">add_year_col</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_database_year.html">get_database_year</a></span><span class="op">(</span><span class="va">input_path</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">1969</span><span class="op">:</span><span class="fl">2030</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/cli_alert.html" class="external-link">cli_alert_info</a></span><span class="op">(</span></span>
-<span>      <span class="st">"Could not determine year from file name(s). Will not partition by year."</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">data</span></span>
-<span><span class="op">}</span></span></code></pre></div>
 <section class="level4"><h4 id="read_registerregister_name-project_id">
 <code>read_register(register_name, project_id)</code><a class="anchor" aria-label="anchor" href="#read_registerregister_name-project_id"></a>
 </h4>
@@ -381,7 +304,7 @@
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: Flow of the expected flow using the <code>convert_to_parquet()</code> package to convert register SAS files to Parquet files.
+Figure 1: Flow of the expected flow using the <code><a href="../reference/convert_to_parquet.html">convert_to_parquet()</a></code> package to convert register SAS files to Parquet files.
 </figcaption></figure>
 </div>
 </div>
