@@ -41,10 +41,10 @@ convert_to_parquet <- function(path, output_path) {
 
   # Read SAS files.
   data <- read_sas_files(path) |>
+    # Remove duplicate rows, ignoring the source_file column.
+    dplyr::distinct(dplyr::across(-"source_file"), .keep_all = TRUE) |>
     # Add year column if possible.
-    add_year_col() |>
-    # Removes duplicates from the same source file.
-    dplyr::distinct()
+    add_year_col()
   # TODO: Might have to do some processing of the dates. If so, create a helper
   # function for this.
   # mutate(across(where(~inherits(.x, what = "date")), as.character))
