@@ -23,7 +23,7 @@
 #'    part of the path. E.g., `path/to/register_name/`.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_path`), so it can be used in a targets pipeline.
+#'    file(s) (`output_path`), so it can be used in a [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
 #' @examples
@@ -34,7 +34,7 @@
 #' }
 convert_to_parquet <- function(path, output_path) {
   # Initial checks.
-  fs::file_exists(path)
+  checkmate::assert_file_exists(path)
   checkmate::assert_character(path)
   checkmate::assert_character(output_path)
   checkmate::assert_scalar(output_path)
@@ -77,7 +77,7 @@ convert_to_parquet <- function(path, output_path) {
 
 #' Read SAS files
 #'
-#' This function reads one or more SAS files and add a `source_file` column
+#' This function reads one or more SAS files and adds a `source_file` column
 #' indicating the file each row came from. This column is useful for tracking
 #' the origin of the row when combining multiple files. It also ensures that
 #' duplicate rows across different files are not removed during the
@@ -106,7 +106,8 @@ read_sas_files <- function(path) {
 add_year_col <- function(data) {
   year <- get_year_from_col(data$source_file)
 
-  if (all(!is.na(year) & year %in% 1969:2030)) {
+  next_year <- as.integer(format(Sys.Date(), "%Y")) + 1L
+  if (all(!is.na(year) & year %in% 1969:next_year)) {
     data <- data |> dplyr::mutate(year = year)
   } else {
     cli::cli_alert_info(
