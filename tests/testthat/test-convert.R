@@ -20,15 +20,27 @@ temp_output_year <- fs::path_temp("test_year")
 
 # Prepare CO2 dataset with character columns instead of factors.
 co2_df <- CO2 |>
+  # Add duplicate rows to test de-duplication.
+  dplyr::bind_rows(CO2) |>
   dplyr::mutate(dplyr::across(tidyselect::where(is.factor), as.character)) |>
   dplyr::as_tibble()
-
+co2_df_with_distinct_row <- co2_df |>
+  tibble::add_row(
+    Plant = "Unknown",
+    Type = "Quebec",
+    Treatment = "chilled",
+    conc = 99,
+    uptake = 99.9
+  )
 
 # Write temporary SAS files.
 # Suppress warnings needed since write_sas() is deprecated.
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file_no_year))
 suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year_2019))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_file_year_2020))
+suppressWarnings(haven::write_sas(
+  co2_df_with_distinct_row,
+  temp_sas_file_year_2020
+))
 
 # Convert SAS to Parquet. Used throughout the tests below.
 parquet_no_year <- convert_to_parquet(
@@ -89,6 +101,35 @@ test_that("column names and data types are properly converted with year partitio
 
   # Same column names with same data types.
   expect_identical(actual, expected)
+})
+
+test_that("duplicates are removed without year partition", {
+  actual <- arrow::read_parquet(
+    temp_parquet_file_no_year
+  ) |>
+    dplyr::as_tibble()
+
+  expected <- co2_df |>
+    dplyr::distinct()
+
+  expect_true(nrow(actual) == nrow(expected))
+})
+
+test_that("duplicates are removed with year partition", {
+  actual <- arrow::open_dataset(
+    temp_output_year,
+    unify_schemas = TRUE
+  ) |>
+    dplyr::as_tibble()
+
+  expected_2019 <- co2_df |>
+    dplyr::distinct()
+
+  expect_true(
+    nrow(actual |> dplyr::filter(year == 2019)) == nrow(expected_2019)
+  )
+  # Only one distinct row in 2020 file based on co2_df_with_distinct_row.
+  expect_true(nrow(actual |> dplyr::filter(year == 2020)) == 1)
 })
 
 test_that("incorrect argument types generates errors", {
