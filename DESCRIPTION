@@ -18,9 +18,7 @@ Imports:
     arrow,
     checkmate,
     cli,
-    dbplyr,
     dplyr,
-    duckdb,
     fs,
     glue,
     haven,
@@ -29,7 +27,9 @@ Imports:
     stringr,
     tibble
 Suggests:
+    dbplyr,
     devtools,
+    duckdb,
     quarto,
     testthat (>= 3.0.0),
     tidyselect
