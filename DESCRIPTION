@@ -19,6 +19,7 @@ Imports:
     checkmate,
     cli,
     dplyr,
+    duckdb,
     fs,
     glue,
     haven,
