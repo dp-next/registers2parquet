@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.3.0 (2025-11-27)
+
+### Feat
+
+- ✨ implement `convert_to_parquet()` (#84)
+
 ## 0.2.4 (2025-11-13)
 
 ### Refactor

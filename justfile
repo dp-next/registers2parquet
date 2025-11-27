@@ -71,3 +71,8 @@ install-package:
 # Clean up generated HTML and R files from vignettes
 cleanup-vignettes:
   rm vignettes/*.R vignettes/*.html vignettes/articles/*.R vignettes/articles/*.html
+
+# From https://jarl.etiennebacher.com/#installation
+# Lint R code for any potential issues
+lint:
+  jarl check .
