@@ -13,8 +13,8 @@
 #' will be saved as `path/to/register.parquet`.
 #'
 #' If any duplicate rows are found from the same file, they are de-duplicated
-#' before saving to Parquet. Identical rows across different files are kept,
-#' since choosing between them requires domain knowledge.
+#' before saving to Parquet. Rows that are almost identical across different files (e.g. different years) but that have a difference in values are kept,
+#' as determining which is the correct value requires domain knowledge.
 #'
 #' @param path A character vector with the absolute path to the register SAS
 #'    file(s).
