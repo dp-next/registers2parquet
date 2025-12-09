@@ -26,6 +26,21 @@ read_register <- function(
     checkmate::check_file_exists(path),
     checkmate::check_directory_exists(path)
   )
+  if (
+    fs::is_dir(path) &&
+      length(fs::dir_ls(path, regexp = "\\.(parquet|parq)$", recurse = TRUE)) ==
+        0
+  ) {
+    cli::cli_abort("The path {path} does not contain any Parquet files.")
+  } else if (
+    fs::is_file(path) &&
+      fs::path_ext(path) != "parquet" &&
+      fs::path_ext(path) != "parq"
+  ) {
+    cli::cli_abort(
+      "The path {path} must have a `.parquet` or `.parq` extension."
+    )
+  }
 
   # If input path is a directory.
   if (fs::is_dir(path)) {
