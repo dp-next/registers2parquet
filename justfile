@@ -76,3 +76,9 @@ cleanup-vignettes:
 # Lint R code for any potential issues
 lint:
   jarl check .
+
+
+# Preview website locally
+preview-website:
+  #!/usr/bin/env Rscript
+  pkgdown::preview_site()
