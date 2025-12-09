@@ -73,3 +73,11 @@ test_that("directory with no Parquet files returns error", {
   # Error message includes the path to the empty directory.
   expect_error(read_register(temp_empty_dir), temp_empty_dir)
 })
+
+test_that("non-Parquet file returns error", {
+  temp_txt_file <- fs::path_temp("file.txt")
+  fs::file_create(temp_txt_file)
+
+  # Error message includes the path to the non-Parquet file.
+  expect_error(read_register(temp_txt_file), temp_txt_file)
+})
