@@ -19,8 +19,9 @@ If you want to read a single Parquet file, provide the path to the file
 (e.g., \code{path/to/parquet/register.parquet}).
 }
 \examples{
-\dontrun{
-read_register("/path/to/parquet/register")
-read_register("/path/to/parquet/register.parquet")
-}
+read_register(fs::path_package(
+  "registers2parquet",
+  "extdata",
+  "test_register.parquet"
+))
 }
