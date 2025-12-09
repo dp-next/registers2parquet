@@ -59,7 +59,7 @@ read_register <- function(
 #' @param dir_path A character scalar with the path to the Parquet register
 #'    directory.
 #'
-#' @inherit read_register returns
+#' @inherit read_register return
 #'
 #' @keywords internal
 read_register_partition <- function(dir_path) {
@@ -72,7 +72,7 @@ read_register_partition <- function(dir_path) {
 #'
 #' @param file_path A character scalar with the path to the Parquet file.
 #'
-#' @inherit read_register returns
+#' @inherit read_register return
 #'
 #' @keywords internal
 read_register_file <- function(file_path) {
