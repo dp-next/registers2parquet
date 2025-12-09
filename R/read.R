@@ -42,7 +42,7 @@ read_register <- function(
 #' @param dir_path A character scalar with the path to the Parquet register
 #'    directory.
 #'
-#' @returns The register as a DuckDB table.
+#' @inherit read_register returns
 #'
 #' @keywords internal
 read_register_partition <- function(dir_path) {
@@ -55,7 +55,7 @@ read_register_partition <- function(dir_path) {
 #'
 #' @param file_path A character scalar with the path to the Parquet file.
 #'
-#' @returns The register as a DuckDB table.
+#' @inherit read_register returns
 #'
 #' @keywords internal
 read_register_file <- function(file_path) {
