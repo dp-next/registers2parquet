@@ -42,7 +42,8 @@ read_register <- function(
     )
   }
 
-  # If input path is a directory.
+  # If input path is a directory, read as partitioned Parquet register,
+  # else read as Parquet file.
   if (fs::is_dir(path)) {
     data <- read_register_partition(path)
   } else {
