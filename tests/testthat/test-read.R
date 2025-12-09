@@ -65,3 +65,11 @@ test_that("incorrect input type throws an error", {
   expect_error(read_register(123))
   expect_error(read_register(c("path1.parquet", "path2.parquet")))
 })
+
+test_that("directory with no Parquet files returns error", {
+  temp_empty_dir <- fs::path_temp("empty_dir")
+  fs::dir_create(temp_empty_dir)
+
+  # Error message includes the path to the empty directory.
+  expect_error(read_register(temp_empty_dir), temp_empty_dir)
+})
