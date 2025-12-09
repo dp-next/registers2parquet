@@ -11,10 +11,11 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' read_register("/path/to/parquet/register")
-#' read_register("/path/to/parquet/register.parquet")
-#' }
+#' read_register(fs::path_package(
+#'   "registers2parquet",
+#'   "extdata",
+#'   "test_register.parquet"
+#' ))
 read_register <- function(
   path
 ) {
