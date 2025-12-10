@@ -31,8 +31,8 @@ A character vector.
 ``` r
 fs::path_temp("database.sas7bdat") |>
   path_alter_to_output_parquet_partition(fs::path_temp("new-dir"))
-#> /tmp/RtmpGLQpUF/new-dir/database/part-0.parquet
+#> /tmp/RtmpuCWURP/new-dir/database/part-0.parquet
 fs::file_temp(pattern = "database2020-", ext = ".sas7bdat") |>
   path_alter_to_output_parquet_partition(fs::path_temp("new-dir"))
-#> /tmp/RtmpGLQpUF/new-dir/database/year=2020/part-0.parquet
+#> /tmp/RtmpuCWURP/new-dir/database/year=2020/part-0.parquet
 ```
