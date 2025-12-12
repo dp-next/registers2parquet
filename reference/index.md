@@ -52,9 +52,6 @@ into Apache Parquet files.
 - [`list_sas_files()`](https://dp-next.github.io/registers2parquet/reference/list_sas_files.md)
   : List all the SAS register databases recursively in a folder
 
-- [`load_database()`](https://dp-next.github.io/registers2parquet/reference/load_database.md)
-  : Load a specific Parquet database into the R session
-
 - [`path_alter_filename_as_dir()`](https://dp-next.github.io/registers2parquet/reference/path_alter_filename_as_dir.md)
   :
 
@@ -113,3 +110,6 @@ into Apache Parquet files.
 
 - [`path_workdata()`](https://dp-next.github.io/registers2parquet/reference/path_workdata.md)
   : Path to workdata directory
+
+- [`read_register()`](https://dp-next.github.io/registers2parquet/reference/read_register.md)
+  : Read a Parquet register

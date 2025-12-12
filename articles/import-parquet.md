@@ -95,9 +95,8 @@ list_databases()
 ```
 
 Let’s take a simple register as an example. The “ftforael” will do. Use
-the custom
-[`load_database()`](https://dp-next.github.io/registers2parquet/reference/load_database.md)
-function from this registers2parquet package. After that, we need assign
+the custom `load_database()` function from this registers2parquet
+package. After that, we need assign
 
 ``` r
 ftf_db <- load_database("ftforael")

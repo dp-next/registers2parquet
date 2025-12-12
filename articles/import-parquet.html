@@ -101,10 +101,10 @@
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_databases.html">list_databases</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>Let’s take a simple register as an example. The “ftforael” will do. Use the custom <code><a href="../reference/load_database.html">load_database()</a></code> function from this registers2parquet package. After that, we need assign</p>
+<p>Let’s take a simple register as an example. The “ftforael” will do. Use the custom <code>load_database()</code> function from this registers2parquet package. After that, we need assign</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ftf_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_database.html">load_database</a></span><span class="op">(</span><span class="st">"ftforael"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ftf_db</span> <span class="op">&lt;-</span> <span class="fu">load_database</span><span class="op">(</span><span class="st">"ftforael"</span><span class="op">)</span></span>
 <span><span class="va">ftf_db</span></span></code></pre></div>
 </div>
 <p>You’ll see that the printed output of this object says <code># Source: table&lt;arrow_002&gt; [?? x 12]</code>, or something similar. What this means is that it is showing you a small output of an arrow table (the Parquet data format), that it has 12 columns and an unknown number of rows. Why unknown? Because DuckDB doesn’t store anything on memory and because of the way it processes the query to the database, it can’t actually tell you how many rows are in the database unless you specifically ask for it. For us, we don’t really need to know at this point.</p>

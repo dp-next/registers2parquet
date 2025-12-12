@@ -182,6 +182,10 @@ retrieval of data based on the year.
 Reads a Parquet register from the specified path and returns it as a
 DuckDB table.
 
+See the
+[`read_register()`](https://dp-next.github.io/registers2parquet/reference/read_register.md)
+reference for more details.
+
 ### Helper functions
 
 #### `list_sas_registers(project_id)`
