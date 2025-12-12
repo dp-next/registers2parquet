@@ -12,12 +12,12 @@
 #' # Returns an empty character vector as there are no SAS files in the extdata folder.
 #' list_sas_registers(fs::path_package("registers2parquet", "extdata"))
 list_sas_registers <- function(path) {
-  # Check input
+  # Check input.
   checkmate::assert_directory(path)
   checkmate::assert_scalar(path)
 
-  # List all SAS files in the directory and its subdirectories
-  # (?i) makes the regex case-insensitive
+  # List all SAS files in the directory and its subdirectories.
+  # (?i) makes the regex case-insensitive.
   fs::dir_ls(path, regexp = "(?i).*\\.sas7bdat$", recurse = TRUE) |>
     sort()
 }
@@ -39,12 +39,12 @@ list_sas_registers <- function(path) {
 #'   "extdata",
 #' )))
 list_parquet_registers <- function(path) {
-  # Check input
+  # Check input.
   checkmate::assert_directory(path)
   checkmate::assert_character(path, len = 1)
 
-  # List all Parquet files in the directory and its subdirectories
-  # (?i) makes the regex case-insensitive
+  # List all Parquet files in the directory and its subdirectories.
+  # (?i) makes the regex case-insensitive.
   fs::dir_ls(path, regexp = "(?i)\\.(parquet|parq)$", recurse = TRUE) |>
     sort()
 }
