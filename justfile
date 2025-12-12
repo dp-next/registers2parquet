@@ -77,7 +77,6 @@ cleanup-vignettes:
 lint:
   jarl check .
 
-
 # Preview website locally
 preview-website:
   #!/usr/bin/env Rscript
