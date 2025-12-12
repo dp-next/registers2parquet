@@ -34,10 +34,7 @@ list_sas_registers <- function(path) {
 #'
 #' @export
 #' @examples
-#' list_parquet_registers(fs::path_package(
-#'   "registers2parquet",
-#'   "extdata",
-#' )))
+#' list_parquet_registers(fs::path_package("registers2parquet", "extdata"))
 list_parquet_registers <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
