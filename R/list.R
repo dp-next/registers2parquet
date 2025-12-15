@@ -38,7 +38,7 @@ list_sas_files <- function(path) {
 list_parquet_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
-  checkmate::assert_character(path, len = 1)
+  checkmate::assert_scalar(path)
 
   # List all Parquet files in the directory and its subdirectories.
   # (?i) makes the regex case-insensitive.
