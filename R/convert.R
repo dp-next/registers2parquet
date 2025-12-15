@@ -32,7 +32,7 @@
 #' @examples
 #' \dontrun{
 #' convert_to_parquet(
-#'   list_sas_registers(project_id="202020"),
+#'   list_sas_files("path/to/sas/files"),
 #'   "output/path/to/register_name"
 #' )
 #' }
