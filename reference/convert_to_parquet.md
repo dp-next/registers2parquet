@@ -43,3 +43,12 @@ Returns a character scalar with the path to the created Parquet file(s)
 [targets](https://books.ropensci.org/targets/) pipeline.
 
 ## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+convert_to_parquet(
+  list_sas_files("path/to/sas/files"),
+  "output/path/to/register_name"
+)
+} # }
+```
