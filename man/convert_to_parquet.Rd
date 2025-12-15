@@ -16,7 +16,8 @@ part of the path. E.g., \verb{path/to/register_name/}.}
 }
 \value{
 Returns a character scalar with the path to the created Parquet
-file(s) (\code{output_path}), so it can be used in a \href{https://books.ropensci.org/targets/}{targets} pipeline.
+file(s) (\code{output_path}), so it can be used in a
+\href{https://books.ropensci.org/targets/}{targets} pipeline.
 }
 \description{
 If multiple paths are given, the function looks for a year (4 digits) in the
@@ -40,7 +41,8 @@ knowledge.
 \examples{
 \dontrun{
 convert_to_parquet(
-  list_sas_registers(project_id="202020")),
-  "output/path/to/register_name")
+  list_sas_files("path/to/sas/files"),
+  "output/path/to/register_name"
+)
 }
 }
