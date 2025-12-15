@@ -32,8 +32,9 @@
 #' @examples
 #' \dontrun{
 #' convert_to_parquet(
-#'   list_sas_registers(project_id="202020")),
-#'   "output/path/to/register_name")
+#'   list_sas_registers(project_id="202020"),
+#'   "output/path/to/register_name"
+#' )
 #' }
 convert_to_parquet <- function(path, output_path) {
   # Initial checks.
