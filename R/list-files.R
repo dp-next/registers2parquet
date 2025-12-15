@@ -1,38 +1,3 @@
-#' List all the SAS register databases recursively in a folder
-#'
-#' @param dir Directory to list (recursively) all SAS database files (e.g. in
-#'   `Grunddata/`).
-#'
-#' @returns A character vector of file paths.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' list_sas_files(path_grunddata_dir())
-#' list_sas_files(path_eksterne_dir())
-#' }
-list_sas_files <- function(dir) {
-  fs::dir_ls(dir, glob = "*.sas7bdat", recurse = TRUE) |>
-    sort()
-}
-
-#' List all the Parquet database files recursively in a folder
-#'
-#' @param dir Directory to list (recursively) all Parquet files.
-#'
-#' @returns A character vector.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' list_parquet_files(path_parquet_dirs()[1])
-#' list_parquet_files(path_parquet_dirs()[2])
-#' }
-list_parquet_files <- function(dir) {
-  fs::dir_ls(dir, glob = "*.parquet", recurse = TRUE) |>
-    sort()
-}
-
 #' Lists all the cleaned Parquet databases in the `cleaned-data` folder
 #'
 #' @param full_path Full path to directory to list databases based on.
