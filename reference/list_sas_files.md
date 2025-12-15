@@ -1,29 +1,29 @@
-# List all the SAS register databases recursively in a folder
+# List SAS registers in a directory
 
-List all the SAS register databases recursively in a folder
+This function lists all SAS register files (with the extension
+`.sas7bdat` case-insensitively) in the specified directory and its
+subdirectories.
 
 ## Usage
 
 ``` r
-list_sas_files(dir)
+list_sas_files(path)
 ```
 
 ## Arguments
 
-- dir:
+- path:
 
-  Directory to list (recursively) all SAS database files (e.g. in
-  `Grunddata/`).
+  The path to the directory to search for SAS files.
 
 ## Value
 
-A character vector of file paths.
+A character vector of paths to the SAS files found.
 
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-list_sas_files(path_grunddata_dir())
-list_sas_files(path_eksterne_dir())
-} # }
+# Returns an empty character vector as there are no SAS files in the extdata folder.
+list_sas_files(fs::path_package("registers2parquet", "extdata"))
+#> character(0)
 ```

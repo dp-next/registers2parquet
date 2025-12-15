@@ -60,10 +60,10 @@ into Apache Parquet files.
   : List directories at given path
 
 - [`list_parquet_files()`](https://dp-next.github.io/registers2parquet/reference/list_parquet_files.md)
-  : List all the Parquet database files recursively in a folder
+  : List Parquet registers in a directory
 
 - [`list_sas_files()`](https://dp-next.github.io/registers2parquet/reference/list_sas_files.md)
-  : List all the SAS register databases recursively in a folder
+  : List SAS registers in a directory
 
 - [`path_alter_filename_as_dir()`](https://dp-next.github.io/registers2parquet/reference/path_alter_filename_as_dir.md)
   :
