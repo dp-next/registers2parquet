@@ -26,14 +26,16 @@
 #'    part of the path. E.g., `path/to/register_name/`.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_path`), so it can be used in a [targets](https://books.ropensci.org/targets/) pipeline.
+#'    file(s) (`output_path`), so it can be used in a
+#'    [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
 #' @examples
 #' \dontrun{
 #' convert_to_parquet(
-#'   list_sas_registers(project_id="202020")),
-#'   "output/path/to/register_name")
+#'   list_sas_files("path/to/sas/files"),
+#'   "output/path/to/register_name"
+#' )
 #' }
 convert_to_parquet <- function(path, output_path) {
   # Initial checks.
