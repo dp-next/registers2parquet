@@ -16,13 +16,13 @@ Source:
 [`DESCRIPTION`](https://github.com/dp-next/registers2parquet/blob/main/DESCRIPTION)
 
 Johnston L, Brødbæk S (2025). *registers2parquet: Convert Danish
-register SAS files into Parquet files*. R package version 0.4.0,
+register SAS files into Parquet files*. R package version 0.5.0,
 <https://dp-next.github.io/registers2parquet/>.
 
     @Manual{,
       title = {registers2parquet: Convert Danish register SAS files into Parquet files},
       author = {Luke Johnston and Signe Kirk Brødbæk},
       year = {2025},
-      note = {R package version 0.4.0},
+      note = {R package version 0.5.0},
       url = {https://dp-next.github.io/registers2parquet/},
     }
