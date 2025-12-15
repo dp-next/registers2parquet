@@ -26,7 +26,8 @@
 #'    part of the path. E.g., `path/to/register_name/`.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_path`), so it can be used in a [targets](https://books.ropensci.org/targets/) pipeline.
+#'    file(s) (`output_path`), so it can be used in a
+#'    [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
 #' @examples
