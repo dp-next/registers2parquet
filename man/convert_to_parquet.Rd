@@ -20,6 +20,11 @@ file(s) (\code{output_path}), so it can be used in a
 \href{https://books.ropensci.org/targets/}{targets} pipeline.
 }
 \description{
+This function reads one or more SAS files for a given register, removes any
+duplicate rows, and saves the data in Parquet format. It expects the input
+SAS files to come from the same register, e.g., different years of the same
+register.
+
 If multiple paths are given, the function looks for a year (4 digits) in the
 file names to use the year as partition, see \code{vignettes("design")} for more
 information about the partitioning. If a year is found, the data is saved
