@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.5.0 (2025-12-15)
+
+### Feat
+
+- ✨ add `list_*()` functions (#96)
+
 ## 0.4.0 (2025-12-12)
 
 ### Feat
