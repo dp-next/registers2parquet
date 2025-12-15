@@ -10,8 +10,8 @@
 #' @export
 #' @examples
 #' # Returns an empty character vector as there are no SAS files in the extdata folder.
-#' list_sas_registers(fs::path_package("registers2parquet", "extdata"))
-list_sas_registers <- function(path) {
+#' list_sas_files(fs::path_package("registers2parquet", "extdata"))
+list_sas_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
   checkmate::assert_scalar(path)
@@ -34,8 +34,8 @@ list_sas_registers <- function(path) {
 #'
 #' @export
 #' @examples
-#' list_parquet_registers(fs::path_package("registers2parquet", "extdata"))
-list_parquet_registers <- function(path) {
+#' list_parquet_files(fs::path_package("registers2parquet", "extdata"))
+list_parquet_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
   checkmate::assert_character(path, len = 1)
