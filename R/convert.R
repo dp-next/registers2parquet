@@ -42,15 +42,15 @@
 #'   "output/path/to/register_name"
 #' )
 #' }
-convert_to_parquet <- function(path, output_path) {
+convert_to_parquet <- function(paths, output_path) {
   # Initial checks.
-  checkmate::assert_file_exists(path)
-  checkmate::assert_character(path)
+  checkmate::assert_file_exists(paths)
+  checkmate::assert_character(paths)
   checkmate::assert_character(output_path)
   checkmate::assert_scalar(output_path)
 
   # Read SAS files.
-  data <- read_sas_files(path) |>
+  data <- read_sas_files(paths) |>
     # Remove duplicate rows, ignoring the source_file column.
     dplyr::distinct(dplyr::across(-"source_file"), .keep_all = TRUE) |>
     # Add year column if possible.
@@ -61,7 +61,7 @@ convert_to_parquet <- function(path, output_path) {
   # mutate(across(where(lubridate::is.Date), as.character))
 
   # Write to Parquet, partitioned by year if year column exists.
-  if (length(path) > 1 & any(colnames(data) == "year")) {
+  if (length(paths) > 1 & any(colnames(data) == "year")) {
     fs::dir_create(fs::path(output_path))
     arrow::write_dataset(
       dataset = data,
@@ -79,7 +79,7 @@ convert_to_parquet <- function(path, output_path) {
 
   # Success message.
   cli::cli_alert_success(
-    "Successfully converted {.val {fs::path_file(path)}} to Parquet format and saved it in {.path {output_path}}."
+    "Successfully converted {.val {fs::path_file(paths)}} to Parquet format and saved it in {.path {output_path}}."
   )
 
   output_path
