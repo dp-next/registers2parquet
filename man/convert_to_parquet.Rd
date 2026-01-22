@@ -4,7 +4,7 @@
 \alias{convert_to_parquet}
 \title{Convert register SAS file(s) and save to Parquet format}
 \usage{
-convert_to_parquet(paths, output_path, chunk_size = 5000000L)
+convert_to_parquet(paths, output_path, chunk_size = 10000000L)
 }
 \arguments{
 \item{paths}{A character vector with the absolute path to the register SAS
@@ -15,7 +15,7 @@ the output Parquet file to. Should include the register name as the last
 part of the path. E.g., \verb{path/to/register_name/}.}
 
 \item{chunk_size}{An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 5,000,000.}
+at a time from the SAS files. Defaults to 10,000,000.}
 }
 \value{
 Returns a character scalar with the path to the created Parquet
@@ -31,7 +31,7 @@ If multiple paths are given, the function looks for a year (the first four
 consecutive digits) in the file names to use the year as partition, see
 \code{vignettes("design")} for more information about the partitioning. If a year
 is found, the data is saved partitioned by year in the output directory,
-e.g., \verb{path/to/register_name/year=2020/part-0000.parquet}. If no year is
+e.g., \code{path/to/register_name/year=2020/part-ad5b.parquet} (the ending being an UUID). If no year is
 found in the file name, the data is still partitioned with \code{year=NA}.
 
 Because this function only converts one file at a time (in chunks) to be

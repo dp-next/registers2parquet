@@ -4,7 +4,7 @@
 \alias{convert_file_in_chunks}
 \title{Convert a single register SAS file to Parquet in chunks}
 \usage{
-convert_file_in_chunks(path, output_path, chunk_size = 5000000L)
+convert_file_in_chunks(path, output_path, chunk_size = 10000000L)
 }
 \arguments{
 \item{path}{A character scalar with the absolute path to a single SAS file.}
@@ -14,7 +14,7 @@ the output Parquet file to. Should include the register name as the last
 part of the path. E.g., \verb{path/to/register_name/}.}
 
 \item{chunk_size}{An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 5,000,000.}
+at a time from the SAS files. Defaults to 10,000,000.}
 }
 \value{
 Path to the partition.
