@@ -25,7 +25,8 @@ Imports:
     purrr,
     rlang,
     stringr,
-    tibble
+    tibble,
+    uuid
 Suggests:
     dbplyr,
     devtools,

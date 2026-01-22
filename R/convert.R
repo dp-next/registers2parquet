@@ -73,9 +73,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   fs::dir_create(partition_path, recurse = TRUE)
 
   # Prepare variables used in repeat below.
-  # Start part numbering after existing files to avoid overwriting when
-  # multiple source files share the same year partition.
-  part <- substr(uuid::UUIDgenerate(), 0, 4)
+  part <- create_part_uuid()
   skip <- 0L
 
   # Read first chunk to establish schema.
@@ -100,6 +98,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
       )
 
     skip <- skip + nrow(chunk)
+    part <- create_part_uuid()
 
     chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
@@ -127,6 +126,17 @@ get_year_from_filename <- function(file_path) {
     as.integer()
 }
 
+#' Create UUID for partition part.
+#'
+#' We're using shortened UUIDs instead of integers to avoid collisions when
+#' converting registers in parallel.
+#'
+#' @returns A character scalar with a UUID with a length of 4.
+#'
+#' @keywords internal
+create_part_uuid <- function() {
+  substr(uuid::UUIDgenerate(), 0, 4)
+}
 
 #' Create a consistent Arrow schema from a data frame
 #'
