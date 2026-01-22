@@ -22,7 +22,7 @@
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
 #' @param chunk_size An integer scalar indicating the number of rows to read
-#'    at a time from the SAS files. Defaults to 5,000,000.
+#'    at a time from the SAS files. Defaults to 10,000,000.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
 #'    file(s) (`output_path`), so it can be used in a
@@ -36,7 +36,7 @@
 #'   "output/path/to/register_name"
 #' )
 #' }
-convert_to_parquet <- function(paths, output_path, chunk_size = 5000000L) {
+convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
   # Initial checks.
   checkmate::assert_character(paths)
   checkmate::assert_file_exists(paths)
@@ -64,7 +64,7 @@ convert_to_parquet <- function(paths, output_path, chunk_size = 5000000L) {
 #' @returns Path to the partition.
 #'
 #' @keywords internal
-convert_file_in_chunks <- function(path, output_path, chunk_size = 5000000L) {
+convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   # Create partition path, if it doesn't exist.
   partition_path <- fs::path(
     output_path,
