@@ -72,11 +72,14 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 5000000L) {
   )
   fs::dir_create(partition_path, recurse = TRUE)
 
-  # Check for existing parts and make part = latest part + 1 or 0.
-  part <- get_next_part(partition_path)
+  # Prepare variables used in repeat below.
+  # Start part numbering after existing files to avoid overwriting when
+  # multiple source files share the same year partition.
+  existing_parts <- fs::dir_ls(partition_path, glob = "*.parquet")
+  part <- length(existing_parts)
+  skip <- 0L
 
   # Read first chunk to establish schema.
-  skip <- 0L
   chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
     dplyr::mutate(source_file = path)
@@ -93,15 +96,12 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 5000000L) {
       arrow::write_parquet(
         sink = fs::path(
           partition_path,
-          glue::glue("part-{part}.parquet")
+          glue::glue("part-{sprintf('%04d', part)}.parquet")
         )
       )
 
     skip <- skip + nrow(chunk)
-    # Determine next part from existing parts at `partition_path` in case
-    # write_parquet() above writes multiple parts (only happens if data has more
-    # than 250 million cells, rows x columns).
-    part <- get_next_part(partition_path)
+    part <- part + 1L
 
     chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
@@ -109,24 +109,6 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 5000000L) {
   }
 
   invisible(partition_path)
-}
-
-#' Get the number of the next Parquet partition based on existing partitions.
-#'
-#' @param path Path to (potentially) existing partitions.
-#'
-#' @returns A padded string with the number of the next part. If no existing
-#'  parts are found at `path`, will return `0000`.
-#'
-#' @keywords internal
-get_next_part <- function(path) {
-  parts <- list.files(path) |>
-    stringr::str_extract("\\d+") |>
-    as.integer()
-
-  next_part <- if (length(parts) > 0) max(parts) + 1L else 0L
-
-  sprintf("%04d", next_part)
 }
 
 #' Get year from file name
