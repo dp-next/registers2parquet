@@ -76,7 +76,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   # Start part numbering after existing files to avoid overwriting when
   # multiple source files share the same year partition.
   existing_parts <- fs::dir_ls(partition_path, glob = "*.parquet")
-  part <- length(existing_parts)
+  part <- substr(uuid::UUIDgenerate(), 0, 4)
   skip <- 0L
 
   # Read first chunk to establish schema.
@@ -96,7 +96,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
       arrow::write_parquet(
         sink = fs::path(
           partition_path,
-          glue::glue("part-{sprintf('%04d', part)}.parquet")
+          glue::glue("part-{part}.parquet")
         )
       )
 
