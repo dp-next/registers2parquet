@@ -75,7 +75,6 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   # Prepare variables used in repeat below.
   # Start part numbering after existing files to avoid overwriting when
   # multiple source files share the same year partition.
-  existing_parts <- fs::dir_ls(partition_path, glob = "*.parquet")
   part <- substr(uuid::UUIDgenerate(), 0, 4)
   skip <- 0L
 
@@ -101,7 +100,6 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
       )
 
     skip <- skip + nrow(chunk)
-    part <- part + 1L
 
     chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
