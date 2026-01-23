@@ -40,6 +40,7 @@ convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
   # Initial checks.
   checkmate::assert_character(paths)
   checkmate::assert_file_exists(paths)
+  checkmate::assert_true(is_same_register(paths))
   checkmate::assert_character(output_path)
   checkmate::assert_scalar(output_path)
   checkmate::assert_int(chunk_size, lower = 10000L)
@@ -186,4 +187,26 @@ create_arrow_schema <- function(data) {
 #' @keywords internal
 column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
+}
+
+
+#' Check that all paths are from the same register.
+#'
+#' Removes all non-letters from the file names in paths and checks that the
+#' remaining characters are identical, i.e., the registers have the same name.
+#'
+#' @param paths A character vector with paths to SAS registers.
+#'
+#' @returns A logical that's TRUE if all paths point to files from the same
+#'  register, based on the file names.
+#'
+#' @keywords internal
+is_same_register <- function(paths) {
+  base_names <- paths |>
+    fs::path_file() |>
+    fs::path_ext_remove() |>
+    # Remove everything that's not a letter.
+    stringr::str_remove_all("[^[:alpha:]]")
+
+  length(unique(base_names)) == 1L
 }
