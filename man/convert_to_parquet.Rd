@@ -7,8 +7,8 @@
 convert_to_parquet(paths, output_path, chunk_size = 10000000L)
 }
 \arguments{
-\item{paths}{A character vector with the absolute path to the register SAS
-file(s).}
+\item{paths}{A character vector with the absolute path to a SAS
+file or files for one register.}
 
 \item{output_path}{A character scalar with the path to the directory to save
 the output Parquet file to. Should include the register name as the last

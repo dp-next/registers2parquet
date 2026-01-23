@@ -4,10 +4,10 @@
 \alias{create_arrow_schema}
 \title{Create a consistent Arrow schema from a data frame}
 \usage{
-create_arrow_schema(df)
+create_arrow_schema(data)
 }
 \arguments{
-\item{df}{A data frame to create a schema from.}
+\item{data}{A data frame to create a schema from.}
 }
 \value{
 An Arrow schema with consistent types.
