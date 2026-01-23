@@ -46,7 +46,7 @@ convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
 
   # Convert files.
   purrr::walk(
-    paths, 
+    paths,
     \(path) convert_file_in_chunks(path, output_path, chunk_size)
   )
 
