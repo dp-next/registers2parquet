@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.6.0 (2026-01-23)
+
+### Feat
+
+- ✨ read SAS files in chunks; lowercase column names; align Arrow schemas (#112)
+
 ## 0.5.0 (2025-12-15)
 
 ### Feat
