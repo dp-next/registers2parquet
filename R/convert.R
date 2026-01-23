@@ -16,8 +16,8 @@
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param paths A character vector with the absolute path to the register SAS
-#'    file(s).
+#' @param paths A character vector with the absolute path to a SAS
+#'    file or files for one register.
 #' @param output_path A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
@@ -45,7 +45,10 @@ convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
   checkmate::assert_int(chunk_size, lower = 10000L)
 
   # Convert files.
-  purrr::walk(paths, convert_file_in_chunks, output_path, chunk_size)
+  purrr::walk(
+    paths, 
+    \(path) convert_file_in_chunks(path, output_path, chunk_size)
+  )
 
   # Success message.
   cli::cli_alert_success(
@@ -143,12 +146,12 @@ create_part_uuid <- function() {
 #' Maps R types to specific Arrow types to ensure consistent schemas across
 #' chunks and files.
 #'
-#' @param df A data frame to create a schema from.
+#' @param data A data frame to create a schema from.
 #'
 #' @returns An Arrow schema with consistent types.
 #'
 #' @keywords internal
-create_arrow_schema <- function(df) {
+create_arrow_schema <- function(data) {
   type_map <- function(x) {
     if (inherits(x, "POSIXt")) {
       return(arrow::timestamp(unit = "s"))
@@ -171,7 +174,7 @@ create_arrow_schema <- function(df) {
     arrow::infer_type(x)
   }
 
-  fields <- purrr::imap(df, \(col, name) arrow::field(name, type_map(col)))
+  fields <- purrr::imap(data, \(col, name) arrow::field(name, type_map(col)))
   arrow::schema(fields)
 }
 
