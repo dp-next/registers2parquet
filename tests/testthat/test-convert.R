@@ -8,8 +8,8 @@ temp_output_no_year <- fs::path_temp("test_no_year")
 
 # Prepare temp files with year in filename.
 temp_sas_years <- c(
-  fs::path_temp("test_year1999.sas7bdat"),
-  fs::path_temp("test_year2020.sas7bdat")
+  fs::path_temp("test_1999.sas7bdat"),
+  fs::path_temp("test_2020.sas7bdat")
 )
 temp_output_multiple_years <- fs::path_temp("test_multiple_years")
 
