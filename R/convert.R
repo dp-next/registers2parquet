@@ -1,34 +1,28 @@
 #' Convert register SAS file(s) and save to Parquet format
 #'
 #' @description
-#' This function reads one or more SAS files for a given register, removes any
-#' duplicate rows, and saves the data in Parquet format. It expects the input
-#' SAS files to come from the same register, e.g., different years of the same
-#' register.
+#' This function reads one or more SAS files for a given register, and saves the
+#' data in Parquet format. It expects the input SAS files to come from the same
+#' register, e.g., different years of the same register.
 #'
-#' If multiple paths are given, the function looks for a year (4 digits) in the
-#' file names to use the year as partition, see `vignettes("design")` for more
-#' information about the partitioning. If a year is found, the data is saved
-#' partitioned by year in the output directory, e.g.,
-#' `path/to/register_name/year=2020/part-0.parquet`.
+#' If multiple paths are given, the function looks for a year (the first four
+#' consecutive digits) in the file names to use the year as partition, see
+#' `vignettes("design")` for more information about the partitioning. If a year
+#' is found, the data is saved partitioned by year in the output directory,
+#' e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the ending being an UUID). If no year is
+#' found in the file name, the data is still partitioned with `year=NA`.
 #'
-#' If no year can be found or only one path is given, the data is converted
-#' without partitioning and saved as a Parquet file with the name specified in
-#' the output path. E.g., if output_path is `path/to/register`, the Parquet file
-#' will be saved as `path/to/register.parquet`.
+#' Because this function only converts one file at a time (in chunks) to be
+#' able to handle larger-than-memory SAS files, duplicate rows across files are
+#' not deduplicated.
 #'
-#' If any duplicate rows are found, they are deduplicated before saving to
-#' Parquet. If duplicate rows are found in multiple source files, the row from
-#' the file that appears first in `path` is kept. Rows that are almost identical
-#' across different files (e.g. different years) but that have a difference in
-#' values are kept, as determining which is the correct value requires domain
-#' knowledge.
-#'
-#' @param path A character vector with the absolute path to the register SAS
-#'    file(s).
+#' @param paths A character vector with the absolute path to a SAS
+#'    file or files for one register.
 #' @param output_path A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
+#' @param chunk_size An integer scalar indicating the number of rows to read
+#'    at a time from the SAS files. Defaults to 10,000,000.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
 #'    file(s) (`output_path`), so it can be used in a
@@ -42,102 +36,154 @@
 #'   "output/path/to/register_name"
 #' )
 #' }
-convert_to_parquet <- function(path, output_path) {
+convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
   # Initial checks.
-  checkmate::assert_file_exists(path)
-  checkmate::assert_character(path)
+  checkmate::assert_character(paths)
+  checkmate::assert_file_exists(paths)
   checkmate::assert_character(output_path)
   checkmate::assert_scalar(output_path)
+  checkmate::assert_int(chunk_size, lower = 10000L)
 
-  # Read SAS files.
-  data <- read_sas_files(path) |>
-    # Remove duplicate rows, ignoring the source_file column.
-    dplyr::distinct(dplyr::across(-"source_file"), .keep_all = TRUE) |>
-    # Add year column if possible.
-    add_year_col()
-  # TODO: Might have to do some processing of the dates. If so, create a helper
-  # function for this.
-  # mutate(across(where(~inherits(.x, what = "date")), as.character))
-  # mutate(across(where(lubridate::is.Date), as.character))
-
-  # Write to Parquet, partitioned by year if year column exists.
-  if (length(path) > 1 & any(colnames(data) == "year")) {
-    fs::dir_create(fs::path(output_path))
-    arrow::write_dataset(
-      dataset = data,
-      path = output_path,
-      format = "parquet",
-      partitioning = "year"
-    )
-  } else {
-    output_path <- paste0(output_path, ".parquet")
-    arrow::write_parquet(
-      x = data,
-      sink = output_path,
-    )
-  }
+  # Convert files.
+  purrr::walk(
+    paths,
+    \(path) convert_file_in_chunks(path, output_path, chunk_size)
+  )
 
   # Success message.
   cli::cli_alert_success(
-    "Successfully converted {.val {fs::path_file(path)}} to Parquet format and saved it in {.path {output_path}}."
+    "Successfully converted {.val {fs::path_file(paths)}} and saved it in {.path {output_path}}."
   )
 
   output_path
 }
 
-#' Read SAS files
+
+#' Convert a single register SAS file to Parquet in chunks
 #'
-#' This function reads one or more SAS files and adds a `source_file` column
-#' indicating the file each row came from.
+#' @param path A character scalar with the absolute path to a single SAS file.
+#' @inheritParams convert_to_parquet
 #'
-#' @param path A character vector with the absolute path to the SAS file(s).
-#'
-#' @returns A data frame with the contents of the SAS file(s) plus a
-#'    `source_file` column.
+#' @returns Path to the partition.
 #'
 #' @keywords internal
-read_sas_files <- function(path) {
-  purrr::map(path, \(file_path) {
-    haven::read_sas(file_path) |>
-      dplyr::mutate(source_file = as.character(file_path))
-  }) |>
-    purrr::reduce(dplyr::full_join)
-}
+convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
+  # Create partition path, if it doesn't exist.
+  partition_path <- fs::path(
+    output_path,
+    glue::glue("year={get_year_from_filename(path)}")
+  )
+  fs::dir_create(partition_path, recurse = TRUE)
 
-#' Add year column to data if possible
-#'
-#' @param data A data frame with a `source_file` column to extract year from.
-#'
-#' @returns A data frame with a year column added if the year could be
-#'    determined.
-#'
-#' @keywords internal
-add_year_col <- function(data) {
-  year <- get_year_from_col(data$source_file)
+  # Prepare variables used in repeat below.
+  part <- create_part_uuid()
+  skip <- 0L
 
-  next_year <- as.integer(format(Sys.Date(), "%Y")) + 1L
-  if (all(!is.na(year) & year %in% 1969:next_year)) {
-    data <- data |> dplyr::mutate(year = year)
-  } else {
-    cli::cli_alert_info(
-      "Could not determine year from file name(s) {.path {unique(fs::path_file(data$source_file))}}. Will not partition by year."
-    )
+  # Read first chunk to establish schema.
+  chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+    column_names_to_lower() |>
+    dplyr::mutate(source_file = path)
+  schema <- create_arrow_schema(chunk)
+
+  repeat {
+    # Break when no more rows left.
+    if (nrow(chunk) == 0) {
+      break
+    }
+
+    chunk |>
+      arrow::as_arrow_table(schema = schema) |>
+      arrow::write_parquet(
+        sink = fs::path(
+          partition_path,
+          glue::glue("part-{part}.parquet")
+        )
+      )
+
+    skip <- skip + nrow(chunk)
+    part <- create_part_uuid()
+
+    chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+      column_names_to_lower() |>
+      dplyr::mutate(source_file = path)
   }
-  data
+
+  invisible(partition_path)
 }
 
-#' Get year from column values
+#' Get year from file name
 #'
-#' @param data_col A character vector with file paths to extract year from.
+#' The year is determined as the first four consecutive numbers starting with
+#' 19 or 20 in the file name (i.e., years 1900-2099).
 #'
-#' @returns An integer vector with the extracted years, or `NA` if no year
-#'    found.
+#' @param file_path A character vector with file path to extract year from.
+#'
+#' @returns An integer vector with the extracted years, or NA if no year
+#'    is found.
 #'
 #' @keywords internal
-get_year_from_col <- function(data_col) {
-  data_col |>
-    get_filename_no_ext() |>
-    stringr::str_extract("\\d{4,6}") |>
-    stringr::str_extract("^\\d{4}") |>
+get_year_from_filename <- function(file_path) {
+  file_path |>
+    fs::path_file() |>
+    stringr::str_extract("(19|20)\\d{2}") |>
     as.integer()
+}
+
+#' Create UUID for partition part.
+#'
+#' We're using shortened UUIDs instead of integers to avoid collisions when
+#' converting registers in parallel.
+#'
+#' @returns A character scalar with a UUID with a length of 4.
+#'
+#' @keywords internal
+create_part_uuid <- function() {
+  substr(uuid::UUIDgenerate(), 0, 4)
+}
+
+#' Create a consistent Arrow schema from a data frame
+#'
+#' Maps R types to specific Arrow types to ensure consistent schemas across
+#' chunks and files.
+#'
+#' @param data A data frame to create a schema from.
+#'
+#' @returns An Arrow schema with consistent types.
+#'
+#' @keywords internal
+create_arrow_schema <- function(data) {
+  type_map <- function(x) {
+    if (inherits(x, "POSIXt")) {
+      return(arrow::timestamp(unit = "s"))
+    }
+    if (inherits(x, "Date")) {
+      return(arrow::date32())
+    }
+    if (is.character(x)) {
+      return(arrow::large_utf8())
+    }
+    if (is.integer(x)) {
+      return(arrow::int32())
+    }
+    if (is.numeric(x)) {
+      return(arrow::float64())
+    }
+    if (is.logical(x)) {
+      return(arrow::boolean())
+    }
+    arrow::infer_type(x)
+  }
+
+  fields <- purrr::imap(data, \(col, name) arrow::field(name, type_map(col)))
+  arrow::schema(fields)
+}
+
+#' Convert column names to lower case
+#'
+#' @param data A data frame type object.
+#'
+#' @returns The same object type given.
+#' @keywords internal
+column_names_to_lower <- function(data) {
+  dplyr::rename_with(data, tolower)
 }

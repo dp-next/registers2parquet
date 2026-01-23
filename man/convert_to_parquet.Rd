@@ -4,15 +4,18 @@
 \alias{convert_to_parquet}
 \title{Convert register SAS file(s) and save to Parquet format}
 \usage{
-convert_to_parquet(path, output_path)
+convert_to_parquet(paths, output_path, chunk_size = 10000000L)
 }
 \arguments{
-\item{path}{A character vector with the absolute path to the register SAS
-file(s).}
+\item{paths}{A character vector with the absolute path to a SAS
+file or files for one register.}
 
 \item{output_path}{A character scalar with the path to the directory to save
 the output Parquet file to. Should include the register name as the last
 part of the path. E.g., \verb{path/to/register_name/}.}
+
+\item{chunk_size}{An integer scalar indicating the number of rows to read
+at a time from the SAS files. Defaults to 10,000,000.}
 }
 \value{
 Returns a character scalar with the path to the created Parquet
@@ -20,28 +23,20 @@ file(s) (\code{output_path}), so it can be used in a
 \href{https://books.ropensci.org/targets/}{targets} pipeline.
 }
 \description{
-This function reads one or more SAS files for a given register, removes any
-duplicate rows, and saves the data in Parquet format. It expects the input
-SAS files to come from the same register, e.g., different years of the same
-register.
+This function reads one or more SAS files for a given register, and saves the
+data in Parquet format. It expects the input SAS files to come from the same
+register, e.g., different years of the same register.
 
-If multiple paths are given, the function looks for a year (4 digits) in the
-file names to use the year as partition, see \code{vignettes("design")} for more
-information about the partitioning. If a year is found, the data is saved
-partitioned by year in the output directory, e.g.,
-\verb{path/to/register_name/year=2020/part-0.parquet}.
+If multiple paths are given, the function looks for a year (the first four
+consecutive digits) in the file names to use the year as partition, see
+\code{vignettes("design")} for more information about the partitioning. If a year
+is found, the data is saved partitioned by year in the output directory,
+e.g., \code{path/to/register_name/year=2020/part-ad5b.parquet} (the ending being an UUID). If no year is
+found in the file name, the data is still partitioned with \code{year=NA}.
 
-If no year can be found or only one path is given, the data is converted
-without partitioning and saved as a Parquet file with the name specified in
-the output path. E.g., if output_path is \code{path/to/register}, the Parquet file
-will be saved as \code{path/to/register.parquet}.
-
-If any duplicate rows are found, they are deduplicated before saving to
-Parquet. If duplicate rows are found in multiple source files, the row from
-the file that appears first in \code{path} is kept. Rows that are almost identical
-across different files (e.g. different years) but that have a difference in
-values are kept, as determining which is the correct value requires domain
-knowledge.
+Because this function only converts one file at a time (in chunks) to be
+able to handle larger-than-memory SAS files, duplicate rows across files are
+not deduplicated.
 }
 \examples{
 \dontrun{
