@@ -2,7 +2,7 @@
 % Please edit documentation in R/convert.R
 \name{create_part_uuid}
 \alias{create_part_uuid}
-\title{Create UUID for partition part.}
+\title{Create UUID for partition part}
 \usage{
 create_part_uuid()
 }

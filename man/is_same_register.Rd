@@ -2,7 +2,7 @@
 % Please edit documentation in R/convert.R
 \name{is_same_register}
 \alias{is_same_register}
-\title{Check that all paths are from the same register.}
+\title{Check that all paths are from the same register}
 \usage{
 is_same_register(paths)
 }

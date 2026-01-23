@@ -130,7 +130,7 @@ get_year_from_filename <- function(file_path) {
     as.integer()
 }
 
-#' Create UUID for partition part.
+#' Create UUID for partition part
 #'
 #' We're using shortened UUIDs instead of integers to avoid collisions when
 #' converting registers in parallel.
@@ -189,8 +189,7 @@ column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
 }
 
-
-#' Check that all paths are from the same register.
+#' Check that all paths are from the same register
 #'
 #' Removes all non-letters from the file names in paths and checks that the
 #' remaining characters are identical, i.e., the registers have the same name.
