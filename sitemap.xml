@@ -11,8 +11,11 @@
 <url><loc>https://dp-next.github.io/registers2parquet/authors.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/index.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/news/index.html</loc></url>
-<url><loc>https://dp-next.github.io/registers2parquet/reference/add_year_col.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/column_names_to_lower.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/convert_file_in_chunks.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/create_arrow_schema.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/create_part_uuid.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_database_name.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_database_year.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_database_year_external.html</loc></url>
@@ -23,8 +26,9 @@
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_path_specific_database.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_path_with_year.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/get_path_without_year.html</loc></url>
-<url><loc>https://dp-next.github.io/registers2parquet/reference/get_year_from_col.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/get_year_from_filename.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/index.html</loc></url>
+<url><loc>https://dp-next.github.io/registers2parquet/reference/is_same_register.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/list_databases.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/list_dirs.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/list_parquet_files.html</loc></url>
@@ -50,6 +54,5 @@
 <url><loc>https://dp-next.github.io/registers2parquet/reference/read_register.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/read_register_file.html</loc></url>
 <url><loc>https://dp-next.github.io/registers2parquet/reference/read_register_partition.html</loc></url>
-<url><loc>https://dp-next.github.io/registers2parquet/reference/read_sas_files.html</loc></url>
 </urlset>
 
