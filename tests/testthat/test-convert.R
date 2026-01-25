@@ -8,8 +8,8 @@ temp_output_no_year <- fs::path_temp("test_no_year")
 
 # Prepare temp files with year in filename.
 temp_sas_years <- c(
-  fs::path_temp("test_year1999.sas7bdat"),
-  fs::path_temp("test_year2020.sas7bdat")
+  fs::path_temp("test_1999.sas7bdat"),
+  fs::path_temp("test_2020.sas7bdat")
 )
 temp_output_multiple_years <- fs::path_temp("test_multiple_years")
 
@@ -128,6 +128,13 @@ test_that("incorrect parameters generate errors", {
     temp_sas_no_years,
     temp_output_no_year_one_file,
     10L
+  ))
+  # Paths are not from the same register.
+  temp_different_register <- fs::path_temp("other_2020.sas7bdat")
+  suppressWarnings(haven::write_sas(co2_df, temp_different_register))
+  expect_error(convert_to_parquet(
+    c(temp_sas_years[[1]], temp_different_register),
+    temp_output_multiple_years
   ))
 })
 
