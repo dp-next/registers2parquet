@@ -1,3 +1,5 @@
+# Tests with small test data --------------------------------------------------
+
 # Prepare temp file without year in filename.
 temp_sas_no_years <- c(
   fs::path_temp("test.sas7bdat"),
@@ -188,4 +190,53 @@ test_that("mixed files with and without years are partitioned correctly", {
   result <- arrow::open_dataset(output_path_mixed) |>
     dplyr::as_tibble()
   expect_equal(nrow(result), nrow(co2_df) * 2)
+})
+
+# Tests with large internal data files ----------------------------------------
+
+test_that("larger files are partitioned as expected with chunk_size = 1 million", {
+  skip_on_cran()
+
+  kontakter_list <- helper_create_simulated_kontakter()
+  paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+    fs::path_temp() |>
+    as.character()
+  temp_output <- fs::path_temp("kontakter")
+
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[[1]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
+
+  chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
+
+  actual_output_path <- convert_to_parquet(
+    paths = paths,
+    output_path = temp_output,
+    chunk_size = chunk_size
+  )
+
+  # Check number of files per partition.
+  sas_files <- purrr::map(paths, haven::read_sas)
+  n_files_expected <- sas_files |>
+    purrr::map_int(nrow) /
+    chunk_size
+
+  files <- fs::dir_ls(actual_output_path, recurse = TRUE)
+
+  expect_length(stringr::str_subset(files, "year=NA/"), n_files_expected[[1]])
+  expect_length(
+    stringr::str_subset(files, "year=1999/"),
+
+    sum(n_files_expected[[2]], n_files_expected[[3]])
+  )
+
+  # Verify Parquet register can be opened and has the expected row count.
+  nrow_actual <- arrow::open_dataset(temp_output) |>
+    nrow()
+
+  nrow_expected <- sas_files |>
+    purrr::map_int(nrow) |>
+    sum()
+
+  expect_equal(nrow_actual, nrow_expected)
 })
