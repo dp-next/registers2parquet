@@ -83,7 +83,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   # Read first chunk to establish schema.
   chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
-    dplyr::mutate(source_file = path)
+    dplyr::mutate(source_file = as.character(path))
   schema <- create_arrow_schema(chunk)
 
   repeat {
@@ -106,7 +106,7 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
 
     chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
-      dplyr::mutate(source_file = path)
+      dplyr::mutate(source_file = as.character(path))
   }
 
   invisible(partition_path)
