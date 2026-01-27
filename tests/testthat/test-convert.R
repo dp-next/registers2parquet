@@ -197,6 +197,7 @@ test_that("mixed files with and without years are partitioned correctly", {
 test_that("larger files are partitioned as expected with chunk_size = 1 million", {
   skip_on_cran()
 
+  kontakter_list <- helper_create_simulated_kontakter()
   paths <- as.character(fs::path_temp(paste0(
     names(kontakter_list),
     ".sas7bdat"
