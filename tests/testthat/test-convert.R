@@ -198,13 +198,12 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
   skip_on_cran()
 
   kontakter_list <- helper_create_simulated_kontakter()
-  paths <- as.character(fs::path_temp(paste0(
-    names(kontakter_list),
-    ".sas7bdat"
-  )))
+  paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+    fs::path_temp() |>
+    as.character()
   temp_output <- fs::path_temp("kontakter")
 
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[1]))
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[[1]]))
   suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
   suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
 
@@ -222,11 +221,12 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
     purrr::map_int(nrow) /
     chunk_size
 
-  files <- list.files(actual_output_path, recursive = TRUE)
+  files <- fs::dir_ls(actual_output_path, recurse = TRUE)
 
-  expect_length(files[grepl("^year=NA/", files)], n_files_expected[[1]])
+  expect_length(stringr::str_subset(files, "^year=NA/"), n_files_expected[[1]])
   expect_length(
-    files[grepl("^year=1999/", files)],
+    stringr::str_subset(files, "^year=1999/"),
+
     sum(n_files_expected[[2]], n_files_expected[[3]])
   )
 
