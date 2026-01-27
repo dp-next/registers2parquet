@@ -23,5 +23,3 @@
 ^\.pre-commit-config\.yaml$
 ^\.typos\.toml$
 ^_targets\.R$
-^data-raw$
-^R/sysdata\.rda$
