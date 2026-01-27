@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.6.2 (2026-01-27)
+
+### Refactor
+
+- :adhesive_bandage: ensure `source_file` is character before Arrow schema creation (#120)
+
 ## 0.6.1 (2026-01-25)
 
 ### Refactor
