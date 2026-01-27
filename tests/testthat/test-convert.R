@@ -223,9 +223,9 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
 
   files <- fs::dir_ls(actual_output_path, recurse = TRUE)
 
-  expect_length(stringr::str_subset(files, "^year=NA/"), n_files_expected[[1]])
+  expect_length(stringr::str_subset(files, "year=NA/"), n_files_expected[[1]])
   expect_length(
-    stringr::str_subset(files, "^year=1999/"),
+    stringr::str_subset(files, "year=1999/"),
 
     sum(n_files_expected[[2]], n_files_expected[[3]])
   )
