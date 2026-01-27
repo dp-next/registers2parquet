@@ -24,3 +24,4 @@
 ^\.typos\.toml$
 ^_targets\.R$
 ^data-raw$
+^R/sysdata\.rda$
