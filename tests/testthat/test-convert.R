@@ -196,23 +196,16 @@ test_that("mixed files with and without years are partitioned correctly", {
 
 test_that("larger files are partitioned as expected with chunk_size = 1 million", {
   skip_on_cran()
-  skip_if_not(
-    exists("kontakter"),
-    "Internal test data not available. Run the internal-data script in the `data-raw/` folder"
-  )
 
-  paths <- c(
-    fs::path_temp("kontakter.sas7bdat"),
-    fs::path_temp("kontakter_1999_1.sas7bdat"),
-    fs::path_temp("kontakter_1999_2.sas7bdat")
-  )
+  kontakter_list <- create_kontakter_register_files()
+  paths <- fs::path_temp(paste0(names(kontakter_list), ".sas7bdat"))
   temp_output <- fs::path_temp("kontakter")
 
-  suppressWarnings(haven::write_sas(kontakter, paths[1]))
-  suppressWarnings(haven::write_sas(kontakter_1999_1, paths[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_1999_2, paths[[3]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[1]))
+  suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
 
-  chunk_size <- 1000000L
+  chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
 
   actual_output_path <- convert_to_parquet(
     paths = paths,
