@@ -14,7 +14,7 @@ A logical that's TRUE if all paths point to files from the same
 register, based on the file names.
 }
 \description{
-Removes all non-letters from the file names in paths and checks that the
-remaining characters are identical, i.e., the registers have the same name.
+Checks that all register names (file names without any non-letters) in paths
+are identical, i.e., the registers have the same name.
 }
 \keyword{internal}
