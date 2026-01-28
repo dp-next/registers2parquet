@@ -191,8 +191,8 @@ column_names_to_lower <- function(data) {
 
 #' Check that all paths are from the same register
 #'
-#' Removes all non-letters from the file names in paths and checks that the
-#' remaining characters are identical, i.e., the registers have the same name.
+#' Checks that all register names (file names without any non-letters) in paths
+#' are identical, i.e., the registers have the same name.
 #'
 #' @param paths A character vector with paths to SAS registers.
 #'
@@ -201,11 +201,7 @@ column_names_to_lower <- function(data) {
 #'
 #' @keywords internal
 is_same_register <- function(paths) {
-  base_names <- paths |>
-    fs::path_file() |>
-    fs::path_ext_remove() |>
-    # Remove everything that's not a letter.
-    stringr::str_remove_all("[^[:alpha:]]")
+  register_names <- get_register_names(paths)
 
-  length(unique(base_names)) == 1L
+  length(unique(register_names)) == 1L
 }
