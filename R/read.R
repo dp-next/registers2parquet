@@ -14,7 +14,7 @@
 #' read_register(fs::path_package(
 #'   "registers2parquet",
 #'   "extdata",
-#'   "test_register.parquet"
+#'   "test.parquet"
 #' ))
 read_register <- function(
   path
