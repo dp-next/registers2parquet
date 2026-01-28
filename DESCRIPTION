@@ -36,7 +36,8 @@ Suggests:
     quarto,
     targets,
     testthat (>= 3.0.0),
-    tidyselect
+    tidyselect,
+    withr
 VignetteBuilder:
     quarto
 Encoding: UTF-8
