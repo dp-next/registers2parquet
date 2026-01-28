@@ -32,7 +32,9 @@ Suggests:
     devtools,
     duckdb,
     osdc,
+    qs2,
     quarto,
+    targets,
     testthat (>= 3.0.0),
     tidyselect
 VignetteBuilder:
