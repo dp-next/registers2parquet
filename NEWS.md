@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.6.3 (2026-01-28)
+
+### Refactor
+
+- ♻️ add internal `get_register_names()` (#123)
+
 ## 0.6.2 (2026-01-27)
 
 ### Refactor
