@@ -111,7 +111,7 @@ and output for a collection of SAS files for the `bef` register:
 ::: column
 #### Input: Register SAS files
 
-```         
+```
 bef2018.sas7bdat
 bef2019.sas7bdat
 bef2020.sas7bdat
@@ -125,7 +125,7 @@ December_2023/bef2023.sas7bdat
 ::: column
 #### Output: Parquet files
 
-```         
+```
 bef/
 ├── year=2018/
 │   └── part-0.parquet
