@@ -4,8 +4,8 @@
 
 The easiest way to contribute is to report issues or bugs that you might
 find while using `fastreg`. You can do this by creating a
-[new](https://github.com/dp-next/fastreg/issues/new/) issue on
-our GitHub repository.
+[new](https://github.com/dp-next/fastreg/issues/new/) issue on our
+GitHub repository.
 
 ## Adding or modifying content :pencil2:
 
