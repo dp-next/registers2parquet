@@ -9,7 +9,6 @@
 #'
 #' @export
 #' @examples
-#' # Returns an empty character vector as there are no SAS files in the extdata folder.
 #' list_sas_files(fs::path_package("registers2parquet", "extdata"))
 list_sas_files <- function(path) {
   # Check input.
