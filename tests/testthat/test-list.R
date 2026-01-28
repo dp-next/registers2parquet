@@ -31,16 +31,13 @@ test_that("expected Parquet files are listed", {
   expect_equal(as.character(actual), as.character(expected))
 })
 
-test_that("an empty list is returned when no relevant files are found", {
+test_that("an error is thrown when no relevant files are found", {
   no_relevant_files_dir <- fs::path_temp("no_relevant_files")
   fs::dir_create(no_relevant_files_dir)
   fs::file_create(fs::path(no_relevant_files_dir, "unrelated.txt"))
 
-  sas_files <- list_sas_files(no_relevant_files_dir)
-  parquet_files <- list_parquet_files(no_relevant_files_dir)
-
-  expect_equal(length(sas_files), 0)
-  expect_equal(length(parquet_files), 0)
+  expect_error(list_sas_files(no_relevant_files_dir))
+  expect_error(list_parquet_files(no_relevant_files_dir))
 })
 
 test_that("error is thrown for non-existent path", {
