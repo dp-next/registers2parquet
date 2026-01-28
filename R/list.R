@@ -18,8 +18,18 @@ list_sas_files <- function(path) {
 
   # List all SAS files in the directory and its subdirectories.
   # (?i) makes the regex case-insensitive.
-  fs::dir_ls(path, regexp = "(?i).*\\.sas7bdat$", recurse = TRUE) |>
+  sas_files <- fs::dir_ls(
+    path,
+    regexp = "(?i).*\\.sas7bdat$",
+    recurse = TRUE
+  ) |>
     sort()
+
+  if (length(sas_files) == 0) {
+    cli::cli_abort("No SAS files found in {.path {path}}.")
+  }
+
+  sas_files
 }
 
 #' List Parquet registers in a directory
@@ -42,6 +52,16 @@ list_parquet_files <- function(path) {
 
   # List all Parquet files in the directory and its subdirectories.
   # (?i) makes the regex case-insensitive.
-  fs::dir_ls(path, regexp = "(?i)\\.(parquet|parq)$", recurse = TRUE) |>
+  parquet_files <- fs::dir_ls(
+    path,
+    regexp = "(?i)\\.(parquet|parq)$",
+    recurse = TRUE
+  ) |>
     sort()
+
+  if (length(parquet_files) == 0) {
+    cli::cli_abort("No SAS files found in {.path {path}}.")
+  }
+
+  parquet_files
 }
