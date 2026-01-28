@@ -84,12 +84,12 @@ through dplyr (technically dbplyr) and I'll show you how!
 
 The key packages you'll want to use are the duckdb and arrow packages.
 So we can load them up. There's also a custom function within this
-registers2parquet package that helps with loading the register databases.
+fastreg package that helps with loading the register databases.
 Everyone on this project folder *should theoretically* have this package
 installed, but let me know if you don't.
 
 ```{r setup}
-library(registers2parquet)
+library(fastreg)
 # devtools::load_all()
 ```
 
@@ -101,7 +101,7 @@ list_databases()
 ```
 
 Let's take a simple register as an example. The "ftforael" will do. Use
-the custom `load_database()` function from this registers2parquet package.
+the custom `load_database()` function from this fastreg package.
 After that, we need assign
 
 ```{r}

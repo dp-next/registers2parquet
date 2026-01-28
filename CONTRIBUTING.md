@@ -3,8 +3,8 @@
 ## Issues and bugs :bug:
 
 The easiest way to contribute is to report issues or bugs that you might
-find while using `registers2parquet`. You can do this by creating a
-[new](https://github.com/dp-next/registers2parquet/issues/new/) issue on
+find while using `fastreg`. You can do this by creating a
+[new](https://github.com/dp-next/fastreg/issues/new/) issue on
 our GitHub repository.
 
 ## Adding or modifying content :pencil2:

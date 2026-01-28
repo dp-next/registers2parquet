@@ -2,10 +2,10 @@
 format: gfm
 gh:
   org: dp-next
-  repo: registers2parquet
+  repo: fastreg
 ---
 
-# registers2parquet: Converting the DST data into Parquet files
+# fastreg: Converting the DST data into Parquet files
 
 <!-- badges: start -->
 [![GitHub Release](https://img.shields.io/github/v/release/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/releases/latest)
@@ -15,7 +15,7 @@ gh:
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
-The goal of registers2parquet is to take the mess of DST SAS files and convert
+The goal of fastreg is to take the mess of DST SAS files and convert
 them into something more modern, faster, and easier to work with. And
 also to prepare the data for our own work.
 
