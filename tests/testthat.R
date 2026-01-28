@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(registers2parquet)
+library(fastreg)
 
-test_check("registers2parquet")
+test_check("fastreg")

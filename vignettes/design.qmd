@@ -8,8 +8,7 @@ vignette: >
 
 ## Core functionality
 
-This is the list of the core functionality in the `registers2parquet`
-package:
+This is the list of the core functionality in the fastreg package:
 
 1.  Converts Danish register data from SAS files to the modern and
     efficient Parquet format.
@@ -33,7 +32,7 @@ if the processing time per file is substantial.
 ## Visual representation of data flow
 
 ```{mermaid}
-%%| fig-alt: "A flowchart showing the data flow within `registers2parquet`, showing how SAS files are imported, potentially joined, and then exported as Parquet files with a year partitioning."
+%%| fig-alt: "A flowchart showing the data flow within fastreg, showing how SAS files are imported, potentially joined, and then exported as Parquet files with a year partitioning."
 %%| file: flow.mmd
 ```
 
@@ -47,31 +46,29 @@ that the functions operate on.
 ### Actions
 
 | Action | Description |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | convert | Convert a register SAS file (or multiple) to Parquet. |
 | get | Used for internal helper functions to e.g., get or extract the year from a file name. |
 | list | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
 | read | Read a Parquet register into R as a DuckDB table. |
 
-: Actions used in `registers2parquet`.
-
-<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? -->
+: Actions used in fastreg.
 
 ### Objects
 
 | Object | Description |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `output_path` | A character scalar with the absolute path to the directory where the Parquet file should be created in. |
 | `path` | A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files. |
 | `project_id` | A character scalar with the DST project number to the folder containing the raw or work data. |
 | `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., "bef". It's used in `list` functions to retrieve the paths of objects including that name. |
 
-: Objects used in `registers2parquet`.
+: Objects used in fastreg.
 
 ## Interface
 
-`registers2parquet` includes two main functions and multiple helper
-functions. Each function is listed below with a short description.
+fastreg includes two main functions and multiple helper functions. Each
+function is listed below with a short description.
 
 ::: callout-tip
 See the [Reference documentation](/reference/index.html) for more
@@ -102,8 +99,8 @@ The output of `convert_register_to_parquet()` is the character vector
 given as input in `output_path`. This allows for easy integration into a
 targets pipeline.
 
-Even though the function doesn't return the written Parquet register, its
-creation is confirmed with a message in the R console.
+Even though the function doesn't return the written Parquet register,
+its creation is confirmed with a message in the R console.
 
 The created Parquet files will be stored in a directory structure that
 reflects the register name and a year partitioning if a year can be
@@ -153,7 +150,6 @@ from the file name. Each year directory contains a Parquet file
 (`part-0.parquet`). This structure allows for efficient querying and
 retrieval of data based on the year.
 
-
 #### `read_register(register_name, project_id)`
 
 Reads a Parquet register from the specified path and returns it as a
@@ -180,13 +176,13 @@ given directory.
 
 ## Expected flow
 
-We expect the flow of using the `registers2parquet` package to convert
-register SAS files to Parquet files will be as follows:
+We expect the flow of using the fastreg package to convert register SAS
+files to Parquet files will be as follows:
 
 ```{mermaid}
 %%| label: fig-flow
 %%| fig-cap: "Flow of the expected flow using the `convert_to_parquet()` package to convert register SAS files to Parquet files."
-%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the `registers2parquet` package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_to_parquet()`, which then outputs the path to the written Parquet files."
+%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the fastreg package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_to_parquet()`, which then outputs the path to the written Parquet files."
 flowchart TD
 
     identify_paths("Identify register path(s)<br>with helper functions")
@@ -205,13 +201,13 @@ flowchart TD
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-We expect a flow of reading a Parquet register created by the
-`registers2parquet` package into an R session to be as follows:
+We expect a flow of reading a Parquet register created by the fastreg
+package into an R session to be as follows:
 
 ```{mermaid}
 %%| label: fig-flow-use
-%%| fig-cap: "Flow of the expected flow of reading a Parquet register that was created with the `registers2parquet` package."
-%%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the `registers2parquet` package. It includes using the register name to read a specific register into the R session using the `read_register_parquet()` function, which outputs the register as a DuckDB table."
+%%| fig-cap: "Flow of the expected flow of reading a Parquet register that was created with the fastreg package."
+%%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package. It includes using the register name to read a specific register into the R session using the `read_register_parquet()` function, which outputs the register as a DuckDB table."
 flowchart TD
 
     project_id[/"project_id<br>[Character scalar]"/]
