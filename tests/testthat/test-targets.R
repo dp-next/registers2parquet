@@ -30,20 +30,26 @@ test_that("template is valid R code", {
 })
 
 test_that("template contains expected targets", {
-  expect_true(any(grepl("all_sas_paths", template_content)))
-  expect_true(any(grepl("register_path_groups", template_content)))
-  expect_true(any(grepl("register_parquets", template_content)))
+  expect_true(any(stringr::str_detect(template_content, "all_sas_paths")))
+  expect_true(any(stringr::str_detect(
+    template_content,
+    "register_path_groups"
+  )))
+  expect_true(any(stringr::str_detect(template_content, "register_parquets")))
 })
 
 test_that("template uses correct package functions", {
-  expect_true(any(grepl("registers2parquet::list_sas_files", template_content)))
-  expect_true(any(grepl(
-    "registers2parquet::get_register_path_groups",
-    template_content
+  expect_true(any(stringr::str_detect(
+    template_content,
+    "registers2parquet::list_sas_files"
   )))
-  expect_true(any(grepl(
-    "registers2parquet::convert_to_parquet",
-    template_content
+  expect_true(any(stringr::str_detect(
+    template_content,
+    "registers2parquet::get_register_path_groups"
+  )))
+  expect_true(any(stringr::str_detect(
+    template_content,
+    "registers2parquet::convert_to_parquet"
   )))
 })
 
