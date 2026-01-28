@@ -19,7 +19,7 @@ list_sas_files <- function(path) {
   # (?i) makes the regex case-insensitive.
   sas_files <- fs::dir_ls(
     path,
-    regexp = "(?i).*\\.sas7bdat$",
+    regexp = "(?i)\\.sas7bdat$",
     recurse = TRUE
   ) |>
     sort()
