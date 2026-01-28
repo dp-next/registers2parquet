@@ -214,3 +214,39 @@ get_register_names <- function(paths) {
     # Remove everything that's not a letter.
     stringr::str_remove_all("[^[:alpha:]]")
 }
+
+#' Group file paths by register name
+#'
+#' Groups a vector of file paths by their register name, where the register
+#' name is derived from the file name with all non-letter characters removed.
+#'
+#' @param paths A character vector of file paths.
+#'
+#' @returns A list of character vectors, where each element contains paths
+#'   belonging to the same register.
+#'
+#' @export
+#' @examples
+#' paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
+#' get_register_path_groups(paths)
+get_register_path_groups <- function(paths) {
+  register_names <- get_register_names(paths)
+  split(paths, register_names) |> unname()
+}
+
+#' Get register name from a group of paths
+#'
+#' Extracts the register name from the first path in a group. Intended for use
+#' with groups created by [get_register_path_groups()].
+#'
+#' @param paths A character vector of file paths from the same register.
+#'
+#' @returns A character scalar with the register name.
+#'
+#' @export
+#' @examples
+#' paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
+#' get_first_register_name(paths)
+get_first_register_name <- function(paths) {
+  get_register_names(paths[1])
+}
