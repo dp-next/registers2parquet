@@ -8,7 +8,7 @@ I’m suggesting using it, and how to use it.
 ## What is SQL and DuckDB?
 
 I mention SQL briefly in the
-[`vignette("saving-as-parquet")`](https://dp-next.github.io/registers2parquet/articles/saving-as-parquet.md),
+[`vignette("saving-as-parquet")`](https://dp-next.github.io/fastreg/articles/saving-as-parquet.md),
 but I’ll expand more here. SQL stands for “Structured Query Language”
 and is a widely used and well established way of working and interacting
 with databases. There are a couple of potentially terms here that I
@@ -78,12 +78,12 @@ through dplyr (technically dbplyr) and I’ll show you how!
 
 The key packages you’ll want to use are the duckdb and arrow packages.
 So we can load them up. There’s also a custom function within this
-registers2parquet package that helps with loading the register
-databases. Everyone on this project folder *should theoretically* have
-this package installed, but let me know if you don’t.
+fastreg package that helps with loading the register databases. Everyone
+on this project folder *should theoretically* have this package
+installed, but let me know if you don’t.
 
 ``` r
-library(registers2parquet)
+library(fastreg)
 # devtools::load_all()
 ```
 
@@ -95,8 +95,8 @@ list_databases()
 ```
 
 Let’s take a simple register as an example. The “ftforael” will do. Use
-the custom `load_database()` function from this registers2parquet
-package. After that, we need assign
+the custom `load_database()` function from this fastreg package. After
+that, we need assign
 
 ``` r
 ftf_db <- load_database("ftforael")

@@ -23,6 +23,6 @@ A character vector of paths to the Parquet files found.
 ## Examples
 
 ``` r
-list_parquet_files(fs::path_package("registers2parquet", "extdata"))
-#> /home/runner/work/_temp/Library/registers2parquet/extdata/test_register.parquet
+list_parquet_files(fs::path_package("fastreg", "extdata"))
+#> /home/runner/work/_temp/Library/fastreg/extdata/test_register.parquet
 ```

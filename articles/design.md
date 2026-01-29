@@ -2,8 +2,7 @@
 
 ## Core functionality
 
-This is the list of the core functionality in the `registers2parquet`
-package:
+This is the list of the core functionality in the fastreg package:
 
 1.  Converts Danish register data from SAS files to the modern and
     efficient Parquet format.
@@ -86,7 +85,7 @@ that the functions operate on.
 | list    | List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name. |
 | read    | Read a Parquet register into R as a DuckDB table.                                                          |
 
-Actions used in `registers2parquet`.
+Actions used in fastreg.
 
 ### Objects
 
@@ -97,17 +96,17 @@ Actions used in `registers2parquet`.
 | `project_id`    | A character scalar with the DST project number to the folder containing the raw or work data.                                                                                                              |
 | `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., “bef”. It’s used in `list` functions to retrieve the paths of objects including that name.                    |
 
-Objects used in `registers2parquet`.
+Objects used in fastreg.
 
 ## Interface
 
-`registers2parquet` includes two main functions and multiple helper
-functions. Each function is listed below with a short description.
+fastreg includes two main functions and multiple helper functions. Each
+function is listed below with a short description.
 
 > **Tip**
 >
 > See the [Reference
-> documentation](https://dp-next.github.io/registers2parquet/articles/reference/index.md)
+> documentation](https://dp-next.github.io/fastreg/articles/reference/index.md)
 > for more details.
 
 ### Main functions
@@ -118,7 +117,7 @@ This function takes one or more register SAS files and converts them to
 a Parquet file or a Parquet dataset partitioned by year.
 
 See the
-[`convert_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
+[`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md)
 reference for more details.
 
 The function requires two inputs:
@@ -183,7 +182,7 @@ Reads a Parquet register from the specified path and returns it as a
 DuckDB table.
 
 See the
-[`read_register()`](https://dp-next.github.io/registers2parquet/reference/read_register.md)
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
 reference for more details.
 
 ### Helper functions
@@ -201,8 +200,8 @@ given directory.
 
 ## Expected flow
 
-We expect the flow of using the `registers2parquet` package to convert
-register SAS files to Parquet files will be as follows:
+We expect the flow of using the fastreg package to convert register SAS
+files to Parquet files will be as follows:
 
 ``` mermaid
 flowchart TD
@@ -224,11 +223,11 @@ flowchart TD
 ```
 
 Figure 1: Flow of the expected flow using the
-[`convert_to_parquet()`](https://dp-next.github.io/registers2parquet/reference/convert_to_parquet.md)
+[`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md)
 package to convert register SAS files to Parquet files.
 
-We expect a flow of reading a Parquet register created by the
-`registers2parquet` package into an R session to be as follows:
+We expect a flow of reading a Parquet register created by the fastreg
+package into an R session to be as follows:
 
 ``` mermaid
 flowchart TD
@@ -245,4 +244,4 @@ flowchart TD
 ```
 
 Figure 2: Flow of the expected flow of reading a Parquet register that
-was created with the `registers2parquet` package.
+was created with the fastreg package.

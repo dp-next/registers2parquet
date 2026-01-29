@@ -2,24 +2,23 @@
 
 ## Overview
 
-The `registers2parquet` package is designed to convert Danish register
-data from the SAS file format to the [Apache Parquet
+The fastreg package is designed to convert Danish register data from the
+SAS file format to the [Apache Parquet
 format](https://parquet.apache.org/), also commonly referred to as
 Parquet. This vignette provides an introduction to the package, its
 purpose, and the benefits of using Parquet for data storage and
 analysis.
 
 For an in-depth look at the package design, please refer to the
-[`vignette("design")`](https://dp-next.github.io/registers2parquet/articles/design.md).
+[`vignette("design")`](https://dp-next.github.io/fastreg/articles/design.md).
 
 For an introduction to using the package, please see the guides.
 
 ## Purpose
 
-The primary purpose of the `registers2parquet` package is to simplify
-the process of converting the large Danish registers into the more
-modern Parquet storage format as well as to simplify reading these
-Parquet files.
+The primary purpose of the fastreg package is to simplify the process of
+converting the large Danish registers into the more modern Parquet
+storage format as well as to simplify reading these Parquet files.
 
 By converting data from SAS to the more modern and efficient Parquet
 format, the package reduces storage costs and aims to improve

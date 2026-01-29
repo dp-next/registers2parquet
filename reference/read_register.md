@@ -25,7 +25,7 @@ The register as a DuckDB table.
 
 ``` r
 read_register(fs::path_package(
-  "registers2parquet",
+  "fastreg",
   "extdata",
   "test_register.parquet"
 ))

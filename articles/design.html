@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Design • registers2parquet</title>
+<title>Design • fastreg</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">registers2parquet</a>
+    <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
 
@@ -45,7 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dp-next/registers2parquet/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dp-next/fastreg/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -60,7 +60,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/dp-next/registers2parquet/blob/main/vignettes/design.qmd" class="external-link"><code>vignettes/design.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dp-next/fastreg/blob/main/vignettes/design.qmd" class="external-link"><code>vignettes/design.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -71,7 +71,7 @@
 
     <section class="level2"><h2 id="core-functionality">Core functionality<a class="anchor" aria-label="anchor" href="#core-functionality"></a>
 </h2>
-<p>This is the list of the core functionality in the <code>registers2parquet</code> package:</p>
+<p>This is the list of the core functionality in the fastreg package:</p>
 <ol type="1">
 <li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
 <li>Read register Parquet files into R as a DuckDB table.</li>
@@ -141,10 +141,10 @@
 <section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
 </h3>
 <table class="table caption-top">
-<caption>Actions used in <code>registers2parquet</code>.</caption>
+<caption>Actions used in fastreg.</caption>
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 27%">
+<col style="width: 72%">
 </colgroup>
 <thead><tr class="header">
 <th>Action</th>
@@ -168,14 +168,13 @@
 <td>Read a Parquet register into R as a DuckDB table.</td>
 </tr>
 </tbody>
-</table>
-<!-- TODO: Should the registers2parquet function be called something with the action *convert* instead? Or do we like the simplicity of it having be the same name as the package? --></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
+</table></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
 </h3>
 <table class="table caption-top">
-<caption>Objects used in <code>registers2parquet</code>.</caption>
+<caption>Objects used in fastreg.</caption>
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 27%">
+<col style="width: 72%">
 </colgroup>
 <thead><tr class="header">
 <th>Object</th>
@@ -201,7 +200,7 @@
 </tbody>
 </table></section></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
 </h2>
-<p><code>registers2parquet</code> includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
+<p>fastreg includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
 <div>
 <blockquote>
 <p><strong>Tip</strong></p>
@@ -278,7 +277,7 @@
 <!-- TODO: Add link to reference documentation when ready -->
 </section></section></section><section class="level2"><h2 id="expected-flow">Expected flow<a class="anchor" aria-label="anchor" href="#expected-flow"></a>
 </h2>
-<p>We expect the flow of using the <code>registers2parquet</code> package to convert register SAS files to Parquet files will be as follows:</p>
+<p>We expect the flow of using the fastreg package to convert register SAS files to Parquet files will be as follows:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div id="fig-flow" class="quarto-float quarto-figure quarto-figure-center">
@@ -309,7 +308,7 @@ Figure 1: Flow of the expected flow using the <code><a href="../reference/conve
 </div>
 </div>
 </div>
-<p>We expect a flow of reading a Parquet register created by the <code>registers2parquet</code> package into an R session to be as follows:</p>
+<p>We expect a flow of reading a Parquet register created by the fastreg package into an R session to be as follows:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div id="fig-flow-use" class="quarto-float quarto-figure quarto-figure-center">
@@ -331,7 +330,7 @@ Figure 1: Flow of the expected flow using the <code><a href="../reference/conve
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Flow of the expected flow of reading a Parquet register that was created with the <code>registers2parquet</code> package.
+Figure 2: Flow of the expected flow of reading a Parquet register that was created with the fastreg package.
 </figcaption></figure>
 </div>
 </div>

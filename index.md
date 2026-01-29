@@ -1,8 +1,8 @@
-# registers2parquet: Converting the DST data into Parquet files
+# fastreg: Converting the DST data into Parquet files
 
-The goal of registers2parquet is to take the mess of DST SAS files and
-convert them into something more modern, faster, and easier to work
-with. And also to prepare the data for our own work.
+The goal of fastreg is to take the mess of DST SAS files and convert
+them into something more modern, faster, and easier to work with. And
+also to prepare the data for our own work.
 
 Want to review the documentation? See the PDF file in the `docs/` folder
 by opening the `docs/manual.pdf` file to check out the documentation.

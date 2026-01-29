@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Welcome! • registers2parquet</title>
+<title>Welcome! • fastreg</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">registers2parquet</a>
+    <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
 
@@ -44,7 +44,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dp-next/registers2parquet/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dp-next/fastreg/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,7 +59,7 @@
 
 
 
-      <small class="dont-index">Source: <a href="https://github.com/dp-next/registers2parquet/blob/main/vignettes/index.qmd" class="external-link"><code>vignettes/index.qmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dp-next/fastreg/blob/main/vignettes/index.qmd" class="external-link"><code>vignettes/index.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
     </div>
 
@@ -70,14 +70,14 @@
 
     <section class="level2"><h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The <code>registers2parquet</code> package is designed to convert Danish register data from the SAS file format to the <a href="https://parquet.apache.org/" class="external-link">Apache Parquet format</a>, also commonly referred to as Parquet. This vignette provides an introduction to the package, its purpose, and the benefits of using Parquet for data storage and analysis.</p>
+<p>The fastreg package is designed to convert Danish register data from the SAS file format to the <a href="https://parquet.apache.org/" class="external-link">Apache Parquet format</a>, also commonly referred to as Parquet. This vignette provides an introduction to the package, its purpose, and the benefits of using Parquet for data storage and analysis.</p>
 <p>For an in-depth look at the package design, please refer to the <code><a href="../articles/design.html">vignette("design")</a></code>.</p>
 <div class="hidden">
 <p>For an introduction to using the package, please see the guides. <!-- TODO: Add links to guides when they are created --></p>
 </div>
 </section><section class="level2"><h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
-<p>The primary purpose of the <code>registers2parquet</code> package is to simplify the process of converting the large Danish registers into the more modern Parquet storage format as well as to simplify reading these Parquet files.</p>
+<p>The primary purpose of the fastreg package is to simplify the process of converting the large Danish registers into the more modern Parquet storage format as well as to simplify reading these Parquet files.</p>
 <p>By converting data from SAS to the more modern and efficient Parquet format, the package reduces storage costs and aims to improve performance in data analysis workflows.</p>
 </section><section class="level2"><h2 id="why-parquet">Why Parquet?<a class="anchor" aria-label="anchor" href="#why-parquet"></a>
 </h2>
