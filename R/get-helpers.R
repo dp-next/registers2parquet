@@ -196,3 +196,21 @@ get_path_no_duplicates <- function(path) {
 get_path_specific_database <- function(path, name) {
   stringr::str_subset(path, name)
 }
+
+#' Get the register names from file paths
+#'
+#' Removes all non-letters from the file names in `paths`.
+#'
+#' @param paths Character vector with file paths.
+#'
+#' @returns The file names from `paths` with only letters (all non-letter
+#'  removed).
+#'
+#' @keywords internal
+get_register_names <- function(paths) {
+  paths |>
+    fs::path_file() |>
+    fs::path_ext_remove() |>
+    # Remove everything that's not a letter.
+    stringr::str_remove_all("[^[:alpha:]]")
+}

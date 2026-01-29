@@ -17,5 +17,5 @@ This function lists all SAS register files (with the extension \code{.sas7bdat}
 case-insensitively) in the specified directory and its subdirectories.
 }
 \examples{
-list_sas_files(fs::path_package("registers2parquet", "extdata"))
+list_sas_files(fs::path_package("fastreg", "extdata"))
 }

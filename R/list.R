@@ -9,7 +9,7 @@
 #'
 #' @export
 #' @examples
-#' list_sas_files(fs::path_package("registers2parquet", "extdata"))
+#' list_sas_files(fs::path_package("fastreg", "extdata"))
 list_sas_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
@@ -43,7 +43,7 @@ list_sas_files <- function(path) {
 #'
 #' @export
 #' @examples
-#' list_parquet_files(fs::path_package("registers2parquet", "extdata"))
+#' list_parquet_files(fs::path_package("fastreg", "extdata"))
 list_parquet_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
