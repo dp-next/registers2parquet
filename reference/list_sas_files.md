@@ -23,7 +23,6 @@ A character vector of paths to the SAS files found.
 ## Examples
 
 ``` r
-# Returns an empty character vector as there are no SAS files in the extdata folder.
 list_sas_files(fs::path_package("fastreg", "extdata"))
-#> character(0)
+#> /home/runner/work/_temp/Library/fastreg/extdata/test.sas7bdat
 ```

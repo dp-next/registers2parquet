@@ -24,5 +24,5 @@ A character vector of paths to the Parquet files found.
 
 ``` r
 list_parquet_files(fs::path_package("fastreg", "extdata"))
-#> /home/runner/work/_temp/Library/fastreg/extdata/test_register.parquet
+#> /home/runner/work/_temp/Library/fastreg/extdata/test.parquet
 ```

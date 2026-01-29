@@ -1,8 +1,7 @@
 # Check that all paths are from the same register
 
-Removes all non-letters from the file names in paths and checks that the
-remaining characters are identical, i.e., the registers have the same
-name.
+Checks that all register names (file names without any non-letters) in
+paths are identical, i.e., the registers have the same name.
 
 ## Usage
 
