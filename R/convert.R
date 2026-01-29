@@ -35,7 +35,7 @@
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
 #'   file_paths = list_sas_files(sas_file_directory),
-#'   output_dir = "output/path/to/register_name"
+#'   output_dir = fs::path_temp("path/to/register_name/")
 #' )
 convert_to_parquet <- function(
   file_paths,
