@@ -1,4 +1,4 @@
-Package: registers2parquet
+Package: fastreg
 Title: Convert Danish register SAS files into Parquet files
 Version: 0.6.3
 Authors@R: c(
@@ -10,8 +10,8 @@ Authors@R: c(
 Description: A tool for converting SAS files containing Danish register data into
     the more modern and efficient Apache Parquet format.
 License: MIT + file LICENSE
-URL: https://dp-next.github.io/registers2parquet/ https://github.com/dp-next/registers2parquet
-BugReports: https://github.com/dp-next/registers2parquet/issues
+URL: https://dp-next.github.io/fastreg/ https://github.com/dp-next/fastreg
+BugReports: https://github.com/dp-next/fastreg/issues
 Depends:
     R (>= 4.1.0)
 Imports:

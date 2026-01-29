@@ -1,23 +1,23 @@
 
 
-# registers2parquet: Converting the DST data into Parquet files
+# fastreg: Converting the DST data into Parquet files
 
 <!-- badges: start -->
 
 [![GitHub
-Release](https://img.shields.io/github/v/release/dp-next/registers2parquet.svg)](https://github.com/dp-next/registers2parquet/releases/latest)
-[![Build](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/registers2parquet/actions/workflows/build.yml)
+Release](https://img.shields.io/github/v/release/dp-next/fastreg.svg)](https://github.com/dp-next/fastreg/releases/latest)
+[![Build](https://github.com/dp-next/fastreg/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/fastreg/actions/workflows/build.yml)
 [![pre-commit.ci
-status](https://results.pre-commit.ci/badge/github/dp-next/registers2parquet/main.svg)](https://results.pre-commit.ci/latest/github/dp-next/registers2parquet/main)
+status](https://results.pre-commit.ci/badge/github/dp-next/fastreg/main.svg)](https://results.pre-commit.ci/latest/github/dp-next/fastreg/main)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
-The goal of registers2parquet is to take the mess of DST SAS files and
-convert them into something more modern, faster, and easier to work
-with. And also to prepare the data for our own work.
+The goal of fastreg is to take the mess of DST SAS files and convert
+them into something more modern, faster, and easier to work with. And
+also to prepare the data for our own work.
 
 Want to review the documentation? See the PDF file in the `docs/` folder
 by opening the `docs/manual.pdf` file to check out the documentation.
