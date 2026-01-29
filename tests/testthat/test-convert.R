@@ -29,16 +29,16 @@ suppressWarnings(haven::write_sas(co2_df, temp_sas_years[2]))
 
 # Convert SAS to Parquet.
 output_no_years_one_file <- convert_to_parquet(
-  paths = temp_sas_no_years[1],
-  output_path = temp_output_no_year_one_file
+  file_paths = temp_sas_no_years[1],
+  output_dir = temp_output_no_year_one_file
 )
 output_no_years <- convert_to_parquet(
-  paths = temp_sas_no_years,
-  output_path = temp_output_no_year
+  file_paths = temp_sas_no_years,
+  output_dir = temp_output_no_year
 )
 output_multiple_years <- convert_to_parquet(
-  paths = temp_sas_years,
-  output_path = temp_output_multiple_years
+  file_paths = temp_sas_years,
+  output_dir = temp_output_multiple_years
 )
 
 # Open datasets.
@@ -57,7 +57,7 @@ actual_multiple_years <- arrow::open_dataset(
 ) |>
   dplyr::as_tibble()
 
-test_that("output is output_path", {
+test_that("output is output_dir", {
   expect_equal(output_no_years_one_file, temp_output_no_year_one_file)
   expect_equal(output_no_years, temp_output_no_year)
   expect_equal(output_multiple_years, temp_output_multiple_years)
@@ -119,7 +119,7 @@ test_that("number of rows are as expected", {
 test_that("incorrect parameters generate errors", {
   # Incorrect paths type.
   expect_error(convert_to_parquet(1, temp_output_multiple_years))
-  # Incorrect output_path type.
+  # Incorrect output_dir type.
   expect_error(convert_to_parquet(temp_sas_years[[1]], 1))
   expect_error(convert_to_parquet(
     temp_sas_years[[1]],
@@ -151,7 +151,7 @@ test_that("parts are named correctly with chunked files", {
     ),
     fs::path_temp("test_chunks_2000.sas7bdat")
   )
-  output_path <- fs::path_temp("output_chunks")
+  output_dir <- fs::path_temp("output_chunks")
   df <- dplyr::bind_rows(
     co2_df,
     dplyr::slice_sample(co2_df, n = 10000, replace = TRUE)
@@ -161,11 +161,11 @@ test_that("parts are named correctly with chunked files", {
 
   convert_to_parquet(
     temp_paths,
-    output_path,
+    output_dir,
     chunk_size = 10000L
   )
 
-  files <- list.files(output_path, recursive = TRUE)
+  files <- list.files(output_dir, recursive = TRUE)
 
   # Check correct number of files per partition
   expect_length(files[grepl("^year=1999/", files)], 2)
@@ -173,21 +173,21 @@ test_that("parts are named correctly with chunked files", {
 })
 
 test_that("mixed files with and without years are partitioned correctly", {
-  output_path_mixed <- fs::path_temp("output_mixed")
+  output_dir_mixed <- fs::path_temp("output_mixed")
 
   convert_to_parquet(
     c(temp_sas_no_years[[1]], temp_sas_years[[1]]),
-    output_path_mixed
+    output_dir_mixed
   )
 
-  files <- list.files(output_path_mixed, recursive = TRUE)
+  files <- list.files(output_dir_mixed, recursive = TRUE)
 
   # Check correct number of files per partition
   expect_length(files[grepl("^year=1999/", files)], 1)
   expect_length(files[grepl("^year=NA/", files)], 1)
 
   # Verify data can be read and has correct row count
-  result <- arrow::open_dataset(output_path_mixed) |>
+  result <- arrow::open_dataset(output_dir_mixed) |>
     dplyr::as_tibble()
   expect_equal(nrow(result), nrow(co2_df) * 2)
 })
@@ -198,30 +198,30 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
   skip_on_cran()
 
   kontakter_list <- helper_create_simulated_kontakter()
-  paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+  file_paths <- paste0(names(kontakter_list), ".sas7bdat") |>
     fs::path_temp() |>
     as.character()
   temp_output <- fs::path_temp("kontakter")
 
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[[1]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], file_paths[[1]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[2]], file_paths[[2]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[3]], file_paths[[3]]))
 
   chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
 
-  actual_output_path <- convert_to_parquet(
-    paths = paths,
-    output_path = temp_output,
+  actual_output_dir <- convert_to_parquet(
+    file_paths = file_paths,
+    output_dir = temp_output,
     chunk_size = chunk_size
   )
 
   # Check number of files per partition.
-  sas_files <- purrr::map(paths, haven::read_sas)
+  sas_files <- purrr::map(file_paths, haven::read_sas)
   n_files_expected <- sas_files |>
     purrr::map_int(nrow) /
     chunk_size
 
-  files <- fs::dir_ls(actual_output_path, recurse = TRUE)
+  files <- fs::dir_ls(actual_output_dir, recurse = TRUE)
 
   expect_length(stringr::str_subset(files, "year=NA/"), n_files_expected[[1]])
   expect_length(
