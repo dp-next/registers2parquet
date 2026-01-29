@@ -32,9 +32,9 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
-#'   file_paths = list_sas_files("path/to/sas/files"),
+#'   file_paths = list_sas_files(sas_file_directory),
 #'   output_dir = "output/path/to/register_name"
 #' )
 convert_to_parquet <- function(
