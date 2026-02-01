@@ -9,7 +9,7 @@
 #' names in `file_paths` to use the year as partition, see `vignettes("design")`
 #' for more information about the partitioning.
 #'
-#' If a year is found, the data is saved partitioned by year in the output
+#' If a year is found, the data is saved as a partition by year in the output
 #' directory, e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the
 #' ending being an UUID). If no year is found in the file name, the data is
 #' still partitioned with `year=NA`.
@@ -18,8 +18,9 @@
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param file_paths A character vector with the absolute path to a SAS
-#'    file or files for one register.
+#' @param file_paths A character vector with the absolute path(s) to a SAS
+#'    file(s) for one register. See [list_sas_files()], which is a helper for
+#'    for this parameter.
 #' @param output_dir A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
