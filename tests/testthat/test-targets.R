@@ -36,14 +36,14 @@ test_that("pipeline converts SAS files to Parquet", {
   skip_if_not_installed("targets")
   skip_if_not_installed("crew")
 
-  # Create temp directory structure
+  # Create temp directory structure.
   test_path <- fs::path_temp("pipeline-test")
   input_path <- fs::path_temp(test_path, "input")
   output_path <- fs::path(test_path, "output")
   fs::dir_create(input_path)
   fs::dir_create(output_path)
 
-  # Create test SAS files
+  # Create test SAS files.
   kontakter_list <- helper_create_simulated_kontakter(n = 1000)
   paths <- fs::path(input_path) |>
     paste0("/", names(kontakter_list), ".sas7bdat") |>
@@ -54,18 +54,18 @@ test_that("pipeline converts SAS files to Parquet", {
   suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
   suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
 
-  # Read template and replace placeholder paths
+  # Read template and replace placeholder paths.
   modified_content <- template_content |>
     stringr::str_replace("/path/to/register/sas/files/directory", input_path) |>
     stringr::str_replace("/path/to/output/directory", output_path)
 
-  # Write and run pipeline
+  # Write and run pipeline.
   withr::with_dir(test_path, {
     writeLines(modified_content, "_targets.R")
     targets::tar_make(callr_function = NULL, reporter = "silent")
   })
 
-  # Check output
+  # Check output.
   parquet_files <- fs::dir_ls(output_path, recurse = TRUE, glob = "*.parquet")
   expect_equal(length(parquet_files), length(kontakter_list))
 })
