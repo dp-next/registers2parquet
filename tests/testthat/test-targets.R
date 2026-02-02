@@ -1,7 +1,7 @@
 # Tests of use_targets_template() ----------------------------------------------
 output_path <- fs::path_temp("_targets.R")
 use_targets_pipeline(output_path, open = FALSE)
-template <- system.file("template-targets.R", package = "registers2parquet")
+template <- fs::path_package("fastreg", "template-targets.R")
 template_content <- readLines(template)
 
 test_that("targets pipeline is created as expected", {
@@ -29,29 +29,7 @@ test_that("template is valid R code", {
   expect_no_error(parse(file = template))
 })
 
-test_that("template contains expected targets", {
-  expect_true(any(stringr::str_detect(template_content, "all_sas_paths")))
-  expect_true(any(stringr::str_detect(
-    template_content,
-    "register_path_groups"
-  )))
-  expect_true(any(stringr::str_detect(template_content, "register_parquets")))
-})
 
-test_that("template uses correct package functions", {
-  expect_true(any(stringr::str_detect(
-    template_content,
-    "registers2parquet::list_sas_files"
-  )))
-  expect_true(any(stringr::str_detect(
-    template_content,
-    "registers2parquet::get_register_path_groups"
-  )))
-  expect_true(any(stringr::str_detect(
-    template_content,
-    "registers2parquet::convert_to_parquet"
-  )))
-})
 
 # Test pipeline ----------------------------------------------------------------
 

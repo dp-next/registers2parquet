@@ -9,15 +9,11 @@
 #' @returns The path to the created file (invisibly).
 #'
 #' @export
-#' @examples
-#' \dontrun{
-#' use_targets_pipeline()
-#' }
 use_targets_pipeline <- function(
   path = "_targets.R",
   open = rlang::is_interactive()
 ) {
-  template <- system.file(
+  template_path <- system.file(
     "template-targets.R",
     package = "registers2parquet",
     mustWork = TRUE
@@ -30,7 +26,7 @@ use_targets_pipeline <- function(
     ))
   }
 
-  fs::file_copy(template, path)
+  fs::file_copy(template_path, path)
   cli::cli_alert_success("Created {.file {path}}")
   cli::cli_alert_info("Edit the {.code config} section to set your paths.")
 

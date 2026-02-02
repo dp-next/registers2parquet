@@ -229,7 +229,7 @@ get_register_names <- function(paths) {
 #' @examples
 #' paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
 #' get_register_path_groups(paths)
-get_register_path_groups <- function(paths) {
+split_paths_by_register <- function(paths) {
   register_names <- get_register_names(paths)
   split(paths, register_names) |> unname()
 }

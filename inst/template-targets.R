@@ -53,13 +53,13 @@ tar_option_set(
 list(
   tar_target(
     name = all_sas_paths,
-    command = registers2parquet::list_sas_files(config$input_path),
+    command = list_sas_files(config$input_path),
     deployment = "main"
   ),
 
   tar_target(
     name = register_path_groups,
-    command = registers2parquet::get_register_path_groups(all_sas_paths),
+    command = get_register_path_groups(all_sas_paths),
     iteration = "list",
     deployment = "main"
   ),
