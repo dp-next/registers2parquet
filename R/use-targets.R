@@ -13,10 +13,10 @@ use_targets_pipeline <- function(
   path = "_targets.R",
   open = rlang::is_interactive()
 ) {
-  template_path <- system.file(
-    "template-targets.R",
-    package = "registers2parquet",
-    mustWork = TRUE
+  template_path <- fs::path_package(
+    "fastreg",
+    "inst",
+    "template-targets.R"
   )
 
   if (fs::file_exists(path)) {
