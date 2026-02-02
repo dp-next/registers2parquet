@@ -5,16 +5,16 @@ Convert a single register SAS file to Parquet in chunks
 ## Usage
 
 ``` r
-convert_file_in_chunks(path, output_path, chunk_size = 10000000L)
+convert_file_in_chunks(file_path, output_dir, chunk_size = 10000000L)
 ```
 
 ## Arguments
 
-- path:
+- file_path:
 
   A character scalar with the absolute path to a single SAS file.
 
-- output_path:
+- output_dir:
 
   A character scalar with the path to the directory to save the output
   Parquet file to. Should include the register name as the last part of
