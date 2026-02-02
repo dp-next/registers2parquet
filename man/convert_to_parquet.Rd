@@ -7,8 +7,9 @@
 convert_to_parquet(file_paths, output_dir, chunk_size = 10000000L)
 }
 \arguments{
-\item{file_paths}{A character vector with the absolute path to a SAS
-file or files for one register.}
+\item{file_paths}{A character vector with the absolute path(s) to a SAS
+file(s) for one register. See \code{\link[=list_sas_files]{list_sas_files()}}, which is a helper for
+for this parameter.}
 
 \item{output_dir}{A character scalar with the path to the directory to save
 the output Parquet file to. Should include the register name as the last
@@ -31,7 +32,7 @@ The function looks for a year (the first four consecutive digits) in the file
 names in \code{file_paths} to use the year as partition, see \code{vignettes("design")}
 for more information about the partitioning.
 
-If a year is found, the data is saved partitioned by year in the output
+If a year is found, the data is saved as a partition by year in the output
 directory, e.g., \code{path/to/register_name/year=2020/part-ad5b.parquet} (the
 ending being an UUID). If no year is found in the file name, the data is
 still partitioned with \code{year=NA}.

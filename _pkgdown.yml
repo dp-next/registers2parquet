@@ -22,4 +22,5 @@ reference:
   - starts_with("load")
   - starts_with("path")
   - starts_with("read")
+  - split_paths_by_register
   - use_targets_pipeline

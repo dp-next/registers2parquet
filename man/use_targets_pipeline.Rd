@@ -18,8 +18,3 @@ The path to the created file (invisibly).
 \description{
 Copies the targets pipeline template to your project root.
 }
-\examples{
-\dontrun{
-use_targets_pipeline()
-}
-}
