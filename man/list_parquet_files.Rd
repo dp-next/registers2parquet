@@ -18,5 +18,5 @@ or \code{.parq} case-insensitively) in the specified directory and its
 subdirectories.
 }
 \examples{
-list_parquet_files(fs::path_package("registers2parquet", "extdata"))
+list_parquet_files(fs::path_package("fastreg", "extdata"))
 }

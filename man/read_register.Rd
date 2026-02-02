@@ -20,8 +20,8 @@ If you want to read a single Parquet file, provide the path to the file
 }
 \examples{
 read_register(fs::path_package(
-  "registers2parquet",
+  "fastreg",
   "extdata",
-  "test_register.parquet"
+  "test.parquet"
 ))
 }

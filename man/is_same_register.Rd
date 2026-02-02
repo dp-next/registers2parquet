@@ -2,19 +2,19 @@
 % Please edit documentation in R/convert.R
 \name{is_same_register}
 \alias{is_same_register}
-\title{Check that all paths are from the same register}
+\title{Check that all file paths are from the same register}
 \usage{
-is_same_register(paths)
+is_same_register(file_paths)
 }
 \arguments{
-\item{paths}{A character vector with paths to SAS registers.}
+\item{file_paths}{A character vector with paths to SAS register files.}
 }
 \value{
-A logical that's TRUE if all paths point to files from the same
-register, based on the file names.
+A logical that's TRUE if all \code{file_paths} point to files from the
+same register, based on the file names.
 }
 \description{
-Removes all non-letters from the file names in paths and checks that the
-remaining characters are identical, i.e., the registers have the same name.
+Checks that all register names (file names without any non-letters) in
+\code{file_paths} are identical, i.e., the registers have the same name.
 }
 \keyword{internal}
