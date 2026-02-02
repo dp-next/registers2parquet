@@ -257,4 +257,6 @@ get_register_name <- function(file_paths) {
       "i" = "Expected a single register name from {.path {file_paths}}."
     ))
   }
+
+  register_name
 }
