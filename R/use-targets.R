@@ -27,8 +27,11 @@ use_targets_pipeline <- function(
   }
 
   fs::file_copy(template_path, path)
-  cli::cli_alert_success("Created {.file {path}}")
-  cli::cli_alert_info("Edit the {.code config} section to set your paths.")
+
+  if (fs::file_exists(path)) {
+    cli::cli_alert_success("Created {.file {path}}")
+    cli::cli_alert_info("Edit the {.code config} section to set your paths.")
+  }
 
   if (open) {
     utils::file.edit(path)
