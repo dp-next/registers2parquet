@@ -4,12 +4,12 @@
 \alias{convert_file_in_chunks}
 \title{Convert a single register SAS file to Parquet in chunks}
 \usage{
-convert_file_in_chunks(path, output_path, chunk_size = 10000000L)
+convert_file_in_chunks(file_path, output_dir, chunk_size = 10000000L)
 }
 \arguments{
-\item{path}{A character scalar with the absolute path to a single SAS file.}
+\item{file_path}{A character scalar with the absolute path to a single SAS file.}
 
-\item{output_path}{A character scalar with the path to the directory to save
+\item{output_dir}{A character scalar with the path to the directory to save
 the output Parquet file to. Should include the register name as the last
 part of the path. E.g., \verb{path/to/register_name/}.}
 

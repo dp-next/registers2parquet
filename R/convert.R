@@ -5,74 +5,84 @@
 #' data in Parquet format. It expects the input SAS files to come from the same
 #' register, e.g., different years of the same register.
 #'
-#' If multiple paths are given, the function looks for a year (the first four
-#' consecutive digits) in the file names to use the year as partition, see
-#' `vignettes("design")` for more information about the partitioning. If a year
-#' is found, the data is saved partitioned by year in the output directory,
-#' e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the ending being an UUID). If no year is
-#' found in the file name, the data is still partitioned with `year=NA`.
+#' The function looks for a year (the first four consecutive digits) in the file
+#' names in `file_paths` to use the year as partition, see `vignettes("design")`
+#' for more information about the partitioning.
+#'
+#' If a year is found, the data is saved as a partition by year in the output
+#' directory, e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the
+#' ending being an UUID). If no year is found in the file name, the data is
+#' still partitioned with `year=NA`.
 #'
 #' Because this function only converts one file at a time (in chunks) to be
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param paths A character vector with the absolute path to a SAS
-#'    file or files for one register.
-#' @param output_path A character scalar with the path to the directory to save
+#' @param file_paths A character vector with the absolute path(s) to a SAS
+#'    file(s) for one register. See [list_sas_files()], which is a helper for
+#'    for this parameter.
+#' @param output_dir A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
 #' @param chunk_size An integer scalar indicating the number of rows to read
 #'    at a time from the SAS files. Defaults to 10,000,000.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_path`), so it can be used in a
+#'    file(s) (`output_dir`), so it can be used in a
 #'    [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
-#'   list_sas_files("path/to/sas/files"),
-#'   "output/path/to/register_name"
+#'   file_paths = list_sas_files(sas_file_directory),
+#'   output_dir = fs::path_temp("path/to/register_name/")
 #' )
-#' }
-convert_to_parquet <- function(paths, output_path, chunk_size = 10000000L) {
+convert_to_parquet <- function(
+  file_paths,
+  output_dir,
+  chunk_size = 10000000L
+) {
   # Initial checks.
-  checkmate::assert_character(paths)
-  checkmate::assert_file_exists(paths)
-  checkmate::assert_true(is_same_register(paths))
-  checkmate::assert_character(output_path)
-  checkmate::assert_scalar(output_path)
+  checkmate::assert_character(file_paths)
+  checkmate::assert_file_exists(file_paths)
+  checkmate::assert_true(is_same_register(file_paths))
+  checkmate::assert_character(output_dir)
+  checkmate::assert_scalar(output_dir)
   checkmate::assert_int(chunk_size, lower = 10000L)
 
   # Convert files.
   purrr::walk(
-    paths,
-    \(path) convert_file_in_chunks(path, output_path, chunk_size)
+    file_paths,
+    \(file_path) convert_file_in_chunks(file_path, output_dir, chunk_size)
   )
 
   # Success message.
   cli::cli_alert_success(
-    "Successfully converted {.val {fs::path_file(paths)}} and saved it in {.path {output_path}}."
+    "Successfully converted {.val {fs::path_file(file_paths)}} and saved it in {.path {output_dir}}."
   )
 
-  output_path
+  output_dir
 }
 
 
 #' Convert a single register SAS file to Parquet in chunks
 #'
-#' @param path A character scalar with the absolute path to a single SAS file.
+#' @param file_path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
 #' @returns Path to the partition.
 #'
 #' @keywords internal
-convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
+convert_file_in_chunks <- function(
+  file_path,
+  output_dir,
+  chunk_size = 10000000L
+) {
   # Create partition path, if it doesn't exist.
   partition_path <- fs::path(
-    output_path,
-    glue::glue("year={get_year_from_filename(path)}")
+    output_dir,
+    glue::glue("year={get_year_from_filename(file_path)}")
   )
   fs::dir_create(partition_path, recurse = TRUE)
 
@@ -81,9 +91,9 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
   skip <- 0L
 
   # Read first chunk to establish schema.
-  chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+  chunk <- haven::read_sas(file_path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
-    dplyr::mutate(source_file = as.character(path))
+    dplyr::mutate(source_file = as.character(file_path))
   schema <- create_arrow_schema(chunk)
 
   repeat {
@@ -104,9 +114,9 @@ convert_file_in_chunks <- function(path, output_path, chunk_size = 10000000L) {
     skip <- skip + nrow(chunk)
     part <- create_part_uuid()
 
-    chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+    chunk <- haven::read_sas(file_path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
-      dplyr::mutate(source_file = as.character(path))
+      dplyr::mutate(source_file = as.character(file_path))
   }
 
   invisible(partition_path)
@@ -189,19 +199,19 @@ column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
 }
 
-#' Check that all paths are from the same register
+#' Check that all file paths are from the same register
 #'
-#' Checks that all register names (file names without any non-letters) in paths
-#' are identical, i.e., the registers have the same name.
+#' Checks that all register names (file names without any non-letters) in
+#' `file_paths` are identical, i.e., the registers have the same name.
 #'
-#' @param paths A character vector with paths to SAS registers.
+#' @param file_paths A character vector with paths to SAS register files.
 #'
-#' @returns A logical that's TRUE if all paths point to files from the same
-#'  register, based on the file names.
+#' @returns A logical that's TRUE if all `file_paths` point to files from the
+#'  same register, based on the file names.
 #'
 #' @keywords internal
-is_same_register <- function(paths) {
-  register_names <- get_register_names(paths)
+is_same_register <- function(file_paths) {
+  register_names <- get_register_names(file_paths)
 
   length(unique(register_names)) == 1L
 }
