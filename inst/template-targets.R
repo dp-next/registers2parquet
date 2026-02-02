@@ -59,7 +59,7 @@ list(
 
   tar_target(
     name = register_path_groups,
-    command = get_register_path_groups(all_sas_paths),
+    command = split_paths_by_register(all_sas_paths),
     iteration = "list",
     deployment = "main"
   ),
@@ -67,10 +67,10 @@ list(
   tar_target(
     name = register_parquets,
     command = convert_to_parquet(
-      paths = register_path_groups,
-      output_path = fs::path(
+      file_paths = register_path_groups,
+      output_dir = path(
         config$output_path,
-        get_first_register_name(register_path_groups)
+        get_register_name(register_path_groups)
       )
     ),
     pattern = map(register_path_groups),
