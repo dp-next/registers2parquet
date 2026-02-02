@@ -29,8 +29,6 @@ test_that("template is valid R code", {
   expect_no_error(parse(file = template))
 })
 
-
-
 # Test pipeline ----------------------------------------------------------------
 
 test_that("pipeline converts SAS files to Parquet", {
