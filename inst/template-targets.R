@@ -66,11 +66,11 @@ list(
 
   tar_target(
     name = register_parquets,
-    command = registers2parquet::convert_to_parquet(
+    command = convert_to_parquet(
       paths = register_path_groups,
       output_path = fs::path(
         config$output_path,
-        registers2parquet::get_first_register_name(register_path_groups)
+        get_first_register_name(register_path_groups)
       )
     ),
     pattern = map(register_path_groups),
