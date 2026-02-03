@@ -81,3 +81,7 @@ lint:
 preview-website:
   #!/usr/bin/env Rscript
   pkgdown::preview_site()
+
+# List all TODO items in the repository
+list-todos:
+  grep -R -n --exclude="justfile" --exclude-dir="docs/deps" "TODO" *
