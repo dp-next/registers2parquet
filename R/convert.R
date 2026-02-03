@@ -29,7 +29,7 @@
 #'    at a time from the SAS files. Defaults to 10,000,000.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_dir`), so it can be used in a
+#'    file(s) (`output_dir`) invisibly, so it can be used in a
 #'    [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
@@ -63,16 +63,15 @@ convert_to_parquet <- function(
     "Successfully converted {.val {fs::path_file(file_paths)}} and saved it in {.path {output_dir}}."
   )
 
-  output_dir
+  invisible(output_dir)
 }
-
 
 #' Convert a single register SAS file to Parquet in chunks
 #'
 #' @param file_path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
-#' @returns Path to the partition.
+#' @returns file_path invisibly.
 #'
 #' @keywords internal
 convert_file_in_chunks <- function(
@@ -124,7 +123,7 @@ convert_file_in_chunks <- function(
       dplyr::mutate(source_file = as.character(file_path))
   }
 
-  invisible(partition_path)
+  invisible(file_path)
 }
 
 #' Get year from file name

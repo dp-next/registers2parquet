@@ -20,7 +20,7 @@ at a time from the SAS files. Defaults to 10,000,000.}
 }
 \value{
 Returns a character scalar with the path to the created Parquet
-file(s) (\code{output_dir}), so it can be used in a
+file(s) (\code{output_dir}) invisibly, so it can be used in a
 \href{https://books.ropensci.org/targets/}{targets} pipeline.
 }
 \description{
