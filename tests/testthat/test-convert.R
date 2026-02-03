@@ -119,37 +119,37 @@ test_that("number of rows are as expected", {
 test_that("incorrect parameters generate errors", {
   # Incorrect file_paths type.
   expect_error(convert_to_parquet(
-    output_dir = temp_output_multiple_years,
-    file_paths = 1
+    file_paths = 1,
+    output_dir = temp_output_multiple_years
   ))
   # Incorrect output_dir type.
   expect_error(convert_to_parquet(
-    output_dir = 1,
-    file_paths = temp_sas_years[[1]]
+    file_paths = temp_sas_years[[1]],
+    output_dir = 1
   ))
   expect_error(convert_to_parquet(
-    output_dir = temp_sas_years[[1]],
-    file_paths = rep(temp_output_multiple_years, times = 2)
+    file_paths = rep(temp_output_multiple_years, times = 2),
+    output_dir = temp_sas_years[[1]]
   ))
   # Incorrect chunk size type (lower than allowed).
   expect_error(convert_to_parquet(
-    output_dir = temp_output_no_year_one_file,
     file_paths = temp_sas_no_years,
+    output_dir = temp_output_no_year_one_file,
     chunk_size = 10L
   ))
   # Paths are not from the same register.
   temp_different_register <- fs::path_temp("other_2020.sas7bdat")
   suppressWarnings(haven::write_sas(co2_df, temp_different_register))
   expect_error(convert_to_parquet(
+    file_paths = c(temp_sas_years[[1]], temp_different_register),
     output_dir = temp_output_multiple_years,
-    file_paths = c(temp_sas_years[[1]], temp_different_register)
   ))
 })
 
 test_that("files passed in the paths parameter must exist", {
   expect_error(convert_to_parquet(
-    output_dir = temp_output_multiple_years,
     file_paths = fs::file_temp(),
+    output_dir = temp_output_multiple_years
   ))
 })
 
@@ -169,8 +169,8 @@ test_that("parts are named correctly with chunked files", {
   suppressWarnings(haven::write_sas(df, temp_paths[[2]]))
 
   convert_to_parquet(
-    output_dir = output_dir,
     file_paths = temp_paths,
+    output_dir = output_dir,
     chunk_size = 10000L
   )
 
@@ -185,8 +185,8 @@ test_that("mixed files with and without years are partitioned correctly", {
   output_dir_mixed <- fs::path_temp("output_mixed")
 
   convert_to_parquet(
-    output_dir = output_dir_mixed,
-    file_paths = c(temp_sas_no_years[[1]], temp_sas_years[[1]])
+    file_paths = c(temp_sas_no_years[[1]], temp_sas_years[[1]]),
+    output_dir = output_dir_mixed
   )
 
   files <- list.files(output_dir_mixed, recursive = TRUE)
@@ -219,8 +219,8 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
   chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
 
   actual_output_dir <- convert_to_parquet(
-    output_dir = temp_output,
     file_paths = file_paths,
+    output_dir = temp_output,
     chunk_size = chunk_size
   )
 
