@@ -12,7 +12,8 @@
 #' If a year is found, the data is saved as a partition by year in the output
 #' directory, e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the
 #' ending being an UUID). If no year is found in the file name, the data is
-#' still partitioned with `year=NA`.
+#' saved in a `year=__HIVE_DEFAULT_PARTITION__` partition, which is the
+#' standard Hive convention for missing partition values.
 #'
 #' Because this function only converts one file at a time (in chunks) to be
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
@@ -80,9 +81,12 @@ convert_file_in_chunks <- function(
   chunk_size = 10000000L
 ) {
   # Create partition path, if it doesn't exist.
+  year <- get_year_from_filename(file_path)
+  # Following
+  year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
   partition_path <- fs::path(
     output_dir,
-    glue::glue("year={get_year_from_filename(file_path)}")
+    glue::glue("year={year_partition}")
   )
   fs::dir_create(partition_path, recurse = TRUE)
 
