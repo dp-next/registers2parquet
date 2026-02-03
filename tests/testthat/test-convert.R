@@ -43,12 +43,14 @@ output_multiple_years <- convert_to_parquet(
 
 # Open datasets.
 actual_no_years_one_file <- arrow::open_dataset(
-  output_no_years_one_file
+  output_no_years_one_file,
+  partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
 
 actual_no_years <- arrow::open_dataset(
-  output_no_years
+  output_no_years,
+  partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
 
@@ -112,7 +114,8 @@ test_that("column names and data types are as expected", {
 
 test_that("number of rows are as expected", {
   actual_no_years_one_file <- arrow::open_dataset(
-    output_no_years_one_file
+    output_no_years_one_file,
+    partitioning = arrow::hive_partition(year = arrow::int32())
   ) |>
     dplyr::as_tibble() |>
     nrow()
@@ -196,7 +199,10 @@ test_that("mixed files with and without years are partitioned correctly", {
   expect_length(files[grepl("^year=__HIVE_DEFAULT_PARTITION__/", files)], 1)
 
   # Verify data can be read and has correct row count
-  result <- arrow::open_dataset(output_dir_mixed) |>
+  result <- arrow::open_dataset(
+    output_dir_mixed,
+    partitioning = arrow::hive_partition(year = arrow::int32())
+  ) |>
     dplyr::as_tibble()
   expect_equal(nrow(result), nrow(co2_df) * 2)
 })
