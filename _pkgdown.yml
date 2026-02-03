@@ -19,8 +19,6 @@ reference:
   - convert_to_parquet
   - starts_with("get")
   - starts_with("list")
-  - starts_with("load")
-  - starts_with("path")
   - starts_with("read")
   - split_paths_by_register
   - use_targets_pipeline
