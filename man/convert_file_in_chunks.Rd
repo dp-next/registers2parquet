@@ -17,7 +17,7 @@ part of the path. E.g., \verb{path/to/register_name/}.}
 at a time from the SAS files. Defaults to 10,000,000.}
 }
 \value{
-Path to the partition.
+file_path invisibly.
 }
 \description{
 Convert a single register SAS file to Parquet in chunks
