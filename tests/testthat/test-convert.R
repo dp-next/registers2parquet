@@ -65,14 +65,23 @@ test_that("output is output_dir", {
 
 test_that("files without year in filename are partitioned as expected", {
   # One input file.
-  expected_path <- fs::path(temp_output_no_year_one_file, "year=NA")
+  expected_path <- fs::path(
+    temp_output_no_year_one_file,
+    "year=__HIVE_DEFAULT_PARTITION__"
+  )
   expect_true(fs::dir_exists(expected_path))
   expect_length(list.files(expected_path), 1)
 
   # Multiple input files.
-  expected_path <- fs::path(temp_output_no_year, "year=NA")
+  expected_path <- fs::path(
+    temp_output_no_year,
+    "year=__HIVE_DEFAULT_PARTITION__"
+  )
   expect_true(fs::dir_exists(expected_path))
   expect_length(list.files(expected_path), 2) # One Parquet per input file.
+
+  # Year column should be NA when read.
+  expect_true(all(is.na(actual_no_years$year)))
 })
 
 test_that("files with year in filename are partitioned as expected", {
@@ -184,7 +193,7 @@ test_that("mixed files with and without years are partitioned correctly", {
 
   # Check correct number of files per partition
   expect_length(files[grepl("^year=1999/", files)], 1)
-  expect_length(files[grepl("^year=NA/", files)], 1)
+  expect_length(files[grepl("^year=__HIVE_DEFAULT_PARTITION__/", files)], 1)
 
   # Verify data can be read and has correct row count
   result <- arrow::open_dataset(output_dir_mixed) |>
@@ -223,7 +232,10 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
 
   files <- fs::dir_ls(actual_output_dir, recurse = TRUE)
 
-  expect_length(stringr::str_subset(files, "year=NA/"), n_files_expected[[1]])
+  expect_length(
+    stringr::str_subset(files, "year=__HIVE_DEFAULT_PARTITION__/"),
+    n_files_expected[[1]]
+  )
   expect_length(
     stringr::str_subset(files, "year=1999/"),
 
