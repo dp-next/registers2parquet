@@ -82,7 +82,8 @@ convert_file_in_chunks <- function(
 ) {
   # Create partition path, if it doesn't exist.
   year <- get_year_from_filename(file_path)
-  # Following
+  # Following the default `null_fallback` in arrow::hive_partition()
+  # https://arrow.apache.org/docs/r/reference/hive_partition.html#arg-null-fallback.
   year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
   partition_path <- fs::path(
     output_dir,
