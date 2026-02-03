@@ -1,59 +1,60 @@
-# Prepare temp file without year.
-temp_parquet_no_year <- fs::path_temp("test.parquet")
+# Prepare data to be read.
+kontakter_list <- helper_create_simulated_kontakter(n = 1000)
+file_paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+  fs::path_temp() |>
+  as.character()
+temp_output <- fs::path_temp("kontakter")
 
-# Prepare temp files with year.
-temp_parquet_year_2019 <- fs::path_temp(
-  "test_year",
-  "year=2019",
-  "part-0.parquet"
-)
-temp_parquet_year_2020 <- fs::path_temp(
-  "test_year",
-  "year=2020",
-  "part-0.parquet"
-)
-paths <- c(
-  temp_parquet_no_year,
-  temp_parquet_year_2019,
-  temp_parquet_year_2020
-)
+# Clean up any existing files from previous test runs.
+if (fs::dir_exists(temp_output)) {
+  fs::dir_delete(temp_output)
+}
 
-# Prepare CO2 dataset with character columns instead of factors.
-co2_df <- CO2 |>
-  dplyr::mutate(dplyr::across(tidyselect::where(is.factor), as.character)) |>
-  dplyr::as_tibble()
+suppressWarnings(haven::write_sas(kontakter_list[[1]], file_paths[[1]]))
+suppressWarnings(haven::write_sas(kontakter_list[[2]], file_paths[[2]]))
+suppressWarnings(haven::write_sas(kontakter_list[[3]], file_paths[[3]]))
 
-# Write as Parquet files.
-fs::dir_create(fs::path_dir(paths))
-purrr::map(paths, \(file_path) arrow::write_parquet(co2_df, file_path))
+# Use convert_to_parquet() for conversion
+convert_to_parquet(file_paths = file_paths, output_dir = temp_output)
 
+test_that("reading a single Parquet file works as expected", {
+  # Read single Parquet file (from SAS file without year in filename).
+  # Because UUID is used in the convert function, we can't know the name of the
+  # file.
+  actual <- read_register(fs::dir_ls(fs::path(
+    temp_output,
+    "year=__HIVE_DEFAULT_PARTITION__"
+  ))) |>
+    dplyr::collect()
 
-test_that("reading a Parquet register file works as expected", {
-  actual <- read_register(temp_parquet_no_year)
-  expected <- co2_df |> arrow::to_duckdb()
+  expected <- haven::read_sas(file_paths[[1]])
 
   expect_equal(
-    dplyr::collect(actual),
-    dplyr::collect(expected)
+    actual |> dplyr::select(-"source_file"),
+    expected
   )
+  expect_all_equal(actual$source_file, file_paths[[1]])
 })
 
 test_that("reading a partitioned Parquet register works as expected", {
-  # Go two levels up to get the register directory containing the partitioned Parquet files.
-  actual <- read_register(
-    temp_parquet_year_2019 |>
-      fs::path_dir() |>
-      fs::path_dir()
-  )
+  actual <- read_register(temp_output) |> dplyr::collect()
 
-  co2_df_2019 <- co2_df |> dplyr::mutate(year = 2019)
-  co2_df_2020 <- co2_df |> dplyr::mutate(year = 2020)
-  expected <- dplyr::bind_rows(co2_df_2019, co2_df_2020) |> arrow::to_duckdb()
+  expected <- purrr::map(file_paths, \(file_path) haven::read_sas(file_path)) |>
+    dplyr::bind_rows()
 
+  # Sort both dataframes by cpr and dw_ek_kontakt to ensure consistent ordering,
+  # and use ignore_attr = TRUE to ignore row.names differences.
   expect_equal(
-    dplyr::collect(actual),
-    dplyr::collect(expected)
+    actual |>
+      dplyr::select(-c("source_file", "year")) |>
+      dplyr::arrange(cpr, dw_ek_kontakt),
+    expected |>
+      dplyr::arrange(cpr, dw_ek_kontakt),
+    ignore_attr = TRUE
   )
+
+  expect_equal(sort(unique(actual$source_file)), sort(file_paths))
+  expect_equal(sort(unique(actual$year), na.last = TRUE), c(1999, NA))
 })
 
 test_that("reading a non-existing Parquet register throws an error", {
