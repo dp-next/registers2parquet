@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.7.1 (2026-02-03)
+
+### Fix
+
+- 🐛 partitioning with missing year (#132)
+
 ## 0.7.0 (2026-02-02)
 
 ### Feat
