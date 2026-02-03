@@ -29,16 +29,16 @@ suppressWarnings(haven::write_sas(co2_df, temp_sas_years[2]))
 
 # Convert SAS to Parquet.
 output_no_years_one_file <- convert_to_parquet(
-  output_dir = temp_output_no_year_one_file,
-  file_paths = temp_sas_no_years[1]
+  file_paths = temp_sas_no_years[1],
+  output_dir = temp_output_no_year_one_file
 )
 output_no_years <- convert_to_parquet(
-  output_dir = temp_output_no_year,
-  file_paths = temp_sas_no_years
+  file_paths = temp_sas_no_years,
+  output_dir = temp_output_no_year
 )
 output_multiple_years <- convert_to_parquet(
-  output_dir = temp_output_multiple_years,
-  file_paths = temp_sas_years
+  file_paths = temp_sas_years,
+  output_dir = temp_output_multiple_years
 )
 
 # Open datasets.

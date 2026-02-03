@@ -18,12 +18,12 @@
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param output_dir A character scalar with the path to the directory to save
-#'    the output Parquet file to. Should include the register name as the last
-#'    part of the path. E.g., `path/to/register_name/`.
 #' @param file_paths A character vector with the absolute path(s) to a SAS
 #'    file(s) for one register. See [list_sas_files()], which is a helper for
 #'    for this parameter.
+#' @param output_dir A character scalar with the path to the directory to save
+#'    the output Parquet file to. Should include the register name as the last
+#'    part of the path. E.g., `path/to/register_name/`.
 #' @param chunk_size An integer scalar indicating the number of rows to read
 #'    at a time from the SAS files. Defaults to 10,000,000.
 #'
@@ -35,12 +35,12 @@
 #' @examples
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
-#'   output_dir = fs::path_temp("path/to/register_name/"),
-#'   file_paths = list_sas_files(sas_file_directory)
+#'   file_paths = list_sas_files(sas_file_directory),
+#'   output_dir = fs::path_temp("path/to/register_name/")
 #' )
 convert_to_parquet <- function(
-  output_dir,
   file_paths,
+  output_dir,
   chunk_size = 10000000L
 ) {
   # Initial checks.
@@ -64,7 +64,6 @@ convert_to_parquet <- function(
 
   invisible(output_dir)
 }
-
 
 #' Convert a single register SAS file to Parquet in chunks
 #'
