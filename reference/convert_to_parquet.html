@@ -5,7 +5,7 @@ register, e.g., different years of the same register.
 The function looks for a year (the first four consecutive digits) in the file
 names in file_paths to use the year as partition, see vignettes("design")
 for more information about the partitioning.
-If a year is found, the data is saved partitioned by year in the output
+If a year is found, the data is saved as a partition by year in the output
 directory, e.g., path/to/register_name/year=2020/part-ad5b.parquet (the
 ending being an UUID). If no year is found in the file name, the data is
 still partitioned with year=NA.
@@ -17,7 +17,7 @@ register, e.g., different years of the same register.
 The function looks for a year (the first four consecutive digits) in the file
 names in file_paths to use the year as partition, see vignettes("design")
 for more information about the partitioning.
-If a year is found, the data is saved partitioned by year in the output
+If a year is found, the data is saved as a partition by year in the output
 directory, e.g., path/to/register_name/year=2020/part-ad5b.parquet (the
 ending being an UUID). If no year is found in the file name, the data is
 still partitioned with year=NA.
@@ -31,7 +31,7 @@ not deduplicated.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@ register, e.g., different years of the same register.</p>
 <p>The function looks for a year (the first four consecutive digits) in the file
 names in <code>file_paths</code> to use the year as partition, see <code>vignettes("design")</code>
 for more information about the partitioning.</p>
-<p>If a year is found, the data is saved partitioned by year in the output
+<p>If a year is found, the data is saved as a partition by year in the output
 directory, e.g., <code>path/to/register_name/year=2020/part-ad5b.parquet</code> (the
 ending being an UUID). If no year is found in the file name, the data is
 still partitioned with <code>year=NA</code>.</p>
@@ -87,8 +87,9 @@ not deduplicated.</p>
 
 
 <dl><dt id="arg-file-paths">file_paths<a class="anchor" aria-label="anchor" href="#arg-file-paths"></a></dt>
-<dd><p>A character vector with the absolute path to a SAS
-file or files for one register.</p></dd>
+<dd><p>A character vector with the absolute path(s) to a SAS
+file(s) for one register. See <code><a href="list_sas_files.html">list_sas_files()</a></code>, which is a helper for
+for this parameter.</p></dd>
 
 
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
@@ -116,8 +117,8 @@ file(s) (<code>output_dir</code>), so it can be used in a
 <span class="r-in"><span>  file_paths <span class="op">=</span> <span class="fu"><a href="list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">sas_file_directory</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  output_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"path/to/register_name/"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully converted <span style="color: #0000BB;">"test.sas7bdat"</span> and saved it in <span style="color: #0000BB;">/tmp/Rtmp9Cfjhj/path/to/register_name</span>.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9Cfjhj/path/to/register_name</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully converted <span style="color: #0000BB;">"test.sas7bdat"</span> and saved it in <span style="color: #0000BB;">/tmp/RtmpgXd64W/path/to/register_name</span>.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpgXd64W/path/to/register_name</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
 </h2>
 <p>All the code to convert the SAS files into Parquet are found in the <code>_targets.R</code> file. I’m using the targets package because it is very efficient at handling pipelines and using parallel processing. Look through that file if you are curious about it. Running the pipeline is done by using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_make</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_make.html" class="external-link">tar_make</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </section><section class="level2"><h2 id="save-other-datasets-as-parquet">Save other datasets as Parquet<a class="anchor" aria-label="anchor" href="#save-other-datasets-as-parquet"></a>
 </h2>
 <p>We don’t want to save every data object we create into a Parquet dataset. But some processed data we’ll end up using for several projects and that take a long time to run. In these situations, we’d want to create a Parquet dataset so we can make use of it at later points in time.</p>

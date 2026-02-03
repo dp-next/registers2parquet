@@ -8,10 +8,11 @@ The function looks for a year (the first four consecutive digits) in the
 file names in `file_paths` to use the year as partition, see
 `vignettes("design")` for more information about the partitioning.
 
-If a year is found, the data is saved partitioned by year in the output
-directory, e.g., `path/to/register_name/year=2020/part-ad5b.parquet`
-(the ending being an UUID). If no year is found in the file name, the
-data is still partitioned with `year=NA`.
+If a year is found, the data is saved as a partition by year in the
+output directory, e.g.,
+`path/to/register_name/year=2020/part-ad5b.parquet` (the ending being an
+UUID). If no year is found in the file name, the data is still
+partitioned with `year=NA`.
 
 Because this function only converts one file at a time (in chunks) to be
 able to handle larger-than-memory SAS files, duplicate rows across files
@@ -27,8 +28,10 @@ convert_to_parquet(file_paths, output_dir, chunk_size = 10000000L)
 
 - file_paths:
 
-  A character vector with the absolute path to a SAS file or files for
-  one register.
+  A character vector with the absolute path(s) to a SAS file(s) for one
+  register. See
+  [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md),
+  which is a helper for for this parameter.
 
 - output_dir:
 
@@ -55,6 +58,6 @@ convert_to_parquet(
   file_paths = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/Rtmp9Cfjhj/path/to/register_name.
-#> /tmp/Rtmp9Cfjhj/path/to/register_name
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpgXd64W/path/to/register_name.
+#> /tmp/RtmpgXd64W/path/to/register_name
 ```

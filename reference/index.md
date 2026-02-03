@@ -38,6 +38,9 @@ into Apache Parquet files.
 - [`get_path_without_year()`](https://dp-next.github.io/fastreg/reference/get_path_without_year.md)
   : Get path without year in the file name
 
+- [`get_register_name()`](https://dp-next.github.io/fastreg/reference/get_register_name.md)
+  : Get register name from a group of file paths
+
 - [`list_databases()`](https://dp-next.github.io/fastreg/reference/list_databases.md)
   :
 
@@ -113,3 +116,9 @@ into Apache Parquet files.
 
 - [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
   : Read a Parquet register
+
+- [`split_paths_by_register()`](https://dp-next.github.io/fastreg/reference/split_paths_by_register.md)
+  : Group file paths by register name
+
+- [`use_targets_pipeline()`](https://dp-next.github.io/fastreg/reference/use_targets_pipeline.md)
+  : Set up a targets pipeline for converting SAS registers to Parquet

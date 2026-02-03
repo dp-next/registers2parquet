@@ -26,6 +26,7 @@
 <url><loc>https://dp-next.github.io/fastreg/reference/get_path_specific_database.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/get_path_with_year.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/get_path_without_year.html</loc></url>
+<url><loc>https://dp-next.github.io/fastreg/reference/get_register_name.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/get_register_names.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/get_year_from_filename.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/index.html</loc></url>
@@ -55,5 +56,7 @@
 <url><loc>https://dp-next.github.io/fastreg/reference/read_register.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/read_register_file.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/read_register_partition.html</loc></url>
+<url><loc>https://dp-next.github.io/fastreg/reference/split_paths_by_register.html</loc></url>
+<url><loc>https://dp-next.github.io/fastreg/reference/use_targets_pipeline.html</loc></url>
 </urlset>
 
