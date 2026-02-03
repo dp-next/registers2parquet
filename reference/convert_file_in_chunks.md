@@ -27,4 +27,4 @@ convert_file_in_chunks(file_path, output_dir, chunk_size = 10000000L)
 
 ## Value
 
-Path to the partition.
+file_path invisibly.

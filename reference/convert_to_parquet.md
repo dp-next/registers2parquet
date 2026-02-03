@@ -48,7 +48,7 @@ convert_to_parquet(file_paths, output_dir, chunk_size = 10000000L)
 ## Value
 
 Returns a character scalar with the path to the created Parquet file(s)
-(`output_dir`), so it can be used in a
+(`output_dir`) invisibly, so it can be used in a
 [targets](https://books.ropensci.org/targets/) pipeline.
 
 ## Examples
@@ -59,6 +59,5 @@ convert_to_parquet(
   file_paths = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpIt1X0d/path/to/register_name.
-#> /tmp/RtmpIt1X0d/path/to/register_name
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/Rtmp9OGZhy/path/to/register_name.
 ```
