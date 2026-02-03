@@ -35,7 +35,8 @@ for more information about the partitioning.
 If a year is found, the data is saved as a partition by year in the output
 directory, e.g., \code{path/to/register_name/year=2020/part-ad5b.parquet} (the
 ending being an UUID). If no year is found in the file name, the data is
-still partitioned with \code{year=NA}.
+saved in a \verb{year=__HIVE_DEFAULT_PARTITION__} partition, which is the
+standard Hive convention for missing partition values.
 
 Because this function only converts one file at a time (in chunks) to be
 able to handle larger-than-memory SAS files, duplicate rows across files are
