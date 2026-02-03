@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: clean install-deps document spell-check style test build-website build-readme check install-package
+run-all: clean install-deps document update-wordlist spell-check style test build-website build-readme check install-package
 
 # Clean up auto-generated files
 clean:
