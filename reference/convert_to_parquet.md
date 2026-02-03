@@ -11,8 +11,9 @@ file names in `file_paths` to use the year as partition, see
 If a year is found, the data is saved as a partition by year in the
 output directory, e.g.,
 `path/to/register_name/year=2020/part-ad5b.parquet` (the ending being an
-UUID). If no year is found in the file name, the data is still
-partitioned with `year=NA`.
+UUID). If no year is found in the file name, the data is saved in a
+`year=__HIVE_DEFAULT_PARTITION__` partition, which is the standard Hive
+convention for missing partition values.
 
 Because this function only converts one file at a time (in chunks) to be
 able to handle larger-than-memory SAS files, duplicate rows across files
@@ -58,6 +59,6 @@ convert_to_parquet(
   file_paths = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpRFst9I/path/to/register_name.
-#> /tmp/RtmpRFst9I/path/to/register_name
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpwpZ8hz/path/to/register_name.
+#> /tmp/RtmpwpZ8hz/path/to/register_name
 ```
