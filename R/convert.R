@@ -18,29 +18,29 @@
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param file_paths A character vector with the absolute path(s) to a SAS
-#'    file(s) for one register. See [list_sas_files()], which is a helper for
-#'    for this parameter.
 #' @param output_dir A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
+#' @param file_paths A character vector with the absolute path(s) to a SAS
+#'    file(s) for one register. See [list_sas_files()], which is a helper for
+#'    for this parameter.
 #' @param chunk_size An integer scalar indicating the number of rows to read
 #'    at a time from the SAS files. Defaults to 10,000,000.
 #'
 #' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_dir`), so it can be used in a
+#'    file(s) (`output_dir`) invisibly, so it can be used in a
 #'    [targets](https://books.ropensci.org/targets/) pipeline.
 #'
 #' @export
 #' @examples
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
-#'   file_paths = list_sas_files(sas_file_directory),
-#'   output_dir = fs::path_temp("path/to/register_name/")
+#'   output_dir = fs::path_temp("path/to/register_name/"),
+#'   file_paths = list_sas_files(sas_file_directory)
 #' )
 convert_to_parquet <- function(
-  file_paths,
   output_dir,
+  file_paths,
   chunk_size = 10000000L
 ) {
   # Initial checks.
@@ -62,7 +62,7 @@ convert_to_parquet <- function(
     "Successfully converted {.val {fs::path_file(file_paths)}} and saved it in {.path {output_dir}}."
   )
 
-  output_dir
+  invisible(output_dir)
 }
 
 
@@ -71,7 +71,7 @@ convert_to_parquet <- function(
 #' @param file_path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
-#' @returns Path to the partition.
+#' @returns file_path invisibly.
 #'
 #' @keywords internal
 convert_file_in_chunks <- function(
@@ -119,7 +119,7 @@ convert_file_in_chunks <- function(
       dplyr::mutate(source_file = as.character(file_path))
   }
 
-  invisible(partition_path)
+  invisible(file_path)
 }
 
 #' Get year from file name
