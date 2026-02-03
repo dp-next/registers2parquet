@@ -59,5 +59,5 @@ convert_to_parquet(
   file_paths = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/Rtmp9OGZhy/path/to/register_name.
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/Rtmp8ry1n0/path/to/register_name.
 ```
