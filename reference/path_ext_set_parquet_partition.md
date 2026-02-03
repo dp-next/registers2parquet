@@ -22,5 +22,5 @@ A character vector.
 
 ``` r
 fs::file_temp(ext = ".sas7bdat") |> path_ext_set_parquet_partition()
-#> /tmp/RtmpwpZ8hz/file200d5fa9a9a.sas7bdat/part-0.parquet
+#> /tmp/Rtmpu042jK/file1da81b69137c.sas7bdat/part-0.parquet
 ```
