@@ -62,7 +62,12 @@ read_register <- function(
 #' @keywords internal
 read_register_partition <- function(dir_path) {
   dir_path |>
-    arrow::open_dataset(unify_schemas = TRUE) |>
+    arrow::open_dataset(
+      unify_schemas = TRUE,
+      # Explicitly set type of partition to int32 to handle when year is
+      # missing.
+      partitioning = arrow::hive_partition(year = arrow::int32())
+    ) |>
     arrow::to_duckdb()
 }
 
