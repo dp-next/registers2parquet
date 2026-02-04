@@ -59,7 +59,7 @@ list_parquet_files <- function(path) {
     sort()
 
   if (length(parquet_files) == 0) {
-    cli::cli_abort("No SAS files found in {.path {path}}.")
+    cli::cli_abort("No Parquet files found in {.path {path}}.")
   }
 
   parquet_files
