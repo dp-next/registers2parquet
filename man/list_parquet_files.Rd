@@ -2,18 +2,18 @@
 % Please edit documentation in R/list.R
 \name{list_parquet_files}
 \alias{list_parquet_files}
-\title{List Parquet registers in a directory}
+\title{List Parquet files in a directory}
 \usage{
 list_parquet_files(path)
 }
 \arguments{
-\item{path}{The path to the directory to search for Parquet files.}
+\item{path}{A character scalar with the path to the directory to search.}
 }
 \value{
 A character vector of paths to the Parquet files found.
 }
 \description{
-This function lists all Parquet register files (with the extension \code{.parquet}
+Lists all Parquet register files (with the extension \code{.parquet}
 or \code{.parq} case-insensitively) in the specified directory and its
 subdirectories.
 }

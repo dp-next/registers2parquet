@@ -2,18 +2,18 @@
 % Please edit documentation in R/list.R
 \name{list_sas_files}
 \alias{list_sas_files}
-\title{List SAS registers in a directory}
+\title{List SAS files in a directory}
 \usage{
 list_sas_files(path)
 }
 \arguments{
-\item{path}{The path to the directory to search for SAS files.}
+\item{path}{A character scalar with the path to the directory to search.}
 }
 \value{
 A character vector of paths to the SAS files found.
 }
 \description{
-This function lists all SAS register files (with the extension \code{.sas7bdat}
+Lists all SAS register files (with the extension \code{.sas7bdat}
 case-insensitively) in the specified directory and its subdirectories.
 }
 \examples{
