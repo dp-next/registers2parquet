@@ -1,6 +1,6 @@
 # Prepare data to be read.
 kontakter_list <- helper_create_simulated_kontakter(n = 1000)
-file_paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+path <- paste0(names(kontakter_list), ".sas7bdat") |>
   fs::path_temp() |>
   as.character()
 temp_output <- fs::path_temp("kontakter")
@@ -10,12 +10,12 @@ if (fs::dir_exists(temp_output)) {
   fs::dir_delete(temp_output)
 }
 
-suppressWarnings(haven::write_sas(kontakter_list[[1]], file_paths[[1]]))
-suppressWarnings(haven::write_sas(kontakter_list[[2]], file_paths[[2]]))
-suppressWarnings(haven::write_sas(kontakter_list[[3]], file_paths[[3]]))
+suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
+suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
+suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
 
 # Use convert_to_parquet() for conversion
-convert_to_parquet(file_paths = file_paths, output_dir = temp_output)
+convert_to_parquet(path = path, output_dir = temp_output)
 
 test_that("reading a single Parquet file works as expected", {
   # Read single Parquet file (from SAS file without year in filename).
@@ -27,19 +27,19 @@ test_that("reading a single Parquet file works as expected", {
   ))) |>
     dplyr::collect()
 
-  expected <- haven::read_sas(file_paths[[1]])
+  expected <- haven::read_sas(path[[1]])
 
   expect_equal(
     actual |> dplyr::select(-"source_file"),
     expected
   )
-  expect_all_equal(actual$source_file, file_paths[[1]])
+  expect_all_equal(actual$source_file, path[[1]])
 })
 
 test_that("reading a partitioned Parquet register works as expected", {
   actual <- read_register(temp_output) |> dplyr::collect()
 
-  expected <- purrr::map(file_paths, \(file_path) haven::read_sas(file_path)) |>
+  expected <- purrr::map(path, \(file_path) haven::read_sas(file_path)) |>
     dplyr::bind_rows()
 
   # Sort both dataframes by cpr and dw_ek_kontakt to ensure consistent ordering,
@@ -53,7 +53,7 @@ test_that("reading a partitioned Parquet register works as expected", {
     ignore_attr = TRUE
   )
 
-  expect_equal(sort(unique(actual$source_file)), sort(file_paths))
+  expect_equal(sort(unique(actual$source_file)), sort(path))
   expect_equal(sort(unique(actual$year), na.last = TRUE), c(1999, NA))
 })
 

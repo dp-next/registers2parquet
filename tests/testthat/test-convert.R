@@ -29,15 +29,15 @@ suppressWarnings(haven::write_sas(co2_df, temp_sas_years[2]))
 
 # Convert SAS to Parquet.
 output_no_years_one_file <- convert_to_parquet(
-  file_paths = temp_sas_no_years[1],
+  path = temp_sas_no_years[1],
   output_dir = temp_output_no_year_one_file
 )
 output_no_years <- convert_to_parquet(
-  file_paths = temp_sas_no_years,
+  path = temp_sas_no_years,
   output_dir = temp_output_no_year
 )
 output_multiple_years <- convert_to_parquet(
-  file_paths = temp_sas_years,
+  path = temp_sas_years,
   output_dir = temp_output_multiple_years
 )
 
@@ -129,23 +129,23 @@ test_that("number of rows are as expected", {
 })
 
 test_that("incorrect parameters generate errors", {
-  # Incorrect file_paths type.
+  # Incorrect path type.
   expect_error(convert_to_parquet(
-    file_paths = 1,
+    path = 1,
     output_dir = temp_output_multiple_years
   ))
   # Incorrect output_dir type.
   expect_error(convert_to_parquet(
-    file_paths = temp_sas_years[[1]],
+    path = temp_sas_years[[1]],
     output_dir = 1
   ))
   expect_error(convert_to_parquet(
-    file_paths = rep(temp_output_multiple_years, times = 2),
+    path = rep(temp_output_multiple_years, times = 2),
     output_dir = temp_sas_years[[1]]
   ))
   # Incorrect chunk size type (lower than allowed).
   expect_error(convert_to_parquet(
-    file_paths = temp_sas_no_years,
+    path = temp_sas_no_years,
     output_dir = temp_output_no_year_one_file,
     chunk_size = 10L
   ))
@@ -153,14 +153,14 @@ test_that("incorrect parameters generate errors", {
   temp_different_register <- fs::path_temp("other_2020.sas7bdat")
   suppressWarnings(haven::write_sas(co2_df, temp_different_register))
   expect_error(convert_to_parquet(
-    file_paths = c(temp_sas_years[[1]], temp_different_register),
+    path = c(temp_sas_years[[1]], temp_different_register),
     output_dir = temp_output_multiple_years,
   ))
 })
 
 test_that("files passed in the paths parameter must exist", {
   expect_error(convert_to_parquet(
-    file_paths = fs::file_temp(),
+    path = fs::file_temp(),
     output_dir = temp_output_multiple_years
   ))
 })
@@ -181,7 +181,7 @@ test_that("parts are named correctly with chunked files", {
   suppressWarnings(haven::write_sas(df, temp_paths[[2]]))
 
   convert_to_parquet(
-    file_paths = temp_paths,
+    path = temp_paths,
     output_dir = output_dir,
     chunk_size = 10000L
   )
@@ -197,7 +197,7 @@ test_that("mixed files with and without years are partitioned correctly", {
   output_dir_mixed <- fs::path_temp("output_mixed")
 
   convert_to_parquet(
-    file_paths = c(temp_sas_no_years[[1]], temp_sas_years[[1]]),
+    path = c(temp_sas_no_years[[1]], temp_sas_years[[1]]),
     output_dir = output_dir_mixed
   )
 
@@ -222,25 +222,25 @@ test_that("larger files are partitioned as expected with chunk_size = 1 million"
   skip_on_cran()
 
   kontakter_list <- helper_create_simulated_kontakter()
-  file_paths <- paste0(names(kontakter_list), ".sas7bdat") |>
+  path <- paste0(names(kontakter_list), ".sas7bdat") |>
     fs::path_temp() |>
     as.character()
   temp_output <- fs::path_temp("kontakter")
 
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], file_paths[[1]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[2]], file_paths[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[3]], file_paths[[3]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
 
   chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
 
   actual_output_dir <- convert_to_parquet(
-    file_paths = file_paths,
+    path = path,
     output_dir = temp_output,
     chunk_size = chunk_size
   )
 
   # Check number of files per partition.
-  sas_files <- purrr::map(file_paths, haven::read_sas)
+  sas_files <- purrr::map(path, haven::read_sas)
   n_files_expected <- sas_files |>
     purrr::map_int(nrow) /
     chunk_size

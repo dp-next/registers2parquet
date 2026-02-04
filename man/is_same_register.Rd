@@ -4,17 +4,17 @@
 \alias{is_same_register}
 \title{Check that all file paths are from the same register}
 \usage{
-is_same_register(file_paths)
+is_same_register(path)
 }
 \arguments{
-\item{file_paths}{A character vector with paths to SAS register files.}
+\item{path}{A character vector of one or more paths to SAS register files.}
 }
 \value{
-A logical that's TRUE if all \code{file_paths} point to files from the
+A logical that's TRUE if all paths point to files from the
 same register, based on the file names.
 }
 \description{
 Checks that all register names (file names without any non-letters) in
-\code{file_paths} are identical, i.e., the registers have the same name.
+\code{path} are identical, i.e., the registers have the same name.
 }
 \keyword{internal}

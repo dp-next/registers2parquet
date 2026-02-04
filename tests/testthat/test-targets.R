@@ -45,14 +45,14 @@ test_that("pipeline converts SAS files to Parquet", {
 
   # Create test SAS files.
   kontakter_list <- helper_create_simulated_kontakter(n = 1000)
-  paths <- fs::path(input_path) |>
+  path <- fs::path(input_path) |>
     paste0("/", names(kontakter_list), ".sas7bdat") |>
     as.character()
   temp_output <- fs::path_temp("kontakter")
 
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], paths[[1]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[2]], paths[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[3]], paths[[3]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
+  suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
 
   # Read template and replace placeholder paths.
   modified_content <- template_content |>
