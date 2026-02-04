@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.7.4 (2026-02-04)
+
+### Refactor
+
+- :recycle: longer UUIDs for less chance of duplicates (#141)
+
 ## 0.7.3 (2026-02-03)
 
 ### Refactor
