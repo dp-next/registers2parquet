@@ -4,16 +4,16 @@
 \alias{get_register_names}
 \title{Get the register names from file paths}
 \usage{
-get_register_names(paths)
+get_register_names(path)
 }
 \arguments{
-\item{paths}{Character vector with file paths.}
+\item{path}{A character vector of one or more file paths.}
 }
 \value{
-The file names from \code{paths} with only letters (all non-letter
+The file names from \code{path} with only letters (all non-letters
 removed).
 }
 \description{
-Removes all non-letters from the file names in \code{paths}.
+Removes all non-letters from the file names in \code{path}.
 }
 \keyword{internal}

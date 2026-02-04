@@ -4,10 +4,10 @@
 \alias{split_paths_by_register}
 \title{Group file paths by register name}
 \usage{
-split_paths_by_register(paths)
+split_paths_by_register(path)
 }
 \arguments{
-\item{paths}{A character vector of file paths.}
+\item{path}{A character vector of one or more file paths.}
 }
 \value{
 A list of character vectors, where each element contains paths
@@ -18,6 +18,6 @@ Groups a vector of file paths by their register name, where the register
 name is derived from the file name with all non-letter characters removed.
 }
 \examples{
-paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
-split_paths_by_register(paths)
+path <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
+split_paths_by_register(path)
 }

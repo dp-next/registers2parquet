@@ -4,12 +4,11 @@
 \alias{convert_to_parquet}
 \title{Convert register SAS file(s) and save to Parquet format}
 \usage{
-convert_to_parquet(file_paths, output_dir, chunk_size = 10000000L)
+convert_to_parquet(path, output_dir, chunk_size = 10000000L)
 }
 \arguments{
-\item{file_paths}{A character vector with the absolute path(s) to a SAS
-file(s) for one register. See \code{\link[=list_sas_files]{list_sas_files()}}, which is a helper for
-for this parameter.}
+\item{path}{A character vector of one or more paths to SAS file(s) for one
+register. See \code{\link[=list_sas_files]{list_sas_files()}}, which is a helper for this parameter.}
 
 \item{output_dir}{A character scalar with the path to the directory to save
 the output Parquet file to. Should include the register name as the last
@@ -29,14 +28,14 @@ data in Parquet format. It expects the input SAS files to come from the same
 register, e.g., different years of the same register.
 
 The function looks for a year (the first four consecutive digits) in the file
-names in \code{file_paths} to use the year as partition, see \code{vignettes("design")}
+names in \code{path} to use the year as partition, see \code{vignettes("design")}
 for more information about the partitioning.
 
 If a year is found, the data is saved as a partition by year in the output
-directory, e.g., \code{path/to/register_name/year=2020/part-ad5b.parquet} (the
-ending being an UUID). If no year is found in the file name, the data is
-saved in a \verb{year=__HIVE_DEFAULT_PARTITION__} partition, which is the
-standard Hive convention for missing partition values.
+directory, e.g., \code{output_dir/year=2020/part-ad5b.parquet} (the ending being
+a UUID). If no year is found in the file name, the data is saved in a
+\verb{year=__HIVE_DEFAULT_PARTITION__} partition, which is the standard Hive
+convention for missing partition values.
 
 Because this function only converts one file at a time (in chunks) to be
 able to handle larger-than-memory SAS files, duplicate rows across files are
@@ -45,7 +44,7 @@ not deduplicated.
 \examples{
 sas_file_directory <- fs::path_package("fastreg", "extdata")
 convert_to_parquet(
-  file_paths = list_sas_files(sas_file_directory),
+  path = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
 }

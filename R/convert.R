@@ -6,22 +6,21 @@
 #' register, e.g., different years of the same register.
 #'
 #' The function looks for a year (the first four consecutive digits) in the file
-#' names in `file_paths` to use the year as partition, see `vignettes("design")`
+#' names in `path` to use the year as partition, see `vignettes("design")`
 #' for more information about the partitioning.
 #'
 #' If a year is found, the data is saved as a partition by year in the output
-#' directory, e.g., `path/to/register_name/year=2020/part-ad5b.parquet` (the
-#' ending being an UUID). If no year is found in the file name, the data is
-#' saved in a `year=__HIVE_DEFAULT_PARTITION__` partition, which is the
-#' standard Hive convention for missing partition values.
+#' directory, e.g., `output_dir/year=2020/part-ad5b.parquet` (the ending being
+#' a UUID). If no year is found in the file name, the data is saved in a
+#' `year=__HIVE_DEFAULT_PARTITION__` partition, which is the standard Hive
+#' convention for missing partition values.
 #'
 #' Because this function only converts one file at a time (in chunks) to be
 #' able to handle larger-than-memory SAS files, duplicate rows across files are
 #' not deduplicated.
 #'
-#' @param file_paths A character vector with the absolute path(s) to a SAS
-#'    file(s) for one register. See [list_sas_files()], which is a helper for
-#'    for this parameter.
+#' @param path A character vector of one or more paths to SAS file(s) for one
+#'    register. See [list_sas_files()], which is a helper for this parameter.
 #' @param output_dir A character scalar with the path to the directory to save
 #'    the output Parquet file to. Should include the register name as the last
 #'    part of the path. E.g., `path/to/register_name/`.
@@ -36,31 +35,31 @@
 #' @examples
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
-#'   file_paths = list_sas_files(sas_file_directory),
+#'   path = list_sas_files(sas_file_directory),
 #'   output_dir = fs::path_temp("path/to/register_name/")
 #' )
 convert_to_parquet <- function(
-  file_paths,
+  path,
   output_dir,
   chunk_size = 10000000L
 ) {
   # Initial checks.
-  checkmate::assert_character(file_paths)
-  checkmate::assert_file_exists(file_paths)
-  checkmate::assert_true(is_same_register(file_paths))
+  checkmate::assert_character(path)
+  checkmate::assert_file_exists(path)
+  checkmate::assert_true(is_same_register(path))
   checkmate::assert_character(output_dir)
   checkmate::assert_scalar(output_dir)
   checkmate::assert_int(chunk_size, lower = 10000L)
 
   # Convert files.
   purrr::walk(
-    file_paths,
-    \(file_path) convert_file_in_chunks(file_path, output_dir, chunk_size)
+    path,
+    \(p) convert_file_in_chunks(p, output_dir, chunk_size)
   )
 
   # Success message.
   cli::cli_alert_success(
-    "Successfully converted {.val {fs::path_file(file_paths)}} and saved it in {.path {output_dir}}."
+    "Successfully converted {.val {fs::path_file(path)}} and saved it in {.path {output_dir}}."
   )
 
   invisible(output_dir)
@@ -206,16 +205,16 @@ column_names_to_lower <- function(data) {
 #' Check that all file paths are from the same register
 #'
 #' Checks that all register names (file names without any non-letters) in
-#' `file_paths` are identical, i.e., the registers have the same name.
+#' `path` are identical, i.e., the registers have the same name.
 #'
-#' @param file_paths A character vector with paths to SAS register files.
+#' @param path A character vector of one or more paths to SAS register files.
 #'
-#' @returns A logical that's TRUE if all `file_paths` point to files from the
+#' @returns A logical that's TRUE if all paths point to files from the
 #'  same register, based on the file names.
 #'
 #' @keywords internal
-is_same_register <- function(file_paths) {
-  register_names <- get_register_names(file_paths)
+is_same_register <- function(path) {
+  register_names <- get_register_names(path)
 
   length(unique(register_names)) == 1L
 }

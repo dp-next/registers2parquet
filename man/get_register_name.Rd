@@ -4,11 +4,10 @@
 \alias{get_register_name}
 \title{Get register name from a group of file paths}
 \usage{
-get_register_name(file_paths)
+get_register_name(path)
 }
 \arguments{
-\item{file_paths}{A character vector of file file_paths from the same
-register.}
+\item{path}{A character vector of one or more paths from the same register.}
 }
 \value{
 A character scalar with the register name.
@@ -18,6 +17,6 @@ Extracts the register name from the path in a group. Intended for use
 with groups created by \code{\link[=split_paths_by_register]{split_paths_by_register()}} in the targets template.
 }
 \examples{
-file_paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
-get_register_name(file_paths)
+path <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
+get_register_name(path)
 }
