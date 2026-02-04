@@ -7,7 +7,7 @@
 create_part_uuid()
 }
 \value{
-A character scalar with a UUID with a length of 4.
+A character scalar with a UUID with a length of 6.
 }
 \description{
 We're using shortened UUIDs instead of integers to avoid collisions when
