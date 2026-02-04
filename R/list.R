@@ -1,9 +1,9 @@
-#' List SAS registers in a directory
+#' List SAS files in a directory
 #'
-#' This function lists all SAS register files (with the extension `.sas7bdat`
+#' Lists all SAS register files (with the extension `.sas7bdat`
 #' case-insensitively) in the specified directory and its subdirectories.
 #'
-#' @param path The path to the directory to search for SAS files.
+#' @param path A character scalar with the path to the directory to search.
 #'
 #' @returns A character vector of paths to the SAS files found.
 #'
@@ -31,13 +31,13 @@ list_sas_files <- function(path) {
   sas_files
 }
 
-#' List Parquet registers in a directory
+#' List Parquet files in a directory
 #'
-#' This function lists all Parquet register files (with the extension `.parquet`
+#' Lists all Parquet register files (with the extension `.parquet`
 #' or `.parq` case-insensitively) in the specified directory and its
 #' subdirectories.
 #'
-#' @param path The path to the directory to search for Parquet files.
+#' @param path A character scalar with the path to the directory to search.
 #'
 #' @returns A character vector of paths to the Parquet files found.
 #'
@@ -59,7 +59,7 @@ list_parquet_files <- function(path) {
     sort()
 
   if (length(parquet_files) == 0) {
-    cli::cli_abort("No SAS files found in {.path {path}}.")
+    cli::cli_abort("No Parquet files found in {.path {path}}.")
   }
 
   parquet_files
