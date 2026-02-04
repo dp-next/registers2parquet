@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="convert-sas-register-files-to-parquet">Convert SAS register files to Parquet<a class="anchor" aria-label="anchor" href="#convert-sas-register-files-to-parquet"></a></h2>
+      <h2 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a></h2>
 
-      <div class="section-desc"><p>Main functions for converting SAS files containing Danish register data into Apache Parquet files.</p></div>
+
 
       <dl></dl></div><div class="section level2">
 
@@ -54,12 +54,21 @@
 
         <dt>
 
-          <code><a href="get_register_name.html">get_register_name()</a></code>
+          <code><a href="read_register.html">read_register()</a></code>
 
         </dt>
-        <dd>Get register name from a group of file paths</dd>
+        <dd>Read a Parquet register</dd>
+      </dl></div><div class="section level2">
+      <h2 id="helper-functions">Helper functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a></h2>
 
-        <dt>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="list_parquet_files.html">list_parquet_files()</a></code>
 
@@ -75,10 +84,26 @@
 
         <dt>
 
-          <code><a href="read_register.html">read_register()</a></code>
+          <code><a href="use_targets_pipeline.html">use_targets_pipeline()</a></code>
 
         </dt>
-        <dd>Read a Parquet register</dd>
+        <dd>Set up a targets pipeline for converting SAS registers to Parquet</dd>
+      </dl></div><div class="section level2">
+      <h2 id="functions-used-within-the-targets-pipeline">Functions used within the targets pipeline<a class="anchor" aria-label="anchor" href="#functions-used-within-the-targets-pipeline"></a></h2>
+
+      <div class="section-desc"><p>These functions are not expected to be used outside the targets pipeline created with the template.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_register_name.html">get_register_name()</a></code>
+
+        </dt>
+        <dd>Get register name from a group of file paths</dd>
 
         <dt>
 
@@ -86,15 +111,9 @@
 
         </dt>
         <dd>Group file paths by register name</dd>
-
-        <dt>
-
-          <code><a href="use_targets_pipeline.html">use_targets_pipeline()</a></code>
-
-        </dt>
-        <dd>Set up a targets pipeline for converting SAS registers to Parquet</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
