@@ -149,11 +149,11 @@ get_year_from_filename <- function(file_path) {
 #' We're using shortened UUIDs instead of integers to avoid collisions when
 #' converting registers in parallel.
 #'
-#' @returns A character scalar with a UUID with a length of 4.
+#' @returns A character scalar with a UUID with a length of 6.
 #'
 #' @keywords internal
 create_part_uuid <- function() {
-  substr(uuid::UUIDgenerate(), 0, 4)
+  substr(uuid::UUIDgenerate(), 0, 6)
 }
 
 #' Create a consistent Arrow schema from a data frame
