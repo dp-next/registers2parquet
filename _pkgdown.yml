@@ -11,14 +11,18 @@ navbar:
       href: articles/design.html
 
 reference:
-- title: Convert SAS register files to Parquet
-  desc: >
-    Main functions for converting SAS files containing
-    Danish register data into Apache Parquet files.
+- title: Main functions
 - contents:
   - convert_to_parquet
-  - starts_with("get")
+  - read_register
+- title: Helper functions
+- contents:
   - starts_with("list")
-  - starts_with("read")
-  - split_paths_by_register
   - use_targets_pipeline
+- title: Functions used within the targets pipeline
+  desc: > 
+    These functions are not expected to be used outside the targets pipeline
+    created with the template.
+- contents:
+  - get_register_name
+  - split_paths_by_register
