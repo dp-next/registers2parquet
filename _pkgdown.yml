@@ -20,7 +20,7 @@ reference:
   - starts_with("list")
   - use_targets_pipeline
 - title: Functions used within the targets pipeline
-  desc: > 
+  desc: >
     These functions are not expected to be used outside the targets pipeline
     created with the template.
 - contents:
