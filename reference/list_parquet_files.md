@@ -1,8 +1,8 @@
-# List Parquet registers in a directory
+# List Parquet files in a directory
 
-This function lists all Parquet register files (with the extension
-`.parquet` or `.parq` case-insensitively) in the specified directory and
-its subdirectories.
+Lists all Parquet register files (with the extension `.parquet` or
+`.parq` case-insensitively) in the specified directory and its
+subdirectories.
 
 ## Usage
 
@@ -14,7 +14,7 @@ list_parquet_files(path)
 
 - path:
 
-  The path to the directory to search for Parquet files.
+  A character scalar with the path to the directory to search.
 
 ## Value
 

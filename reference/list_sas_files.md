@@ -1,8 +1,7 @@
-# List SAS registers in a directory
+# List SAS files in a directory
 
-This function lists all SAS register files (with the extension
-`.sas7bdat` case-insensitively) in the specified directory and its
-subdirectories.
+Lists all SAS register files (with the extension `.sas7bdat`
+case-insensitively) in the specified directory and its subdirectories.
 
 ## Usage
 
@@ -14,7 +13,7 @@ list_sas_files(path)
 
 - path:
 
-  The path to the directory to search for SAS files.
+  A character scalar with the path to the directory to search.
 
 ## Value
 

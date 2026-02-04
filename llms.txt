@@ -23,9 +23,9 @@ into Apache Parquet files.
 - [`get_register_name()`](https://dp-next.github.io/fastreg/reference/get_register_name.md)
   : Get register name from a group of file paths
 - [`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet_files.md)
-  : List Parquet registers in a directory
+  : List Parquet files in a directory
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
-  : List SAS registers in a directory
+  : List SAS files in a directory
 - [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
   : Read a Parquet register
 - [`split_paths_by_register()`](https://dp-next.github.io/fastreg/reference/split_paths_by_register.md)
