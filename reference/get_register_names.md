@@ -1,19 +1,19 @@
 # Get the register names from file paths
 
-Removes all non-letters from the file names in `paths`.
+Removes all non-letters from the file names in `path`.
 
 ## Usage
 
 ``` r
-get_register_names(paths)
+get_register_names(path)
 ```
 
 ## Arguments
 
-- paths:
+- path:
 
-  Character vector with file paths.
+  A character vector of one or more file paths.
 
 ## Value
 
-The file names from `paths` with only letters (all non-letter removed).
+The file names from `path` with only letters (all non-letters removed).

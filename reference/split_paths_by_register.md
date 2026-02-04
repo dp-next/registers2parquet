@@ -7,14 +7,14 @@ removed.
 ## Usage
 
 ``` r
-split_paths_by_register(paths)
+split_paths_by_register(path)
 ```
 
 ## Arguments
 
-- paths:
+- path:
 
-  A character vector of file paths.
+  A character vector of one or more file paths.
 
 ## Value
 
@@ -24,8 +24,8 @@ to the same register.
 ## Examples
 
 ``` r
-paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
-split_paths_by_register(paths)
+path <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat", "data/ind2020.sas7bdat")
+split_paths_by_register(path)
 #> [[1]]
 #> [1] "data/bef2020.sas7bdat" "data/bef2021.sas7bdat"
 #> 

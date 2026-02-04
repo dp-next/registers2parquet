@@ -11,4 +11,4 @@ create_part_uuid()
 
 ## Value
 
-A character scalar with a UUID with a length of 4.
+A character scalar with a UUID with a length of 6.

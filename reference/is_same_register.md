@@ -1,21 +1,21 @@
 # Check that all file paths are from the same register
 
 Checks that all register names (file names without any non-letters) in
-`file_paths` are identical, i.e., the registers have the same name.
+`path` are identical, i.e., the registers have the same name.
 
 ## Usage
 
 ``` r
-is_same_register(file_paths)
+is_same_register(path)
 ```
 
 ## Arguments
 
-- file_paths:
+- path:
 
-  A character vector with paths to SAS register files.
+  A character vector of one or more paths to SAS register files.
 
 ## Value
 
-A logical that's TRUE if all `file_paths` point to files from the same
+A logical that's TRUE if all paths point to files from the same
 register, based on the file names.

@@ -8,14 +8,14 @@ in the targets template.
 ## Usage
 
 ``` r
-get_register_name(file_paths)
+get_register_name(path)
 ```
 
 ## Arguments
 
-- file_paths:
+- path:
 
-  A character vector of file file_paths from the same register.
+  A character vector of one or more paths from the same register.
 
 ## Value
 
@@ -24,7 +24,7 @@ A character scalar with the register name.
 ## Examples
 
 ``` r
-file_paths <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
-get_register_name(file_paths)
+path <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
+get_register_name(path)
 #> [1] "bef"
 ```
