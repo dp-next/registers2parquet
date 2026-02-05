@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.7.6 (2026-02-05)
+
+### Refactor
+
+- 🚚 `use_targets_pipeline()` -> `use_targets()` (#145)
+
 ## 0.7.5 (2026-02-04)
 
 ### Refactor
