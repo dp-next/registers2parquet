@@ -22,7 +22,7 @@ use_targets <- function(
     ))
   }
 
-  fs::file_copy(template_path, path)
+  fs::file_copy(path = template_path, new_path = path)
 
   if (fs::file_exists(path)) {
     cli::cli_alert_success("Created {.file {path}}")
