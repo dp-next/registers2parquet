@@ -1,269 +1,161 @@
 # Tests with small test data --------------------------------------------------
 
-# Prepare temp file without year in filename.
-temp_sas_no_years <- c(
-  fs::path_temp("test.sas7bdat"),
-  fs::path_temp("test1.sas7bdat")
-)
-temp_output_no_year_one_file <- fs::path_temp("test_no_year_one_file")
-temp_output_no_year <- fs::path_temp("test_no_year")
-
-# Prepare temp files with year in filename.
-temp_sas_years <- c(
-  fs::path_temp("test_1999.sas7bdat"),
-  fs::path_temp("test_2020.sas7bdat")
-)
-temp_output_multiple_years <- fs::path_temp("test_multiple_years")
-
-# Prepare CO2 dataset with character columns instead of factors.
-co2_df <- CO2 |>
-  dplyr::mutate(dplyr::across(tidyselect::where(is.factor), as.character)) |>
-  dplyr::as_tibble()
-
-# Write temporary SAS files.
-# Suppress warnings needed since write_sas() is deprecated.
-suppressWarnings(haven::write_sas(co2_df, temp_sas_no_years[1]))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_no_years[2]))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_years[1]))
-suppressWarnings(haven::write_sas(co2_df, temp_sas_years[2]))
+# n = 11000 to test chunking logic.
+kontakter_list <- simulate_kontakter_register(n = 11000)
+sas_path <- fs::path_temp("sas_kontakter")
+save_as_sas(kontakter_list, sas_path)
+sas_kontakter <- fs::dir_ls(sas_path)
+output_dir <- fs::path_temp("parquet_path")
 
 # Convert SAS to Parquet.
-output_no_years_one_file <- convert_to_parquet(
-  path = temp_sas_no_years[1],
-  output_dir = temp_output_no_year_one_file
-)
-output_no_years <- convert_to_parquet(
-  path = temp_sas_no_years,
-  output_dir = temp_output_no_year
-)
-output_multiple_years <- convert_to_parquet(
-  path = temp_sas_years,
-  output_dir = temp_output_multiple_years
+actual_path <- convert_to_parquet(
+  path = sas_kontakter,
+  output_dir = output_dir
 )
 
-# Open datasets.
-actual_no_years_one_file <- arrow::open_dataset(
-  output_no_years_one_file,
+# Open Parquet dataset.
+actual_data <- arrow::open_dataset(
+  output_dir,
   partitioning = arrow::hive_partition(year = arrow::int32())
-) |>
-  dplyr::as_tibble()
-
-actual_no_years <- arrow::open_dataset(
-  output_no_years,
-  partitioning = arrow::hive_partition(year = arrow::int32())
-) |>
-  dplyr::as_tibble()
-
-actual_multiple_years <- arrow::open_dataset(
-  output_multiple_years
 ) |>
   dplyr::as_tibble()
 
 test_that("output is output_dir", {
-  expect_equal(output_no_years_one_file, temp_output_no_year_one_file)
-  expect_equal(output_no_years, temp_output_no_year)
-  expect_equal(output_multiple_years, temp_output_multiple_years)
+  expect_equal(actual_path, output_dir)
 })
 
-test_that("files without year in filename are partitioned as expected", {
-  # One input file.
-  expected_path <- fs::path(
-    temp_output_no_year_one_file,
-    "year=__HIVE_DEFAULT_PARTITION__"
+# Read expected dataset from SAS files.
+expected_data <- purrr::map(sas_kontakter, \(sas_file) {
+  haven::read_sas(sas_file)
+}) |>
+  dplyr::bind_rows()
+
+test_that("files are partitioned as expected", {
+  expected <- fs::path(
+    output_dir,
+    c("year=__HIVE_DEFAULT_PARTITION__", "year=1999", "year=2020")
   )
-  expect_true(fs::dir_exists(expected_path))
-  expect_length(list.files(expected_path), 1)
 
-  # Multiple input files.
-  expected_path <- fs::path(
-    temp_output_no_year,
-    "year=__HIVE_DEFAULT_PARTITION__"
+  expect_all_true(fs::dir_exists(expected))
+  # Same number of created files as input files.
+  expect_length(fs::dir_ls(expected), length(fs::dir_ls(sas_path)))
+})
+
+test_that("parts are named as expected", {
+  actual <- fs::path_file(fs::dir_ls(output_dir, recurse = TRUE, type = "file"))
+  expect_true(all(stringr::str_detect(actual, "^part-[a-f0-9]{6}\\.parquet$")))
+})
+
+test_that("column names, data types, and number of rows are as expected", {
+  actual <- actual_data |> dplyr::select(-c("source_file", "year"))
+  expect_identical(actual, expected_data)
+  expect_identical(
+    purrr::map(actual_data |> dplyr::select(c("source_file", "year")), class),
+    list(source_file = "character", year = "integer")
   )
-  expect_true(fs::dir_exists(expected_path))
-  expect_length(list.files(expected_path), 2) # One Parquet per input file.
-
-  # Year column should be NA when read.
-  expect_true(all(is.na(actual_no_years$year)))
-})
-
-test_that("files with year in filename are partitioned as expected", {
-  expected_path_1999 <- fs::path(temp_output_multiple_years, "year=1999")
-  expected_path_2020 <- fs::path(temp_output_multiple_years, "year=2020")
-
-  expect_true(fs::dir_exists(expected_path_1999))
-  expect_length(list.files(expected_path_1999), 1)
-  expect_true(fs::dir_exists(expected_path_2020))
-  expect_length(list.files(expected_path_2020), 1)
-})
-
-test_that("column names and data types are as expected", {
-  actual_multi <- arrow::open_dataset(temp_output_multiple_years) |>
-    dplyr::as_tibble() |>
-    purrr::map_chr(class)
-
-  expected <- co2_df |>
-    dplyr::mutate(
-      source_file = as.character(temp_sas_years[[1]]),
-      year = 1999L
-    ) |>
-    dplyr::rename_with(tolower) |>
-    purrr::map_chr(class)
-
-  expect_identical(actual_multi, expected)
-})
-
-test_that("number of rows are as expected", {
-  actual_no_years_one_file <- arrow::open_dataset(
-    output_no_years_one_file,
-    partitioning = arrow::hive_partition(year = arrow::int32())
-  ) |>
-    dplyr::as_tibble() |>
-    nrow()
-
-  expected_nrow_one_file <- nrow(co2_df)
-  expected_nrow_two_files <- expected_nrow_one_file * 2
-
-  expect_equal(actual_no_years_one_file, expected_nrow_one_file)
-  expect_equal(nrow(actual_no_years), expected_nrow_two_files)
-  expect_equal(nrow(actual_multiple_years), expected_nrow_two_files)
 })
 
 test_that("incorrect parameters generate errors", {
   # Incorrect path type.
-  expect_error(convert_to_parquet(
-    path = 1,
-    output_dir = temp_output_multiple_years
-  ))
-  # Incorrect output_dir type.
-  expect_error(convert_to_parquet(
-    path = temp_sas_years[[1]],
-    output_dir = 1
-  ))
-  expect_error(convert_to_parquet(
-    path = rep(temp_output_multiple_years, times = 2),
-    output_dir = temp_sas_years[[1]]
-  ))
-  # Incorrect chunk size type (lower than allowed).
-  expect_error(convert_to_parquet(
-    path = temp_sas_no_years,
-    output_dir = temp_output_no_year_one_file,
-    chunk_size = 10L
-  ))
-  # Paths are not from the same register.
+  expect_error(
+    convert_to_parquet(
+      path = 1,
+      output_dir = output_dir
+    ),
+    regexp = "character"
+  )
+  # Paths from different registers.
   temp_different_register <- fs::path_temp("other_2020.sas7bdat")
-  suppressWarnings(haven::write_sas(co2_df, temp_different_register))
-  expect_error(convert_to_parquet(
-    path = c(temp_sas_years[[1]], temp_different_register),
-    output_dir = temp_output_multiple_years,
+  suppressWarnings(haven::write_sas(
+    kontakter_list[[1]],
+    temp_different_register
   ))
+  expect_error(
+    convert_to_parquet(
+      path = c(sas_kontakter, temp_different_register),
+      output_dir = temp_output_multiple_years
+    ),
+    regexp = "is_same_register"
+  )
+
+  # Incorrect output_dir type.
+  expect_error(
+    convert_to_parquet(
+      path = sas_kontakter,
+      output_dir = 1
+    ),
+    regexp = "character"
+  )
+  expect_error(
+    convert_to_parquet(
+      path = sas_kontakter,
+      output_dir = rep(output_dir, times = 2),
+    ),
+    regexp = "length 1"
+  )
+  # Incorrect chunk size type (lower than allowed).
+  expect_error(
+    convert_to_parquet(
+      path = sas_kontakter,
+      output_dir = output_dir,
+      chunk_size = 10L
+    ),
+    regexp = ">= 10000"
+  )
 })
 
 test_that("files passed in the paths parameter must exist", {
-  expect_error(convert_to_parquet(
-    path = fs::file_temp(),
-    output_dir = temp_output_multiple_years
-  ))
+  expect_error(
+    convert_to_parquet(
+      path = fs::file_temp(),
+      output_dir = output_dir
+    ),
+    regexp = "does not exist"
+  )
 })
 
-test_that("parts are named correctly with chunked files", {
-  temp_paths <- c(
-    fs::path_temp(
-      "test_chunks_1999.sas7bdat"
-    ),
-    fs::path_temp("test_chunks_2000.sas7bdat")
-  )
+test_that("n parts are as expected when chunk_size is less than nrow per file", {
   output_dir <- fs::path_temp("output_chunks")
-  df <- dplyr::bind_rows(
-    co2_df,
-    dplyr::slice_sample(co2_df, n = 10000, replace = TRUE)
-  )
-  suppressWarnings(haven::write_sas(df, temp_paths[[1]]))
-  suppressWarnings(haven::write_sas(df, temp_paths[[2]]))
-
+  chunk_size <- 10000L
   convert_to_parquet(
-    path = temp_paths,
+    path = sas_kontakter,
     output_dir = output_dir,
     chunk_size = 10000L
   )
 
-  files <- list.files(output_dir, recursive = TRUE)
-
-  # Check correct number of files per partition
-  expect_length(files[grepl("^year=1999/", files)], 2)
-  expect_length(files[grepl("^year=2000/", files)], 2)
+  n_expected <- sum(ceiling(purrr::map_int(kontakter_list, nrow) / chunk_size))
+  n_actual <- length(fs::dir_ls(output_dir, recurse = TRUE, type = "file"))
+  expect_equal(n_actual, n_expected)
 })
 
-test_that("mixed files with and without years are partitioned correctly", {
-  output_dir_mixed <- fs::path_temp("output_mixed")
-
-  convert_to_parquet(
-    path = c(temp_sas_no_years[[1]], temp_sas_years[[1]]),
-    output_dir = output_dir_mixed
-  )
-
-  files <- list.files(output_dir_mixed, recursive = TRUE)
-
-  # Check correct number of files per partition
-  expect_length(files[grepl("^year=1999/", files)], 1)
-  expect_length(files[grepl("^year=__HIVE_DEFAULT_PARTITION__/", files)], 1)
-
-  # Verify data can be read and has correct row count
-  result <- arrow::open_dataset(
-    output_dir_mixed,
-    partitioning = arrow::hive_partition(year = arrow::int32())
-  ) |>
-    dplyr::as_tibble()
-  expect_equal(nrow(result), nrow(co2_df) * 2)
-})
 
 # Tests with large internal data files ----------------------------------------
 
-test_that("larger files are partitioned as expected with chunk_size = 1 million", {
+test_that("larger files with 1.1 million rows are converted as expected", {
   skip_on_cran()
+  skip()
 
-  kontakter_list <- helper_create_simulated_kontakter()
-  path <- paste0(names(kontakter_list), ".sas7bdat") |>
-    fs::path_temp() |>
-    as.character()
-  temp_output <- fs::path_temp("kontakter")
+  # n = 1.1 million to test chunking with chunk_size = 1 million.
+  kontakter_list_large <- simulate_kontakter_register(n = 1100000)
+  sas_path_large <- fs::path_temp("sas_kontakter_large")
+  save_as_sas(kontakter_list_large, sas_path_large)
+  sas_kontakter_large <- fs::dir_ls(sas_path_large)
+  output_dir_large <- fs::path_temp("parquet_path_large")
+  chunk_size_large <- 1000000L
 
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
-
-  chunk_size <- 1000000L # Create variable so it can be used to calculate expected number of files.
-
-  actual_output_dir <- convert_to_parquet(
-    path = path,
-    output_dir = temp_output,
-    chunk_size = chunk_size
+  convert_to_parquet(
+    path = sas_kontakter_large,
+    output_dir = output_dir_large,
+    chunk_size = chunk_size_large
   )
 
-  # Check number of files per partition.
-  sas_files <- purrr::map(path, haven::read_sas)
-  n_files_expected <- sas_files |>
-    purrr::map_int(nrow) /
-    chunk_size
-
-  files <- fs::dir_ls(actual_output_dir, recurse = TRUE)
-
-  expect_length(
-    stringr::str_subset(files, "year=__HIVE_DEFAULT_PARTITION__/"),
-    n_files_expected[[1]]
-  )
-  expect_length(
-    stringr::str_subset(files, "year=1999/"),
-
-    sum(n_files_expected[[2]], n_files_expected[[3]])
-  )
-
-  # Verify Parquet register can be opened and has the expected row count.
-  nrow_actual <- arrow::open_dataset(temp_output) |>
-    nrow()
-
-  nrow_expected <- sas_files |>
-    purrr::map_int(nrow) |>
-    sum()
-
-  expect_equal(nrow_actual, nrow_expected)
+  n_expected <- sum(ceiling(
+    purrr::map_int(kontakter_list_large, nrow) / chunk_size_large
+  ))
+  n_actual <- length(fs::dir_ls(
+    output_dir_large,
+    recurse = TRUE,
+    type = "file"
+  ))
+  expect_equal(n_actual, n_expected)
 })

@@ -31,41 +31,34 @@ test_that("template is valid R code", {
 
 # Test pipeline ----------------------------------------------------------------
 
-test_that("pipeline converts SAS files to Parquet", {
+test_that("targets pipeline template converts SAS files to Parquet", {
   skip_on_cran()
   skip_if_not_installed("targets")
   skip_if_not_installed("crew")
 
   # Create temp directory structure.
-  test_path <- fs::path_temp("pipeline-test")
-  input_path <- fs::path_temp(test_path, "input")
-  output_path <- fs::path(test_path, "output")
-  fs::dir_create(input_path)
-  fs::dir_create(output_path)
+  test_dir <- fs::path_temp("pipeline-test")
+  input_dir <- fs::path_temp(test_dir, "input")
+  output_dir <- fs::path(test_dir, "output")
+  fs::dir_create(input_dir)
+  fs::dir_create(output_dir)
 
-  # Create test SAS files.
-  kontakter_list <- helper_create_simulated_kontakter(n = 1000)
-  path <- fs::path(input_path) |>
-    paste0("/", names(kontakter_list), ".sas7bdat") |>
-    as.character()
-  temp_output <- fs::path_temp("kontakter")
-
-  suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
-  suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
+  # Create SAS files.
+  kontakter_list <- simulate_kontakter_register()
+  save_as_sas(kontakter_list, input_dir)
 
   # Read template and replace placeholder paths.
   modified_content <- template_content |>
-    stringr::str_replace("/path/to/register/sas/files/directory", input_path) |>
-    stringr::str_replace("/path/to/output/directory", output_path)
+    stringr::str_replace("/path/to/register/sas/files/directory", input_dir) |>
+    stringr::str_replace("/path/to/output/directory", output_dir)
 
   # Write and run pipeline.
-  withr::with_dir(test_path, {
+  withr::with_dir(test_dir, {
     writeLines(modified_content, "_targets.R")
     targets::tar_make(callr_function = NULL, reporter = "silent")
   })
 
   # Check output.
-  parquet_files <- fs::dir_ls(output_path, recurse = TRUE, glob = "*.parquet")
+  parquet_files <- fs::dir_ls(output_dir, recurse = TRUE, glob = "*.parquet")
   expect_equal(length(parquet_files), length(kontakter_list))
 })

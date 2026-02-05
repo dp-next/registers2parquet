@@ -1,48 +1,49 @@
 # Prepare data to be read.
-kontakter_list <- helper_create_simulated_kontakter(n = 1000)
-path <- paste0(names(kontakter_list), ".sas7bdat") |>
-  fs::path_temp() |>
-  as.character()
-temp_output <- fs::path_temp("kontakter")
+kontakter_list <- simulate_kontakter_register()
+sas_path <- fs::path_temp("sas_kontakter")
+save_as_sas(kontakter_list, sas_path)
+sas_kontakter <- fs::dir_ls(sas_path)
+output_dir <- fs::path_temp("kontakter")
 
 # Clean up any existing files from previous test runs.
-if (fs::dir_exists(temp_output)) {
-  fs::dir_delete(temp_output)
-}
-
-suppressWarnings(haven::write_sas(kontakter_list[[1]], path[[1]]))
-suppressWarnings(haven::write_sas(kontakter_list[[2]], path[[2]]))
-suppressWarnings(haven::write_sas(kontakter_list[[3]], path[[3]]))
+# if (fs::dir_exists(output_dir)) {
+#   fs::dir_delete(output_dir)
+# }
 
 # Use convert_to_parquet() for conversion
-convert_to_parquet(path = path, output_dir = temp_output)
+convert_to_parquet(path = sas_kontakter, output_dir = output_dir)
 
 test_that("reading a single Parquet file works as expected", {
-  # Read single Parquet file (from SAS file without year in filename).
+  # Read single Parquet file (2020 file).
   # Because UUID is used in the convert function, we can't know the name of the
   # file.
-  actual <- read_register(fs::dir_ls(fs::path(
-    temp_output,
-    "year=__HIVE_DEFAULT_PARTITION__"
+  year <- "2020"
+  actual_data <- read_register(fs::dir_ls(fs::path(
+    output_dir,
+    glue::glue("year={year}")
   ))) |>
     dplyr::collect()
 
-  expected <- haven::read_sas(path[[1]])
+  expected_source_file <- stringr::str_subset(sas_kontakter, year)
+  expected_data <- haven::read_sas(expected_source_file)
 
   expect_equal(
-    actual |> dplyr::select(-"source_file"),
-    expected
+    # year col doesn't exist when only one file is read.
+    actual_data |> dplyr::select(-"source_file"),
+    expected_data
   )
-  expect_all_equal(actual$source_file, path[[1]])
+  expect_all_equal(actual_data$source_file, expected_source_file)
 })
 
-test_that("reading a partitioned Parquet register works as expected", {
-  actual <- read_register(temp_output) |> dplyr::collect()
+test_that("reading partitioned Parquet register works as expected", {
+  actual <- read_register(output_dir) |> dplyr::collect()
 
-  expected <- purrr::map(path, \(file_path) haven::read_sas(file_path)) |>
+  expected <- purrr::map(sas_kontakter, \(path) haven::read_sas(path)) |>
     dplyr::bind_rows()
+  expected_years <- get_year_from_filename(sas_kontakter)
 
-  # Sort both dataframes by cpr and dw_ek_kontakt to ensure consistent ordering,
+  # Data is as expected (column names, data types, nrows)
+  # Sort dataframes by cpr and dw_ek_kontakt to ensure consistent ordering,
   # and use ignore_attr = TRUE to ignore row.names differences.
   expect_equal(
     actual |>
@@ -53,25 +54,39 @@ test_that("reading a partitioned Parquet register works as expected", {
     ignore_attr = TRUE
   )
 
-  expect_equal(sort(unique(actual$source_file)), sort(path))
-  expect_equal(sort(unique(actual$year), na.last = TRUE), c(1999, NA))
+  # source_file column.
+  expect_equal(
+    sort(unique(actual$source_file)),
+    # Convert sas_kontakter to character, otherwise it's an fs_path.
+    sort(as.character(sas_kontakter))
+  )
+  # year column.
+  expect_equal(
+    sort(unique(actual$year), na.last = TRUE),
+    sort(unique(expected_years), na.last = TRUE)
+  )
 })
 
 test_that("reading a non-existing Parquet register throws an error", {
-  expect_error(read_register("/non/existing/path.parquet"))
-  expect_error(read_register("/non/existing/directory/"))
+  expect_error(
+    read_register("/non/existing/path.parquet"),
+    regexp = "not exist"
+  )
+  expect_error(read_register("/non/existing/directory/"), regexp = "not exist")
 })
 
 test_that("incorrect input type throws an error", {
-  expect_error(read_register(123))
-  expect_error(read_register(c("path1.parquet", "path2.parquet")))
+  expect_error(read_register(123), regexp = "character")
+  expect_error(
+    read_register(c("path1.parquet", "path2.parquet")),
+    regexp = "length 1"
+  )
 })
 
 test_that("directory with no Parquet files returns error", {
   temp_empty_dir <- fs::path_temp("empty_dir")
   fs::dir_create(temp_empty_dir)
 
-  # Error message includes the path to the empty directory.
   expect_error(read_register(temp_empty_dir), temp_empty_dir)
 })
 
@@ -79,6 +94,5 @@ test_that("non-Parquet file returns error", {
   temp_txt_file <- fs::path_temp("file.txt")
   fs::file_create(temp_txt_file)
 
-  # Error message includes the path to the non-Parquet file.
   expect_error(read_register(temp_txt_file), temp_txt_file)
 })
