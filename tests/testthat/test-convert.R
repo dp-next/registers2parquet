@@ -133,7 +133,6 @@ test_that("n parts are as expected when chunk_size is less than nrow per file", 
 
 test_that("larger files with 1.1 million rows are converted as expected", {
   skip_on_cran()
-  skip()
 
   # n = 1.1 million to test chunking with chunk_size = 1 million.
   kontakter_list_large <- simulate_kontakter_register(n = 1100000)
