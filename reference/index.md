@@ -13,8 +13,9 @@
   : List Parquet files in a directory
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
   : List SAS files in a directory
-- [`use_targets_pipeline()`](https://dp-next.github.io/fastreg/reference/use_targets_pipeline.md)
-  : Set up a targets pipeline for converting SAS registers to Parquet
+- [`use_targets()`](https://dp-next.github.io/fastreg/reference/use_targets.md)
+  : Use a targets pipeline template for converting SAS registers to
+  Parquet
 
 ## Functions used within the targets pipeline
 
