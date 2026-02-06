@@ -6,16 +6,19 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Core functionality
+## Scope
 
-This is the list of the core functionality in the fastreg package:
+fastreg:
 
 1.  Converts Danish register data from SAS files to the modern and
     efficient Parquet format.
-2.  Read register Parquet files into R as a DuckDB table.
-3.  Provides functions to list available SAS or Parquet register files
+2.  Reads register Parquet files into R as a DuckDB table.
+3.  Provides a [targets](https://docs.ropensci.org/targets/) pipeline
+    template to convert multiple registers in parallel.
+4.  Provides functions to list available SAS or Parquet register files
     directly from R.
 
+<--! TODO: Add simulate and save to sas functionality here? -->
 ## Parallel processing
 
 Each register-year pairing (including duplicate years) are sent to a
