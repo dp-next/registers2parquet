@@ -67,7 +67,7 @@ list(
   tar_target(
     name = register_parquets,
     command = convert_to_parquet(
-      file_paths = register_path_groups,
+      path = register_path_groups,
       output_dir = path(
         config$output_path,
         get_register_name(register_path_groups)
