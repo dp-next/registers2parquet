@@ -10,8 +10,9 @@ simulate_register(register, year = "", n = 1000)
 \item{register}{Name of the register. Has to be a register accepted by
 osdc::simulate_registers().}
 
-\item{year}{Year of the register as a character. Is appended to the register
-name to form the list element names.}
+\item{year}{A character vector of year suffixes appended to the register
+name to form the list element names (e.g., \code{"2020"}, \code{"1999_1"}, or
+\code{""} for no suffix).}
 
 \item{n}{Number of rows to simulate per year.}
 }
