@@ -22,3 +22,9 @@ save_as_sas(data_list, path)
 ## Value
 
 The path invisibly.
+
+## Examples
+
+``` r
+save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
+```
