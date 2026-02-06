@@ -84,4 +84,4 @@ preview-website:
 
 # List all TODO items in the repository
 list-todos:
-  grep -R -n --exclude="justfile" --exclude-dir="docs/deps" "TODO" *
+  grep -R -n --exclude="justfile" --exclude-dir="docs/deps" --exclude="*.json" --exclude="*.html" "TODO" *
