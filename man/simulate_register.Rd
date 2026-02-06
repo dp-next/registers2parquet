@@ -17,7 +17,7 @@ name to form the list element names.}
 }
 \value{
 A named list of tibble(s) with names in the format
-{register}_{year}.
+\verb{\{register\}_\{year\}}.
 }
 \description{
 The data is simulated using \code{osdc::simulate_registers()}. It's used

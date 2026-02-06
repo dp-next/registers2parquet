@@ -10,7 +10,7 @@
 #' @param n Number of rows to simulate per year.
 #'
 #' @returns A named list of tibble(s) with names in the format
-#'  {register}_{year}.
+#'  `{register}_{year}`.
 #'
 #' @export
 #' @examples
