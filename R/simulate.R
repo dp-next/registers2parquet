@@ -20,7 +20,7 @@ simulate_register <- function(register, year = "", n = 1000) {
   purrr::map(names, \(name) {
     osdc::simulate_registers(registers = register, n = n)[[1]]
   }) |>
-    setNames(names)
+    stats::setNames(names)
 }
 
 #' Save a list of data frames as SAS files

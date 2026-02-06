@@ -24,6 +24,7 @@ Imports:
     haven,
     purrr,
     rlang,
+    stats,
     stringr,
     uuid
 Suggests:
