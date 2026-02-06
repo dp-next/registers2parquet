@@ -44,8 +44,8 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   fs::dir_create(output_dir)
 
   # Create SAS files.
-  kontakter_list <- simulate_kontakter_register()
-  diagnoser_list <- simulate_diagnoser_register()
+  kontakter_list <- simulate_register("kontakter", c("1999", "2020"))
+  diagnoser_list <- simulate_register("diagnoser", c("2020", "2021"))
   save_as_sas(kontakter_list, input_dir)
   save_as_sas(diagnoser_list, input_dir)
 

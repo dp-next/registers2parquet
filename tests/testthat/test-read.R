@@ -1,5 +1,5 @@
 # Prepare data to be read.
-kontakter_list <- simulate_kontakter_register()
+kontakter_list <- simulate_register("kontakter", c("", "2020"))
 sas_path <- fs::path_temp("sas_kontakter")
 save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)

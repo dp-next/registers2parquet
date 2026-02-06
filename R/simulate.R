@@ -1,39 +1,26 @@
-#' Create example kontakter registers
+#' Simulate example registers
 #'
 #' The data is simulated using `osdc::simulate_registers()`. It's used
 #' in vignettes and tests.
 #'
-#' @param n Number of rows to simulate per simulated kontakter tibble.
+#' @param register Name of the register. Has to be a register accepted by
+#'  osdc::simulate_registers().
+#' @param year Year of the register as a character. Is appended to the register
+#'  name to form the list element names.
+#' @param n Number of rows to simulate per year.
 #'
-#' @returns A named list with four tibbles containing simulated kontakter
-#'  registers.
-simulate_kontakter_register <- function(
-  n = 1000
-) {
-  data_list <- list(
-    kontakter = osdc::simulate_registers("kontakter", n = n)[[1]],
-    kontakter_1999_1 = osdc::simulate_registers("kontakter", n = n)[[1]],
-    kontakter_1999_2 = osdc::simulate_registers("kontakter", n = n)[[1]],
-    kontakter_2020 = osdc::simulate_registers("kontakter", n = n)[[1]]
-  )
-}
-
-#' Create example diagnoser registers
+#' @returns A named list of tibble(s) with names in the format
+#'  `{register}_{year}`.
 #'
-#' The data is simulated using `osdc::simulate_registers()`. It's used
-#' in vignettes and tests.
-#'
-#' @param n Number of rows to simulate per simulated diagnoser tibble.
-#'
-#' @returns A named list with two tibbles containing simulated diagnoser
-#'  registers.
-simulate_diagnoser_register <- function(
-  n = 1000
-) {
-  data_list <- list(
-    diagnoser_2020 = osdc::simulate_registers("diagnoser", n = n)[[1]],
-    diagnoser_2021 = osdc::simulate_registers("diagnoser", n = n)[[1]]
-  )
+#' @export
+#' @examples
+#' simulate_register(register = "kontakter", year = c("1999", "2000"))
+simulate_register <- function(register, year = "", n = 1000) {
+  names <- ifelse(year == "", register, paste(register, year, sep = "_"))
+  purrr::map(names, \(name) {
+    osdc::simulate_registers(registers = register, n = n)[[1]]
+  }) |>
+    stats::setNames(names)
 }
 
 #' Save a list of data frames as SAS files
@@ -45,6 +32,10 @@ simulate_diagnoser_register <- function(
 #' @param path A character scalar with the directory to save the SAS files to.
 #'
 #' @returns The path invisibly.
+#'
+#' @export
+#' @examples
+#' save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
 save_as_sas <- function(data_list, path) {
   fs::dir_create(path, recurse = TRUE)
   purrr::iwalk(data_list, \(df, name) {
