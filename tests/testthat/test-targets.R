@@ -45,7 +45,9 @@ test_that("targets pipeline template converts SAS files to Parquet", {
 
   # Create SAS files.
   kontakter_list <- simulate_kontakter_register()
+  diagnoser_list <- simulate_diagnoser_register()
   save_as_sas(kontakter_list, input_dir)
+  save_as_sas(diagnoser_list, input_dir)
 
   # Read template and replace placeholder paths.
   modified_content <- template_content |>
@@ -58,7 +60,10 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     targets::tar_make(callr_function = NULL, reporter = "silent")
   })
 
-  # Check output.
+  # Check number of created Parquet files.
   parquet_files <- fs::dir_ls(output_dir, recurse = TRUE, glob = "*.parquet")
-  expect_equal(length(parquet_files), length(kontakter_list))
+  expect_equal(
+    length(parquet_files),
+    sum(length(kontakter_list), length(diagnoser_list))
+  )
 })
