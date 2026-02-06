@@ -54,14 +54,14 @@ read_register <- function(
 
 #' Read a partitioned Parquet register as DuckDB table
 #'
-#' @param dir_path A character scalar with the path to the Parquet register
+#' @param path A character scalar with the path to the Parquet register
 #'    directory.
 #'
 #' @inherit read_register return
 #'
 #' @keywords internal
-read_register_partition <- function(dir_path) {
-  dir_path |>
+read_register_partition <- function(path) {
+  path |>
     arrow::open_dataset(
       unify_schemas = TRUE,
       # Explicitly set type of partition to int32 to handle when year is
@@ -73,13 +73,13 @@ read_register_partition <- function(dir_path) {
 
 #' Read a Parquet file as DuckDB table
 #'
-#' @param file_path A character scalar with the path to the Parquet file.
+#' @param path A character scalar with the path to the Parquet file.
 #'
 #' @inherit read_register return
 #'
 #' @keywords internal
-read_register_file <- function(file_path) {
-  file_path |>
+read_register_file <- function(path) {
+  path |>
     arrow::read_parquet() |>
     arrow::to_duckdb()
 }

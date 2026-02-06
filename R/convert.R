@@ -67,19 +67,19 @@ convert_to_parquet <- function(
 
 #' Convert a single register SAS file to Parquet in chunks
 #'
-#' @param file_path A character scalar with the absolute path to a single SAS file.
+#' @param path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
-#' @returns file_path invisibly.
+#' @returns path invisibly.
 #'
 #' @keywords internal
 convert_file_in_chunks <- function(
-  file_path,
+  path,
   output_dir,
   chunk_size = 10000000L
 ) {
   # Create partition path, if it doesn't exist.
-  year <- get_year_from_filename(file_path)
+  year <- get_year_from_filename(path)
   # Following the default `null_fallback` in arrow::hive_partition()
   # https://arrow.apache.org/docs/r/reference/hive_partition.html#arg-null-fallback.
   year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
@@ -94,9 +94,9 @@ convert_file_in_chunks <- function(
   skip <- 0L
 
   # Read first chunk to establish schema.
-  chunk <- haven::read_sas(file_path, skip = skip, n_max = chunk_size) |>
+  chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
-    dplyr::mutate(source_file = as.character(file_path))
+    dplyr::mutate(source_file = as.character(path))
   schema <- create_arrow_schema(chunk)
 
   repeat {
@@ -117,12 +117,12 @@ convert_file_in_chunks <- function(
     skip <- skip + nrow(chunk)
     part <- create_part_uuid()
 
-    chunk <- haven::read_sas(file_path, skip = skip, n_max = chunk_size) |>
+    chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
       column_names_to_lower() |>
-      dplyr::mutate(source_file = as.character(file_path))
+      dplyr::mutate(source_file = as.character(path))
   }
 
-  invisible(file_path)
+  invisible(path)
 }
 
 #' Get year from file name
@@ -130,14 +130,14 @@ convert_file_in_chunks <- function(
 #' The year is determined as the first four consecutive numbers starting with
 #' 19 or 20 in the file name (i.e., years 1900-2099).
 #'
-#' @param file_path A character vector with file path to extract year from.
+#' @param path A character vector with file path to extract year from.
 #'
 #' @returns An integer vector with the extracted years, or NA if no year
 #'    is found.
 #'
 #' @keywords internal
-get_year_from_filename <- function(file_path) {
-  file_path |>
+get_year_from_filename <- function(path) {
+  path |>
     fs::path_file() |>
     stringr::str_extract("(19|20)\\d{2}") |>
     as.integer()
