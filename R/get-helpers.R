@@ -8,6 +8,7 @@
 #'  removed).
 #'
 #' @keywords internal
+#' @noRd
 get_register_names <- function(path) {
   path |>
     fs::path_file() |>

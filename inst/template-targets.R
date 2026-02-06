@@ -1,7 +1,7 @@
 # Targets pipeline template for converting SAS registers to Parquet
 #
 # SETUP:
-# 1. Run `fastreg::use_targets_pipeline()` to copy this template
+# 1. Run `fastreg::use_targets_template()` to copy this template
 # 2. Set the `input_path` and `output_path` under "Configuration" below
 # 3. Run `targets::tar_make()` to convert registers to Parquet
 #
@@ -67,7 +67,7 @@ list(
   tar_target(
     name = register_parquets,
     command = convert_to_parquet(
-      file_paths = register_path_groups,
+      path = register_path_groups,
       output_dir = path(
         config$output_path,
         get_register_name(register_path_groups)

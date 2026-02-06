@@ -1,6 +1,6 @@
 # Tests of use_targets_template() ----------------------------------------------
 output_path <- fs::path_temp("_targets.R")
-use_targets_pipeline(output_path, open = FALSE)
+use_targets_template(output_path, open = FALSE)
 template_path <- fs::path_package("fastreg", "template-targets.R")
 template_content <- readLines(template_path)
 
@@ -9,7 +9,7 @@ test_that("targets pipeline is created as expected", {
 })
 
 test_that("trying to create pipeline when it already exists throws error", {
-  expect_error(use_targets_pipeline(output_path, open = FALSE))
+  expect_error(use_targets_template(output_path, open = FALSE))
 })
 
 test_that("created file matches template content", {
@@ -21,7 +21,7 @@ test_that("created file matches template content", {
 
 test_that("returns path invisibly", {
   temp_path <- fs::path_temp("test_return.R")
-  result <- use_targets_pipeline(temp_path, open = FALSE)
+  result <- use_targets_template(temp_path, open = FALSE)
   expect_equal(result, temp_path)
 })
 
