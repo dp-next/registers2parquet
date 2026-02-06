@@ -38,7 +38,7 @@ a function overview.
 ### Actions
 
 | Action | Description |
-|-----------------------|-------------------------------------------------|
+|------------------------|------------------------------------------------|
 | `convert` | Convert a register SAS file (or multiple) to Parquet. |
 | `get` | Get or extract metadata, e.g., the register name from a file path. |
 | `list` | List files in a directory, e.g., SAS or Parquet files. |
@@ -53,7 +53,7 @@ a function overview.
 ### Objects
 
 | Object | Description |
-|-----------------------|-------------------------------------------------|
+|------------------------|------------------------------------------------|
 | `chunk_size` | Number of rows to read per chunk during conversion. |
 | `data_list` | A named list of data frames. |
 | `path` | A character vector of one or more paths. |
