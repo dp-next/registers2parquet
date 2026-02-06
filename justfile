@@ -56,7 +56,7 @@ build-website:
 
 # Re-build the README file from the Quarto version
 build-readme:
-  uvx --from quarto quarto render README.qmd --to gfm
+  uvx --from quarto quarto render README.Rmd --to gfm
 
 # Run local CRAN checks
 check:
