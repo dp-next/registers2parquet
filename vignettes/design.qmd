@@ -27,6 +27,14 @@ objects in the package. **Actions** are verbs that describe what a
 function does, while **objects** are nouns that represent the parameters
 that the functions operate on.
 
+::: callout-tip
+See the
+[Reference](https://dp-next.github.io/fastreg/reference/index.html) for
+a function overview.
+
+<!-- TODO: Use relative path instead? -->
+:::
+
 ### Actions
 
 | Action | Description |
@@ -48,115 +56,6 @@ that the functions operate on.
 | `register_name` | A character scalar with the name of a register used in the file name (without a path), e.g., "bef". It's used in `list` functions to retrieve the paths of objects including that name. |
 
 : Objects used in fastreg.
-
-## Interface
-
-fastreg includes two main functions and multiple helper functions. Each
-function is listed below with a short description.
-
-::: callout-tip
-See the [Reference documentation](/reference/index.html) for more
-details.
-:::
-
-### Main functions
-
-#### `convert_to_parquet()`
-
-This function takes one or more register SAS files and converts them to
-a Parquet file or a Parquet dataset partitioned by year.
-
-See the `convert_to_parquet()` reference for more details.
-
-The function requires two inputs:
-
--   **path**: A character vector with path(s) to one or several files
-    that should be converted.
--   **output_path**: A character vector with the path to the directory
-    where the Parquet file(s) should be written to.
-
-If multiple files are given, the function looks for a year in the file
-names to use as partitioning. The function also removes any duplicate
-rows before saving the data.
-
-The output of `convert_register_to_parquet()` is the character vector
-given as input in `output_path`. This allows for easy integration into a
-targets pipeline.
-
-Even though the function doesn't return the written Parquet register,
-its creation is confirmed with a message in the R console.
-
-The created Parquet files will be stored in a directory structure that
-reflects the register name and a year partitioning if a year can be
-determined from the file name(s). Below is shown an example of the input
-and output for a collection of SAS files for the `bef` register:
-
-::::: columns
-::: column
-#### Input: Register SAS files
-
-```
-bef2018.sas7bdat
-bef2019.sas7bdat
-bef2020.sas7bdat
-bef2021.sas7bdat
-bef2022.sas7bdat
-December_2023/bef2022.sas7bdat
-December_2023/bef2023.sas7bdat
-```
-:::
-
-::: column
-#### Output: Parquet files
-
-```
-bef/
-├── year=2018/
-│   └── part-0.parquet
-├── year=2019/
-│   └── part-0.parquet
-├── year=2020/
-│   └── part-0.parquet
-├── year=2021/
-│   └── part-0.parquet
-├── year=2022/
-│   └── part-0.parquet
-└── year=2023/
-    └── part-0.parquet
-```
-:::
-:::::
-
-As shown above, the Parquet files will be stored in a directory named
-after the register (e.g., `bef/`), with subdirectories for each year
-(e.g., `year=2018/`, `year=2019/`, etc.) if the year can be determined
-from the file name. Each year directory contains a Parquet file
-(`part-0.parquet`). This structure allows for efficient querying and
-retrieval of data based on the year.
-
-#### `read_register(register_name, project_id)`
-
-Reads a Parquet register from the specified path and returns it as a
-DuckDB table.
-
-See the `read_register()` reference for more details.
-
-### Helper functions
-
-#### `list_sas_registers(project_id)`
-
-Lists all SAS files in a given directory. It returns a character vector
-of file paths with the `.sas7bdat` extension at the given directory.
-
-<!-- TODO: Add link to reference documentation when ready -->
-
-#### `list_parquet_registers(project_id)`
-
-Lists all Parquet files in a given directory. It returns a character
-vector of file paths with the `.parquet` or `.parq` extension at the
-given directory.
-
-<!-- TODO: Add link to reference documentation when ready -->
 
 ## Expected flow
 
