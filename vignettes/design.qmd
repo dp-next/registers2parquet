@@ -69,48 +69,69 @@ a function overview.
 
 ## Expected flow
 
-We expect the flow of using the fastreg package to convert register SAS
-files to Parquet files will be as follows:
+This section shows flow diagrams for the expected workflows of the
+package:
+
+1.  Converting a single register
+2.  Converting registers in parallel
+3.  Reading a register
+
+### Converting SAS files from a single register
 
 ```{mermaid}
 %%| label: fig-flow
-%%| fig-cap: "Flow of the expected flow using the `convert_to_parquet()` package to convert register SAS files to Parquet files."
-%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the fastreg package. It includes identifying paths to the relevant SAS files using the helper functions, calling the main function `convert_to_parquet()`, which then outputs the path to the written Parquet files."
+%%| fig-cap: "Expected workflow for converting SAS files from a single register using `convert_to_parquet()`."
+%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
+
 flowchart TD
-
-    identify_paths("Identify register path(s)<br>with helper functions")
+    identify_paths("Identify register path(s)<br>with list_sas_files()")
     path[/"path<br>[Character vector]"/]
-    output_path[/"output_path<br>[Character scalar]"/]
+    output_dir[/"output_dir<br>[Character scalar]"/]
     convert_to_parquet("convert_to_parquet()")
-    output[/"Output<br>[Character scalar]<br>Path to Parquet file(s)"/]
-
+    output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
     identify_paths -.-> path --> convert_to_parquet
-    output_path --> convert_to_parquet
+    output_dir --> convert_to_parquet
     convert_to_parquet --> output
 
-    %% Styling
+    %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-We expect a flow of reading a Parquet register created by the fastreg
-package into an R session to be as follows:
+### Using the targets pipeline to convert multiple registers in parallel
+
+```{mermaid}
+%%| label: fig-targets-flow
+%%| fig-cap: "Expected workflow for converting multiple registers using the targets pipeline."
+%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the provided targets pipeline template."
+
+flowchart TD
+    copy_pipeline("use_targets_template()")
+    edit["Edit _targets.R as needed"]
+    run_pipeline("targets::tar_make()")
+    output[/"Parquet file(s)<br>written to directory<br>specified in _targets.R"/]
+
+    %% Edges
+    copy_pipeline --> edit --> run_pipeline --> output
+
+    %% Style
+    style edit fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+```
+
+### Reading a Parquet register
 
 ```{mermaid}
 %%| label: fig-flow-use
-%%| fig-cap: "Flow of the expected flow of reading a Parquet register that was created with the fastreg package."
-%%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package. It includes using the register name to read a specific register into the R session using the `read_register_parquet()` function, which outputs the register as a DuckDB table."
+%%| fig-cap: "Expected workflow for reading a Parquet register as a DuckDB table."
+%%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package."
+
 flowchart TD
-
-    project_id[/"project_id<br>[Character scalar]"/]
     path[/"path<br>[Character scalar]"/]
-
     read_register("read_register()")
-
     output[/"Output<br>[DuckDB table]"/]
 
     %% Edges
-    path & project_id --> read_register --> output
+    path --> read_register --> output
 
 ```
