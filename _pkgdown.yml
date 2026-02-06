@@ -18,7 +18,7 @@ reference:
 - title: Helper functions
 - contents:
   - starts_with("list")
-  - use_targets
+  - use_targets_template
 - title: Functions used within the targets pipeline
   desc: >
     These functions are not expected to be used outside the targets pipeline
