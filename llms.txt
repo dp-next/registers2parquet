@@ -26,7 +26,7 @@ to use a language (DuckDB SQL) to do your work faster.
   : List Parquet files in a directory
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
   : List SAS files in a directory
-- [`use_targets()`](https://dp-next.github.io/fastreg/reference/use_targets.md)
+- [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
   : Use a targets pipeline template for converting SAS registers to
   Parquet
 
