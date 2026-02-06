@@ -13,6 +13,12 @@
   : List Parquet files in a directory
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
   : List SAS files in a directory
+- [`save_as_sas()`](https://dp-next.github.io/fastreg/reference/save_as_sas.md)
+  : Save a list of data frames as SAS files
+- [`simulate_diagnoser_register()`](https://dp-next.github.io/fastreg/reference/simulate_diagnoser_register.md)
+  : Create example diagnoser registers
+- [`simulate_kontakter_register()`](https://dp-next.github.io/fastreg/reference/simulate_kontakter_register.md)
+  : Create example kontakter registers
 - [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
   : Use a targets pipeline template for converting SAS registers to
   Parquet
