@@ -18,7 +18,7 @@ fastreg:
 4.  Provides functions to list available SAS or Parquet register files
     directly from R.
 
-<--! TODO: Add simulate and save to sas functionality here? -->
+<!-- TODO: Add simulate and save to sas functionality here? -->
 
 ## Naming conventions
 
