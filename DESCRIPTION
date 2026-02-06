@@ -18,7 +18,6 @@ Imports:
     arrow,
     checkmate,
     cli,
-    crew,
     dplyr,
     fs,
     glue,
@@ -29,6 +28,7 @@ Imports:
     stringr,
     uuid
 Suggests:
+    crew,
     dbplyr,
     devtools,
     duckdb,
