@@ -18,6 +18,7 @@ Imports:
     arrow,
     checkmate,
     cli,
+    crew,
     dplyr,
     fs,
     glue,
