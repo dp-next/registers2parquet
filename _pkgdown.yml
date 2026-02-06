@@ -19,7 +19,7 @@ reference:
 - contents:
   - starts_with("list")
   - save_as_sas
-  - starts_with("simulate")
+  - simulate_register
   - use_targets_template
 - title: Functions used within the targets pipeline
   desc: >

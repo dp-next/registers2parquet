@@ -18,3 +18,6 @@ The path invisibly.
 Writes each element of a named list as a SAS file to the given directory.
 The file names are derived from the list names.
 }
+\examples{
+save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
+}
