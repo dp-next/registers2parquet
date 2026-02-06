@@ -32,6 +32,10 @@ simulate_register <- function(register, year = "", n = 1000) {
 #' @param path A character scalar with the directory to save the SAS files to.
 #'
 #' @returns The path invisibly.
+#'
+#' @export
+#' @examples
+#' save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
 save_as_sas <- function(data_list, path) {
   fs::dir_create(path, recurse = TRUE)
   purrr::iwalk(data_list, \(df, name) {
