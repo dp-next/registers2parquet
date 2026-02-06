@@ -73,6 +73,7 @@ convert_to_parquet <- function(
 #' @returns path invisibly.
 #'
 #' @keywords internal
+#' @noRd
 convert_file_in_chunks <- function(
   path,
   output_dir,
@@ -136,6 +137,7 @@ convert_file_in_chunks <- function(
 #'    is found.
 #'
 #' @keywords internal
+#' @noRd
 get_year_from_filename <- function(path) {
   path |>
     fs::path_file() |>
@@ -151,6 +153,7 @@ get_year_from_filename <- function(path) {
 #' @returns A character scalar with a UUID with a length of 6.
 #'
 #' @keywords internal
+#' @noRd
 create_part_uuid <- function() {
   substr(uuid::UUIDgenerate(), 0, 6)
 }
@@ -165,6 +168,7 @@ create_part_uuid <- function() {
 #' @returns An Arrow schema with consistent types.
 #'
 #' @keywords internal
+#' @noRd
 create_arrow_schema <- function(data) {
   type_map <- function(x) {
     if (inherits(x, "POSIXt")) {
@@ -197,7 +201,9 @@ create_arrow_schema <- function(data) {
 #' @param data A data frame type object.
 #'
 #' @returns The same object type given.
+#'
 #' @keywords internal
+#' @noRd
 column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
 }
@@ -213,6 +219,7 @@ column_names_to_lower <- function(data) {
 #'  same register, based on the file names.
 #'
 #' @keywords internal
+#' @noRd
 is_same_register <- function(path) {
   register_names <- get_register_names(path)
 

@@ -9,7 +9,7 @@
 #' @returns The path to the created file (invisibly).
 #'
 #' @export
-use_targets <- function(
+use_targets_template <- function(
   path = "_targets.R",
   open = rlang::is_interactive()
 ) {
