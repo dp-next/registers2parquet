@@ -46,15 +46,15 @@ fs::dir_create(kontakter_dir)
 fs::dir_create(diagnoser_dir)
 
 kontakter_list <- simulate_register(
-  "kontakter", 
-  c("", "1999_1", "1999_2", "2020"), 
+  "kontakter",
+  c("", "1999_1", "1999_2", "2020"),
   n = 1000
 )
 save_as_sas(kontakter_list, kontakter_dir)
 
 diagnoser_list <- simulate_register(
-  "diagnoser", 
-  c("2020", "2021"), 
+  "diagnoser",
+  c("2020", "2021"),
   n = 1000
 )
 save_as_sas(diagnoser_list, diagnoser_dir)
@@ -114,7 +114,7 @@ files for a register called `bef`:
 ::: column
 #### Input: SAS files
 
-```         
+```
 sas_dir/
 ├── A) bef2020.sas7bdat
 ├── B) bef2021.sas7bdat
@@ -128,7 +128,7 @@ sas_dir/
 ::: column
 #### Output: Parquet files
 
-```         
+```
 bef/
 ├── year=2020/
 │   └── part-c28221.parquet
