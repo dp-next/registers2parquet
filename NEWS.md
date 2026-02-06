@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.7.8 (2026-02-06)
+
+### Refactor
+
+- :truck: `use_targets()` -> `use_targets_template()` (#149)
+
 ## 0.7.7 (2026-02-06)
 
 ### Fix
