@@ -19,8 +19,9 @@ simulate_register(register, year = "", n = 1000)
 
 - year:
 
-  Year of the register as a character. Is appended to the register name
-  to form the list element names.
+  A character vector of year suffixes appended to the register name to
+  form the list element names (e.g., `"2020"`, `"1999_1"`, or `""` for
+  no suffix).
 
 - n:
 
