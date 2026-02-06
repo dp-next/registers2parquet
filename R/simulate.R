@@ -5,8 +5,9 @@
 #'
 #' @param register Name of the register. Has to be a register accepted by
 #'  osdc::simulate_registers().
-#' @param year Year of the register as a character. Is appended to the register
-#'  name to form the list element names.
+#' @param year A character vector of year suffixes appended to the register
+#'  name to form the list element names (e.g., `"2020"`, `"1999_1"`, or
+#'  `""` for no suffix).
 #' @param n Number of rows to simulate per year.
 #'
 #' @returns A named list of tibble(s) with names in the format

@@ -38,7 +38,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
 
   # Create temp directory structure.
   test_dir <- fs::path_temp("pipeline-test")
-  input_dir <- fs::path_temp(test_dir, "input")
+  input_dir <- fs::path(test_dir, "input")
   output_dir <- fs::path(test_dir, "output")
   fs::dir_create(input_dir)
   fs::dir_create(output_dir)
