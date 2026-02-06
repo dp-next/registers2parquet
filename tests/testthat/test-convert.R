@@ -1,7 +1,10 @@
 # Tests with small test data --------------------------------------------------
 
 # n = 11000 to test chunking logic.
-kontakter_list <- simulate_kontakter_register(n = 11000)
+kontakter_list <- simulate_register(
+  "kontakter",
+  year = c("", "1999_1", "1999_2", "2020")
+)
 sas_path <- fs::path_temp("sas_kontakter")
 save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)
@@ -135,7 +138,11 @@ test_that("larger files with 1.1 million rows are converted as expected", {
   skip_on_cran()
 
   # n = 1.1 million to test chunking with chunk_size = 1 million.
-  kontakter_list_large <- simulate_kontakter_register(n = 1100000)
+  kontakter_list_large <- simulate_register(
+    "kontakter",
+    c("1999", "2020"),
+    n = 1100000
+  )
   sas_path_large <- fs::path_temp("sas_kontakter_large")
   save_as_sas(kontakter_list_large, sas_path_large)
   sas_kontakter_large <- fs::dir_ls(sas_path_large)
