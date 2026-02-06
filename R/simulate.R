@@ -7,9 +7,6 @@
 #'
 #' @returns A named list with four tibbles containing simulated kontakter
 #'  registers.
-#'
-#' @keywords internal
-#' @noRd
 simulate_kontakter_register <- function(
   n = 1000
 ) {
@@ -30,9 +27,6 @@ simulate_kontakter_register <- function(
 #'
 #' @returns A named list with two tibbles containing simulated diagnoser
 #'  registers.
-#'
-#' @keywords internal
-#' @noRd
 simulate_diagnoser_register <- function(
   n = 1000
 ) {
@@ -51,9 +45,6 @@ simulate_diagnoser_register <- function(
 #' @param path A character scalar with the directory to save the SAS files to.
 #'
 #' @returns The path invisibly.
-#'
-#' @keywords internal
-#' @noRd
 save_as_sas <- function(data_list, path) {
   fs::dir_create(path, recurse = TRUE)
   purrr::iwalk(data_list, \(df, name) {
