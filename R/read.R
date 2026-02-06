@@ -60,6 +60,7 @@ read_register <- function(
 #' @inherit read_register return
 #'
 #' @keywords internal
+#' @noRd
 read_register_partition <- function(dir_path) {
   dir_path |>
     arrow::open_dataset(
@@ -78,6 +79,7 @@ read_register_partition <- function(dir_path) {
 #' @inherit read_register return
 #'
 #' @keywords internal
+#' @noRd
 read_register_file <- function(file_path) {
   file_path |>
     arrow::read_parquet() |>
