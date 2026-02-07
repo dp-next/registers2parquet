@@ -6,7 +6,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-fastreg eases the converts SAS register files (`.sas7bdat`) into
+fastreg eases the conversion of SAS register files (`.sas7bdat`) into
 [Parquet](https://parquet.apache.org/). In this context, a *register*
 refers to a collection of related data files that belong to the same
 dataset, typically with yearly snapshots (e.g.,
