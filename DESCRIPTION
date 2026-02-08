@@ -28,6 +28,7 @@ Imports:
     stringr,
     uuid
 Suggests:
+    crew,
     dbplyr,
     devtools,
     duckdb,

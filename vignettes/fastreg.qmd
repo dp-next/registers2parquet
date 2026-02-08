@@ -1,0 +1,233 @@
+---
+title: "Getting started"
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+fastreg eases the conversion of SAS register files (`.sas7bdat`) into
+[Parquet](https://parquet.apache.org/). In this context, a *register*
+refers to a collection of related data files that belong to the same
+dataset, typically with yearly snapshots (e.g.,
+`kontakter_2020.sas7bdat`, `kontakter_2021.sas7bdat`).
+
+## Why Parquet?
+
+[Parquet](https://parquet.apache.org/) is a columnar storage file format
+optimised for analytical workloads. Compared to
+[SAS](https://fileinfo.com/extension/sas7bdat) files (and row-based
+formats like CSV), Parquet offers:
+
+-   **Reduced storage**: Efficient compression significantly reduces
+    disk space, especially for large datasets.
+-   **Faster queries**: The columnar layout speeds up analytical queries
+    that only need a subset of columns.
+-   **Wide tool support**: Parquet is supported across data processing
+    frameworks in [R](https://www.r-project.org/),
+    [Python](https://www.python.org/), and beyond, making it easy to
+    integrate into modern workflows.
+
+## Setup
+
+For the examples below, we simulate SAS register data for two registers,
+`kontakter` and `diagnoser`:
+
+```{r prepare}
+#| code-fold: true
+#| code-summary: "Show setup code"
+
+library(fastreg)
+
+sas_dir <- fs::path_temp("sas-dir")
+kontakter_dir <- fs::path(sas_dir, "kontakter")
+diagnoser_dir <- fs::path(sas_dir, "diagnoser")
+fs::dir_create(kontakter_dir)
+fs::dir_create(diagnoser_dir)
+
+kontakter_list <- simulate_register(
+  "kontakter",
+  c("", "1999_1", "1999_2", "2020"),
+  n = 1000
+)
+save_as_sas(kontakter_list, kontakter_dir)
+
+diagnoser_list <- simulate_register(
+  "diagnoser",
+  c("2020", "2021"),
+  n = 1000
+)
+save_as_sas(diagnoser_list, diagnoser_dir)
+```
+
+```{r setup-tree}
+#| echo: false
+
+withr::with_dir(fs::path_dir(sas_dir), {
+  fs::dir_tree(fs::path_file(sas_dir))
+})
+```
+
+## Converting a single register
+
+Use `list_sas_files()` to find SAS files in a directory (and any
+subdirectories), then use `convert_to_parquet()` to convert them.
+`convert_to_parquet()` expects files to be from the **same register**
+based on file names.
+
+```{r locate}
+kontakter_sas_files <- list_sas_files(kontakter_dir)
+kontakter_sas_files
+```
+
+```{r convert}
+output_dir <- fs::path_temp("output-dir")
+
+convert_to_parquet(
+  path = kontakter_sas_files,
+  output_dir = output_dir
+)
+```
+
+The output is partitioned by year, extracted from filenames:
+
+```{r output-tree}
+#| echo: false
+
+withr::with_dir(fs::path_dir(output_dir), {
+  fs::dir_tree(fs::path_file(output_dir))
+})
+```
+
+`convert_to_parquet()` reads files in chunks (to be able to handle
+larger-than-memory data), extracts 4-digit years from filenames for
+partitioning, and lowercases column names. See `?convert_to_parquet` for
+more details.
+
+<!-- TODO: Maybe this isn't needed? It does cover one scenario that isn't covered above; larger than chunk size files -->
+
+:::::: {.callout-note collapse="true" title="Conversion scenarios example"}
+The diagram below shows four scenarios when converting a SAS register
+files for a register called `bef`:
+
+::::: columns
+::: column
+#### Input: SAS files
+
+```
+sas_dir/
+├── A) bef2020.sas7bdat
+├── B) bef2021.sas7bdat
+├── December_2023/
+│   └── B) bef2021.sas7bdat
+├── C) bef2022.sas7bdat
+└── D) bef.sas7bdat
+```
+:::
+
+::: column
+#### Output: Parquet files
+
+```
+bef/
+├── year=2020/
+│   └── part-c28221.parquet
+├── year=2021/
+│   ├── part-bf73dc.parquet
+│   └── part-546bed.parquet
+├── year=2022/
+│   ├── part-7c041e.parquet
+│   └── part-8869b7.parquet
+└── year=__HIVE_DEFAULT_PARTITION__/
+    └── part-a8d52c.parquet
+```
+:::
+:::::
+
+A)  Single file → single Parquet file, partitioned by year from
+    filename.
+B)  Multiple files with the same year → separate Parquet files in the
+    same partition. Identical rows are not deduplicated.
+C)  Large file → split into multiple Parquet files due to more rows in
+    than `chunk_size`.
+D)  File without year in name → placed in
+    `year=__HIVE_DEFAULT_PARTITION__` (the [Apache
+    Hive](https://hive.apache.org/docs/latest/user/configuration-properties/)
+    default for missing partitions).
+::::::
+
+## Converting multiple registers in parallel
+
+For many or large files, fastreg provides a
+[targets](https://docs.ropensci.org/targets/) pipeline template that
+parallelises conversion across CPU cores. By default it uses 10 workers,
+but that can be adjusted in the pipeline to fit the available resources.
+
+### Create the pipeline file
+
+```{r use-targets}
+# Create temp directory for example.
+pipeline_dir <- fs::path_temp("pipeline-dir")
+fs::dir_create(pipeline_dir)
+
+use_targets_template(path = fs::path(pipeline_dir, "_targets.R"))
+```
+
+### Set input and output paths
+
+Open `_targets.R` and edit the `config` section:
+
+```{r config}
+config <- list(
+  input_path = fs::path_temp("sas-dir"),
+  output_path = fs::path_temp("parquet-registers")
+)
+```
+
+-   **`input_path`**: directory containing SAS files (searched
+    recursively).
+-   **`output_path`**: directory where Parquet files will be written.
+
+### Run the pipeline
+
+```{r tar-make}
+#| eval: false
+targets::tar_make()
+```
+
+```{r edit-and-run-pipeline}
+#| echo: false
+template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
+modified_content <- template_content |>
+  stringr::str_replace("/path/to/register/sas/files/directory", config$input_path) |>
+  stringr::str_replace("/path/to/output/directory",config$output_path)
+
+withr::with_dir(pipeline_dir, {
+  writeLines(modified_content, "_targets.R")
+  targets::tar_make(callr_function = NULL, reporter = "silent")
+})
+```
+
+The pipeline finds all SAS files, groups them by register name, and
+converts each in parallel. Re-running `tar_make()` only re-converts
+registers whose source files have changed.
+
+```{r output-pipeline}
+#| echo: false
+withr::with_dir(fs::path_dir(config$output_path), {
+  fs::dir_tree(fs::path_file(config$output_path))
+})
+```
+
+## Reading a Parquet register
+
+Use `read_register()` to read converted data as a DuckDB table:
+
+```{r read-register}
+register <- read_register(output_dir)
+register
+```
+
+You can pass a directory to read the full partitioned register or a file
+path to read a single `.parquet` file. The data is read lazily, so it
+won't load into memory until collected with e.g. `dplyr::collect()`.
