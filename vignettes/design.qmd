@@ -84,15 +84,16 @@ package:
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
 
 flowchart TD
-    identify_paths("Identify register path(s)<br>with list_sas_files()")
+    identify_paths("Identify register path(s)<br>with list_sas_files(path)")
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
+    chunk_size[/"chunk_size<br>[Integer scalar]"/]
     convert_to_parquet("convert_to_parquet()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
     identify_paths -.-> path --> convert_to_parquet
-    output_dir --> convert_to_parquet
+    output_dir & chunk_size --> convert_to_parquet
     convert_to_parquet --> output
 
     %% Style
