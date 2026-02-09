@@ -9,11 +9,9 @@ gh:
 
 <!-- badges: start -->
 
-[![GitHub
-Release](https://img.shields.io/github/v/release/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/releases/latest)
-[![Build](https://github.com/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D/actions/workflows/build.yml/badge.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml)
-[![pre-commit.ci
-status](https://results.pre-commit.ci/badge/github/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D/main.svg)](https://results.pre-commit.ci/latest/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main)
+[![GitHub Release](https://img.shields.io/github/v/release/{{< meta gh.org >}}/{{< meta gh.repo >}}.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/releases/latest)
+[![Build](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml/badge.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main.svg)](https://results.pre-commit.ci/latest/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
