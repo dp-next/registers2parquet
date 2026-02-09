@@ -5,10 +5,10 @@
 <!-- badges: start -->
 
 [![GitHub
-Release](https://img.shields.io/github/v/release/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D.svg)](https://github.com/dp-next/fastreg/releases/latest)
-[![Build](https://github.com/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/fastreg/actions/workflows/build.yml)
+Release](https://img.shields.io/github/v/release/dp-next/fastreg.svg)](https://github.com/dp-next/fastreg/releases/latest)
+[![Build](https://github.com/dp-next/fastreg/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/fastreg/actions/workflows/build.yml)
 [![pre-commit.ci
-status](https://results.pre-commit.ci/badge/github/%7B%7B%3C%20meta%20gh.org%20%3E%7D%7D/%7B%7B%3C%20meta%20gh.repo%20%3E%7D%7D/main.svg)](https://results.pre-commit.ci/latest/github/dp-next/fastreg/main)
+status](https://results.pre-commit.ci/badge/github/dp-next/fastreg/main.svg)](https://results.pre-commit.ci/latest/github/dp-next/fastreg/main)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
@@ -18,11 +18,11 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 ## Overview
 
-fastreg simplifies converting large SAS register files (`.sas7bdat`)
-into [Apache Parquet](https://parquet.apache.org/) format. This is
-particularly useful for researchers working with Danish registers at
-Statistics Denmark, where large SAS files are common. Parquet files are
-smaller on disk, faster to read, and work well with modern tools like
+fastreg converts large SAS register files (`.sas7bdat`) into [Apache
+Parquet](https://parquet.apache.org/) format. This is particularly
+useful for researchers working with Danish registers at Statistics
+Denmark, where large SAS files are common. Parquet files are smaller on
+disk, faster to read, and work well with modern tools like
 [DuckDB](https://r.duckdb.org/) and
 [Arrow](https://arrow.apache.org/docs/r/).
 
@@ -32,18 +32,27 @@ files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
 
 fastreg provides functions to:
 
-- Convert SAS files to Parquet
-- Read Parquet registers
-- Copy a [targets](https://docs.ropensci.org/targets/) pipeline template
-  for parallel batch conversion
-- List SAS and Parquet files in directories
+- Convert SAS files to Parquet.
+- Read Parquet registers.
+- Create a [targets](https://docs.ropensci.org/targets/) pipeline from a
+  template for parallel batch conversion.
+- List SAS and Parquet files in directories.
+
+## Purpose
+
+The primary purpose of the fastreg package is to simplify the process of
+converting the large Danish registers into the more modern Parquet
+storage format as well as to simplify reading these Parquet files. By
+converting data from SAS to the more modern and efficient Parquet
+format, the package reduces storage costs and aims to improve
+performance in data analysis workflows.
 
 ## Installation
 
 <!-- TODO: Uncomment when released to CRAN -->
 
 ``` r
-#install.packages("fastreg")
+# install.packages("fastreg")
 
 # Development version on GitHub
 pak::pak("dp-next/fastreg")
