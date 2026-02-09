@@ -27,8 +27,8 @@ This function reads one or more SAS files for a given register, and saves the
 data in Parquet format. It expects the input SAS files to come from the same
 register, e.g., different years of the same register.
 
-The function looks for a year (the first four consecutive digits) in the file
-names in \code{path} to use the year as partition, see \code{vignettes("design")}
+The function looks for a year (1900-2099) in the file
+names in \code{path} to use the year as partition, see \code{vignette("design")}
 for more information about the partitioning.
 
 If a year is found, the data is saved as a partition by year in the output
