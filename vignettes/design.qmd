@@ -29,7 +29,7 @@ workflows.
 We generally name function by the **action** the perform and the
 **object(s)** they perform it on, `{action}_{object}()`. **Actions** are
 verbs that describe what a function does, while **objects** are nouns
-that represent the parameters that the functions operate on. Below are
+that represent the parameters that the functions operate on. Below is
 an overview of the main actions and objects within fastreg.
 
 ::: callout-tip
