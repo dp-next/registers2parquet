@@ -41,6 +41,15 @@ fastreg provides functions to:
     from a template for parallel batch conversion.
 -   List SAS and Parquet files in directories.
 
+## Purpose
+
+The primary purpose of the fastreg package is to simplify the process of
+converting the large Danish registers into the more modern Parquet
+storage format as well as to simplify reading these Parquet files.
+By converting data from SAS to the more modern and efficient Parquet
+format, the package reduces storage costs and aims to improve
+performance in data analysis workflows.
+
 ## Installation
 
 <!-- TODO: Uncomment when released to CRAN -->
