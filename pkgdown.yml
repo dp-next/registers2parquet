@@ -6,7 +6,7 @@ articles:
   fastreg: fastreg.html
   import-parquet: import-parquet.html
   saving-as-parquet: saving-as-parquet.html
-last_built: 2026-02-09T10:03Z
+last_built: 2026-02-09T13:04Z
 urls:
   reference: https://dp-next.github.io/fastreg/reference
   article: https://dp-next.github.io/fastreg/articles
