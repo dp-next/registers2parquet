@@ -21,7 +21,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 ## Overview
 
-fastreg simplifies converting large SAS register files (`.sas7bdat`)
+fastreg converts large SAS register files (`.sas7bdat`)
 into [Apache Parquet](https://parquet.apache.org/) format. This is
 particularly useful for researchers working with Danish registers at
 Statistics Denmark, where large SAS files are common. Parquet files are
