@@ -70,82 +70,34 @@
 
 
 
-    <section class="level2"><h2 id="core-functionality">Core functionality<a class="anchor" aria-label="anchor" href="#core-functionality"></a>
+    <section class="level2"><h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>This is the list of the core functionality in the fastreg package:</p>
+<p>fastreg:</p>
 <ol type="1">
 <li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
-<li>Read register Parquet files into R as a DuckDB table.</li>
+<li>Reads register Parquet files into R as a DuckDB table.</li>
+<li>Provides a <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline template to convert multiple registers in parallel.</li>
 <li>Provides functions to list available SAS or Parquet register files directly from R.</li>
-</ol></section><section class="level2"><h2 id="parallel-processing">Parallel processing<a class="anchor" aria-label="anchor" href="#parallel-processing"></a>
+</ol></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
 </h2>
-<p>Each register-year pairing (including duplicate years) are sent to a separate process. That way, rather than converting 1000+ registers one after the other, it can be split into chunks based on the number of available CPU cores. For instance, if you set the number of “workers” (cores) to 4, than the 1000+ registers will be split into 4 groups and each group will be processed simultaneously on its own core.</p>
-<p>There are some overheads to parallel processing, so it works best with a large number of files and when the files are also relatively large, or if the processing time per file is substantial.</p>
-</section><section class="level2"><h2 id="visual-representation-of-data-flow">Visual representation of data flow<a class="anchor" aria-label="anchor" href="#visual-representation-of-data-flow"></a>
-</h2>
-<div class="cell" data-file="flow.mmd" data-layout-align="default">
-<div class="cell-output-display">
+<p>Before implementation, we identified the main actions and objects of the package and mapped out the interface with diagrams of expected workflows.</p>
+<section class="level3"><h3 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
+</h3>
+<p>We generally name function by the <strong>action</strong> the perform and the <strong>object(s)</strong> they perform it on, <code>{action}_{object}()</code>. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on. Below is an overview of the main actions and objects within fastreg.</p>
 <div>
-<p></p>
-<figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    subgraph SAS [SAS Files]
-        direction TB
-        A1[bef2018.sas7bdat]
-        A2[bef2019.sas7bdat]
-        A3[bef2020.sas7bdat]
-        A4[bef2021.sas7bdat]
-        A5[bef2022.sas7bdat]
-        A6[December_2023/bef2022.sas7bdat]
-        A7[December_2023/bef2023.sas7bdat]
-    end
-
-    subgraph Parquet [Parquet Files]
-        direction TB
-        B1[bef/year=2018/part-0.parquet]
-        B2[bef/year=2019/part-0.parquet]
-        B3[bef/year=2020/part-0.parquet]
-        B4[bef/year=2021/part-0.parquet]
-        B5[bef/year=2022/part-0.parquet]
-        B6[bef/year=2023/part-0.parquet]
-    end
-
-    F1[Data]
-    F2[Data]
-    F3[Data]
-    F4[Data]
-    F5[Data]
-    F6[Data]
-
-    A1 --&gt;|import| F1 --&gt;|export| B1
-    A2 --&gt;|import| F2 --&gt;|export| B2
-    A3 --&gt;|import| F3 --&gt;|export| B3
-    A4 --&gt;|import| F4 --&gt;|export| B4
-    A5 --&gt;|import &amp;&lt;br&gt;join| F5
-    A6 --&gt;|import &amp;&lt;br&gt;join| F5
-    F5 --&gt;|export| B5
-    A7 --&gt;|import| F6 --&gt;|export| B6
-
-    %% Styling
-    style SAS fill:#FFFFFF, color:#000000
-    style Parquet fill:#FFFFFF, color:#000000
-</pre>
+<blockquote>
+<p><strong>Tip</strong></p>
+<p>See the <a href="https://dp-next.github.io/fastreg/reference/index.html">Reference</a> for a function overview.</p>
+<!-- TODO: Use relative path instead? -->
+</blockquote>
 </div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section><section class="level2"><h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
-</h2>
-<p>In the sections below, we outline the naming conventions of actions and objects in the package. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on.</p>
-<section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
+</section><section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
 </h3>
 <table class="table caption-top">
 <caption>Actions used in fastreg.</caption>
 <colgroup>
-<col style="width: 27%">
-<col style="width: 72%">
+<col style="width: 34%">
+<col style="width: 65%">
 </colgroup>
 <thead><tr class="header">
 <th>Action</th>
@@ -153,190 +105,131 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>convert</td>
+<td><code>convert</code></td>
 <td>Convert a register SAS file (or multiple) to Parquet.</td>
 </tr>
 <tr class="even">
-<td>get</td>
-<td>Used for internal helper functions to e.g., get or extract the year from a file name.</td>
+<td><code>get</code></td>
+<td>Get or extract metadata, e.g., the register name from a file path.</td>
 </tr>
 <tr class="odd">
-<td>list</td>
-<td>List or retrieve an object or multiple objects. E.g., a path, a register name, or a year from a file name.</td>
+<td><code>list</code></td>
+<td>List files in a directory, e.g., SAS or Parquet files.</td>
 </tr>
 <tr class="even">
-<td>read</td>
+<td><code>read</code></td>
 <td>Read a Parquet register into R as a DuckDB table.</td>
+</tr>
+<tr class="odd">
+<td><code>use</code></td>
+<td>Use a template in the current project.</td>
 </tr>
 </tbody>
 </table></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
 </h3>
 <table class="table caption-top">
 <caption>Objects used in fastreg.</caption>
-<colgroup>
-<col style="width: 27%">
-<col style="width: 72%">
-</colgroup>
 <thead><tr class="header">
 <th>Object</th>
 <th>Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>output_path</code></td>
-<td>A character scalar with the absolute path to the directory where the Parquet file should be created in.</td>
+<td><code>chunk_size</code></td>
+<td>Number of rows to read per chunk during conversion.</td>
 </tr>
 <tr class="even">
 <td><code>path</code></td>
-<td>A character vector with the absolute path to a file or directory. It can be a single path or multiple paths as a character vector. Is used in functions to list available files or to specify input files.</td>
+<td>A character vector of one or more paths.</td>
 </tr>
 <tr class="odd">
-<td><code>project_id</code></td>
-<td>A character scalar with the DST project number to the folder containing the raw or work data.</td>
-</tr>
-<tr class="even">
-<td><code>register_name</code></td>
-<td>A character scalar with the name of a register used in the file name (without a path), e.g., “bef”. It’s used in <code>list</code> functions to retrieve the paths of objects including that name.</td>
+<td><code>output_dir</code></td>
+<td>The directory to save the Parquet output to.</td>
 </tr>
 </tbody>
-</table></section></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
-</h2>
-<p>fastreg includes two main functions and multiple helper functions. Each function is listed below with a short description.</p>
-<div>
-<blockquote>
-<p><strong>Tip</strong></p>
-<p>See the <a href="./reference/index.html">Reference documentation</a> for more details.</p>
-</blockquote>
-</div>
-<section class="level3"><h3 id="main-functions">Main functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
+</table></section><section class="level3"><h3 id="converting-sas-files-from-a-single-register">Converting SAS files from a single register<a class="anchor" aria-label="anchor" href="#converting-sas-files-from-a-single-register"></a>
 </h3>
-<section class="level4"><h4 id="convert_to_parquet">
-<code>convert_to_parquet()</code><a class="anchor" aria-label="anchor" href="#convert_to_parquet"></a>
-</h4>
-<p>This function takes one or more register SAS files and converts them to a Parquet file or a Parquet dataset partitioned by year.</p>
-<p>See the <code><a href="../reference/convert_to_parquet.html">convert_to_parquet()</a></code> reference for more details.</p>
-<p>The function requires two inputs:</p>
-<ul>
-<li>
-<strong>path</strong>: A character vector with path(s) to one or several files that should be converted.</li>
-<li>
-<strong>output_path</strong>: A character vector with the path to the directory where the Parquet file(s) should be written to.</li>
-</ul>
-<p>If multiple files are given, the function looks for a year in the file names to use as partitioning. The function also removes any duplicate rows before saving the data.</p>
-<p>The output of <code>convert_register_to_parquet()</code> is the character vector given as input in <code>output_path</code>. This allows for easy integration into a targets pipeline.</p>
-<p>Even though the function doesn’t return the written Parquet register, its creation is confirmed with a message in the R console.</p>
-<p>The created Parquet files will be stored in a directory structure that reflects the register name and a year partitioning if a year can be determined from the file name(s). Below is shown an example of the input and output for a collection of SAS files for the <code>bef</code> register:</p>
-</section><div class="columns">
-<div class="column">
-<section class="level4"><h4 id="input-register-sas-files">Input: Register SAS files<a class="anchor" aria-label="anchor" href="#input-register-sas-files"></a>
-</h4>
-<pre><code><span><span class="va">bef2018.sas7bdat</span></span>
-<span><span class="va">bef2019.sas7bdat</span></span>
-<span><span class="va">bef2020.sas7bdat</span></span>
-<span><span class="va">bef2021.sas7bdat</span></span>
-<span><span class="va">bef2022.sas7bdat</span></span>
-<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2022.sas7bdat</span></span>
-<span><span class="va">December_2023</span><span class="op">/</span><span class="va">bef2023.sas7bdat</span></span></code></pre>
-</section>
-</div>
-<div class="column">
-<section class="level4"><h4 id="output-parquet-files">Output: Parquet files<a class="anchor" aria-label="anchor" href="#output-parquet-files"></a>
-</h4>
-<pre><code>bef/
-├── year=2018/
-│   └── part-0.parquet
-├── year=2019/
-│   └── part-0.parquet
-├── year=2020/
-│   └── part-0.parquet
-├── year=2021/
-│   └── part-0.parquet
-├── year=2022/
-│   └── part-0.parquet
-└── year=2023/
-    └── part-0.parquet</code></pre>
-</section>
-</div>
-</div>
-<p>As shown above, the Parquet files will be stored in a directory named after the register (e.g., <code>bef/</code>), with subdirectories for each year (e.g., <code>year=2018/</code>, <code>year=2019/</code>, etc.) if the year can be determined from the file name. Each year directory contains a Parquet file (<code>part-0.parquet</code>). This structure allows for efficient querying and retrieval of data based on the year.</p>
-<section class="level4"><h4 id="read_registerregister_name-project_id">
-<code>read_register(register_name, project_id)</code><a class="anchor" aria-label="anchor" href="#read_registerregister_name-project_id"></a>
-</h4>
-<p>Reads a Parquet register from the specified path and returns it as a DuckDB table.</p>
-<p>See the <code><a href="../reference/read_register.html">read_register()</a></code> reference for more details.</p>
-</section></section><section class="level3"><h3 id="helper-functions">Helper functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a>
-</h3>
-<section class="level4"><h4 id="list_sas_registersproject_id">
-<code>list_sas_registers(project_id)</code><a class="anchor" aria-label="anchor" href="#list_sas_registersproject_id"></a>
-</h4>
-<p>Lists all SAS files in a given directory. It returns a character vector of file paths with the <code>.sas7bdat</code> extension at the given directory.</p>
-<!-- TODO: Add link to reference documentation when ready -->
-</section><section class="level4"><h4 id="list_parquet_registersproject_id">
-<code>list_parquet_registers(project_id)</code><a class="anchor" aria-label="anchor" href="#list_parquet_registersproject_id"></a>
-</h4>
-<p>Lists all Parquet files in a given directory. It returns a character vector of file paths with the <code>.parquet</code> or <code>.parq</code> extension at the given directory.</p>
-<!-- TODO: Add link to reference documentation when ready -->
-</section></section></section><section class="level2"><h2 id="expected-flow">Expected flow<a class="anchor" aria-label="anchor" href="#expected-flow"></a>
-</h2>
-<p>We expect the flow of using the fastreg package to convert register SAS files to Parquet files will be as follows:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div id="fig-flow" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-flow">flowchart TD
-
-    identify_paths("Identify register path(s)&lt;br&gt;with helper functions")
+    identify_paths("Identify register path(s)&lt;br&gt;with list_sas_files(path)")
     path[/"path&lt;br&gt;[Character vector]"/]
-    output_path[/"output_path&lt;br&gt;[Character scalar]"/]
+    output_dir[/"output_dir&lt;br&gt;[Character scalar]"/]
+    chunk_size[/"chunk_size&lt;br&gt;[Integer scalar]"/]
     convert_to_parquet("convert_to_parquet()")
-    output[/"Output&lt;br&gt;[Character scalar]&lt;br&gt;Path to Parquet file(s)"/]
-
+    output[/"Parquet file(s)&lt;br&gt;written to output_dir"/]
 
     %% Edges
     identify_paths -.-&gt; path --&gt; convert_to_parquet
-    output_path --&gt; convert_to_parquet
+    output_dir &amp; chunk_size --&gt; convert_to_parquet
     convert_to_parquet --&gt; output
 
-    %% Styling
+    %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 </pre>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: Flow of the expected flow using the <code><a href="../reference/convert_to_parquet.html">convert_to_parquet()</a></code> package to convert register SAS files to Parquet files.
+Figure 1: Expected workflow for converting SAS files from a single register using <code><a href="../reference/convert_to_parquet.html">convert_to_parquet()</a></code>.
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>We expect a flow of reading a Parquet register created by the fastreg package into an R session to be as follows:</p>
+</section><section class="level3"><h3 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
+</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-targets-flow" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-targets-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-targets-flow">flowchart TD
+    copy_pipeline("use_targets_template()")
+    edit["Edit _targets.R as needed"]
+    run_pipeline("targets::tar_make()")
+    output[/"Parquet file(s)&lt;br&gt;written to directory&lt;br&gt;specified in _targets.R"/]
+
+    %% Edges
+    copy_pipeline --&gt; edit --&gt; run_pipeline --&gt; output
+
+    %% Style
+    style edit fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-targets-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: Expected workflow for converting multiple registers using the targets pipeline.
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="level3"><h3 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
+</h3>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div id="fig-flow-use" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-flow-use">flowchart TD
-
-    project_id[/"project_id&lt;br&gt;[Character scalar]"/]
     path[/"path&lt;br&gt;[Character scalar]"/]
-
     read_register("read_register()")
-
     output[/"Output&lt;br&gt;[DuckDB table]"/]
 
     %% Edges
-    path &amp; project_id --&gt; read_register --&gt; output
+    path --&gt; read_register --&gt; output
 
 </pre>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Flow of the expected flow of reading a Parquet register that was created with the fastreg package.
+Figure 3: Expected workflow for reading a Parquet register as a DuckDB table.
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><script id="quarto-html-after-body" type="application/javascript">
+</section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
