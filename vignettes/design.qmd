@@ -18,9 +18,13 @@ fastreg:
 4.  Provides functions to list available SAS or Parquet register files
     directly from R.
 
-<!-- TODO: Add simulate and save to sas functionality here? -->
+## Interface
 
-## Naming conventions
+Before implementation, we identified the main actions and objects of the
+package and mapped out the interface with diagrams of expected
+workflows.
+
+### Naming conventions
 
 We generally name function by the **action** the perform and the
 **object(s)** they perform it on, `{action}_{object}()`. **Actions** are
@@ -58,17 +62,6 @@ a function overview.
 
 : Objects used in fastreg.
 
-<!-- TODO: Do we want to include *all* actions and object here? -->
-
-## Expected flow
-
-This section shows flow diagrams for the expected workflows of the
-package:
-
-1.  Converting a single register
-2.  Converting registers in parallel
-3.  Reading a register
-
 ### Converting SAS files from a single register
 
 ```{mermaid}
@@ -93,7 +86,7 @@ flowchart TD
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-### Using the targets pipeline to convert multiple registers in parallel
+### Converting multiple registers in parallel
 
 ```{mermaid}
 %%| label: fig-targets-flow
