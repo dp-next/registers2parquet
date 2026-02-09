@@ -1,4 +1,4 @@
-#' Simulate example registers
+#' Simulate an example register
 #'
 #' The data is simulated using `osdc::simulate_registers()`. It's used
 #' in vignettes and tests.

@@ -1,6 +1,6 @@
 #' Use a targets pipeline template for converting SAS registers to Parquet
 #'
-#' Copies a template to your project root.
+#' Copies a template to the given path.
 #'
 #' @param path Path to the file to create. Defaults to `_targets.R`.
 #' @param open Whether to open the file for editing. Defaults to `TRUE` in
