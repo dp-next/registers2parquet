@@ -3,7 +3,7 @@
 #' @description
 #' This function reads one or more SAS files for a given register, and saves the
 #' data in Parquet format. It expects the input SAS files to come from the same
-#' register, e.g., different years of the same register. The function verifies
+#' register, e.g., different years of the same register. The function checks
 #' that all files belong to the same register by comparing the alphabetic
 #' characters in the file name(s).
 #'
