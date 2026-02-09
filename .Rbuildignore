@@ -15,7 +15,7 @@
 ^\.cz\.toml$
 ^CODE_OF_CONDUCT\.md$
 ^CONTRIBUTING\.md$
-^README\.Rmd$
+^README\.qmd$
 ^justfile$
 ^CITATION\.cgg$
 ^\.vscode$
