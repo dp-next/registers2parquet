@@ -22,10 +22,11 @@ fastreg:
 
 ## Naming conventions
 
-In the sections below, we outline the naming conventions of actions and
-objects in the package. **Actions** are verbs that describe what a
-function does, while **objects** are nouns that represent the parameters
-that the functions operate on.
+We generally name function by the **action** the perform and the
+**object(s)** they perform it on, `{action}_{object}()`. **Actions** are
+verbs that describe what a function does, while **objects** are nouns
+that represent the parameters that the functions operate on. Below are
+an overview of the main actions and objects within fastreg.
 
 ::: callout-tip
 See the
@@ -38,30 +39,22 @@ a function overview.
 ### Actions
 
 | Action | Description |
-|------------------------|------------------------------------------------|
+|-------------------------|------------------------------------------------|
 | `convert` | Convert a register SAS file (or multiple) to Parquet. |
 | `get` | Get or extract metadata, e.g., the register name from a file path. |
 | `list` | List files in a directory, e.g., SAS or Parquet files. |
 | `read` | Read a Parquet register into R as a DuckDB table. |
-| `save` | Save data to disk, e.g., as SAS files. |
-| `simulate` | Simulate register data for testing and examples. |
-| `split` | Split paths into groups based on the register name (used within the targets pipeline). |
 | `use` | Use a template in the current project. |
 
 : Actions used in fastreg.
 
 ### Objects
 
-| Object | Description |
-|------------------------|------------------------------------------------|
+| Object       | Description                                         |
+|--------------|-----------------------------------------------------|
 | `chunk_size` | Number of rows to read per chunk during conversion. |
-| `data_list` | A named list of data frames. |
-| `path` | A character vector of one or more paths. |
-| `n` | Number of rows to simulate per year. |
-| `open` | Whether to open the file for editing after creation. |
-| `output_dir` | The directory to save the Parquet output to. |
-| `register` | Name of the register to simulate. |
-| `year` | Suffix(es) appended to the register name (e.g., `"2020"`, `"1999_1"`, or `""` for no suffix). |
+| `path`       | A character vector of one or more paths.            |
+| `output_dir` | The directory to save the Parquet output to.        |
 
 : Objects used in fastreg.
 
