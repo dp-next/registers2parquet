@@ -37,18 +37,18 @@ files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
 
 fastreg provides functions to:
 
--   Convert SAS files to Parquet
--   Read Parquet registers
--   Copy a [targets](https://docs.ropensci.org/targets/) pipeline
-    template for parallel batch conversion
--   List SAS and Parquet files in directories
+-   Convert SAS files to Parquet.
+-   Read Parquet registers.
+-   Create a [targets](https://docs.ropensci.org/targets/) pipeline
+    from a template for parallel batch conversion.
+-   List SAS and Parquet files in directories.
 
 ## Installation
 
 <!-- TODO: Uncomment when released to CRAN -->
 
 ```{r, eval = FALSE}
-#install.packages("fastreg")
+# install.packages("fastreg")
 
 # Development version on GitHub
 pak::pak("dp-next/fastreg")
