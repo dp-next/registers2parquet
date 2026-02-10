@@ -72,7 +72,6 @@ list(
       path = register_path_groups,
       output_dir = config$output_dir
     ),
-    pattern = map(register_path_groups),
-    format = "file"
+    pattern = map(register_path_groups)
   )
 )
