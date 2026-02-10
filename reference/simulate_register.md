@@ -1,4 +1,4 @@
-# Simulate example registers
+# Simulate an example register
 
 The data is simulated using
 [`osdc::simulate_registers()`](https://steno-aarhus.github.io/osdc/reference/simulate_registers.html).

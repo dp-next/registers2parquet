@@ -4,9 +4,10 @@ This function reads one or more SAS files for a given register, and
 saves the data in Parquet format. It expects the input SAS files to come
 from the same register, e.g., different years of the same register.
 
-The function looks for a year (the first four consecutive digits) in the
-file names in `path` to use the year as partition, see
-`vignettes("design")` for more information about the partitioning.
+The function looks for a year (1900-2099) in the file names in `path` to
+use the year as partition, see
+[`vignette("design")`](https://dp-next.github.io/fastreg/articles/design.md)
+for more information about the partitioning.
 
 If a year is found, the data is saved as a partition by year in the
 output directory, e.g., `output_dir/year=2020/part-ad5b.parquet` (the
@@ -58,5 +59,5 @@ convert_to_parquet(
   path = list_sas_files(sas_file_directory),
   output_dir = fs::path_temp("path/to/register_name/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpQrrS6N/path/to/register_name.
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpqIFsMw/path/to/register_name.
 ```

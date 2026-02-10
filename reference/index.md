@@ -16,7 +16,7 @@
 - [`save_as_sas()`](https://dp-next.github.io/fastreg/reference/save_as_sas.md)
   : Save a list of data frames as SAS files
 - [`simulate_register()`](https://dp-next.github.io/fastreg/reference/simulate_register.md)
-  : Simulate example registers
+  : Simulate an example register
 - [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
   : Use a targets pipeline template for converting SAS registers to
   Parquet

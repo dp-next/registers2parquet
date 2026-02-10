@@ -1,6 +1,6 @@
 # Use a targets pipeline template for converting SAS registers to Parquet
 
-Copies a template to your project root.
+Copies a template to the given path.
 
 ## Usage
 
