@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.3 (2026-02-10)
+
+### Refactor
+
+- :recycle: update success msg in `convert_to_parquet()` (#167)
+
 ## 0.8.2 (2026-02-10)
 
 ### Refactor
