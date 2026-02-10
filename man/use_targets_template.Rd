@@ -16,5 +16,5 @@ interactive sessions.}
 The path to the created file (invisibly).
 }
 \description{
-Copies a template to your project root.
+Copies a template to the given path.
 }

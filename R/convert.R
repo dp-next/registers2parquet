@@ -5,8 +5,8 @@
 #' data in Parquet format. It expects the input SAS files to come from the same
 #' register, e.g., different years of the same register.
 #'
-#' The function looks for a year (the first four consecutive digits) in the file
-#' names in `path` to use the year as partition, see `vignettes("design")`
+#' The function looks for a year (1900-2099) in the file
+#' names in `path` to use the year as partition, see `vignette("design")`
 #' for more information about the partitioning.
 #'
 #' If a year is found, the data is saved as a partition by year in the output
@@ -70,7 +70,7 @@ convert_to_parquet <- function(
 #' @param path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
-#' @returns path invisibly.
+#' @returns The input `path` (SAS file path) invisibly.
 #'
 #' @keywords internal
 #' @noRd
@@ -198,9 +198,9 @@ create_arrow_schema <- function(data) {
 
 #' Convert column names to lower case
 #'
-#' @param data A data frame type object.
+#' @param data A data frame.
 #'
-#' @returns The same object type given.
+#' @returns A data frame with column names converted to lower case.
 #'
 #' @keywords internal
 #' @noRd
