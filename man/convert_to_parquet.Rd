@@ -12,7 +12,7 @@ register. See \code{\link[=list_sas_files]{list_sas_files()}}, which is a helper
 
 \item{output_dir}{A character scalar with the path to the directory to save
 the output Parquet file to. Should not include the register name as this
-will be extracted from path.}
+will be extracted from \code{path}.}
 
 \item{chunk_size}{An integer scalar indicating the number of rows to read
 at a time from the SAS files. Defaults to 10,000,000.}
