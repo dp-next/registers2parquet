@@ -60,9 +60,11 @@ convert_to_parquet <- function(
   )
 
   # Success message.
-  cli::cli_alert_success(
-    "Successfully converted {.val {fs::path_file(path)}} and saved it in {.path {output_dir}}."
-  )
+  cli::cli_alert_success("Successfully converted {length(path)} file{?s}.")
+  cli::cli_bullets(c(
+    "*" = "Input: {.val {fs::path_file(path)}}",
+    "*" = "Output: Register files in {.path {fs::path(output_dir, get_register_name(path))}}"
+  ))
 
   invisible(output_dir)
 }
