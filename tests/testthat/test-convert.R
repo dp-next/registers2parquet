@@ -1,8 +1,9 @@
 # Tests with small test data --------------------------------------------------
 
 # n = 11000 to test chunking logic.
+register_name <- "kontakter"
 kontakter_list <- simulate_register(
-  "kontakter",
+  register_name,
   year = c("", "1999_1", "1999_2", "2020")
 )
 sas_path <- fs::path_temp("sas_kontakter")
@@ -18,7 +19,7 @@ actual_path <- convert_to_parquet(
 
 # Open Parquet dataset.
 actual_data <- arrow::open_dataset(
-  output_dir,
+  fs::path(output_dir, register_name),
   partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
@@ -36,6 +37,7 @@ test_that("output is output_dir", {
 test_that("files are partitioned as expected", {
   expected <- fs::path(
     output_dir,
+    register_name,
     c("year=__HIVE_DEFAULT_PARTITION__", "year=1999", "year=2020")
   )
 
@@ -45,7 +47,11 @@ test_that("files are partitioned as expected", {
 })
 
 test_that("parts are named as expected", {
-  actual <- fs::path_file(fs::dir_ls(output_dir, recurse = TRUE, type = "file"))
+  actual <- fs::path_file(fs::dir_ls(
+    fs::path(output_dir, register_name),
+    recurse = TRUE,
+    type = "file"
+  ))
   expect_true(all(stringr::str_detect(actual, "^part-[a-f0-9]{6}\\.parquet$")))
 })
 
@@ -127,7 +133,11 @@ test_that("n parts are as expected when chunk_size is less than nrow per file", 
   )
 
   n_expected <- sum(ceiling(purrr::map_int(kontakter_list, nrow) / chunk_size))
-  n_actual <- length(fs::dir_ls(output_dir, recurse = TRUE, type = "file"))
+  n_actual <- length(fs::dir_ls(
+    fs::path(output_dir, register_name),
+    recurse = TRUE,
+    type = "file"
+  ))
   expect_equal(n_actual, n_expected)
 })
 

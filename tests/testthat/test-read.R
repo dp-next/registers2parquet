@@ -1,9 +1,10 @@
 # Prepare data to be read.
-kontakter_list <- simulate_register("kontakter", c("", "2020"))
+register_name <- "kontakter"
+kontakter_list <- simulate_register(register_name, c("", "2020"))
 sas_path <- fs::path_temp("sas_kontakter")
 save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)
-output_dir <- fs::path_temp("kontakter")
+output_dir <- fs::path_temp("output_dir")
 
 # Clean up any existing files from previous test runs.
 # if (fs::dir_exists(output_dir)) {
@@ -20,6 +21,7 @@ test_that("reading a single Parquet file works as expected", {
   year <- "2020"
   actual_data <- read_register(fs::dir_ls(fs::path(
     output_dir,
+    register_name,
     glue::glue("year={year}")
   ))) |>
     dplyr::collect()

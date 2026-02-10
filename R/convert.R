@@ -3,7 +3,9 @@
 #' @description
 #' This function reads one or more SAS files for a given register, and saves the
 #' data in Parquet format. It expects the input SAS files to come from the same
-#' register, e.g., different years of the same register.
+#' register, e.g., different years of the same register. The function checks
+#' that all files belong to the same register by comparing the alphabetic
+#' characters in the file name(s).
 #'
 #' The function looks for a year (1900-2099) in the file
 #' names in `path` to use the year as partition, see `vignette("design")`
@@ -22,8 +24,8 @@
 #' @param path A character vector of one or more paths to SAS file(s) for one
 #'    register. See [list_sas_files()], which is a helper for this parameter.
 #' @param output_dir A character scalar with the path to the directory to save
-#'    the output Parquet file to. Should include the register name as the last
-#'    part of the path. E.g., `path/to/register_name/`.
+#'    the output Parquet file to. Should not include the register name as this
+#'    will be extracted from `path`.
 #' @param chunk_size An integer scalar indicating the number of rows to read
 #'    at a time from the SAS files. Defaults to 10,000,000.
 #'
@@ -36,7 +38,7 @@
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
 #' convert_to_parquet(
 #'   path = list_sas_files(sas_file_directory),
-#'   output_dir = fs::path_temp("path/to/register_name/")
+#'   output_dir = fs::path_temp("path/to/output/")
 #' )
 convert_to_parquet <- function(
   path,
@@ -86,6 +88,7 @@ convert_file_in_chunks <- function(
   year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
   partition_path <- fs::path(
     output_dir,
+    get_register_name(path),
     glue::glue("year={year_partition}")
   )
   fs::dir_create(partition_path, recurse = TRUE)
