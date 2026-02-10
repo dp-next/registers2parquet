@@ -26,5 +26,4 @@ reference:
     These functions are not expected to be used outside the targets pipeline
     created with the template.
 - contents:
-  - get_register_name
   - split_paths_by_register

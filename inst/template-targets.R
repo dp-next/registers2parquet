@@ -1,8 +1,9 @@
 # Targets pipeline template for converting SAS registers to Parquet
 #
-# SETUP:
+# Setup:
+#
 # 1. Run `fastreg::use_targets_template()` to copy this template
-# 2. Set the `input_path` and `output_path` under "Configuration" below
+# 2. Set the `input_dir` and `output_dir` under "Configuration" below
 # 3. Run `targets::tar_make()` to convert registers to Parquet
 #
 # For more information on targets: https://books.ropensci.org/targets/
@@ -13,15 +14,17 @@ library(targets)
 
 config <- list(
   # Path to locate SAS files in.
-  input_path = "/path/to/register/sas/files/directory",
+  input_dir = "/path/to/register/sas/files/directory",
   # Path to output Parquet files in. Parquet files will be located in
   # subdirectories of this path.
-  output_path = "/path/to/output/directory"
+  output_dir = "/path/to/output/directory"
 )
 
 # Validate input path.
-if (!dir.exists(config$input_path)) {
-  stop("Input directory does not exist: ", config$input_path, call. = FALSE)
+if (!dir.exists(config$input_dir)) {
+  cli::cli_abort(
+    message = "Input directory does not exist: {config$input_dir}"
+  )
 }
 
 # Target options ---------------------------------------------------------------
@@ -52,14 +55,14 @@ tar_option_set(
 
 list(
   tar_target(
-    name = all_sas_paths,
-    command = list_sas_files(config$input_path),
+    name = sas_paths,
+    command = list_sas_files(config$input_dir),
     deployment = "main"
   ),
 
   tar_target(
     name = register_path_groups,
-    command = split_paths_by_register(all_sas_paths),
+    command = split_paths_by_register(sas_paths),
     iteration = "list",
     deployment = "main"
   ),
@@ -68,12 +71,8 @@ list(
     name = register_parquets,
     command = convert_to_parquet(
       path = register_path_groups,
-      output_dir = path(
-        config$output_path,
-        get_register_name(register_path_groups)
-      )
+      output_dir = config$output_dir
     ),
-    pattern = map(register_path_groups),
-    format = "file"
+    pattern = map(register_path_groups)
   )
 )

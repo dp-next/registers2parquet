@@ -45,10 +45,8 @@ split_paths_by_register <- function(path) {
 #'
 #' @returns A character scalar with the register name.
 #'
-#' @export
-#' @examples
-#' path <- c("data/bef2020.sas7bdat", "data/bef2021.sas7bdat")
-#' get_register_name(path)
+#' @keyword internal
+#' @noRd
 get_register_name <- function(path) {
   register_name <- unique(get_register_names(path))
 
