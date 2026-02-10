@@ -29,7 +29,7 @@ register, e.g., different years of the same register. The function checks
 that all files belong to the same register by comparing the alphabetic
 characters in the file name(s).
 
-The function looks for a year (the first four consecutive digits) in the file
+The function looks for a year (1900-2099) in the file
 names in \code{path} to use the year as partition, see \code{vignette("design")}
 for more information about the partitioning.
 

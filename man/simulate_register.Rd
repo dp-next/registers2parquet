@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulate.R
 \name{simulate_register}
 \alias{simulate_register}
-\title{Simulate example registers}
+\title{Simulate an example register}
 \usage{
 simulate_register(register, year = "", n = 1000)
 }

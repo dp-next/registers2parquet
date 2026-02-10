@@ -24,15 +24,15 @@ actual_data <- arrow::open_dataset(
 ) |>
   dplyr::as_tibble()
 
-test_that("output is output_dir", {
-  expect_equal(actual_path, output_dir)
-})
-
 # Read expected dataset from SAS files.
 expected_data <- purrr::map(sas_kontakter, \(sas_file) {
   haven::read_sas(sas_file)
 }) |>
   dplyr::bind_rows()
+
+test_that("output is output_dir", {
+  expect_equal(actual_path, output_dir)
+})
 
 test_that("files are partitioned as expected", {
   expected <- fs::path(

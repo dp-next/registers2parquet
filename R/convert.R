@@ -7,7 +7,7 @@
 #' that all files belong to the same register by comparing the alphabetic
 #' characters in the file name(s).
 #'
-#' The function looks for a year (the first four consecutive digits) in the file
+#' The function looks for a year (1900-2099) in the file
 #' names in `path` to use the year as partition, see `vignette("design")`
 #' for more information about the partitioning.
 #'
@@ -72,7 +72,7 @@ convert_to_parquet <- function(
 #' @param path A character scalar with the absolute path to a single SAS file.
 #' @inheritParams convert_to_parquet
 #'
-#' @returns path invisibly.
+#' @returns The input `path` (SAS file path) invisibly.
 #'
 #' @keywords internal
 #' @noRd
@@ -201,9 +201,9 @@ create_arrow_schema <- function(data) {
 
 #' Convert column names to lower case
 #'
-#' @param data A data frame type object.
+#' @param data A data frame.
 #'
-#' @returns The same object type given.
+#' @returns A data frame with column names converted to lower case.
 #'
 #' @keywords internal
 #' @noRd
