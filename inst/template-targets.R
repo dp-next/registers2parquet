@@ -20,8 +20,10 @@ config <- list(
 )
 
 # Validate input path.
-if (!dir.exists(config$input_path)) {
-  stop("Input directory does not exist: ", config$input_path, call. = FALSE)
+if (!dir.exists(config$input_dir)) {
+  cli::cli_abort(
+    message = "Input directory does not exist: {config$input_dir}"
+  )
 }
 
 # Target options ---------------------------------------------------------------
