@@ -76,10 +76,10 @@ expects files to be from the **same register** based on file names.
 ``` r
 kontakter_sas_files <- list_sas_files(kontakter_dir)
 kontakter_sas_files
-#> /tmp/RtmphIwVRG/sas-dir/kontakter/kontakter_1999_1.sas7bdat
-#> /tmp/RtmphIwVRG/sas-dir/kontakter/kontakter_1999_2.sas7bdat
-#> /tmp/RtmphIwVRG/sas-dir/kontakter/kontakter_2020.sas7bdat
-#> /tmp/RtmphIwVRG/sas-dir/kontakter/kontakter.sas7bdat
+#> /tmp/Rtmp5kyqmM/sas-dir/kontakter/kontakter_1999_1.sas7bdat
+#> /tmp/Rtmp5kyqmM/sas-dir/kontakter/kontakter_1999_2.sas7bdat
+#> /tmp/Rtmp5kyqmM/sas-dir/kontakter/kontakter_2020.sas7bdat
+#> /tmp/Rtmp5kyqmM/sas-dir/kontakter/kontakter.sas7bdat
 ```
 
 ``` r
@@ -92,7 +92,7 @@ convert_to_parquet(
 #> ✔ Successfully converted 4 files.
 #> • Input: "kontakter_1999_1.sas7bdat", "kontakter_1999_2.sas7bdat",
 #>   "kontakter_2020.sas7bdat", and "kontakter.sas7bdat"
-#> • Output: Register files in '/tmp/RtmphIwVRG/output-dir/kontakter'
+#> • Output: Register files in '/tmp/Rtmp5kyqmM/output-dir/kontakter'
 ```
 
 The output is partitioned by year, extracted from filenames:
@@ -100,12 +100,12 @@ The output is partitioned by year, extracted from filenames:
     #> output-dir
     #> └── kontakter
     #>     ├── year=1999
-    #>     │   ├── part-09face.parquet
-    #>     │   └── part-7841e8.parquet
+    #>     │   ├── part-12f861.parquet
+    #>     │   └── part-cbec7e.parquet
     #>     ├── year=2020
-    #>     │   └── part-205d74.parquet
+    #>     │   └── part-8467d4.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-eb661e.parquet
+    #>         └── part-abd670.parquet
 
 [`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md)
 reads files in chunks (to be able to handle larger-than-memory data),
@@ -169,7 +169,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = fs::path(pipeline_dir, "_targets.R"))
-#> ✔ Created '/tmp/RtmphIwVRG/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/Rtmp5kyqmM/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -179,14 +179,14 @@ Open `_targets.R` and edit the `config` section:
 
 ``` r
 config <- list(
-  input_path = fs::path_temp("sas-dir"),
-  output_path = fs::path_temp("parquet-registers")
+  input_dir = fs::path_temp("sas-dir"),
+  output_dir = fs::path_temp("parquet-registers")
 )
 ```
 
-- **`input_path`**: directory containing SAS files (searched
+- **`input_dir`**: directory containing SAS files (searched
   recursively).
-- **`output_path`**: directory where Parquet files will be written.
+- **`output_dir`**: directory where Parquet files will be written.
 
 ### Run the pipeline
 
@@ -200,20 +200,18 @@ registers whose source files have changed.
 
     #> parquet-registers
     #> ├── diagnoser
-    #> │   └── diagnoser
-    #> │       ├── year=2020
-    #> │       │   └── part-b2858b.parquet
-    #> │       └── year=2021
-    #> │           └── part-9ccecf.parquet
+    #> │   ├── year=2020
+    #> │   │   └── part-cb82c2.parquet
+    #> │   └── year=2021
+    #> │       └── part-bd046a.parquet
     #> └── kontakter
-    #>     └── kontakter
-    #>         ├── year=1999
-    #>         │   ├── part-02c504.parquet
-    #>         │   └── part-5848d0.parquet
-    #>         ├── year=2020
-    #>         │   └── part-8a0b40.parquet
-    #>         └── year=__HIVE_DEFAULT_PARTITION__
-    #>             └── part-29594b.parquet
+    #>     ├── year=1999
+    #>     │   ├── part-6684b3.parquet
+    #>     │   └── part-7c00b4.parquet
+    #>     ├── year=2020
+    #>     │   └── part-1735a5.parquet
+    #>     └── year=__HIVE_DEFAULT_PARTITION__
+    #>         └── part-4042a0.parquet
 
 ## Reading a Parquet register
 
@@ -228,16 +226,16 @@ register
 #> # Database: DuckDB 1.4.4 [unknown@Linux 6.11.0-1018-azure:R 4.5.2/:memory:]
 #>    cpr          dw_ek_kontakt     dato_start hovedspeciale_ans source_file  year
 #>    <chr>        <chr>             <chr>      <chr>             <chr>       <int>
-#>  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/Rtmph…  1999
-#>  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/Rtmph…  1999
-#>  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/Rtmph…  1999
-#>  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/Rtmph…  1999
-#>  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/Rtmph…  1999
-#>  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/Rtmph…  1999
-#>  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/Rtmph…  1999
-#>  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/Rtmph…  1999
-#>  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/Rtmph…  1999
-#> 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/Rtmph…  1999
+#>  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/Rtmp5…  1999
+#>  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/Rtmp5…  1999
+#>  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/Rtmp5…  1999
+#>  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/Rtmp5…  1999
+#>  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/Rtmp5…  1999
+#>  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/Rtmp5…  1999
+#>  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/Rtmp5…  1999
+#>  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/Rtmp5…  1999
+#>  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/Rtmp5…  1999
+#> 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/Rtmp5…  1999
 #> # ℹ more rows
 ```
 

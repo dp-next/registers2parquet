@@ -26,7 +26,5 @@
 These functions are not expected to be used outside the targets pipeline
 created with the template.
 
-- [`get_register_name()`](https://dp-next.github.io/fastreg/reference/get_register_name.md)
-  : Get register name from a group of file paths
 - [`split_paths_by_register()`](https://dp-next.github.io/fastreg/reference/split_paths_by_register.md)
   : Group file paths by register name

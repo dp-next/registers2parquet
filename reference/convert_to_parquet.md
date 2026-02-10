@@ -63,5 +63,5 @@ convert_to_parquet(
 )
 #> ✔ Successfully converted 1 file.
 #> • Input: "test.sas7bdat"
-#> • Output: Register files in /tmp/RtmprhNm6Q/path/to/output/test
+#> • Output: Register files in /tmp/RtmpuQ8DKX/path/to/output/test
 ```
