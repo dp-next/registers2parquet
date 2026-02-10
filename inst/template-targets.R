@@ -68,10 +68,7 @@ list(
     name = register_parquets,
     command = convert_to_parquet(
       path = register_path_groups,
-      output_dir = path(
-        config$output_path,
-        get_register_name(register_path_groups)
-      )
+      output_dir = config$output_dir
     ),
     pattern = map(register_path_groups),
     format = "file"
