@@ -11,3 +11,6 @@ _ignore
 _freeze
 *_freeze
 docs
+
+/.quarto/
+**/*.quarto_ipynb
