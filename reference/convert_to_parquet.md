@@ -2,7 +2,9 @@
 
 This function reads one or more SAS files for a given register, and
 saves the data in Parquet format. It expects the input SAS files to come
-from the same register, e.g., different years of the same register.
+from the same register, e.g., different years of the same register. The
+function checks that all files belong to the same register by comparing
+the alphabetic characters in the file name(s).
 
 The function looks for a year (1900-2099) in the file names in `path` to
 use the year as partition, see
@@ -37,8 +39,8 @@ convert_to_parquet(path, output_dir, chunk_size = 10000000L)
 - output_dir:
 
   A character scalar with the path to the directory to save the output
-  Parquet file to. Should include the register name as the last part of
-  the path. E.g., `path/to/register_name/`.
+  Parquet file to. Should not include the register name as this will be
+  extracted from path.
 
 - chunk_size:
 
@@ -57,7 +59,7 @@ Returns a character scalar with the path to the created Parquet file(s)
 sas_file_directory <- fs::path_package("fastreg", "extdata")
 convert_to_parquet(
   path = list_sas_files(sas_file_directory),
-  output_dir = fs::path_temp("path/to/register_name/")
+  output_dir = fs::path_temp("path/to/output/")
 )
-#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/RtmpqIFsMw/path/to/register_name.
+#> ✔ Successfully converted "test.sas7bdat" and saved it in /tmp/Rtmp5qspXi/path/to/output.
 ```
