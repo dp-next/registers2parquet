@@ -179,14 +179,14 @@ Open `_targets.R` and edit the `config` section:
 
 ```{r config}
 config <- list(
-  input_path = fs::path_temp("sas-dir"),
-  output_path = fs::path_temp("parquet-registers")
+  input_dir = fs::path_temp("sas-dir"),
+  output_dir = fs::path_temp("parquet-registers")
 )
 ```
 
--   **`input_path`**: directory containing SAS files (searched
+-   **`input_dir`**: directory containing SAS files (searched
     recursively).
--   **`output_path`**: directory where Parquet files will be written.
+-   **`output_dir`**: directory where Parquet files will be written.
 
 ### Run the pipeline
 
@@ -199,8 +199,8 @@ targets::tar_make()
 #| echo: false
 template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
 modified_content <- template_content |>
-  stringr::str_replace("/path/to/register/sas/files/directory", config$input_path) |>
-  stringr::str_replace("/path/to/output/directory",config$output_path)
+  stringr::str_replace("/path/to/register/sas/files/directory", config$input_dir) |>
+  stringr::str_replace("/path/to/output/directory",config$output_dir)
 
 withr::with_dir(pipeline_dir, {
   writeLines(modified_content, "_targets.R")
@@ -214,8 +214,8 @@ registers whose source files have changed.
 
 ```{r output-pipeline}
 #| echo: false
-withr::with_dir(fs::path_dir(config$output_path), {
-  fs::dir_tree(fs::path_file(config$output_path))
+withr::with_dir(fs::path_dir(config$output_dir), {
+  fs::dir_tree(fs::path_file(config$output_dir))
 })
 ```
 
