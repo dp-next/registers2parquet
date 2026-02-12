@@ -76,10 +76,10 @@ expects files to be from the **same register** based on file names.
 ``` r
 kontakter_sas_files <- list_sas_files(kontakter_dir)
 kontakter_sas_files
-#> /tmp/Rtmp5F3dhT/sas-dir/kontakter/kontakter_1999_1.sas7bdat
-#> /tmp/Rtmp5F3dhT/sas-dir/kontakter/kontakter_1999_2.sas7bdat
-#> /tmp/Rtmp5F3dhT/sas-dir/kontakter/kontakter_2020.sas7bdat
-#> /tmp/Rtmp5F3dhT/sas-dir/kontakter/kontakter.sas7bdat
+#> /tmp/RtmpG3ZSG8/sas-dir/kontakter/kontakter_1999_1.sas7bdat
+#> /tmp/RtmpG3ZSG8/sas-dir/kontakter/kontakter_1999_2.sas7bdat
+#> /tmp/RtmpG3ZSG8/sas-dir/kontakter/kontakter_2020.sas7bdat
+#> /tmp/RtmpG3ZSG8/sas-dir/kontakter/kontakter.sas7bdat
 ```
 
 ``` r
@@ -92,7 +92,7 @@ convert_to_parquet(
 #> ✔ Successfully converted 4 files.
 #> • Input: "kontakter_1999_1.sas7bdat", "kontakter_1999_2.sas7bdat",
 #>   "kontakter_2020.sas7bdat", and "kontakter.sas7bdat"
-#> • Output: Register files in '/tmp/Rtmp5F3dhT/output-dir/kontakter'
+#> • Output: Register files in '/tmp/RtmpG3ZSG8/output-dir/kontakter'
 ```
 
 The output is partitioned by year, extracted from filenames:
@@ -100,12 +100,12 @@ The output is partitioned by year, extracted from filenames:
     #> output-dir
     #> └── kontakter
     #>     ├── year=1999
-    #>     │   ├── part-199729.parquet
-    #>     │   └── part-27463d.parquet
+    #>     │   ├── part-0a2f56.parquet
+    #>     │   └── part-7da131.parquet
     #>     ├── year=2020
-    #>     │   └── part-9c1b26.parquet
+    #>     │   └── part-de87db.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-9092da.parquet
+    #>         └── part-d5a4cb.parquet
 
 [`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md)
 reads files in chunks (to be able to handle larger-than-memory data),
@@ -169,7 +169,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = fs::path(pipeline_dir, "_targets.R"))
-#> ✔ Created '/tmp/Rtmp5F3dhT/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpG3ZSG8/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -201,17 +201,17 @@ registers whose source files have changed.
     #> parquet-registers
     #> ├── diagnoser
     #> │   ├── year=2020
-    #> │   │   └── part-5f375b.parquet
+    #> │   │   └── part-21c2d9.parquet
     #> │   └── year=2021
-    #> │       └── part-c2a81a.parquet
+    #> │       └── part-b22dd1.parquet
     #> └── kontakter
     #>     ├── year=1999
-    #>     │   ├── part-8ffdff.parquet
-    #>     │   └── part-e9af5f.parquet
+    #>     │   ├── part-144d95.parquet
+    #>     │   └── part-ec6eee.parquet
     #>     ├── year=2020
-    #>     │   └── part-20e043.parquet
+    #>     │   └── part-dd000a.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-9c952c.parquet
+    #>         └── part-6e5cb8.parquet
 
 ## Reading a Parquet register
 
@@ -226,16 +226,16 @@ register
 #> # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]
 #>    cpr          dw_ek_kontakt     dato_start hovedspeciale_ans source_file  year
 #>    <chr>        <chr>             <chr>      <chr>             <chr>       <int>
-#>  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/Rtmp5…  1999
-#>  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/Rtmp5…  1999
-#>  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/Rtmp5…  1999
-#>  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/Rtmp5…  1999
-#>  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/Rtmp5…  1999
-#>  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/Rtmp5…  1999
-#>  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/Rtmp5…  1999
-#>  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/Rtmp5…  1999
-#>  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/Rtmp5…  1999
-#> 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/Rtmp5…  1999
+#>  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/RtmpG…  1999
+#>  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/RtmpG…  1999
+#>  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/RtmpG…  1999
+#>  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/RtmpG…  1999
+#>  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/RtmpG…  1999
+#>  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/RtmpG…  1999
+#>  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/RtmpG…  1999
+#>  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/RtmpG…  1999
+#>  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/RtmpG…  1999
+#> 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/RtmpG…  1999
 #> # ℹ more rows
 ```
 
