@@ -45,7 +45,7 @@ split_paths_by_register <- function(path) {
 #'
 #' @returns A character scalar with the register name.
 #'
-#' @keyword internal
+#' @keywords internal
 #' @noRd
 get_register_name <- function(path) {
   register_name <- unique(get_register_names(path))
