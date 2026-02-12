@@ -83,7 +83,6 @@ convert_file_in_chunks <- function(
   output_dir,
   chunk_size = 10000000L
 ) {
-
   # Prepare variables used in repeat below.
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
@@ -117,6 +116,9 @@ convert_file_in_chunks <- function(
       column_names_to_lower() |>
       dplyr::mutate(source_file = as.character(path))
   }
+
+  invisible(path)
+}
 
 #' Create partition path
 #'
