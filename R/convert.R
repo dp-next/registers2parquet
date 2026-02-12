@@ -122,6 +122,7 @@ convert_file_in_chunks <- function(
     part <- create_part_uuid()
 
     chunk <- read_sas_chunk(path, skip, chunk_size)
+  }
 
   invisible(path)
 }
