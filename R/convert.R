@@ -83,19 +83,8 @@ convert_file_in_chunks <- function(
   output_dir,
   chunk_size = 10000000L
 ) {
-  # Create partition path, if it doesn't exist.
-  year <- get_year_from_filename(path)
-  # Following the default `null_fallback` in arrow::hive_partition()
-  # https://arrow.apache.org/docs/r/reference/hive_partition.html#arg-null-fallback.
-  year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
-  partition_path <- fs::path(
-    output_dir,
-    get_register_name(path),
-    glue::glue("year={year_partition}")
-  )
-  fs::dir_create(partition_path, recurse = TRUE)
-
   # Prepare variables used in repeat below.
+  partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
   skip <- 0L
 
@@ -140,6 +129,30 @@ read_sas_chunk <- function(path, skip, chunk_size) {
   haven::read_sas(path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
     dplyr::mutate(source_file = as.character(path))
+
+#' Create partition path
+#'
+#' Gets the year and register name from the file name in `path` and creates
+#' a partition path `{output_dir}/{register_name}/year={year}/`.
+#'
+#' @inheritParams convert_to_parquet
+#'
+#' @returns The partition path.
+#'
+#' @keywords internal
+#' @noRd
+create_partition_path <- function(path, output_dir) {
+  year <- get_year_from_filename(path)
+  # Following the default `null_fallback` in arrow::hive_partition()
+  # https://arrow.apache.org/docs/r/reference/hive_partition.html#arg-null-fallback.
+  year_partition <- if (is.na(year)) "__HIVE_DEFAULT_PARTITION__" else year
+  partition_path <- fs::path(
+    output_dir,
+    get_register_name(path),
+    glue::glue("year={year_partition}")
+  )
+  fs::dir_create(partition_path, recurse = TRUE)
+  partition_path
 }
 
 #' Get year from file name
