@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.6 (2026-02-12)
+
+### Refactor
+
+- :recycle: add internal `read_sas_chunk()` (#171)
+
 ## 0.8.5 (2026-02-12)
 
 ### Refactor
