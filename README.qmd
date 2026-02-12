@@ -66,21 +66,25 @@ pak::pak("dp-next/fastreg")
 ```{r, eval = FALSE}
 library(fastreg)
 
-# Convert SAS files to Parquet
-convert_to_parquet(
+# Convert single SAS file to Parquet
+convert_file(
+  path = "path/to/file.sas7bdat",
+  output_dir = "path/to/output_dir/")
+
+# Convert SAS files from same register to Parquet
+convert_register(
   path = list_sas_files("path/to/sas_register/"),
-  output_dir = "path/to/parquet_register/"
+  output_dir = "path/to/output_dir/"
 )
+
+# Use targets template to convert multiple registers in parallel
+use_targets_template()
 
 # Read Parquet register (as DuckDB table)
 read_register("path/to/parquet_register/")
 
-# Use targets template
-use_targets_template()
-
 # List files
 list_sas_files("path/to/directory/with/sas_files")
-list_parquet_files("path/to/directory/with/parquet_files")
 ```
 
 See `vignette("fastreg")` for a complete guide.
