@@ -129,6 +129,7 @@ read_sas_chunk <- function(path, skip, chunk_size) {
   haven::read_sas(path, skip = skip, n_max = chunk_size) |>
     column_names_to_lower() |>
     dplyr::mutate(source_file = as.character(path))
+}
 
 #' Create partition path
 #'
