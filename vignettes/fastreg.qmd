@@ -110,7 +110,7 @@ convert_register(
 )
 ```
 
-As with `convert_file()`, the output is partitioned by year, extracted from 
+As with `convert_file()`, the output is partitioned by year, extracted from
 file names:
 
 ```{r output-tree}
