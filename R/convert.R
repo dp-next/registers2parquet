@@ -12,14 +12,18 @@
 #' for more information about the partitioning.
 #'
 #' If a year is found, the data is saved as a partition by year in the output
-#' directory, e.g., `output_dir/year=2020/part-ad5b.parquet` (the ending being
-#' a UUID). If no year is found in the file name, the data is saved in a
+#' directory, e.g., `output_dir/register_name/year=2020/part-ad5b.parquet`
+#' (the ending being a UUID). If no year is found in the file name, the data
+#' is saved in a
 #' `year=__HIVE_DEFAULT_PARTITION__` partition, which is the standard Hive
 #' convention for missing partition values.
 #'
+#' Two columns are added to the output: `source_file` (the original SAS file
+#' path) and `year` (extracted from the file name, used as partition key).
+#'
 #' Because this function only converts one file at a time (in chunks) to be
-#' able to handle larger-than-memory SAS files, duplicate rows across files are
-#' not deduplicated.
+#' able to handle larger-than-memory SAS files, using `convert_file()`,
+#' duplicate rows across files are not deduplicated.
 #'
 #' @param path A character vector of one or more paths to SAS file(s) for one
 #'    register. See [list_sas_files()], which is a helper for this parameter.
@@ -36,27 +40,30 @@
 #' @export
 #' @examples
 #' sas_file_directory <- fs::path_package("fastreg", "extdata")
-#' convert_to_parquet(
+#' convert_register(
 #'   path = list_sas_files(sas_file_directory),
-#'   output_dir = fs::path_temp("path/to/output/")
+#'   output_dir = fs::path_temp("path/to/output/register/")
 #' )
-convert_to_parquet <- function(
+convert_register <- function(
   path,
   output_dir,
   chunk_size = 10000000L
 ) {
-  # Initial checks.
-  checkmate::assert_character(path)
-  checkmate::assert_file_exists(path)
-  checkmate::assert_true(is_same_register(path))
-  checkmate::assert_character(output_dir)
-  checkmate::assert_scalar(output_dir)
-  checkmate::assert_int(chunk_size, lower = 10000L)
+  # Check that register dir is empty (if exist) to avoid duplicating data
+  # since parts are named with UUIDs.
+  # Get register name checks that only one register is in `path`.
+  register_dir <- fs::path(output_dir, get_register_name(path))
+  if (fs::dir_exists(register_dir) && length(fs::dir_ls(register_dir)) > 0) {
+    cli::cli_abort(c(
+      "Output directory is not empty: {.path {register_dir}}",
+      "i" = "Delete the directory manually before re-running."
+    ))
+  }
 
   # Convert files.
   purrr::walk(
     path,
-    \(p) convert_file_in_chunks(p, output_dir, chunk_size)
+    \(p) convert_file(p, output_dir, chunk_size)
   )
 
   # Success message.
@@ -69,20 +76,37 @@ convert_to_parquet <- function(
   invisible(output_dir)
 }
 
-#' Convert a single register SAS file to Parquet in chunks
+#' Convert a single register SAS file to Parquet
 #'
-#' @param path A character scalar with the absolute path to a single SAS file.
-#' @inheritParams convert_to_parquet
+#' To be able to handle larger-than-memory files, the SAS file is converted in
+#' chunks. It does not check for existing files in the output directory.
+#' Existing data will not be overwritten, but might be duplicated if it already
+#' exists in the directory, since files are saved with UUIDs in their names.
 #'
-#' @returns The input `path` (SAS file path) invisibly.
+#' @param path A character scalar with the path to a single SAS file.
+#' @inheritParams convert_register
 #'
-#' @keywords internal
-#' @noRd
-convert_file_in_chunks <- function(
+#' @returns The `output_dir` invisibly.
+#'
+#' @export
+#' @examples
+#' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+#' convert_file(
+#'   path = sas_file,
+#'   output_dir = fs::path_temp("path/to/output/file")
+#' )
+convert_file <- function(
   path,
   output_dir,
   chunk_size = 10000000L
 ) {
+  # Initial checks.
+  checkmate::assert_character(path)
+  checkmate::assert_file_exists(path)
+  checkmate::assert_character(output_dir)
+  checkmate::assert_scalar(output_dir)
+  checkmate::assert_int(chunk_size, lower = 10000L)
+
   # Prepare variables used in repeat below.
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
@@ -113,13 +137,15 @@ convert_file_in_chunks <- function(
     chunk <- read_sas_chunk(path, skip, chunk_size)
   }
 
-  invisible(path)
+  cli::cli_alert_success("Converted {.path {fs::path_file(path)}}")
+
+  invisible(output_dir)
 }
 
 #' Read SAS chunk
 #'
 #' @param skip N rows to skip when reading.
-#' @inheritParams convert_to_parquet
+#' @inheritParams convert_file
 #'
 #' @returns A tibble with the SAS chunk.
 #'
@@ -136,7 +162,7 @@ read_sas_chunk <- function(path, skip, chunk_size) {
 #' Gets the year and register name from the file name in `path` and creates
 #' a partition path `{output_dir}/{register_name}/year={year}/`.
 #'
-#' @inheritParams convert_to_parquet
+#' @inheritParams convert_file
 #'
 #' @returns The partition path.
 #'

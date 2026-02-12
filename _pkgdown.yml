@@ -13,7 +13,7 @@ navbar:
 reference:
 - title: Main functions
 - contents:
-  - convert_to_parquet
+  - starts_with("convert")
   - read_register
 - title: Helper functions
 - contents:
