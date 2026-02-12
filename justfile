@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: clean install-deps document update-wordlist spell-check style test build-website build-readme check install-package
+run-all: clean document update-wordlist spell-check style test build-website build-readme check install-package
 
 # Clean up auto-generated files
 clean:
@@ -52,7 +52,7 @@ style:
 # Build the pkgdown website
 build-website:
   #!/usr/bin/env Rscript
-  pkgdown::build_site()
+  pkgdown::build_site(quiet = FALSE)
 
 # Re-build the README file from the Quarto version
 build-readme:
