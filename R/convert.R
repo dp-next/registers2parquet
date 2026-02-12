@@ -89,9 +89,7 @@ convert_file_in_chunks <- function(
   skip <- 0L
 
   # Read first chunk to establish schema.
-  chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
-    column_names_to_lower() |>
-    dplyr::mutate(source_file = as.character(path))
+  chunk <- read_sas_chunk(path, skip, chunk_size)
   schema <- create_arrow_schema(chunk)
 
   repeat {
@@ -112,12 +110,25 @@ convert_file_in_chunks <- function(
     skip <- skip + nrow(chunk)
     part <- create_part_uuid()
 
-    chunk <- haven::read_sas(path, skip = skip, n_max = chunk_size) |>
-      column_names_to_lower() |>
-      dplyr::mutate(source_file = as.character(path))
+    chunk <- read_sas_chunk(path, skip, chunk_size)
   }
 
   invisible(path)
+}
+
+#' Read SAS chunk
+#'
+#' @param skip N rows to skip when reading.
+#' @inheritParams convert_to_parquet
+#'
+#' @returns A tibble with the SAS chunk.
+#'
+#' @keywords internal
+#' @noRd
+read_sas_chunk <- function(path, skip, chunk_size) {
+  haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+    column_names_to_lower() |>
+    dplyr::mutate(source_file = as.character(path))
 }
 
 #' Create partition path
