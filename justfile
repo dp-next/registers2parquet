@@ -52,7 +52,7 @@ style:
 # Build the pkgdown website
 build-website:
   #!/usr/bin/env Rscript
-  pkgdown::build_site()
+  pkgdown::build_site(quiet = FALSE)
 
 # Re-build the README file from the Quarto version
 build-readme:
