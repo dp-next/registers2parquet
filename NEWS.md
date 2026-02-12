@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.5 (2026-02-12)
+
+### Refactor
+
+- :recycle: add internal `create_partition_path()` (#170)
+
 ## 0.8.4 (2026-02-10)
 
 ### Refactor
