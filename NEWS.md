@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.12 (2026-02-13)
+
+### Refactor
+
+- :coffin: remove `is_same_register()` (#187)
+
 ## 0.8.11 (2026-02-13)
 
 ### Refactor
