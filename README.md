@@ -66,7 +66,8 @@ library(fastreg)
 # Convert single SAS file to Parquet
 convert_file(
   path = "path/to/file.sas7bdat",
-  output_dir = "path/to/output_dir/")
+  output_dir = "path/to/output_dir/"
+)
 
 # Convert SAS files from same register to Parquet
 convert_register(

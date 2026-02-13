@@ -22,7 +22,7 @@
 #' path) and `year` (extracted from the file name, used as partition key).
 #'
 #' Because this function only converts one file at a time (in chunks) to be
-#' able to handle larger-than-memory SAS files, using `convert_file()`,
+#' able to handle larger-than-memory SAS files, when using `convert_file()`
 #' duplicate rows across files are not deduplicated.
 #'
 #' @param path A character vector of one or more paths to SAS file(s) for one
