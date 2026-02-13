@@ -19,5 +19,5 @@ The path to the created file, invisibly.
 Copies a \verb{_targets.R} template to the given directory.
 }
 \examples{
-use_targets_template(path = fs::path_temp("_targets.R"))
+use_targets_template(path = fs::path_temp(""))
 }
