@@ -9,6 +9,8 @@
 #' @returns The path to the created file, invisibly.
 #'
 #' @export
+#' @examples
+#' use_targets_template(path = fs::path_temp(""))
 use_targets_template <- function(
   path = ".",
   open = rlang::is_interactive()

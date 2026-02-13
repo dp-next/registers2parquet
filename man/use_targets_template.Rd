@@ -18,3 +18,6 @@ The path to the created file, invisibly.
 \description{
 Copies a \verb{_targets.R} template to the given directory.
 }
+\examples{
+use_targets_template(path = fs::path_temp(""))
+}
