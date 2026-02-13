@@ -43,7 +43,7 @@ duplicate rows across files are not deduplicated.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,26 +106,22 @@ duplicate rows across files are not deduplicated.</p>
 
 
 <dl><dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
-<dd><p>A character vector of one or more paths to SAS file(s) for one
-register. See <code><a href="list_sas_files.html">list_sas_files()</a></code>, which is a helper for this parameter.</p></dd>
+<dd><p>Paths to SAS files for one register. See <code><a href="list_sas_files.html">list_sas_files()</a></code>.</p></dd>
 
 
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
-<dd><p>A character scalar with the path to the directory to save
-the output Parquet file to. Should not include the register name as this
-will be extracted from <code>path</code>.</p></dd>
+<dd><p>Directory to save the Parquet output to. Must not include
+the register name as this will be extracted from <code>path</code> to create the
+register folder.</p></dd>
 
 
 <dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>
-<dd><p>An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 10,000,000.</p></dd>
+<dd><p>Number of rows to read at a time.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a character scalar with the path to the created Parquet
-file(s) (<code>output_dir</code>) invisibly, so it can be used in a
-<a href="https://books.ropensci.org/targets/" class="external-link">targets</a> pipeline.</p>
+    <p>The <code>output_dir</code>, invisibly.</p>
     </div>
 
     <div class="section level2">
@@ -138,7 +134,7 @@ file(s) (<code>output_dir</code>) invisibly, so it can be used in a
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Converted <span style="color: #0000BB;">test.sas7bdat</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully converted 1 file.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Input: <span style="color: #0000BB;">"test.sas7bdat"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Output: Register files in <span style="color: #0000BB;">/tmp/RtmpNO0oVE/path/to/output/register/test</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Output: Register files in <span style="color: #0000BB;">/tmp/RtmpD9B7SY/path/to/output/register/test</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

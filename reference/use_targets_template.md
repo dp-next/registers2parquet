@@ -16,9 +16,8 @@ use_targets_template(path = "_targets.R", open = rlang::is_interactive())
 
 - open:
 
-  Whether to open the file for editing. Defaults to `TRUE` in
-  interactive sessions.
+  Whether to open the file for editing.
 
 ## Value
 
-The path to the created file (invisibly).
+The `path`, invisibly.

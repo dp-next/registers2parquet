@@ -14,11 +14,11 @@ list_parquet_files(path)
 
 - path:
 
-  A character scalar with the path to the directory to search.
+  Directory to search.
 
 ## Value
 
-A character vector of paths to the Parquet files found.
+The path(s) to the found SAS files.
 
 ## Examples
 

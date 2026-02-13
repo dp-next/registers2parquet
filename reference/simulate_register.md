@@ -14,22 +14,21 @@ simulate_register(register, year = "", n = 1000)
 
 - register:
 
-  Name of the register. Has to be a register accepted by
-  osdc::simulate_registers().
+  Name of the register. Must be accepted by
+  [`osdc::simulate_registers()`](https://steno-aarhus.github.io/osdc/reference/simulate_registers.html).
 
 - year:
 
-  A character vector of year suffixes appended to the register name to
-  form the list element names (e.g., `"2020"`, `"1999_1"`, or `""` for
-  no suffix).
+  Year suffixes for list element names (e.g., `"2020"`, `"1999_1"`, or
+  `""` for no suffix).
 
 - n:
 
-  Number of rows to simulate per year.
+  Number of rows per year.
 
 ## Value
 
-A named list of tibble(s) with names in the format `{register}_{year}`.
+A named list of tibbles with in the naming scheme `{register}_{year}`.
 
 ## Examples
 

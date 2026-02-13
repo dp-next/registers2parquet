@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,7 +136,7 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-e61879.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-e62d96.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-single-register">Converting a single register<a class="anchor" aria-label="anchor" href="#converting-a-single-register"></a>
 </h2>
@@ -145,10 +145,10 @@
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kontakter_sas_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">kontakter_dir</span><span class="op">)</span></span>
 <span><span class="va">kontakter_sas_files</span></span>
-<span><span class="co">#&gt; /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_1999_2.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_2020.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter.sas7bdat</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_1999_2.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_2020.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter.sas7bdat</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
@@ -165,19 +165,19 @@
 <span><span class="co">#&gt; ✔ Successfully converted 4 files.</span></span>
 <span><span class="co">#&gt; • Input: "kontakter_1999_1.sas7bdat", "kontakter_1999_2.sas7bdat",</span></span>
 <span><span class="co">#&gt;   "kontakter_2020.sas7bdat", and "kontakter.sas7bdat"</span></span>
-<span><span class="co">#&gt; • Output: Register files in '/tmp/RtmpvVspxe/output-register-dir/kontakter'</span></span></code></pre></div>
+<span><span class="co">#&gt; • Output: Register files in '/tmp/RtmpvBjipP/output-register-dir/kontakter'</span></span></code></pre></div>
 </div>
 <p>As with <code><a href="../reference/convert_file.html">convert_file()</a></code>, the output is partitioned by year, extracted from file names:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-register-dir</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-315bc1.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-56114e.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-270495.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-f42812.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-49f75d.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-935c13.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-fc81c2.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-42a5d0.parquet</span></span></code></pre>
 </div>
 <p><code><a href="../reference/convert_register.html">convert_register()</a></code> reads files in chunks (to be able to handle larger-than-memory data), extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details.</p>
 <!-- TODO: Maybe this isn't needed? It does cover one scenario that isn't covered above; larger than chunk size files -->
@@ -231,7 +231,7 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">pipeline_dir</span>, <span class="st">"_targets.R"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/RtmpvVspxe/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpvBjipP/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 </section><section class="level3"><h3 id="set-input-and-output-paths">Set input and output paths<a class="anchor" aria-label="anchor" href="#set-input-and-output-paths"></a>
@@ -260,17 +260,17 @@
 <pre><code><span><span class="co">#&gt; parquet-registers</span></span>
 <span><span class="co">#&gt; ├── diagnoser</span></span>
 <span><span class="co">#&gt; │   ├── year=2020</span></span>
-<span><span class="co">#&gt; │   │   └── part-9f7ec8.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-6ebc15.parquet</span></span>
 <span><span class="co">#&gt; │   └── year=2021</span></span>
-<span><span class="co">#&gt; │       └── part-561dc2.parquet</span></span>
+<span><span class="co">#&gt; │       └── part-d4c001.parquet</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-325221.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-7586ec.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-98dd5a.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-c0c555.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-cedea5.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-f170cb.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-eea26f.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-6da4ff.parquet</span></span></code></pre>
 </div>
 </section></section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
 </h2>

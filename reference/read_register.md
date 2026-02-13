@@ -15,11 +15,11 @@ read_register(path)
 
 - path:
 
-  A character scalar with the path to the Parquet register.
+  Path to a Parquet file or directory.
 
 ## Value
 
-The register as a DuckDB table.
+A DuckDB table.
 
 ## Examples
 

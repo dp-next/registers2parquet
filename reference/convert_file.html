@@ -13,7 +13,7 @@ exists in the directory, since files are saved with UUIDs in their names."></hea
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,23 +61,22 @@ exists in the directory, since files are saved with UUIDs in their names.</p>
 
 
 <dl><dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
-<dd><p>A character scalar with the path to a single SAS file.</p></dd>
+<dd><p>Path to a single SAS file.</p></dd>
 
 
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
-<dd><p>A character scalar with the path to the directory to save
-the output Parquet file to. Should not include the register name as this
-will be extracted from <code>path</code>.</p></dd>
+<dd><p>Directory to save the Parquet output to. Must not include
+the register name as this will be extracted from <code>path</code> to create the
+register folder.</p></dd>
 
 
 <dt id="arg-chunk-size">chunk_size<a class="anchor" aria-label="anchor" href="#arg-chunk-size"></a></dt>
-<dd><p>An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 10,000,000.</p></dd>
+<dd><p>Number of rows to read at a time.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The <code>output_dir</code> invisibly.</p>
+    <p>The <code>output_dir</code>, invisibly.</p>
     </div>
 
     <div class="section level2">

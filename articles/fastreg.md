@@ -81,7 +81,7 @@ by year extracted from the file name:
     #> output-file-dir
     #> └── kontakter
     #>     └── year=2020
-    #>         └── part-e61879.parquet
+    #>         └── part-e62d96.parquet
 
 ## Converting a single register
 
@@ -96,10 +96,10 @@ expects files to be from the **same register** based on file names.
 ``` r
 kontakter_sas_files <- list_sas_files(kontakter_dir)
 kontakter_sas_files
-#> /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_1999_1.sas7bdat
-#> /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_1999_2.sas7bdat
-#> /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter_2020.sas7bdat
-#> /tmp/RtmpvVspxe/sas-dir/kontakter/kontakter.sas7bdat
+#> /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_1999_1.sas7bdat
+#> /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_1999_2.sas7bdat
+#> /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter_2020.sas7bdat
+#> /tmp/RtmpvBjipP/sas-dir/kontakter/kontakter.sas7bdat
 ```
 
 ``` r
@@ -116,7 +116,7 @@ convert_register(
 #> ✔ Successfully converted 4 files.
 #> • Input: "kontakter_1999_1.sas7bdat", "kontakter_1999_2.sas7bdat",
 #>   "kontakter_2020.sas7bdat", and "kontakter.sas7bdat"
-#> • Output: Register files in '/tmp/RtmpvVspxe/output-register-dir/kontakter'
+#> • Output: Register files in '/tmp/RtmpvBjipP/output-register-dir/kontakter'
 ```
 
 As with
@@ -126,12 +126,12 @@ the output is partitioned by year, extracted from file names:
     #> output-register-dir
     #> └── kontakter
     #>     ├── year=1999
-    #>     │   ├── part-315bc1.parquet
-    #>     │   └── part-56114e.parquet
+    #>     │   ├── part-270495.parquet
+    #>     │   └── part-f42812.parquet
     #>     ├── year=2020
-    #>     │   └── part-49f75d.parquet
+    #>     │   └── part-935c13.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-fc81c2.parquet
+    #>         └── part-42a5d0.parquet
 
 [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
 reads files in chunks (to be able to handle larger-than-memory data),
@@ -195,7 +195,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = fs::path(pipeline_dir, "_targets.R"))
-#> ✔ Created '/tmp/RtmpvVspxe/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpvBjipP/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -227,17 +227,17 @@ registers whose source files have changed.
     #> parquet-registers
     #> ├── diagnoser
     #> │   ├── year=2020
-    #> │   │   └── part-9f7ec8.parquet
+    #> │   │   └── part-6ebc15.parquet
     #> │   └── year=2021
-    #> │       └── part-561dc2.parquet
+    #> │       └── part-d4c001.parquet
     #> └── kontakter
     #>     ├── year=1999
-    #>     │   ├── part-325221.parquet
-    #>     │   └── part-7586ec.parquet
+    #>     │   ├── part-98dd5a.parquet
+    #>     │   └── part-c0c555.parquet
     #>     ├── year=2020
-    #>     │   └── part-cedea5.parquet
+    #>     │   └── part-f170cb.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-eea26f.parquet
+    #>         └── part-6da4ff.parquet
 
 ## Reading a Parquet register
 

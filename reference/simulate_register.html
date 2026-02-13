@@ -9,7 +9,7 @@ in vignettes and tests."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,23 +55,22 @@ in vignettes and tests.</p>
 
 
 <dl><dt id="arg-register">register<a class="anchor" aria-label="anchor" href="#arg-register"></a></dt>
-<dd><p>Name of the register. Has to be a register accepted by
-osdc::simulate_registers().</p></dd>
+<dd><p>Name of the register. Must be accepted by
+<code><a href="https://steno-aarhus.github.io/osdc/reference/simulate_registers.html" class="external-link">osdc::simulate_registers()</a></code>.</p></dd>
 
 
 <dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
-<dd><p>A character vector of year suffixes appended to the register
-name to form the list element names (e.g., <code>"2020"</code>, <code>"1999_1"</code>, or
-<code>""</code> for no suffix).</p></dd>
+<dd><p>Year suffixes for list element names (e.g., <code>"2020"</code>,
+<code>"1999_1"</code>, or <code>""</code> for no suffix).</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>Number of rows to simulate per year.</p></dd>
+<dd><p>Number of rows per year.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named list of tibble(s) with names in the format
+    <p>A named list of tibbles with in the naming scheme
 <code>{register}_{year}</code>.</p>
     </div>
 

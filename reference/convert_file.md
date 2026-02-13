@@ -16,22 +16,21 @@ convert_file(path, output_dir, chunk_size = 10000000L)
 
 - path:
 
-  A character scalar with the path to a single SAS file.
+  Path to a single SAS file.
 
 - output_dir:
 
-  A character scalar with the path to the directory to save the output
-  Parquet file to. Should not include the register name as this will be
-  extracted from `path`.
+  Directory to save the Parquet output to. Must not include the register
+  name as this will be extracted from `path` to create the register
+  folder.
 
 - chunk_size:
 
-  An integer scalar indicating the number of rows to read at a time from
-  the SAS files. Defaults to 10,000,000.
+  Number of rows to read at a time.
 
 ## Value
 
-The `output_dir` invisibly.
+The `output_dir`, invisibly.
 
 ## Examples
 

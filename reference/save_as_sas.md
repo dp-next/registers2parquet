@@ -17,11 +17,11 @@ save_as_sas(data_list, path)
 
 - path:
 
-  A character scalar with the directory to save the SAS files to.
+  Directory to save the SAS files to.
 
 ## Value
 
-The path invisibly.
+The `path`, invisibly.
 
 ## Examples
 

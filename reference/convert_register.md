@@ -37,27 +37,22 @@ convert_register(path, output_dir, chunk_size = 10000000L)
 
 - path:
 
-  A character vector of one or more paths to SAS file(s) for one
-  register. See
-  [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md),
-  which is a helper for this parameter.
+  Paths to SAS files for one register. See
+  [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md).
 
 - output_dir:
 
-  A character scalar with the path to the directory to save the output
-  Parquet file to. Should not include the register name as this will be
-  extracted from `path`.
+  Directory to save the Parquet output to. Must not include the register
+  name as this will be extracted from `path` to create the register
+  folder.
 
 - chunk_size:
 
-  An integer scalar indicating the number of rows to read at a time from
-  the SAS files. Defaults to 10,000,000.
+  Number of rows to read at a time.
 
 ## Value
 
-Returns a character scalar with the path to the created Parquet file(s)
-(`output_dir`) invisibly, so it can be used in a
-[targets](https://books.ropensci.org/targets/) pipeline.
+The `output_dir`, invisibly.
 
 ## Examples
 
@@ -70,5 +65,5 @@ convert_register(
 #> ✔ Converted test.sas7bdat
 #> ✔ Successfully converted 1 file.
 #> • Input: "test.sas7bdat"
-#> • Output: Register files in /tmp/RtmpNO0oVE/path/to/output/register/test
+#> • Output: Register files in /tmp/RtmpD9B7SY/path/to/output/register/test
 ```
