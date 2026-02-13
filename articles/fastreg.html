@@ -136,7 +136,7 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-ee0f6a.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-d37abd.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-single-register">Converting a single register<a class="anchor" aria-label="anchor" href="#converting-a-single-register"></a>
 </h2>
@@ -145,10 +145,10 @@
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kontakter_sas_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">kontakter_dir</span><span class="op">)</span></span>
 <span><span class="va">kontakter_sas_files</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp21iGy3/sas-dir/kontakter/kontakter_1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp21iGy3/sas-dir/kontakter/kontakter_1999_2.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp21iGy3/sas-dir/kontakter/kontakter_2020.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp21iGy3/sas-dir/kontakter/kontakter.sas7bdat</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/RtmpFyijQ7/sas-dir/kontakter/kontakter_1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpFyijQ7/sas-dir/kontakter/kontakter_1999_2.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpFyijQ7/sas-dir/kontakter/kontakter_2020.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmpFyijQ7/sas-dir/kontakter/kontakter.sas7bdat</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
@@ -165,19 +165,19 @@
 <span><span class="co">#&gt; ✔ Successfully converted 4 files.</span></span>
 <span><span class="co">#&gt; • Input: "kontakter_1999_1.sas7bdat", "kontakter_1999_2.sas7bdat",</span></span>
 <span><span class="co">#&gt;   "kontakter_2020.sas7bdat", and "kontakter.sas7bdat"</span></span>
-<span><span class="co">#&gt; • Output: Register files in '/tmp/Rtmp21iGy3/output-register-dir/kontakter'</span></span></code></pre></div>
+<span><span class="co">#&gt; • Output: Register files in '/tmp/RtmpFyijQ7/output-register-dir/kontakter'</span></span></code></pre></div>
 </div>
 <p>As with <code><a href="../reference/convert_file.html">convert_file()</a></code>, the output is partitioned by year, extracted from file names:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-register-dir</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-3cbb2a.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-7d30a3.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-22733c.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-5056e8.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-5ccf10.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-260eb7.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-cfadfb.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-a707e4.parquet</span></span></code></pre>
 </div>
 <p><code><a href="../reference/convert_register.html">convert_register()</a></code> reads files in chunks (to be able to handle larger-than-memory data), extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details.</p>
 <!-- TODO: Maybe this isn't needed? It does cover one scenario that isn't covered above; larger than chunk size files -->
@@ -231,7 +231,7 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">pipeline_dir</span>, <span class="st">"_targets.R"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmp21iGy3/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpFyijQ7/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 </section><section class="level3"><h3 id="set-input-and-output-paths">Set input and output paths<a class="anchor" aria-label="anchor" href="#set-input-and-output-paths"></a>
@@ -260,17 +260,17 @@
 <pre><code><span><span class="co">#&gt; parquet-registers</span></span>
 <span><span class="co">#&gt; ├── diagnoser</span></span>
 <span><span class="co">#&gt; │   ├── year=2020</span></span>
-<span><span class="co">#&gt; │   │   └── part-f3d5b1.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-34d9fd.parquet</span></span>
 <span><span class="co">#&gt; │   └── year=2021</span></span>
-<span><span class="co">#&gt; │       └── part-6920a6.parquet</span></span>
+<span><span class="co">#&gt; │       └── part-3fd292.parquet</span></span>
 <span><span class="co">#&gt; └── kontakter</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-79dc6a.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-dd5ae4.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-776c5a.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-ccdd1d.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-b70c89.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-eb3be3.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-e73f41.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-433477.parquet</span></span></code></pre>
 </div>
 </section></section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
 </h2>
@@ -283,16 +283,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]</span></span>
 <span><span class="co">#&gt;    cpr          dw_ek_kontakt     dato_start hovedspeciale_ans source_file  year</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;             &lt;chr&gt;       &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt;  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/Rtmp2…  1999</span></span>
-<span><span class="co">#&gt; 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/Rtmp2…  1999</span></span>
+<span><span class="co">#&gt;  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt;  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/RtmpF…  1999</span></span>
+<span><span class="co">#&gt; 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/RtmpF…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>You can pass a directory to read the full partitioned register or a file path to read a single <code>.parquet</code> file. The data is read lazily, so it won’t load into memory until collected with e.g. <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::collect()</a></code>.</p>
