@@ -73,7 +73,7 @@ test_that("reading a non-existing Parquet register throws an error", {
 })
 
 test_that("incorrect input type throws an error", {
-  expect_error(read_register(123), regexp = "character")
+  expect_error(read_register(123), regexp = "string")
   expect_error(
     read_register(c("path1.parquet", "path2.parquet")),
     regexp = "length 1"
