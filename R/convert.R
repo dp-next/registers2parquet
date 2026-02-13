@@ -263,24 +263,6 @@ column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
 }
 
-#' Check that all file paths are from the same register
-#'
-#' Checks that all register names (file names without any non-letters) in
-#' `path` are identical, i.e., the registers have the same name.
-#'
-#' @param path A character vector of one or more paths to SAS register files.
-#'
-#' @returns A logical that's TRUE if all paths point to files from the
-#'  same register, based on the file names.
-#'
-#' @keywords internal
-#' @noRd
-is_same_register <- function(path) {
-  register_names <- get_register_names(path)
-
-  length(unique(register_names)) == 1L
-}
-
 #' Get the register names from file paths
 #'
 #' Removes all non-letters from the file names in `path`.
