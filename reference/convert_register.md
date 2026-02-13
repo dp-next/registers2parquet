@@ -70,5 +70,5 @@ convert_register(
 #> ✔ Converted test.sas7bdat
 #> ✔ Successfully converted 1 file.
 #> • Input: "test.sas7bdat"
-#> • Output: Register files in /tmp/RtmpeeqDL7/path/to/output/register/test
+#> • Output: Register files in /tmp/RtmpVZ0Xwb/path/to/output/register/test
 ```
