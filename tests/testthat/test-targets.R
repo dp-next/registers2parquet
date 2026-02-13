@@ -66,4 +66,24 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     length(parquet_files),
     sum(length(kontakter_list), length(diagnoser_list))
   )
+
+  # Check nrows per register.
+  n_expected_kontakter <- sum(purrr::map_int(kontakter_list, nrow))
+  n_expected_diagnoser <- sum(purrr::map_int(diagnoser_list, nrow))
+
+  n_actual_kontakter <- arrow::open_dataset(fs::path(
+    output_dir,
+    "kontakter"
+  )) |>
+    dplyr::collect() |>
+    nrow()
+  n_actual_diagnoser <- arrow::open_dataset(fs::path(
+    output_dir,
+    "diagnoser"
+  )) |>
+    dplyr::collect() |>
+    nrow()
+
+  expect_equal(n_actual_kontakter, n_expected_kontakter)
+  expect_equal(n_actual_diagnoser, n_expected_diagnoser)
 })
