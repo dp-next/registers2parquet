@@ -192,7 +192,7 @@ but that can be adjusted in the pipeline to fit the available resources.
 pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
-use_targets_template(path = fs::path(pipeline_dir, "_targets.R"))
+use_targets_template(path = pipeline_dir)
 ```
 
 ### Set input and output paths
