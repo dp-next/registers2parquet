@@ -17,3 +17,6 @@ The \code{path}, invisibly.
 \description{
 Copies a template to the given path.
 }
+\examples{
+use_targets_template()
+}
