@@ -184,7 +184,6 @@ test_that("convert_register() errors when output directory is not empty", {
 
 test_that("larger files with 1.1 million rows are converted as expected", {
   skip_on_cran()
-  skip()
 
   # n = 1.1 million to test chunking with chunk_size = 1 million.
   kontakter_list_large <- simulate_register(

@@ -21,9 +21,3 @@ reference:
   - save_as_sas
   - simulate_register
   - use_targets_template
-- title: Functions used within the targets pipeline
-  desc: >
-    These functions are not expected to be used outside the targets pipeline
-    created with the template.
-- contents:
-  - split_paths_by_register
