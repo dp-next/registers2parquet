@@ -1,4 +1,4 @@
-# Prepare data to be read.
+# Setup ------------------------------------------------------------------------
 register_name <- "kontakter"
 kontakter_list <- simulate_register(register_name, c("", "2020"))
 sas_path <- fs::path_temp("sas_kontakter")
@@ -9,7 +9,9 @@ output_dir <- fs::path_temp("output_dir")
 # Use convert_register() for conversion
 convert_register(path = sas_kontakter, output_dir = output_dir)
 
-test_that("reading a single Parquet file works as expected", {
+# Test read_register() ---------------------------------------------------------
+
+test_that("read_register() reads a single Parquet file", {
   # Read single Parquet file (2020 file).
   # Because UUID is used in the convert function, we can't know the name of the
   # file.
@@ -32,7 +34,7 @@ test_that("reading a single Parquet file works as expected", {
   expect_all_equal(actual_data$source_file, expected_source_file)
 })
 
-test_that("reading partitioned Parquet register works as expected", {
+test_that("read_register() reads a partitioned Parquet register", {
   actual <- read_register(output_dir) |> dplyr::collect()
 
   expected <- purrr::map(sas_kontakter, \(path) haven::read_sas(path)) |>
@@ -64,7 +66,7 @@ test_that("reading partitioned Parquet register works as expected", {
   )
 })
 
-test_that("reading a non-existing Parquet register throws an error", {
+test_that("read_register() errors when path does not exist", {
   expect_error(
     read_register("/non/existing/path.parquet"),
     regexp = "not exist"
@@ -72,7 +74,7 @@ test_that("reading a non-existing Parquet register throws an error", {
   expect_error(read_register("/non/existing/directory/"), regexp = "not exist")
 })
 
-test_that("incorrect input type throws an error", {
+test_that("read_register() errors with incorrect input type", {
   expect_error(read_register(123), regexp = "string")
   expect_error(
     read_register(c("path1.parquet", "path2.parquet")),
@@ -80,14 +82,14 @@ test_that("incorrect input type throws an error", {
   )
 })
 
-test_that("directory with no Parquet files returns error", {
+test_that("read_register() errors when directory has no Parquet files", {
   temp_empty_dir <- fs::path_temp("empty_dir")
   fs::dir_create(temp_empty_dir)
 
   expect_error(read_register(temp_empty_dir), temp_empty_dir)
 })
 
-test_that("non-Parquet file returns error", {
+test_that("read_register() errors when file is not Parquet", {
   temp_txt_file <- fs::path_temp("file.txt")
   fs::file_create(temp_txt_file)
 
