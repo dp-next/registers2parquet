@@ -29,6 +29,13 @@ test_that("template is valid R code", {
   expect_no_error(parse(file = template_path))
 })
 
+test_that("use_targets_template() errors with incorrect `path`", {
+  expect_error(
+    use_targets_template(fs::path_temp("not-targets.R")),
+    regexp = "_targets.R"
+  )
+})
+
 # Test pipeline ----------------------------------------------------------------
 
 test_that("targets pipeline template converts SAS files to Parquet", {
