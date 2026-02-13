@@ -1,5 +1,5 @@
 Package: fastreg
-Title: Fast Conversion of Danish Register SAS Files to Parquet Format
+Title: Work Faster on Danish Registers with Parquet 
 Version: 0.8.12
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
