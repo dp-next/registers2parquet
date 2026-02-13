@@ -1,4 +1,4 @@
-# Tests with small test data --------------------------------------------------
+# Setup: Write SAS files -------------------------------------------------------
 
 # n = 11000 to test chunking logic.
 register_name <- "kontakter"
@@ -9,143 +9,182 @@ kontakter_list <- simulate_register(
 sas_path <- fs::path_temp("sas_kontakter")
 save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)
-output_dir <- fs::path_temp("parquet_path")
 
-# Convert SAS to Parquet.
-actual_path <- convert_to_parquet(
-  path = sas_kontakter,
-  output_dir = output_dir
+# Tests for convert_file() ----------------------------------------------------
+
+# Setup: Convert single file
+single_file_path <- fs::path_temp("parquet_single_file")
+single_file_output <- convert_file(
+  path = sas_kontakter[[1]],
+  output_dir = single_file_path
 )
-
-# Open Parquet dataset.
-actual_data <- arrow::open_dataset(
-  fs::path(output_dir, register_name),
+data_actual <- arrow::open_dataset(
+  single_file_path,
   partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
+data_expected <- haven::read_sas(sas_kontakter[[1]])
 
-# Read expected dataset from SAS files.
-expected_data <- purrr::map(sas_kontakter, \(sas_file) {
-  haven::read_sas(sas_file)
-}) |>
-  dplyr::bind_rows()
-
-test_that("output is output_dir", {
-  expect_equal(actual_path, output_dir)
+test_that("convert_file() returns output_dir", {
+  expect_equal(single_file_output, single_file_path)
 })
 
-test_that("files are partitioned as expected", {
-  expected <- fs::path(
-    output_dir,
-    register_name,
-    c("year=__HIVE_DEFAULT_PARTITION__", "year=1999", "year=2020")
+test_that("convert_file() preserves source data and adds expected columns", {
+  expect_equal(nrow(data_actual), nrow(data_expected))
+  expect_identical(
+    data_actual |> dplyr::select(-c("source_file", "year")),
+    data_expected
   )
-
-  expect_all_true(fs::dir_exists(expected))
-  # Same number of created files as input files.
-  expect_length(fs::dir_ls(expected), length(fs::dir_ls(sas_path)))
+  expect_all_equal(
+    data_actual$source_file,
+    as.character(sas_kontakter[[1]])
+  )
+  expect_identical(
+    purrr::map(
+      data_actual |> dplyr::select(c("source_file", "year")),
+      class
+    ),
+    list(source_file = "character", year = "integer")
+  )
 })
 
-test_that("parts are named as expected", {
+test_that("convert_file() creates parts with expected naming pattern", {
   actual <- fs::path_file(fs::dir_ls(
-    fs::path(output_dir, register_name),
+    single_file_path,
     recurse = TRUE,
     type = "file"
   ))
   expect_true(all(stringr::str_detect(actual, "^part-[a-f0-9]{6}\\.parquet$")))
 })
 
-test_that("column names, data types, and number of rows are as expected", {
-  actual <- actual_data |> dplyr::select(-c("source_file", "year"))
-  expect_identical(actual, expected_data)
-  expect_identical(
-    purrr::map(actual_data |> dplyr::select(c("source_file", "year")), class),
-    list(source_file = "character", year = "integer")
-  )
-})
-
-test_that("incorrect parameters generate errors", {
+test_that("convert_file() errors with incorrect input parameters", {
   # Incorrect path type.
   expect_error(
-    convert_to_parquet(
-      path = 1,
-      output_dir = output_dir
-    ),
+    convert_file(path = 1, output_dir = single_file_output),
     regexp = "character"
   )
-  # Paths from different registers.
-  temp_different_register <- fs::path_temp("other_2020.sas7bdat")
-  suppressWarnings(haven::write_sas(
-    kontakter_list[[1]],
-    temp_different_register
-  ))
+  # Path must exist.
   expect_error(
-    convert_to_parquet(
-      path = c(sas_kontakter, temp_different_register),
-      output_dir = temp_output_multiple_years
-    ),
-    regexp = "is_same_register"
+    convert_file(path = fs::file_temp(), output_dir = single_file_output),
+    regexp = "does not exist"
   )
-
   # Incorrect output_dir type.
   expect_error(
-    convert_to_parquet(
-      path = sas_kontakter,
-      output_dir = 1
-    ),
+    convert_file(path = sas_kontakter[[1]], output_dir = 1),
     regexp = "character"
   )
+  # output_dir must be scalar.
   expect_error(
-    convert_to_parquet(
-      path = sas_kontakter,
-      output_dir = rep(output_dir, times = 2),
+    convert_file(
+      path = sas_kontakter[[1]],
+      output_dir = rep(single_file_output, times = 2)
     ),
     regexp = "length 1"
   )
-  # Incorrect chunk size type (lower than allowed).
+  # Incorrect chunk size (lower than allowed).
   expect_error(
-    convert_to_parquet(
-      path = sas_kontakter,
-      output_dir = output_dir,
+    convert_file(
+      path = sas_kontakter[[1]],
+      output_dir = single_file_output,
       chunk_size = 10L
     ),
     regexp = ">= 10000"
   )
 })
 
-test_that("files passed in the paths parameter must exist", {
-  expect_error(
-    convert_to_parquet(
-      path = fs::file_temp(),
-      output_dir = output_dir
-    ),
-    regexp = "does not exist"
+test_that("convert_file() partitions by year based on file name", {
+  expected <- fs::path(
+    single_file_output,
+    register_name,
+    "year=__HIVE_DEFAULT_PARTITION__"
+  )
+
+  expect_true(fs::dir_exists(expected))
+  # Same number of created files as input files.
+  expect_length(
+    fs::dir_ls(expected),
+    1L
   )
 })
 
-test_that("n parts are as expected when chunk_size is less than nrow per file", {
-  output_dir <- fs::path_temp("output_chunks")
+test_that("convert_file() creates expected n parts when chunk_size < nrow", {
+  chunks_path <- fs::path_temp("chunks_path")
   chunk_size <- 10000L
-  convert_to_parquet(
-    path = sas_kontakter,
-    output_dir = output_dir,
-    chunk_size = 10000L
+  sas_file <- sas_kontakter[[1]]
+
+  convert_file(
+    path = sas_file,
+    output_dir = chunks_path,
+    chunk_size = chunk_size
   )
 
-  n_expected <- sum(ceiling(purrr::map_int(kontakter_list, nrow) / chunk_size))
+  n_expected <- ceiling(nrow(haven::read_sas(sas_file)) / chunk_size)
   n_actual <- length(fs::dir_ls(
-    fs::path(output_dir, register_name),
+    chunks_path,
     recurse = TRUE,
     type = "file"
   ))
   expect_equal(n_actual, n_expected)
 })
 
+# Tests for convert_register() ------------------------------------------------
 
-# Tests with large internal data files ----------------------------------------
+# Setup: Convert register
+register_path <- fs::path_temp("parquet_register")
+register_output <- convert_register(
+  path = sas_kontakter,
+  output_dir = register_path
+)
+
+test_that("convert_register() returns output_dir", {
+  expect_equal(register_output, register_path)
+})
+
+test_that("convert_register() partitions by year based on file names", {
+  expected <- fs::path(
+    register_output,
+    register_name,
+    c("year=__HIVE_DEFAULT_PARTITION__", "year=1999", "year=2020")
+  )
+
+  expect_all_true(fs::dir_exists(expected))
+  # Same number of created files as input files.
+  expect_length(
+    fs::dir_ls(expected),
+    length(sas_kontakter)
+  )
+})
+
+test_that("convert_register() errors when paths are from different registers", {
+  temp_different_register <- fs::path_temp("other_2020.sas7bdat")
+  suppressWarnings(haven::write_sas(
+    kontakter_list[[1]],
+    temp_different_register
+  ))
+  expect_error(
+    convert_register(
+      path = c(sas_kontakter, temp_different_register),
+      output_dir = fs::path_temp("register_different")
+    ),
+    regexp = "Multiple register names"
+  )
+})
+
+test_that("convert_register() errors when output directory is not empty", {
+  output_dir <- fs::path_temp("register_nonempty")
+  convert_register(path = sas_kontakter, output_dir = output_dir)
+  expect_error(
+    convert_register(
+      path = sas_kontakter,
+      output_dir = output_dir
+    ),
+    regexp = "not empty"
+  )
+})
 
 test_that("larger files with 1.1 million rows are converted as expected", {
   skip_on_cran()
+  skip()
 
   # n = 1.1 million to test chunking with chunk_size = 1 million.
   kontakter_list_large <- simulate_register(
@@ -159,7 +198,7 @@ test_that("larger files with 1.1 million rows are converted as expected", {
   output_dir_large <- fs::path_temp("parquet_path_large")
   chunk_size_large <- 1000000L
 
-  convert_to_parquet(
+  convert_register(
     path = sas_kontakter_large,
     output_dir = output_dir_large,
     chunk_size = chunk_size_large

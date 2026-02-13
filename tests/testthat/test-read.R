@@ -6,13 +6,8 @@ save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)
 output_dir <- fs::path_temp("output_dir")
 
-# Clean up any existing files from previous test runs.
-# if (fs::dir_exists(output_dir)) {
-#   fs::dir_delete(output_dir)
-# }
-
-# Use convert_to_parquet() for conversion
-convert_to_parquet(path = sas_kontakter, output_dir = output_dir)
+# Use convert_register() for conversion
+convert_register(path = sas_kontakter, output_dir = output_dir)
 
 test_that("reading a single Parquet file works as expected", {
   # Read single Parquet file (2020 file).

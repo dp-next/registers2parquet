@@ -68,11 +68,32 @@ withr::with_dir(fs::path_dir(sas_dir), {
 })
 ```
 
+## Converting a single file
+
+```{r convert-file}
+sas_file <- fs::path(kontakter_dir, "kontakter_2020.sas7bdat")
+output_file_dir <- fs::path_temp("output-file-dir")
+
+convert_file(
+  path = sas_file,
+  output_dir = output_file_dir)
+```
+
+Even though this only converts a single file, the output is partitioned by year extracted from the file name:
+
+```{r output-tree-file}
+#| echo: false
+
+withr::with_dir(fs::path_dir(output_file_dir), {
+  fs::dir_tree(fs::path_file(output_file_dir))
+})
+```
+
 ## Converting a single register
 
 Use `list_sas_files()` to find SAS files in a directory (and any
-subdirectories), then use `convert_to_parquet()` to convert them.
-`convert_to_parquet()` expects files to be from the **same register**
+subdirectories), then use `convert_register()` to convert them.
+`convert_register()` expects files to be from the **same register**
 based on file names.
 
 ```{r locate}
@@ -80,28 +101,29 @@ kontakter_sas_files <- list_sas_files(kontakter_dir)
 kontakter_sas_files
 ```
 
-```{r convert}
-output_dir <- fs::path_temp("output-dir")
+```{r convert-register}
+output_register_dir <- fs::path_temp("output-register-dir")
 
-convert_to_parquet(
+convert_register(
   path = kontakter_sas_files,
-  output_dir = output_dir
+  output_dir = output_register_dir
 )
 ```
 
-The output is partitioned by year, extracted from filenames:
+As with `convert_file()`, the output is partitioned by year, extracted from
+file names:
 
 ```{r output-tree}
 #| echo: false
 
-withr::with_dir(fs::path_dir(output_dir), {
-  fs::dir_tree(fs::path_file(output_dir))
+withr::with_dir(fs::path_dir(output_register_dir), {
+  fs::dir_tree(fs::path_file(output_register_dir))
 })
 ```
 
-`convert_to_parquet()` reads files in chunks (to be able to handle
+`convert_register()` reads files in chunks (to be able to handle
 larger-than-memory data), extracts 4-digit years from filenames for
-partitioning, and lowercases column names. See `?convert_to_parquet` for
+partitioning, and lowercases column names. See `?convert_register` for
 more details.
 
 <!-- TODO: Maybe this isn't needed? It does cover one scenario that isn't covered above; larger than chunk size files -->
@@ -224,7 +246,7 @@ withr::with_dir(fs::path_dir(config$output_dir), {
 Use `read_register()` to read converted data as a DuckDB table:
 
 ```{r read-register}
-register <- read_register(output_dir)
+register <- read_register(output_register_dir)
 register
 ```
 

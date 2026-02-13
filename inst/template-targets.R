@@ -61,18 +61,11 @@ list(
   ),
 
   tar_target(
-    name = register_path_groups,
-    command = split_paths_by_register(sas_paths),
-    iteration = "list",
-    deployment = "main"
-  ),
-
-  tar_target(
-    name = register_parquets,
-    command = convert_to_parquet(
-      path = register_path_groups,
+    name = parquet_files,
+    command = convert_file(
+      path = sas_paths,
       output_dir = config$output_dir
     ),
-    pattern = map(register_path_groups)
+    pattern = map(sas_paths)
   )
 )
