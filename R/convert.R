@@ -103,8 +103,7 @@ convert_file <- function(
   # Initial checks.
   checkmate::assert_character(path)
   checkmate::assert_file_exists(path)
-  checkmate::assert_character(output_dir)
-  checkmate::assert_scalar(output_dir)
+  checkmate::assert_string(output_dir)
   checkmate::assert_int(chunk_size, lower = 10000L)
 
   # Prepare variables used in repeat below.

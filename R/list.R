@@ -13,7 +13,7 @@
 list_sas_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
-  checkmate::assert_scalar(path)
+  checkmate::assert_string(path)
 
   # List all SAS files in the directory and its subdirectories.
   # (?i) makes the regex case-insensitive.
@@ -47,7 +47,7 @@ list_sas_files <- function(path) {
 list_parquet_files <- function(path) {
   # Check input.
   checkmate::assert_directory(path)
-  checkmate::assert_scalar(path)
+  checkmate::assert_string(path)
 
   # List all Parquet files in the directory and its subdirectories.
   # (?i) makes the regex case-insensitive.
