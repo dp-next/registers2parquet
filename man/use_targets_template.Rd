@@ -4,16 +4,17 @@
 \alias{use_targets_template}
 \title{Use a targets pipeline template for converting SAS registers to Parquet}
 \usage{
-use_targets_template(path = "_targets.R", open = rlang::is_interactive())
+use_targets_template(path = ".", open = rlang::is_interactive())
 }
 \arguments{
-\item{path}{Path to the file to create. Defaults to \verb{_targets.R}.}
+\item{path}{Path to the directory where \verb{_targets.R} will be created.
+Defaults to the current directory.}
 
 \item{open}{Whether to open the file for editing.}
 }
 \value{
-The \code{path}, invisibly.
+The path to the created file, invisibly.
 }
 \description{
-Copies a template to the given path.
+Copies a \verb{_targets.R} template to the given directory.
 }
