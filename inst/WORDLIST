@@ -4,6 +4,7 @@ DuckDB
 LPR
 Landspatientregisteret
 SemVar
+Tidyverse
 UUID
 UUIDs
 callout
@@ -19,13 +20,12 @@ lifecycle
 lowercases
 msg
 optimised
-osdc
 parallelises
 param
 pre
 schemas
 svg
 tada
-tibble
+tibbles
 yml
 ️
