@@ -1,4 +1,4 @@
-# Setup: Write SAS files -------------------------------------------------------
+# Setup ------------------------------------------------------------------------
 
 # n = 11000 to test chunking logic.
 register_name <- "kontakter"
@@ -10,7 +10,7 @@ sas_path <- fs::path_temp("sas_kontakter")
 save_as_sas(kontakter_list, sas_path)
 sas_kontakter <- fs::dir_ls(sas_path)
 
-# Tests for convert_file() ----------------------------------------------------
+# Test convert_file() ----------------------------------------------------------
 
 # Setup: Convert single file
 single_file_path <- fs::path_temp("parquet_single_file")
@@ -127,7 +127,7 @@ test_that("convert_file() creates expected n parts when chunk_size < nrow", {
   expect_equal(n_actual, n_expected)
 })
 
-# Tests for convert_register() ------------------------------------------------
+# Test convert_register() ------------------------------------------------------
 
 # Setup: Convert register
 register_path <- fs::path_temp("parquet_register")
@@ -182,7 +182,7 @@ test_that("convert_register() errors when output directory is not empty", {
   )
 })
 
-test_that("larger files with 1.1 million rows are converted as expected", {
+test_that("convert_register() converts larger files with chunking", {
   skip_on_cran()
 
   # n = 1.1 million to test chunking with chunk_size = 1 million.
