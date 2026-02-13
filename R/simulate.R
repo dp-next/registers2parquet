@@ -17,7 +17,9 @@
 #' @examples
 #' simulate_register(register = "kontakter", year = c("1999", "2000"))
 simulate_register <- function(register, year = "", n = 1000) {
-  names <- ifelse(year == "", register, paste(register, year, sep = "_"))
+  checkmate::assert_string(register)
+  checkmate::assert_character(year)
+  checkmate::assert_number(n)
   purrr::map(names, \(name) {
     osdc::simulate_registers(registers = register, n = n)[[1]]
   }) |>
@@ -38,6 +40,7 @@ simulate_register <- function(register, year = "", n = 1000) {
 #' @examples
 #' save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
 save_as_sas <- function(data_list, path) {
+  checkmate::assert_list(data_list, names = "named")
   fs::dir_create(path, recurse = TRUE)
   purrr::iwalk(data_list, \(df, name) {
     suppressWarnings(haven::write_sas(
