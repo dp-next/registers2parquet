@@ -18,5 +18,5 @@ The \code{path}, invisibly.
 Copies a template to the given path.
 }
 \examples{
-use_targets_template()
+use_targets_template(path = fs::temp_path("_targets.R"))
 }

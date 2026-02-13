@@ -9,7 +9,7 @@
 #'
 #' @export
 #' @examples
-#' use_targets_template()
+#' use_targets_template(path = fs::temp_path("_targets.R"))
 use_targets_template <- function(
   path = "_targets.R",
   open = rlang::is_interactive()
