@@ -3,9 +3,9 @@
 #' Lists all SAS register files (with the extension `.sas7bdat`
 #' case-insensitively) in the specified directory and its subdirectories.
 #'
-#' @param path A character scalar with the path to the directory to search.
+#' @param path Directory to search.
 #'
-#' @returns A character vector of paths to the SAS files found.
+#' @returns The path(s) to the found SAS files.
 #'
 #' @export
 #' @examples
@@ -37,9 +37,9 @@ list_sas_files <- function(path) {
 #' or `.parq` case-insensitively) in the specified directory and its
 #' subdirectories.
 #'
-#' @param path A character scalar with the path to the directory to search.
+#' @inheritParams list_sas_files
 #'
-#' @returns A character vector of paths to the Parquet files found.
+#' @returns The path(s) to the found SAS files.
 #'
 #' @export
 #' @examples

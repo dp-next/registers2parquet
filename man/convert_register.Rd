@@ -7,20 +7,16 @@
 convert_register(path, output_dir, chunk_size = 10000000L)
 }
 \arguments{
-\item{path}{A character vector of one or more paths to SAS file(s) for one
-register. See \code{\link[=list_sas_files]{list_sas_files()}}, which is a helper for this parameter.}
+\item{path}{Paths to SAS files for one register. See \code{\link[=list_sas_files]{list_sas_files()}}.}
 
-\item{output_dir}{A character scalar with the path to the directory to save
-the output Parquet file to. Should not include the register name as this
-will be extracted from \code{path}.}
+\item{output_dir}{Directory to save the Parquet output to. Must not include
+the register name as this will be extracted from \code{path} to create the
+register folder.}
 
-\item{chunk_size}{An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 10,000,000.}
+\item{chunk_size}{Number of rows to read at a time.}
 }
 \value{
-Returns a character scalar with the path to the created Parquet
-file(s) (\code{output_dir}) invisibly, so it can be used in a
-\href{https://books.ropensci.org/targets/}{targets} pipeline.
+The \code{output_dir}, invisibly.
 }
 \description{
 This function reads one or more SAS files for a given register, and saves the

@@ -7,10 +7,10 @@
 list_parquet_files(path)
 }
 \arguments{
-\item{path}{A character scalar with the path to the directory to search.}
+\item{path}{Directory to search.}
 }
 \value{
-A character vector of paths to the Parquet files found.
+The path(s) to the found SAS files.
 }
 \description{
 Lists all Parquet register files (with the extension \code{.parquet}
