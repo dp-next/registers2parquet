@@ -43,6 +43,8 @@ save_as_sas <- function(data_list, path) {
   checkmate::assert_list(data_list, names = "named")
   fs::dir_create(path, recurse = TRUE)
   purrr::iwalk(data_list, \(df, name) {
+    # Suppress warning bc `write_sas()` is deprecated, but good enough for our
+    # use case.
     suppressWarnings(haven::write_sas(
       df,
       fs::path(path, paste0(name, ".sas7bdat"))
