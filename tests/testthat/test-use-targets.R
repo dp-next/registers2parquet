@@ -1,32 +1,34 @@
-# Tests of use_targets_template() ----------------------------------------------
-output_path <- fs::path_temp("_targets.R")
-use_targets_template(output_path, open = FALSE)
+# Setup ------------------------------------------------------------------------
+output_path <- fs::path_temp()
+file_path <- use_targets_template(output_path, open = FALSE)
 template_path <- fs::path_package("fastreg", "template-targets.R")
 template_content <- readLines(template_path)
 
-test_that("targets pipeline is created as expected", {
+# Test use_targets_template() --------------------------------------------------
+
+test_that("use_targets_template() creates pipeline file", {
   expect_true(fs::file_exists(output_path))
 })
 
-test_that("trying to create pipeline when it already exists throws error", {
+test_that("use_targets_template() errors when file already exists", {
   expect_error(use_targets_template(output_path, open = FALSE))
 })
 
-test_that("created file matches template content", {
+test_that("use_targets_template() creates file matching template content", {
   expect_equal(
-    readLines(output_path),
+    readLines(file_path),
     readLines(template_path)
   )
 })
 
-test_that("template is valid R code", {
+test_that("use_targets_template() creates valid R code", {
   expect_no_error(parse(file = template_path))
 })
 
-test_that("use_targets_template() errors with incorrect `path`", {
+test_that("use_targets_template() errors with non-existing `path`", {
   expect_error(
-    use_targets_template(fs::path_temp("not-targets.R")),
-    regexp = "_targets.R"
+    use_targets_template(fs::path_temp("non-existing/dir")),
+    regexp = "does not exist"
   )
 })
 
