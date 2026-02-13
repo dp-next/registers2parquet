@@ -7,10 +7,10 @@
 read_register(path)
 }
 \arguments{
-\item{path}{A character scalar with the path to the Parquet register.}
+\item{path}{Path to a Parquet file or directory.}
 }
 \value{
-The register as a DuckDB table.
+A DuckDB table.
 }
 \description{
 If you want to read a partitioned Parquet register, provide the path to the

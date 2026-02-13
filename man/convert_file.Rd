@@ -7,17 +7,16 @@
 convert_file(path, output_dir, chunk_size = 10000000L)
 }
 \arguments{
-\item{path}{A character scalar with the path to a single SAS file.}
+\item{path}{Path to a single SAS file.}
 
-\item{output_dir}{A character scalar with the path to the directory to save
-the output Parquet file to. Should not include the register name as this
-will be extracted from \code{path}.}
+\item{output_dir}{Directory to save the Parquet output to. Must not include
+the register name as this will be extracted from \code{path} to create the
+register folder.}
 
-\item{chunk_size}{An integer scalar indicating the number of rows to read
-at a time from the SAS files. Defaults to 10,000,000.}
+\item{chunk_size}{Number of rows to read at a time.}
 }
 \value{
-The \code{output_dir} invisibly.
+The \code{output_dir}, invisibly.
 }
 \description{
 To be able to handle larger-than-memory files, the SAS file is converted in
