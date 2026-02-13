@@ -211,7 +211,7 @@ get_year_from_filename <- function(path) {
 #' @keywords internal
 #' @noRd
 create_part_uuid <- function() {
-  substr(uuid::UUIDgenerate(), 0, 6)
+  stringr::str_sub(uuid::UUIDgenerate(), start = 1, end = 6)
 }
 
 #' Create a consistent Arrow schema from a data frame

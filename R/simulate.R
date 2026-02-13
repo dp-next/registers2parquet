@@ -17,11 +17,15 @@
 #' @examples
 #' simulate_register(register = "kontakter", year = c("1999", "2000"))
 simulate_register <- function(register, year = "", n = 1000) {
-  names <- ifelse(year == "", register, paste(register, year, sep = "_"))
+  names <- dplyr::if_else(
+    year == "",
+    register,
+    paste(register, year, sep = "_")
+  )
   purrr::map(names, \(name) {
     osdc::simulate_registers(registers = register, n = n)[[1]]
   }) |>
-    stats::setNames(names)
+    purrr::set_names(names)
 }
 
 #' Save a list of data frames as SAS files
@@ -42,7 +46,7 @@ save_as_sas <- function(data_list, path) {
   purrr::iwalk(data_list, \(df, name) {
     suppressWarnings(haven::write_sas(
       df,
-      fs::path(path, paste0(name, ".sas7bdat"))
+      fs::path(path, glue::glue("{name}.sas7bdat"))
     ))
   })
   invisible(path)
