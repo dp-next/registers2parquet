@@ -1,5 +1,5 @@
 Package: fastreg
-Title: Convert Danish register SAS files into Parquet files
+Title: Work Faster on Danish Registers with Parquet
 Version: 0.8.13
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
@@ -7,8 +7,11 @@ Authors@R: c(
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut"),
            comment = c(ORCID = "0000-0003-4169-2616", affiliation="Steno Diabetes Center Aarhus"))
     )
-Description: A tool for converting SAS files containing Danish register data into
-    the more modern and efficient Apache Parquet format.
+Description: Converts large Danish register SAS files (`.sas7bdat`) into
+    Parquet format with automatic year-based Hive partitioning and
+    chunked reading for larger-than-memory files. Supports batch and
+    parallel conversion with a targets pipeline and reading those
+    registers into DuckDB tables for faster querying and analyses.
 License: MIT + file LICENSE
 URL: https://dp-next.github.io/fastreg/ https://github.com/dp-next/fastreg
 BugReports: https://github.com/dp-next/fastreg/issues
