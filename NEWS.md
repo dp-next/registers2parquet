@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.7 (2026-02-13)
+
+### Refactor
+
+- ♻️ `convert_register()` and `convert_file()` (#174)
+
 ## 0.8.6 (2026-02-12)
 
 ### Refactor
