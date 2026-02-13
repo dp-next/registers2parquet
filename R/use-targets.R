@@ -13,7 +13,9 @@ use_targets_template <- function(
   path = "_targets.R",
   open = rlang::is_interactive()
 ) {
-  checkmate::assert_string(fs::path_file(path), "_targets.R")
+  if (fs::path_file(path) != "_targets.R") {
+    cli::cli_abort("File name must be {.file _targets.R}.")
+  }
 
   template_path <- fs::path_package("fastreg", "template-targets.R")
 

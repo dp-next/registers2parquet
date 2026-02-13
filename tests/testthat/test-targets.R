@@ -21,14 +21,15 @@ test_that("use_targets_template() creates file matching template content", {
   )
 })
 
-test_that("use_targets_template() returns path invisibly", {
-  temp_path <- fs::path_temp("test_return.R")
-  result <- use_targets_template(temp_path, open = FALSE)
-  expect_equal(result, temp_path)
-})
-
 test_that("use_targets_template() creates valid R code", {
   expect_no_error(parse(file = template_path))
+})
+
+test_that("use_targets_template() errors with incorrect `path`", {
+  expect_error(
+    use_targets_template(fs::path_temp("not-targets.R")),
+    regexp = "_targets.R"
+  )
 })
 
 # Test pipeline ----------------------------------------------------------------
@@ -68,4 +69,24 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     length(parquet_files),
     sum(length(kontakter_list), length(diagnoser_list))
   )
+
+  # Check nrows per register.
+  n_expected_kontakter <- sum(purrr::map_int(kontakter_list, nrow))
+  n_expected_diagnoser <- sum(purrr::map_int(diagnoser_list, nrow))
+
+  n_actual_kontakter <- arrow::open_dataset(fs::path(
+    output_dir,
+    "kontakter"
+  )) |>
+    dplyr::collect() |>
+    nrow()
+  n_actual_diagnoser <- arrow::open_dataset(fs::path(
+    output_dir,
+    "diagnoser"
+  )) |>
+    dplyr::collect() |>
+    nrow()
+
+  expect_equal(n_actual_kontakter, n_expected_kontakter)
+  expect_equal(n_actual_diagnoser, n_expected_diagnoser)
 })

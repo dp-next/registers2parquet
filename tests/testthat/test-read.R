@@ -95,3 +95,9 @@ test_that("read_register() errors when file is not Parquet", {
 
   expect_error(read_register(temp_txt_file), temp_txt_file)
 })
+
+test_that("files with extension .parq can also be read", {
+  path <- fs::path_temp("file.parq")
+  arrow::write_parquet(simulate_register("kontakter")[[1]], sink = path)
+  expect_no_error(read_register(path))
+})
