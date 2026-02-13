@@ -20,13 +20,13 @@ simulate_register <- function(register, year = "", n = 1000) {
   checkmate::assert_string(register)
   checkmate::assert_character(year)
   checkmate::assert_number(n)
-  
+
   names <- dplyr::if_else(
     year == "",
     register,
     paste(register, year, sep = "_")
   )
-  
+
   purrr::map(names, \(name) {
     osdc::simulate_registers(registers = register, n = n)[[1]]
   }) |>
