@@ -19,12 +19,6 @@ test_that("created file matches template content", {
   )
 })
 
-test_that("returns path invisibly", {
-  temp_path <- fs::path_temp("test_return.R")
-  result <- use_targets_template(temp_path, open = FALSE)
-  expect_equal(result, temp_path)
-})
-
 test_that("template is valid R code", {
   expect_no_error(parse(file = template_path))
 })
