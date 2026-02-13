@@ -1,18 +1,19 @@
 # Use a targets pipeline template for converting SAS registers to Parquet
 
-Copies a template to the given path.
+Copies a `_targets.R` template to the given directory.
 
 ## Usage
 
 ``` r
-use_targets_template(path = "_targets.R", open = rlang::is_interactive())
+use_targets_template(path = ".", open = rlang::is_interactive())
 ```
 
 ## Arguments
 
 - path:
 
-  Path to the file to create. Defaults to `_targets.R`.
+  Path to the directory where `_targets.R` will be created. Defaults to
+  the current directory.
 
 - open:
 
@@ -20,4 +21,4 @@ use_targets_template(path = "_targets.R", open = rlang::is_interactive())
 
 ## Value
 
-The `path`, invisibly.
+The path to the created file, invisibly.
