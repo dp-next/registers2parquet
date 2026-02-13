@@ -20,8 +20,7 @@ read_register <- function(
   path
 ) {
   # Check input.
-  checkmate::assert_character(path)
-  checkmate::assert_scalar(path)
+  checkmate::assert_string(path)
   checkmate::assert(
     checkmate::check_file_exists(path),
     checkmate::check_directory_exists(path)
