@@ -62,13 +62,13 @@ flowchart TD
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
-    convert_to_parquet("convert_to_parquet()")
+    convert_register("convert_register()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    identify_paths -.-> path --> convert_to_parquet
-    output_dir & chunk_size --> convert_to_parquet
-    convert_to_parquet --> output
+    identify_paths -.-> path --> convert_register
+    output_dir & chunk_size --> convert_register
+    convert_register --> output
 
     %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
@@ -76,7 +76,7 @@ flowchart TD
 
 Figure 1: Expected workflow for converting SAS files from a single
 register using
-[`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md).
+[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md).
 
 ### Converting multiple registers in parallel
 

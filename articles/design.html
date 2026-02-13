@@ -159,13 +159,13 @@
     path[/"path&lt;br&gt;[Character vector]"/]
     output_dir[/"output_dir&lt;br&gt;[Character scalar]"/]
     chunk_size[/"chunk_size&lt;br&gt;[Integer scalar]"/]
-    convert_to_parquet("convert_to_parquet()")
+    convert_register("convert_register()")
     output[/"Parquet file(s)&lt;br&gt;written to output_dir"/]
 
     %% Edges
-    identify_paths -.-&gt; path --&gt; convert_to_parquet
-    output_dir &amp; chunk_size --&gt; convert_to_parquet
-    convert_to_parquet --&gt; output
+    identify_paths -.-&gt; path --&gt; convert_register
+    output_dir &amp; chunk_size --&gt; convert_register
+    convert_register --&gt; output
 
     %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
@@ -173,7 +173,7 @@
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: Expected workflow for converting SAS files from a single register using <code><a href="../reference/convert_to_parquet.html">convert_to_parquet()</a></code>.
+Figure 1: Expected workflow for converting SAS files from a single register using <code><a href="../reference/convert_register.html">convert_register()</a></code>.
 </figcaption></figure>
 </div>
 </div>

@@ -2,7 +2,9 @@
 
 ## Main functions
 
-- [`convert_to_parquet()`](https://dp-next.github.io/fastreg/reference/convert_to_parquet.md)
+- [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
+  : Convert a single register SAS file to Parquet
+- [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
   : Convert register SAS file(s) and save to Parquet format
 - [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
   : Read a Parquet register

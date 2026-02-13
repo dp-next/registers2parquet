@@ -93,21 +93,26 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dp-next.github.io/fastreg/">fastreg</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Convert SAS files to Parquet</span></span>
-<span><span class="fu"><a href="reference/convert_to_parquet.html">convert_to_parquet</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="fu"><a href="reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="st">"path/to/sas_register/"</span><span class="op">)</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="st">"path/to/parquet_register/"</span></span>
+<span><span class="co"># Convert single SAS file to Parquet</span></span>
+<span><span class="fu"><a href="reference/convert_file.html">convert_file</a></span><span class="op">(</span></span>
+<span>  path <span class="op">=</span> <span class="st">"path/to/file.sas7bdat"</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="st">"path/to/output_dir/"</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Convert SAS files from same register to Parquet</span></span>
+<span><span class="fu"><a href="reference/convert_register.html">convert_register</a></span><span class="op">(</span></span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="st">"path/to/sas_register/"</span><span class="op">)</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="st">"path/to/output_dir/"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Use targets template to convert multiple registers in parallel</span></span>
+<span><span class="fu"><a href="reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Read Parquet register (as DuckDB table)</span></span>
 <span><span class="fu"><a href="reference/read_register.html">read_register</a></span><span class="op">(</span><span class="st">"path/to/parquet_register/"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Use targets template</span></span>
-<span><span class="fu"><a href="reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># List files</span></span>
-<span><span class="fu"><a href="reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="st">"path/to/directory/with/sas_files"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/list_parquet_files.html">list_parquet_files</a></span><span class="op">(</span><span class="st">"path/to/directory/with/parquet_files"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="st">"path/to/directory/with/sas_files"</span><span class="op">)</span></span></code></pre></div>
 <p>See <code><a href="articles/fastreg.html">vignette("fastreg")</a></code> for a complete guide.</p>
 </div>
 <div class="section level2">
