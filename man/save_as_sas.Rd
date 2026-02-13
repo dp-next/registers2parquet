@@ -9,10 +9,10 @@ save_as_sas(data_list, path)
 \arguments{
 \item{data_list}{A named list of data frames.}
 
-\item{path}{A character scalar with the directory to save the SAS files to.}
+\item{path}{Directory to save the SAS files to.}
 }
 \value{
-The path invisibly.
+The \code{path}, invisibly.
 }
 \description{
 Writes each element of a named list as a SAS file to the given directory.

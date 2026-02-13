@@ -5,9 +5,9 @@
 #' If you want to read a single Parquet file, provide the path to the file
 #' (e.g., `path/to/parquet/register.parquet`).
 #'
-#' @param path A character scalar with the path to the Parquet register.
+#' @param path Path to a Parquet file or directory.
 #'
-#' @returns The register as a DuckDB table.
+#' @returns A DuckDB table.
 #'
 #' @export
 #' @examples
@@ -41,7 +41,7 @@ read_register <- function(
 #'
 #' @inheritParams read_register
 #'
-#' @returns `path` invisibly.
+#' @returns `path`, invisibly.
 #'
 #' @keywords internal
 #' @noRd
@@ -68,8 +68,7 @@ check_parquet_path <- function(path) {
 
 #' Read a partitioned Parquet register as DuckDB table
 #'
-#' @param path A character scalar with the path to the Parquet register
-#'    directory.
+#' @param path Path to a Parquet register directory.
 #'
 #' @inherit read_register return
 #'
@@ -88,7 +87,7 @@ read_register_partition <- function(path) {
 
 #' Read a Parquet file as DuckDB table
 #'
-#' @param path A character scalar with the path to the Parquet file.
+#' @param path Path to a Parquet file.
 #'
 #' @inherit read_register return
 #'

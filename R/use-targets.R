@@ -3,10 +3,9 @@
 #' Copies a template to the given path.
 #'
 #' @param path Path to the file to create. Defaults to `_targets.R`.
-#' @param open Whether to open the file for editing. Defaults to `TRUE` in
-#'   interactive sessions.
+#' @param open Whether to open the file for editing.
 #'
-#' @returns The path to the created file (invisibly).
+#' @returns The `path`, invisibly.
 #'
 #' @export
 use_targets_template <- function(

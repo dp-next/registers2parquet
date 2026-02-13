@@ -7,17 +7,16 @@
 simulate_register(register, year = "", n = 1000)
 }
 \arguments{
-\item{register}{Name of the register. Has to be a register accepted by
-osdc::simulate_registers().}
+\item{register}{Name of the register. Must be accepted by
+\code{osdc::simulate_registers()}.}
 
-\item{year}{A character vector of year suffixes appended to the register
-name to form the list element names (e.g., \code{"2020"}, \code{"1999_1"}, or
-\code{""} for no suffix).}
+\item{year}{Year suffixes for list element names (e.g., \code{"2020"},
+\code{"1999_1"}, or \code{""} for no suffix).}
 
-\item{n}{Number of rows to simulate per year.}
+\item{n}{Number of rows per year.}
 }
 \value{
-A named list of tibble(s) with names in the format
+A named list of tibbles with in the naming scheme
 \verb{\{register\}_\{year\}}.
 }
 \description{

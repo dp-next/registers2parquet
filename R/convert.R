@@ -25,17 +25,13 @@
 #' able to handle larger-than-memory SAS files, when using `convert_file()`
 #' duplicate rows across files are not deduplicated.
 #'
-#' @param path A character vector of one or more paths to SAS file(s) for one
-#'    register. See [list_sas_files()], which is a helper for this parameter.
-#' @param output_dir A character scalar with the path to the directory to save
-#'    the output Parquet file to. Should not include the register name as this
-#'    will be extracted from `path`.
-#' @param chunk_size An integer scalar indicating the number of rows to read
-#'    at a time from the SAS files. Defaults to 10,000,000.
+#' @param path Paths to SAS files for one register. See [list_sas_files()].
+#' @param output_dir Directory to save the Parquet output to. Must not include
+#'  the register name as this will be extracted from `path` to create the
+#'  register folder.
+#' @param chunk_size Number of rows to read at a time.
 #'
-#' @returns Returns a character scalar with the path to the created Parquet
-#'    file(s) (`output_dir`) invisibly, so it can be used in a
-#'    [targets](https://books.ropensci.org/targets/) pipeline.
+#' @returns The `output_dir`, invisibly.
 #'
 #' @export
 #' @examples
@@ -83,10 +79,10 @@ convert_register <- function(
 #' Existing data will not be overwritten, but might be duplicated if it already
 #' exists in the directory, since files are saved with UUIDs in their names.
 #'
-#' @param path A character scalar with the path to a single SAS file.
+#' @param path Path to a single SAS file.
 #' @inheritParams convert_register
 #'
-#' @returns The `output_dir` invisibly.
+#' @returns The `output_dir`, invisibly.
 #'
 #' @export
 #' @examples
@@ -143,10 +139,10 @@ convert_file <- function(
 
 #' Read SAS chunk
 #'
-#' @param skip N rows to skip when reading.
+#' @param skip Number of rows to skip.
 #' @inheritParams convert_file
 #'
-#' @returns A tibble with the SAS chunk.
+#' @returns A tibble.
 #'
 #' @keywords internal
 #' @noRd
@@ -186,10 +182,9 @@ create_partition_path <- function(path, output_dir) {
 #' The year is determined as the first four consecutive numbers starting with
 #' 19 or 20 in the file name (i.e., years 1900-2099).
 #'
-#' @param path A character vector with file path to extract year from.
+#' @param path A file path.
 #'
-#' @returns An integer vector with the extracted years, or NA if no year
-#'    is found.
+#' @returns An integer, or `NA` if no year is found.
 #'
 #' @keywords internal
 #' @noRd
@@ -205,7 +200,7 @@ get_year_from_filename <- function(path) {
 #' We're using shortened UUIDs instead of integers to avoid collisions when
 #' converting registers in parallel.
 #'
-#' @returns A character scalar with a UUID with a length of 6.
+#' @returns A 6-character UUID string.
 #'
 #' @keywords internal
 #' @noRd
@@ -218,7 +213,7 @@ create_part_uuid <- function() {
 #' Maps R types to specific Arrow types to ensure consistent schemas across
 #' chunks and files.
 #'
-#' @param data A data frame to create a schema from.
+#' @param data A data frame to create the schema from.
 #'
 #' @returns An Arrow schema with consistent types.
 #'
@@ -255,7 +250,7 @@ create_arrow_schema <- function(data) {
 #'
 #' @param data A data frame.
 #'
-#' @returns A data frame with column names converted to lower case.
+#' @returns The data frame with lower case column names.
 #'
 #' @keywords internal
 #' @noRd
@@ -263,32 +258,13 @@ column_names_to_lower <- function(data) {
   dplyr::rename_with(data, tolower)
 }
 
-#' Check that all file paths are from the same register
-#'
-#' Checks that all register names (file names without any non-letters) in
-#' `path` are identical, i.e., the registers have the same name.
-#'
-#' @param path A character vector of one or more paths to SAS register files.
-#'
-#' @returns A logical that's TRUE if all paths point to files from the
-#'  same register, based on the file names.
-#'
-#' @keywords internal
-#' @noRd
-is_same_register <- function(path) {
-  register_names <- get_register_names(path)
-
-  length(unique(register_names)) == 1L
-}
-
 #' Get the register names from file paths
 #'
 #' Removes all non-letters from the file names in `path`.
 #'
-#' @param path A character vector of one or more file paths.
+#' @param path One or more file paths.
 #'
-#' @returns The file names from `path` with only letters (all non-letters
-#'  removed).
+#' @returns A character vector of register names.
 #'
 #' @keywords internal
 #' @noRd
@@ -304,9 +280,9 @@ get_register_names <- function(path) {
 #'
 #' Extracts the register name from `path`.
 #'
-#' @param path A character vector of one or more paths from the same register.
+#' @param path Paths from the same register.
 #'
-#' @returns A character scalar with the register name.
+#' @returns A single register name.
 #'
 #' @keywords internal
 #' @noRd
