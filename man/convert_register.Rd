@@ -44,7 +44,7 @@ Two columns are added to the output: \code{source_file} (the original SAS file
 path) and \code{year} (extracted from the file name, used as partition key).
 
 Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, using \code{convert_file()},
+able to handle larger-than-memory SAS files, when using \code{convert_file()}
 duplicate rows across files are not deduplicated.
 }
 \examples{
