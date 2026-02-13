@@ -22,11 +22,3 @@
 - [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
   : Use a targets pipeline template for converting SAS registers to
   Parquet
-
-## Functions used within the targets pipeline
-
-These functions are not expected to be used outside the targets pipeline
-created with the template.
-
-- [`split_paths_by_register()`](https://dp-next.github.io/fastreg/reference/split_paths_by_register.md)
-  : Group file paths by register name
