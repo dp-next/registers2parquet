@@ -1,42 +1,42 @@
 #' Use a targets pipeline template for converting SAS registers to Parquet
 #'
-#' Copies a template to the given path.
+#' Copies a `_targets.R` template to the given directory.
 #'
-#' @param path Path to the file to create. Defaults to `_targets.R`.
+#' @param path Path to the directory where `_targets.R` will be created.
+#'   Defaults to the current directory.
 #' @param open Whether to open the file for editing.
 #'
-#' @returns The `path`, invisibly.
+#' @returns The path to the created file, invisibly.
 #'
 #' @export
 #' @examples
 #' use_targets_template(path = fs::path_temp("_targets.R"))
 use_targets_template <- function(
-  path = "_targets.R",
+  path = ".",
   open = rlang::is_interactive()
 ) {
-  if (fs::path_file(path) != "_targets.R") {
-    cli::cli_abort("File name must be {.file _targets.R}.")
-  }
+  checkmate::assert_directory_exists(path)
+  target_file <- fs::path(path, "_targets.R")
 
   template_path <- fs::path_package("fastreg", "template-targets.R")
 
-  if (fs::file_exists(path)) {
+  if (fs::file_exists(target_file)) {
     cli::cli_abort(c(
-      "{.file {path}} already exists.",
-      "i" = "Delete it first or choose a different path."
+      "{.file {target_file}} already exists.",
+      "i" = "Delete it first or choose a different directory."
     ))
   }
 
-  fs::file_copy(path = template_path, new_path = path)
+  fs::file_copy(path = template_path, new_path = target_file)
 
-  if (fs::file_exists(path)) {
-    cli::cli_alert_success("Created {.file {path}}")
+  if (fs::file_exists(target_file)) {
+    cli::cli_alert_success("Created {.file {target_file}}")
     cli::cli_alert_info("Edit the {.code config} section to set your paths.")
   }
 
   if (open) {
-    utils::file.edit(path)
+    utils::file.edit(target_file)
   }
 
-  invisible(path)
+  invisible(target_file)
 }
