@@ -3,8 +3,9 @@ Title: Convert Danish register SAS files into Parquet files
 Version: 0.8.12
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
-           comment = c(ORCID = "0009-0000-2208-7088", affiliation="Steno Diabetes Center Aarhus")),
+           comment = c(ORCID = "0009-0000-2208-7088")),
     person("Luke", "Johnston", , "lwjohnst@gmail.com", role = c("aut"),
+           comment = c(ORCID = "0000-0003-4169-2616")),
     person("Steno Diabetes Center Aarhus", role = "cph"),
     person("Aarhus University", role = "cph")
     )
