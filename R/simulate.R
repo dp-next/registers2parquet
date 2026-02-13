@@ -3,14 +3,13 @@
 #' The data is simulated using `osdc::simulate_registers()`. It's used
 #' in vignettes and tests.
 #'
-#' @param register Name of the register. Has to be a register accepted by
-#'  osdc::simulate_registers().
-#' @param year A character vector of year suffixes appended to the register
-#'  name to form the list element names (e.g., `"2020"`, `"1999_1"`, or
-#'  `""` for no suffix).
-#' @param n Number of rows to simulate per year.
+#' @param register Name of the register. Must be accepted by
+#'  `osdc::simulate_registers()`.
+#' @param year Year suffixes for list element names (e.g., `"2020"`,
+#'  `"1999_1"`, or `""` for no suffix).
+#' @param n Number of rows per year.
 #'
-#' @returns A named list of tibble(s) with names in the format
+#' @returns A named list of tibbles with in the naming scheme
 #'  `{register}_{year}`.
 #'
 #' @export
@@ -39,9 +38,9 @@ simulate_register <- function(register, year = "", n = 1000) {
 #' The file names are derived from the list names.
 #'
 #' @param data_list A named list of data frames.
-#' @param path A character scalar with the directory to save the SAS files to.
+#' @param path Directory to save the SAS files to.
 #'
-#' @returns The path invisibly.
+#' @returns The `path`, invisibly.
 #'
 #' @export
 #' @examples

@@ -9,11 +9,10 @@ use_targets_template(path = "_targets.R", open = rlang::is_interactive())
 \arguments{
 \item{path}{Path to the file to create. Defaults to \verb{_targets.R}.}
 
-\item{open}{Whether to open the file for editing. Defaults to \code{TRUE} in
-interactive sessions.}
+\item{open}{Whether to open the file for editing.}
 }
 \value{
-The path to the created file (invisibly).
+The \code{path}, invisibly.
 }
 \description{
 Copies a template to the given path.
