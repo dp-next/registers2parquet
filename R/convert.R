@@ -103,8 +103,7 @@ convert_file <- function(
   # Initial checks.
   checkmate::assert_character(path)
   checkmate::assert_file_exists(path)
-  checkmate::assert_character(output_dir)
-  checkmate::assert_scalar(output_dir)
+  checkmate::assert_string(output_dir)
   checkmate::assert_int(chunk_size, lower = 10000L)
 
   # Prepare variables used in repeat below.
@@ -211,7 +210,7 @@ get_year_from_filename <- function(path) {
 #' @keywords internal
 #' @noRd
 create_part_uuid <- function() {
-  substr(uuid::UUIDgenerate(), 0, 6)
+  stringr::str_sub(uuid::UUIDgenerate(), start = 1, end = 6)
 }
 
 #' Create a consistent Arrow schema from a data frame

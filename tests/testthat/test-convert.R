@@ -71,7 +71,7 @@ test_that("convert_file() errors with incorrect input parameters", {
   # Incorrect output_dir type.
   expect_error(
     convert_file(path = sas_kontakter[[1]], output_dir = 1),
-    regexp = "character"
+    regexp = "string"
   )
   # output_dir must be scalar.
   expect_error(

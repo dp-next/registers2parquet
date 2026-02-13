@@ -73,7 +73,7 @@ test_that("reading a non-existing Parquet register throws an error", {
 })
 
 test_that("incorrect input type throws an error", {
-  expect_error(read_register(123), regexp = "character")
+  expect_error(read_register(123), regexp = "string")
   expect_error(
     read_register(c("path1.parquet", "path2.parquet")),
     regexp = "length 1"
@@ -92,4 +92,10 @@ test_that("non-Parquet file returns error", {
   fs::file_create(temp_txt_file)
 
   expect_error(read_register(temp_txt_file), temp_txt_file)
+})
+
+test_that("files with extension .parq can also be read", {
+  path <- fs::path_temp("file.parq")
+  arrow::write_parquet(simulate_register("kontakter")[[1]], sink = path)
+  expect_no_error(read_register(path))
 })
