@@ -5,7 +5,8 @@
 		"vivaxy.vscode-conventional-commits",
 		"pshaddel.conventional-branch",
 		"Posit.air-vscode",
-		"tekumara.typos-vscode"
+		"tekumara.typos-vscode",
+		"rvben.rumdl"
 	],
 	"unwantedRecommendations": []
 }

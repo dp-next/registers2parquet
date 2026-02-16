@@ -22,5 +22,6 @@
 ^\.editorconfig$
 ^\.pre-commit-config\.yaml$
 ^\.typos\.toml$
+^\.rumdl\.toml$
 ^_targets\.R$
 ^cran-comments\.md$

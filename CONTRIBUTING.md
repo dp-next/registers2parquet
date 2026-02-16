@@ -45,13 +45,13 @@ a terminal so that the working directory is the root of this project
 just run-all
 ```
 
-When committing changes, please try to follow [Conventional
-Commits](https://decisions.seedcase-project.org/why-conventional-commits/)
+When committing changes, please try to follow
+[Conventional Commits](https://decisions.seedcase-project.org/why-conventional-commits/)
 as Git messages. Using this convention allows us to be able to
 automatically create a release based on the commit message by using
 [Commitizen](https://decisions.seedcase-project.org/why-semantic-release-with-commitizen/).
 If you don't use Conventional Commits when making a commit, we will
-revise the pull request title to follow that format, as we use [squash
-merges](https://git-scm.com/docs/git-merge) when merging pull requests,
-when merging pull requests, so all other commits in the pull request
-will be squashed into one commit.
+revise the pull request title to follow that format, as we use
+[squash merges](https://git-scm.com/docs/git-merge) when merging pull
+requests, when merging pull requests, so all other commits in the pull
+request will be squashed into one commit.

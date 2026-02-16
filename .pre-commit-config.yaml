@@ -28,3 +28,8 @@ repos:
     rev: v1.43.4
     hooks:
       - id: typos
+
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.1.18
+    hooks:
+      - id: rumdl-fmt # Auto-format

@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: clean install-deps document update-wordlist spell-check check-url-cran check-url-lychee style test build-website build-readme check install-package
+run-all: clean install-deps document update-wordlist spell-check check-url-cran check-url-lychee format-md style test build-website build-readme check install-package
 
 # Clean up auto-generated files
 clean:
@@ -90,3 +90,7 @@ preview-website:
 # List all TODO items in the repository
 list-todos:
   grep -R -n --exclude="justfile" --exclude-dir="docs/deps" --exclude="*.json" --exclude="*.html" "TODO" *
+
+# Format Markdown files
+format-md:
+  uvx rumdl fmt --silent
