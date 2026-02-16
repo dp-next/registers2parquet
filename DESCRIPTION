@@ -1,5 +1,5 @@
 Package: fastreg
-Title: Work Faster on Danish Registers with Parquet
+Title: Fast Conversion and Querying of Danish Registers with 'Parquet'
 Version: 0.8.13
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
