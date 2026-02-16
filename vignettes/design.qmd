@@ -6,61 +6,51 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Scope
+This page documents the general design of fastreg. It covers some
+requirements, the public-facing interface, and some diagrams
+highlighting the general flow of the main functions.
 
-fastreg:
+## Requirements
 
-1.  Converts Danish register data from SAS files to the modern and
-    efficient Parquet format.
-2.  Reads register Parquet files into R as a DuckDB table.
-3.  Provides a [targets](https://docs.ropensci.org/targets/) pipeline
-    template to convert multiple registers in parallel.
-4.  Provides functions to list available SAS or Parquet register files
-    directly from R.
+The core requirements of fastreg are to:
+
+1. Convert Danish register data from SAS files to the modern and
+   efficient Parquet format.
+2. Read register Parquet files into R as a DuckDB table.
+3. Provide a [targets](https://docs.ropensci.org/targets/) pipeline
+   template to coordinate converting multiple registers in parallel.
+4. Provide functions to list available SAS or Parquet register files
+   directly from R.
 
 ## Interface
 
-Before implementation, we identified the main actions and objects of the
-package and mapped out the interface with diagrams of expected
-workflows.
-
-### Naming conventions
-
-We generally name function by the **action** the perform and the
-**object(s)** they perform it on, `{action}_{object}()`. **Actions** are
-verbs that describe what a function does, while **objects** are nouns
-that represent the parameters that the functions operate on. Below is
-an overview of the main actions and objects within fastreg.
+We created the interface (the functions and objects that are exposed to
+users) based on some specific naming conventions. Specifically, we
+generally name function by the **action** they perform and the
+**object(s)** they perform it on in the format `{action}_{object}()`.
+**Actions** are verbs that describe what a function does, while
+**objects** are nouns that represent the objects that the functions
+operate on. Below is an overview of the main actions and objects within
+fastreg.
 
 ::: callout-tip
-See the
-[Reference](https://dp-next.github.io/fastreg/reference/index.html) for
-a function overview.
-
-<!-- TODO: Use relative path instead? -->
+For a list of all the public functions, see the
+[Reference](https://dp-next.github.io/fastreg/reference/index.html)
+page.
 :::
 
-### Actions
+The actions are:
 
-| Action | Description |
-|-------------------------|------------------------------------------------|
-| `convert` | Convert a register SAS file (or multiple) to Parquet. |
-| `get` | Get or extract metadata, e.g., the register name from a file path. |
-| `list` | List files in a directory, e.g., SAS or Parquet files. |
-| `read` | Read a Parquet register into R as a DuckDB table. |
-| `use` | Use a template in the current project. |
+- `convert`: Convert a register SAS file (or multiple) to Parquet.
+- `list`:    List files in a directory, e.g., SAS or Parquet files.
+- `read`:    Read a Parquet register into R as a DuckDB table.
+- `use`: Use a template in the current project.
 
-: Actions used in fastreg.
+While the objects are:
 
-### Objects
-
-| Object       | Description                                         |
-|--------------|-----------------------------------------------------|
-| `chunk_size` | Number of rows to read per chunk during conversion. |
-| `path`       | A character vector of one or more paths.            |
-| `output_dir` | The directory to save the Parquet output to.        |
-
-: Objects used in fastreg.
+- `chunk_size`: Number of rows to read per chunk during conversion.
+- `path`: A character vector of one or more paths.
+- `output_dir`: The directory to save the Parquet output to.
 
 ### Converting SAS files from a single register
 
@@ -68,9 +58,8 @@ a function overview.
 %%| label: fig-flow
 %%| fig-cap: "Expected workflow for converting SAS files from a single register using `convert_register()`."
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
-
 flowchart TD
-    identify_paths("Identify register path(s)<br>with list_sas_files(path)")
+    identify_paths("Identify register path(s)<br>with 'list_sas_files(path)'")
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
@@ -92,7 +81,6 @@ flowchart TD
 %%| label: fig-targets-flow
 %%| fig-cap: "Expected workflow for converting multiple registers using the targets pipeline."
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the provided targets pipeline template."
-
 flowchart TD
     copy_pipeline("use_targets_template()")
     edit["Edit _targets.R as needed"]
@@ -112,7 +100,6 @@ flowchart TD
 %%| label: fig-flow-use
 %%| fig-cap: "Expected workflow for reading a Parquet register as a DuckDB table."
 %%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package."
-
 flowchart TD
     path[/"path<br>[Character scalar]"/]
     read_register("read_register()")
