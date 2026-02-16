@@ -21,11 +21,11 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 ## Overview
 
-fastreg converts large SAS register files (`.sas7bdat`)
-into [Apache Parquet](https://parquet.apache.org/) format. This is
-particularly useful for researchers working with Danish registers at
-Statistics Denmark, where large SAS files are common. Parquet files are
-smaller on disk, faster to read, and work well with modern tools like
+fastreg converts large SAS register files (`.sas7bdat`) into [Apache
+Parquet](https://parquet.apache.org/) format. This is particularly
+useful for researchers working with Danish registers at Statistics
+Denmark, where large SAS files are common. Parquet files are smaller on
+disk, faster to read, and work well with modern tools like
 [DuckDB](https://r.duckdb.org/) and
 [Arrow](https://arrow.apache.org/docs/r/).
 
@@ -37,16 +37,16 @@ fastreg provides functions to:
 
 -   Convert SAS files to Parquet.
 -   Read Parquet registers.
--   Create a [targets](https://docs.ropensci.org/targets/) pipeline
-    from a template for parallel batch conversion.
+-   Create a [targets](https://docs.ropensci.org/targets/) pipeline from
+    a template for parallel batch conversion.
 -   List SAS and Parquet files in directories.
 
 ## Purpose
 
 The primary purpose of the fastreg package is to simplify the process of
 converting the large Danish registers into the more modern Parquet
-storage format as well as to simplify reading these Parquet files.
-By converting data from SAS to the more modern and efficient Parquet
+storage format as well as to simplify reading these Parquet files. By
+converting data from SAS to the more modern and efficient Parquet
 format, the package reduces storage costs and aims to improve
 performance in data analysis workflows.
 
@@ -98,5 +98,7 @@ include a minimal reproducible example.
 
 ## Code of conduct
 
-This project is released with a [Code of conduct](CODE_OF_CONDUCT.md).
-By contributing to this project you agree to follow its terms.
+Please note that the fastreg project is released with a [Contributor
+Code of
+Conduct](https://dp-next.github.io/fastreg/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
