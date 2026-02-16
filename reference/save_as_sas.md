@@ -21,7 +21,7 @@ save_as_sas(data_list, path)
 
 ## Value
 
-The `path`, invisibly.
+`path`, invisibly.
 
 ## Examples
 

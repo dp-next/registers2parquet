@@ -21,12 +21,12 @@ use_targets_template(path = ".", open = rlang::is_interactive())
 
 ## Value
 
-The path to the created file, invisibly.
+The path to the created `_targets.R` file, invisibly.
 
 ## Examples
 
 ``` r
 use_targets_template(path = fs::path_temp(""))
-#> ✔ Created /tmp/Rtmp4sfE6F/_targets.R
+#> ✔ Created /tmp/RtmpPZC282/_targets.R
 #> ℹ Edit the `config` section to set your paths.
 ```

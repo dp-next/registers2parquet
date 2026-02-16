@@ -30,7 +30,7 @@ convert_file(path, output_dir, chunk_size = 10000000L)
 
 ## Value
 
-The `output_dir`, invisibly.
+`output_dir`, invisibly.
 
 ## Examples
 

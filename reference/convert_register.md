@@ -22,10 +22,10 @@ Two columns are added to the output: `source_file` (the original SAS
 file path) and `year` (extracted from the file name, used as partition
 key).
 
-Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, when using
+To be able to handle larger-than-memory SAS files, this function uses
 [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
-duplicate rows across files are not deduplicated.
+internally and only converts one file at a time in chunks. As a result,
+identical rows are not deduplicated.
 
 ## Usage
 
@@ -52,7 +52,7 @@ convert_register(path, output_dir, chunk_size = 10000000L)
 
 ## Value
 
-The `output_dir`, invisibly.
+`output_dir`, invisibly.
 
 ## Examples
 
@@ -65,5 +65,5 @@ convert_register(
 #> ✔ Converted test.sas7bdat
 #> ✔ Successfully converted 1 file.
 #> • Input: "test.sas7bdat"
-#> • Output: Register files in /tmp/Rtmp4sfE6F/path/to/output/register/test
+#> • Output: Register files in /tmp/RtmpPZC282/path/to/output/register/test
 ```

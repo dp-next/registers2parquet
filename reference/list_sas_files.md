@@ -17,7 +17,7 @@ list_sas_files(path)
 
 ## Value
 
-The path(s) to the found SAS files.
+The path(s) to the found SAS file(s).
 
 ## Examples
 

@@ -15,9 +15,9 @@ year=__HIVE_DEFAULT_PARTITION__ partition, which is the standard Hive
 convention for missing partition values.
 Two columns are added to the output: source_file (the original SAS file
 path) and year (extracted from the file name, used as partition key).
-Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, when using convert_file()
-duplicate rows across files are not deduplicated.'><meta property="og:description" content='This function reads one or more SAS files for a given register, and saves the
+To be able to handle larger-than-memory SAS files, this function uses
+convert_file() internally and only converts one file at a time in chunks.
+As a result, identical rows are not deduplicated.'><meta property="og:description" content='This function reads one or more SAS files for a given register, and saves the
 data in Parquet format. It expects the input SAS files to come from the same
 register, e.g., different years of the same register. The function checks
 that all files belong to the same register by comparing the alphabetic
@@ -33,9 +33,9 @@ year=__HIVE_DEFAULT_PARTITION__ partition, which is the standard Hive
 convention for missing partition values.
 Two columns are added to the output: source_file (the original SAS file
 path) and year (extracted from the file name, used as partition key).
-Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, when using convert_file()
-duplicate rows across files are not deduplicated.'></head><body>
+To be able to handle larger-than-memory SAS files, this function uses
+convert_file() internally and only converts one file at a time in chunks.
+As a result, identical rows are not deduplicated.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -91,9 +91,9 @@ is saved in a
 convention for missing partition values.</p>
 <p>Two columns are added to the output: <code>source_file</code> (the original SAS file
 path) and <code>year</code> (extracted from the file name, used as partition key).</p>
-<p>Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, when using <code><a href="convert_file.html">convert_file()</a></code>
-duplicate rows across files are not deduplicated.</p>
+<p>To be able to handle larger-than-memory SAS files, this function uses
+<code><a href="convert_file.html">convert_file()</a></code> internally and only converts one file at a time in chunks.
+As a result, identical rows are not deduplicated.</p>
     </div>
 
     <div class="section level2">
@@ -121,7 +121,7 @@ register folder.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The <code>output_dir</code>, invisibly.</p>
+    <p><code>output_dir</code>, invisibly.</p>
     </div>
 
     <div class="section level2">
@@ -134,7 +134,7 @@ register folder.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Converted <span style="color: #0000BB;">test.sas7bdat</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully converted 1 file.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Input: <span style="color: #0000BB;">"test.sas7bdat"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Output: Register files in <span style="color: #0000BB;">/tmp/Rtmp4sfE6F/path/to/output/register/test</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Output: Register files in <span style="color: #0000BB;">/tmp/RtmpPZC282/path/to/output/register/test</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

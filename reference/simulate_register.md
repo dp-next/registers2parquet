@@ -28,7 +28,8 @@ simulate_register(register, year = "", n = 1000)
 
 ## Value
 
-A named list of tibbles with in the naming scheme `{register}_{year}`.
+A named list of tibbles following the naming scheme `{register}_{year}`
+or just `{register}` when year = "".
 
 ## Examples
 

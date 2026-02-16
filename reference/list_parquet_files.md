@@ -18,7 +18,7 @@ list_parquet_files(path)
 
 ## Value
 
-The path(s) to the found SAS files.
+The path(s) to the found Parquet file(s).
 
 ## Examples
 
