@@ -8,7 +8,8 @@ exclude = [
     # This is auto-generated from the qmd version
     "**/README.md",
     # This has it's own structure
-    "**/LICENSE.md"
+    "**/LICENSE.md",
+    "**/cran-comments.md"
 ]
 
 # List style: `-`
