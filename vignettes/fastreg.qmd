@@ -235,6 +235,8 @@ The pipeline finds all SAS files, groups them by register name, and
 converts each in parallel. Re-running `tar_make()` only re-converts
 registers whose source files have changed.
 
+Below, you can see the output of running the pipeline with the example data:
+
 ```{r output-pipeline}
 #| echo: false
 withr::with_dir(fs::path_dir(config$output_dir), {
