@@ -1,11 +1,11 @@
 # Changelog
 
-Since we follow [Conventional
-Commits](https://decisions.seedcase-project.org/why-conventional-commits)
+Since we follow
+[Conventional Commits](https://decisions.seedcase-project.org/why-conventional-commits)
 when writing commit messages, we're able to automatically create formal
 "releases" of the website based on the commit messages. Releases in the
-context of websites are simply snapshots in time of the website
-content. We use
+context of websites are simply snapshots in time of the website content.
+We use
 [Commitizen](https://decisions.seedcase-project.org/why-semantic-release-with-commitizen)
 to be able to automatically create these releases, which uses
 [SemVar](https://semverdoc.org) as the version numbering scheme.
@@ -38,7 +38,8 @@ each release.
 
 ### Fix
 
-- 🐛 abort `use_targets_template()` if file name is not `_targets.R` (#181)
+- 🐛 abort `use_targets_template()` if file name is not `_targets.R`
+  (#181)
 
 ## 0.8.9 (2026-02-13)
 
@@ -88,7 +89,8 @@ each release.
 
 ### Refactor
 
-- ♻️ get register name internally in `convert_to_parquet` from `path` (#161)
+- ♻️ get register name internally in `convert_to_parquet` from `path`
+  (#161)
 
 ## 0.8.1 (2026-02-06)
 
@@ -118,7 +120,8 @@ each release.
 
 ### Fix
 
-- :bug: update `convert_*()` param name in template; `file_paths` -> `path` (#150)
+- :bug: update `convert_*()` param name in template; `file_paths` ->
+  `path` (#150)
 
 ## 0.7.6 (2026-02-05)
 
@@ -184,7 +187,8 @@ each release.
 
 ### Refactor
 
-- :adhesive_bandage: ensure `source_file` is character before Arrow schema creation (#120)
+- :adhesive_bandage: ensure `source_file` is character before Arrow
+  schema creation (#120)
 
 ## 0.6.1 (2026-01-25)
 
@@ -196,7 +200,8 @@ each release.
 
 ### Feat
 
-- ✨ read SAS files in chunks; lowercase column names; align Arrow schemas (#112)
+- ✨ read SAS files in chunks; lowercase column names; align Arrow
+  schemas (#112)
 
 ## 0.5.0 (2025-12-15)
 
