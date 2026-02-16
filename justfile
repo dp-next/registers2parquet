@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: clean install-deps document update-wordlist spell-check style test build-website build-readme check install-package
+run-all: clean install-deps document update-wordlist spell-check check-url-cran check-url-lychee style test build-website build-readme check install-package
 
 # Clean up auto-generated files
 clean:
@@ -41,9 +41,14 @@ spell-check:
   devtools::spell_check()
 
 # Check URLs based on CRAN requirements
-url-check:
+check-url-cran:
   #!/usr/bin/env Rscript
   urlchecker::url_check()
+
+# Install https://github.com/lycheeverse/lychee#installation
+# Check URLs using lychee tool
+check-url-lychee:
+  lychee .
 
 # Style all R code in the package
 style:
