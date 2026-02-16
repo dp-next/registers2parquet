@@ -9,11 +9,11 @@ Authors@R: c(
     person("Steno Diabetes Center Aarhus", role = "cph"),
     person("Aarhus University", role = "cph")
     )
-Description: Converts large Danish register SAS files (`.sas7bdat`) into
-    Parquet format with automatic year-based Hive partitioning and
-    chunked reading for larger-than-memory files. Supports batch and
-    parallel conversion with a targets pipeline and reading those
-    registers into DuckDB tables for faster querying and analyses.
+Description: Converts large Danish register files ('sas7bdat') into 'Parquet'
+    format with year-based 'Hive' partitioning and chunked reading for
+    larger-than-memory files. Supports parallel conversion with a 'targets'
+    pipeline and reading those registers into 'DuckDB' tables for faster
+    querying and analyses.
 License: MIT + file LICENSE
 URL: https://dp-next.github.io/fastreg/ https://github.com/dp-next/fastreg
 BugReports: https://github.com/dp-next/fastreg/issues
