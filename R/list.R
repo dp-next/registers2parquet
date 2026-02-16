@@ -5,7 +5,7 @@
 #'
 #' @param path Directory to search.
 #'
-#' @returns The path(s) to the found SAS files.
+#' @returns The path(s) to the found SAS file(s).
 #'
 #' @export
 #' @examples
@@ -39,7 +39,7 @@ list_sas_files <- function(path) {
 #'
 #' @inheritParams list_sas_files
 #'
-#' @returns The path(s) to the found SAS files.
+#' @returns The path(s) to the found Parquet file(s).
 #'
 #' @export
 #' @examples
