@@ -15,9 +15,9 @@ reference:
 - contents:
   - starts_with("convert")
   - read_register
+  - use_targets_template
 - title: Helper functions
 - contents:
   - starts_with("list")
   - save_as_sas
   - simulate_register
-  - use_targets_template
