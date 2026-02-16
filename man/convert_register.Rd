@@ -16,7 +16,7 @@ register folder.}
 \item{chunk_size}{Number of rows to read at a time.}
 }
 \value{
-The \code{output_dir}, invisibly.
+\code{output_dir}, invisibly.
 }
 \description{
 This function reads one or more SAS files for a given register, and saves the
@@ -39,9 +39,9 @@ convention for missing partition values.
 Two columns are added to the output: \code{source_file} (the original SAS file
 path) and \code{year} (extracted from the file name, used as partition key).
 
-Because this function only converts one file at a time (in chunks) to be
-able to handle larger-than-memory SAS files, when using \code{convert_file()}
-duplicate rows across files are not deduplicated.
+To be able to handle larger-than-memory SAS files, this function uses
+\code{convert_file()} internally and only converts one file at a time in chunks.
+As a result, identical rows are not deduplicated.
 }
 \examples{
 sas_file_directory <- fs::path_package("fastreg", "extdata")
