@@ -40,21 +40,22 @@
 <div id="contributing" class="section level1">
 
 <div class="section level2">
-<h2 id="issues-and-bugs-bug">Issues and bugs <span class="emoji" data-emoji="bug">🐛</span>
-<a class="anchor" aria-label="anchor" href="#issues-and-bugs-bug"></a></h2>
-<p>The easiest way to contribute is to report issues or bugs that you might find while using <code>fastreg</code>. You can do this by creating a <a href="https://github.com/dp-next/fastreg/issues/new/" class="external-link">new</a> issue on our GitHub repository.</p>
+<h2 id="bug-issues-and-bugs">
+<span class="emoji" data-emoji="bug">🐛</span> Issues and bugs<a class="anchor" aria-label="anchor" href="#bug-issues-and-bugs"></a></h2>
+<p>The easiest way to contribute is to report issues or bugs that you might find while using fastreg. You can do this by creating a <a href="https://github.com/dp-next/fastreg/issues/new/choose" class="external-link">new</a> issue on our GitHub repository.</p>
 </div>
 <div class="section level2">
-<h2 id="adding-or-modifying-content-pencil2">Adding or modifying content <span class="emoji" data-emoji="pencil2">✏️</span>
-<a class="anchor" aria-label="anchor" href="#adding-or-modifying-content-pencil2"></a></h2>
-<p>To contribute, you first need to install <a href="https://docs.astral.sh/uv/" class="external-link">uv</a> and <a href="https://just.systems/man/en/packages.html" class="external-link">justfile</a>. We use uv and justfile to manage our project, such as to install development dependencies, run checks, and many other build tasks. Both the uv and justfile websites have a more detailed guide on using them, but below are some simple instructions to get you started.</p>
-<p>It’s easiest to install uv and justfile using <a href="https://pypa.github.io/pipx/" class="external-link">pipx</a>, so install that first. Then, install uv and justfile by running:</p>
+<h2 id="pencil2-adding-or-modifying-content">
+<span class="emoji" data-emoji="pencil2">✏️</span> Adding or modifying content<a class="anchor" aria-label="anchor" href="#pencil2-adding-or-modifying-content"></a></h2>
+<p>If you would like to contribute content, please check out our <a href="https://guidebook.seedcase-project.org/" class="external-link">guidebook</a> for more specific details on how we work and develop. It is a regularly evolving document, so is at various states of completion.</p>
+<p>To contribute to fastreg, you first need to install <a href="https://docs.astral.sh/uv/" class="external-link">uv</a> and <a href="https://just.systems/man/en/packages.html" class="external-link">justfile</a>. We use uv and justfile to manage our project, such as to run checks and test the package. Both the uv and justfile websites have a more detailed guide on using uv, but below are some simple instructions to get you started.</p>
+<p>It’s easiest to install uv and justfile using <a href="https://pipx.pypa.io/stable/" class="external-link">pipx</a>, so install that first. Then, install uv and justfile by running:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">pipx</span> install uv rust-just</span></code></pre></div>
 <p>We keep all our development workflows in the <code>justfile</code>, so you can explore it to see what commands are available. To see a list of commands available, run:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">just</span></span></code></pre></div>
-<p>As you contribute, make sure your changes will pass our tests by opening a terminal so that the working directory is the root of this project’s repository and running:</p>
+<p>As you contribute, make sure your changes will pass our tests by opening a terminal so that the working directory is the root of this project (fastreg) and running:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">just</span> run-all</span></code></pre></div>
-<p>When committing changes, please try to follow <a href="https://decisions.seedcase-project.org/why-conventional-commits" class="external-link">Conventional Commits</a> as Git messages. Using this convention allows us to be able to automatically create a release based on the commit message by using <a href="https://decisions.seedcase-project.org/why-semantic-release-with-commitizen" class="external-link">Commitizen</a>. If you don’t use Conventional Commits when making a commit, we will revise the pull request title to follow that format, as we use <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/squashing-commits/about-squash-merges" class="external-link">squash merges</a> when merging pull requests, so all other commits in the pull request will be squashed into one commit.</p>
+<p>When committing changes, please try to follow <a href="https://decisions.seedcase-project.org/why-conventional-commits/" class="external-link">Conventional Commits</a> as Git messages. Using this convention allows us to be able to automatically create a release based on the commit message by using <a href="https://decisions.seedcase-project.org/why-semantic-release-with-commitizen/" class="external-link">Commitizen</a>. If you don’t use Conventional Commits when making a commit, we will revise the pull request title to follow that format, as we use <a href="https://git-scm.com/docs/git-merge" class="external-link">squash merges</a> when merging pull requests, when merging pull requests, so all other commits in the pull request will be squashed into one commit.</p>
 </div>
 </div>
 
