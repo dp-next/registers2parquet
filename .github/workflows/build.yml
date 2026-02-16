@@ -40,8 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # Commented out bc there seems to be issues with the macos build currently.
-          # - {os: macos-latest,   r: 'release'}
+          - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           # NOTE: These take a long time to run, so won't use them for regular development.
