@@ -1,4 +1,4 @@
 # License
 
-    YEAR: 2025
-    COPYRIGHT HOLDER: Aarhus University
+    YEAR: 2026
+    COPYRIGHT HOLDER: fastreg authors

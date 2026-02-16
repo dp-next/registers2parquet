@@ -8,6 +8,9 @@
   : Convert register SAS file(s) and save to Parquet format
 - [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
   : Read a Parquet register
+- [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
+  : Use a targets pipeline template for converting SAS registers to
+  Parquet
 
 ## Helper functions
 
@@ -19,6 +22,3 @@
   : Save a list of data frames as SAS files
 - [`simulate_register()`](https://dp-next.github.io/fastreg/reference/simulate_register.md)
   : Simulate an example register
-- [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
-  : Use a targets pipeline template for converting SAS registers to
-  Parquet
