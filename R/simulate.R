@@ -10,7 +10,7 @@
 #' @param n Number of rows per year.
 #'
 #' @returns A named list of tibbles following the naming scheme
-#'  `{register}_{year}` or just {register} when year = "".
+#'  `{register}_{year}` or just `{register}` when year = "".
 #'
 #' @export
 #' @examples
