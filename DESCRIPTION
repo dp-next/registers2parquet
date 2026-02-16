@@ -31,7 +31,6 @@ Imports:
     purrr,
     rlang,
     stringr,
-    targets,
     uuid
 Suggests:
     crew,
@@ -40,6 +39,7 @@ Suggests:
     duckdb,
     qs2,
     quarto,
+    targets,
     testthat (>= 3.0.0),
     tidyselect,
     withr
