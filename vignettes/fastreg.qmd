@@ -219,6 +219,7 @@ targets::tar_make()
 
 ```{r edit-and-run-pipeline}
 #| echo: false
+#| eval: !expr requireNamespace("targets", quietly = TRUE)
 template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
 modified_content <- template_content |>
   stringr::str_replace("/path/to/register/sas/files/directory", config$input_dir) |>
