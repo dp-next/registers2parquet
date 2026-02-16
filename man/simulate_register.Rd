@@ -16,8 +16,8 @@ simulate_register(register, year = "", n = 1000)
 \item{n}{Number of rows per year.}
 }
 \value{
-A named list of tibbles with in the naming scheme
-\verb{\{register\}_\{year\}}.
+A named list of tibbles following the naming scheme
+\verb{\{register\}_\{year\}} or just \code{{register}} when year = "".
 }
 \description{
 The data is simulated using \code{osdc::simulate_registers()}. It's used

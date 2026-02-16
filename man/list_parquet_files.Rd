@@ -10,7 +10,7 @@ list_parquet_files(path)
 \item{path}{Directory to search.}
 }
 \value{
-The path(s) to the found SAS files.
+The path(s) to the found Parquet file(s).
 }
 \description{
 Lists all Parquet register files (with the extension \code{.parquet}

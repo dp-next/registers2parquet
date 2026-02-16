@@ -21,9 +21,9 @@
 #' Two columns are added to the output: `source_file` (the original SAS file
 #' path) and `year` (extracted from the file name, used as partition key).
 #'
-#' Because this function only converts one file at a time (in chunks) to be
-#' able to handle larger-than-memory SAS files, when using `convert_file()`
-#' duplicate rows across files are not deduplicated.
+#' To be able to handle larger-than-memory SAS files, this function uses
+#' `convert_file()` internally and only converts one file at a time in chunks.
+#' As a result, identical rows are not deduplicated.
 #'
 #' @param path Paths to SAS files for one register. See [list_sas_files()].
 #' @param output_dir Directory to save the Parquet output to. Must not include
@@ -31,7 +31,7 @@
 #'  register folder.
 #' @param chunk_size Number of rows to read at a time.
 #'
-#' @returns The `output_dir`, invisibly.
+#' @returns `output_dir`, invisibly.
 #'
 #' @export
 #' @examples
@@ -82,7 +82,7 @@ convert_register <- function(
 #' @param path Path to a single SAS file.
 #' @inheritParams convert_register
 #'
-#' @returns The `output_dir`, invisibly.
+#' @returns `output_dir`, invisibly.
 #'
 #' @export
 #' @examples
@@ -184,7 +184,7 @@ create_partition_path <- function(path, output_dir) {
 #'
 #' @param path A file path.
 #'
-#' @returns An integer, or `NA` if no year is found.
+#' @returns The year, or `NA` if no year is found.
 #'
 #' @keywords internal
 #' @noRd

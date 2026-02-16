@@ -9,8 +9,8 @@
 #'  `"1999_1"`, or `""` for no suffix).
 #' @param n Number of rows per year.
 #'
-#' @returns A named list of tibbles with in the naming scheme
-#'  `{register}_{year}`.
+#' @returns A named list of tibbles following the naming scheme
+#'  `{register}_{year}` or just `{register}` when year = "".
 #'
 #' @export
 #' @examples
@@ -40,7 +40,7 @@ simulate_register <- function(register, year = "", n = 1000) {
 #' @param data_list A named list of data frames.
 #' @param path Directory to save the SAS files to.
 #'
-#' @returns The `path`, invisibly.
+#' @returns `path`, invisibly.
 #'
 #' @export
 #' @examples

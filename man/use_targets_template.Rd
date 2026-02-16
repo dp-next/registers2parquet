@@ -13,7 +13,7 @@ Defaults to the current directory.}
 \item{open}{Whether to open the file for editing.}
 }
 \value{
-The path to the created file, invisibly.
+The path to the created \verb{_targets.R} file, invisibly.
 }
 \description{
 Copies a \verb{_targets.R} template to the given directory.

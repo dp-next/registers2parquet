@@ -6,7 +6,7 @@
 #'   Defaults to the current directory.
 #' @param open Whether to open the file for editing.
 #'
-#' @returns The path to the created file, invisibly.
+#' @returns The path to the created `_targets.R` file, invisibly.
 #'
 #' @export
 #' @examples

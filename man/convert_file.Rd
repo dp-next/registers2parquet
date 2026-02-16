@@ -16,7 +16,7 @@ register folder.}
 \item{chunk_size}{Number of rows to read at a time.}
 }
 \value{
-The \code{output_dir}, invisibly.
+\code{output_dir}, invisibly.
 }
 \description{
 To be able to handle larger-than-memory files, the SAS file is converted in
