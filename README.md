@@ -95,5 +95,7 @@ include a minimal reproducible example.
 
 ## Code of conduct
 
-This project is released with a [Code of conduct](CODE_OF_CONDUCT.md).
-By contributing to this project you agree to follow its terms.
+Please note that the fastreg project is released with a [Contributor
+Code of
+Conduct](https://dp-next.github.io/fastreg/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
