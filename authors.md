@@ -16,12 +16,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/dp-next/fastreg/blob/main/DESCRIPTION)
 
-Brødbæk S, Johnston L (2026). *fastreg: Work Faster on Danish Registers
-with Parquet*. R package version 0.8.13,
+Brødbæk S, Johnston L (2026). *fastreg: Fast Conversion and Querying of
+Danish Registers with 'Parquet'*. R package version 0.8.13,
 <https://dp-next.github.io/fastreg/>.
 
     @Manual{,
-      title = {fastreg: Work Faster on Danish Registers with Parquet},
+      title = {fastreg: Fast Conversion and Querying of Danish Registers with 'Parquet'},
       author = {Signe Kirk Brødbæk and Luke Johnston},
       year = {2026},
       note = {R package version 0.8.13},
