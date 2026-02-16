@@ -79,7 +79,8 @@ convert_file(
   output_dir = output_file_dir)
 ```
 
-Even though this only converts a single file, the output is partitioned by year extracted from the file name:
+Even though this only converts a single file, the output is partitioned
+by year extracted from the file name:
 
 ```{r output-tree-file}
 #| echo: false
@@ -110,8 +111,8 @@ convert_register(
 )
 ```
 
-As with `convert_file()`, the output is partitioned by year, extracted from
-file names:
+As with `convert_file()`, the output is partitioned by year, extracted
+from file names:
 
 ```{r output-tree}
 #| echo: false
@@ -183,7 +184,8 @@ D)  File without year in name → placed in
 For many or large files, fastreg provides a
 [targets](https://docs.ropensci.org/targets/) pipeline template that
 parallelises conversion across CPU cores. By default it uses 10 workers,
-but that can be adjusted in the pipeline to fit the available resources.
+but that can be adjusted in the pipeline, the `_targets.R` file, to fit
+the available resources.
 
 ### Create the pipeline file
 
@@ -233,6 +235,9 @@ withr::with_dir(pipeline_dir, {
 The pipeline finds all SAS files, groups them by register name, and
 converts each in parallel. Re-running `tar_make()` only re-converts
 registers whose source files have changed.
+
+Below, you can see the output of running the pipeline with the example
+data:
 
 ```{r output-pipeline}
 #| echo: false
