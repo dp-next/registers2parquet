@@ -13,33 +13,33 @@ gh:
 [![Build](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml/badge.svg)](https://github.com/{{< meta gh.org >}}/{{< meta gh.repo >}}/actions/workflows/build.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main.svg)](https://results.pre-commit.ci/latest/github/{{< meta gh.org >}}/{{< meta gh.repo >}}/main)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <!-- badges: end -->
 
 ## Overview
 
-fastreg converts large SAS register files (`.sas7bdat`) into [Apache
-Parquet](https://parquet.apache.org/) format. This is particularly
-useful for researchers working with Danish registers at Statistics
-Denmark, where large SAS files are common. Parquet files are smaller on
-disk, faster to read, and work well with modern tools like
+fastreg converts large SAS register files (`.sas7bdat`) into
+[Apache Parquet](https://parquet.apache.org/) format. This is
+particularly useful for researchers working with Danish registers at
+Statistics Denmark, where large SAS files are common. Parquet files are
+smaller on disk, faster to read, and work well with modern tools like
 [DuckDB](https://r.duckdb.org/) and
 [Arrow](https://arrow.apache.org/docs/r/).
 
 A *register* in this context refers to a collection of related data
 files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
-`kontakter_2021.sas7bdat` (from Landspatientregisteret, LPR3).
+`kontakter_2021.sas7bdat` (from
+[Landspatientregisteret](https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/landspatientregisteret),
+LPR3).
 
 fastreg provides functions to:
 
--   Convert SAS files to Parquet.
--   Read Parquet registers.
--   Create a [targets](https://docs.ropensci.org/targets/) pipeline from
+- Convert SAS files to Parquet.
+- Read Parquet registers.
+- Create a [targets](https://docs.ropensci.org/targets/) pipeline from
     a template for parallel batch conversion.
--   List SAS and Parquet files in directories.
+- List SAS and Parquet files in directories.
 
 ## Purpose
 
@@ -52,40 +52,54 @@ performance in data analysis workflows.
 
 ## Installation
 
-<!-- TODO: Uncomment when released to CRAN -->
+To install from CRAN, run:
 
 ```{r, eval = FALSE}
-# install.packages("fastreg")
+install.packages("fastreg")
+```
 
+To install the latest development version from GitHub, run:
+
+```{r, eval = FALSE}
 # Development version on GitHub
 pak::pak("dp-next/fastreg")
 ```
 
 ## Usage
 
+To convert a single SAS file to Parquet, use `convert_file()`:
+
 ```{r, eval = FALSE}
 library(fastreg)
 
-# Convert single SAS file to Parquet
 convert_file(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Convert SAS files from same register to Parquet
+You can use the helper function `list_sas_files()` to list all SAS files
+in a directory, which can help convert several registers of the same
+year into one Parquet Hive partitioned dataset:
+
+```{r, eval = FALSE}
 convert_register(
   path = list_sas_files("path/to/sas_register/"),
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Use targets template to convert multiple registers in parallel
+fastreg also comes with a [targets](https://books.ropensci.org/targets/)
+template to make it easier to convert multiple registers in parallel:
+
+```{r, eval = FALSE}
 use_targets_template()
+```
 
-# Read Parquet register (as DuckDB table)
+To read one of the Parquet registers, use `read_register()`:
+
+```{r, eval = FALSE}
 read_register("path/to/parquet_register/")
-
-# List files
-list_sas_files("path/to/directory/with/sas_files")
 ```
 
 See `vignette("fastreg")` for a complete guide.
@@ -98,7 +112,6 @@ include a minimal reproducible example.
 
 ## Code of conduct
 
-Please note that the fastreg project is released with a [Contributor
-Code of
-Conduct](https://dp-next.github.io/fastreg/CODE_OF_CONDUCT.html). By
-contributing to this project, you agree to abide by its terms.
+Please note that the fastreg project is released with a
+[Contributor Code of Conduct](https://dp-next.github.io/fastreg/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

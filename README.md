@@ -28,7 +28,9 @@ disk, faster to read, and work well with modern tools like
 
 A *register* in this context refers to a collection of related data
 files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
-`kontakter_2021.sas7bdat` (from Landspatientregisteret, LPR3).
+`kontakter_2021.sas7bdat` (from
+[Landspatientregisteret](https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/landspatientregisteret),
+LPR3).
 
 fastreg provides functions to:
 
@@ -49,40 +51,54 @@ performance in data analysis workflows.
 
 ## Installation
 
-<!-- TODO: Uncomment when released to CRAN -->
+To install from CRAN, run:
 
 ``` r
-# install.packages("fastreg")
+install.packages("fastreg")
+```
 
+To install the latest development version from GitHub, run:
+
+``` r
 # Development version on GitHub
 pak::pak("dp-next/fastreg")
 ```
 
 ## Usage
 
+To convert a single SAS file to Parquet, use `convert_file()`:
+
 ``` r
 library(fastreg)
 
-# Convert single SAS file to Parquet
 convert_file(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Convert SAS files from same register to Parquet
+You can use the helper function `list_sas_files()` to list all SAS files
+in a directory, which can help convert several registers of the same
+year into one Parquet Hive partitioned dataset:
+
+``` r
 convert_register(
   path = list_sas_files("path/to/sas_register/"),
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Use targets template to convert multiple registers in parallel
+fastreg also comes with a [targets](https://books.ropensci.org/targets/)
+template to make it easier to convert multiple registers in parallel:
+
+``` r
 use_targets_template()
+```
 
-# Read Parquet register (as DuckDB table)
+To read one of the Parquet registers, use `read_register()`:
+
+``` r
 read_register("path/to/parquet_register/")
-
-# List files
-list_sas_files("path/to/directory/with/sas_files")
 ```
 
 See `vignette("fastreg")` for a complete guide.
