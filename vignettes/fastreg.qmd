@@ -183,7 +183,8 @@ D)  File without year in name → placed in
 For many or large files, fastreg provides a
 [targets](https://docs.ropensci.org/targets/) pipeline template that
 parallelises conversion across CPU cores. By default it uses 10 workers,
-but that can be adjusted in the pipeline to fit the available resources.
+but that can be adjusted in the pipeline, the `_targets.R` file, to fit the
+available resources.
 
 ### Create the pipeline file
 
