@@ -46,11 +46,13 @@ jobs:
         with:
           dependencies: '"hard"'
           cache: false
+          # signekb added Quarto since we use Quarto to build the vignettes.
           extra-packages: |
             any::rcmdcheck
             any::testthat
             any::knitr
             any::rmarkdown
+            any::quarto 
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
