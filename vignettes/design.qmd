@@ -18,14 +18,14 @@ The core requirements of fastreg are to:
    efficient Parquet format.
 2. Read register Parquet files into R as a DuckDB table.
 3. Provide a [targets](https://docs.ropensci.org/targets/) pipeline
-   template to coordinate converting multiple registers in parallel.
+   template to convert multiple registers in parallel.
 4. Provide functions to list available SAS or Parquet register files
    directly from R.
 
 ## Interface
 
-We created the interface (the functions and objects that are exposed to
-users) based on some specific naming conventions. Specifically, we
+The interface (the functions and objects that are exposed to
+users) is based on some specific naming conventions. Specifically, we
 generally name function by the **action** they perform and the
 **object(s)** they perform it on in the format `{action}_{object}()`.
 **Actions** are verbs that describe what a function does, while
@@ -52,6 +52,12 @@ While the objects are:
 - `path`: A character vector of one or more paths.
 - `output_dir`: The directory to save the Parquet output to.
 
+::: callout-tip
+For a list of all the public functions, see the
+[Reference](https://dp-next.github.io/fastreg/reference/index.html)
+page.
+:::
+
 ### Converting SAS files from a single register
 
 ```{mermaid}
@@ -59,7 +65,7 @@ While the objects are:
 %%| fig-cap: "Expected workflow for converting SAS files from a single register using `convert_register()`."
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
 flowchart TD
-    identify_paths("Identify register path(s)<br>with 'list_sas_files(path)'")
+    identify_paths("Identify register path(s)<br>with list_sas_files(path)")
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
@@ -98,7 +104,7 @@ flowchart TD
 
 ```{mermaid}
 %%| label: fig-flow-use
-%%| fig-cap: "Expected workflow for reading a Parquet register as a DuckDB table."
+%%| fig-cap: "Expected workflow for reading a Parquet register as a DuckDB table using `read_register()`."
 %%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package."
 flowchart TD
     path[/"path<br>[Character scalar]"/]
