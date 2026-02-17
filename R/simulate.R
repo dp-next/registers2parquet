@@ -1,7 +1,7 @@
 #' Simulate an example register
 #'
-#' The data is simulated using `osdc::simulate_registers()`. It's used
-#' in vignettes and tests.
+#' This is a helper function that simulates data using
+#' `osdc::simulate_registers()`. It's used in vignettes and tests.
 #'
 #' @param register Name of the register. Must be accepted by
 #'  `osdc::simulate_registers()`.
@@ -10,7 +10,7 @@
 #' @param n Number of rows per year.
 #'
 #' @returns A named list of tibbles following the naming scheme
-#'  `{register}_{year}` or just `{register}` when year = "".
+#'  `{register}{year}` or just `{register}` when year = "".
 #'
 #' @export
 #' @examples
@@ -34,8 +34,9 @@ simulate_register <- function(register, year = "", n = 1000) {
 
 #' Save a list of data frames as SAS files
 #'
-#' Writes each element of a named list as a SAS file to the given directory.
-#' The file names are derived from the list names.
+#' This helper function is used for testing fastreg code and in the docs.
+#' It will write each element of a named list as a SAS file to the given
+#' directory. The file names are determined from the list names.
 #'
 #' @param data_list A named list of data frames.
 #' @param path Directory to save the SAS files to.
@@ -44,7 +45,10 @@ simulate_register <- function(register, year = "", n = 1000) {
 #'
 #' @export
 #' @examples
-#' save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
+#' save_as_sas(
+#'   data_list = simulate_register("kontakter", "2020"),
+#'   path = fs::path_temp()
+#' )
 save_as_sas <- function(data_list, path) {
   checkmate::assert_list(data_list, names = "named")
 

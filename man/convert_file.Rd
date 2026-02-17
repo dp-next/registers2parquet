@@ -13,7 +13,7 @@ convert_file(path, output_dir, chunk_size = 10000000L)
 the register name as this will be extracted from \code{path} to create the
 register folder.}
 
-\item{chunk_size}{Number of rows to read at a time.}
+\item{chunk_size}{Number of rows to read and convert at a time.}
 }
 \value{
 \code{output_dir}, invisibly.
