@@ -30,13 +30,13 @@ optimised for analytical workloads. Compared to
 formats like CSV), Parquet offers:
 
 - **Smaller file size**: Efficient compression significantly reduces
-    disk space, especially for large datasets.
+  disk space, especially for large datasets.
 - **Faster queries**: The columnar layout speeds up analytical queries
-    that only need a subset of columns.
+  that only need a subset of columns.
 - **Wide tool support**: Parquet is supported across data processing
-    frameworks in [R](https://www.r-project.org/),
-    [Python](https://www.python.org/), and beyond, making it easy to
-    integrate into modern workflows.
+  frameworks in [R](https://www.r-project.org/),
+  [Python](https://www.python.org/), and beyond, making it easy to
+  integrate into modern workflows.
 
 ## Setup
 
@@ -152,17 +152,17 @@ Grunddata/
 ```
 
 1. A single SAS file is converted to a single Parquet file, partitioned
-    by year from filename.
-2. Multiple SAS files with the same register and year are converted
-    into separate Parquet files in the same partition (shown below).
-    Rows between these several SAS files are not deduplicated, so you'll
-    have to check for duplicates after conversion.
+   by year from filename.
+2. Multiple SAS files with the same register and year are converted into
+   separate Parquet files in the same partition (shown below). Rows
+   between these several SAS files are not deduplicated, so you'll have
+   to check for duplicates after conversion.
 3. A large SAS file is split into multiple Parquet files that are only
-    as many rows as is determined by the `chunk_size` option.
+   as many rows as is determined by the `chunk_size` option.
 4. A SAS file without a year in file name is placed in the
-    `year=__HIVE_DEFAULT_PARTITION__/` folder (the
-    [Apache Hive](https://hive.apache.org/docs/latest/user/configuration-properties/)
-    default for missing partitions) when it is converted to Parquet.
+   `year=__HIVE_DEFAULT_PARTITION__/` folder (the
+   [Apache Hive](https://hive.apache.org/docs/latest/user/configuration-properties/)
+   default for missing partitions) when it is converted to Parquet.
 
 After converting the files into the Parquet Hive partition structure,
 the SAS files from above are output into something that looks like
