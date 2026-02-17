@@ -24,26 +24,19 @@ The core requirements of fastreg are to:
 
 ## Interface
 
-The interface (the functions and objects that are exposed to
-users) is based on some specific naming conventions. Specifically, we
-generally name function by the **action** they perform and the
-**object(s)** they perform it on in the format `{action}_{object}()`.
-**Actions** are verbs that describe what a function does, while
-**objects** are nouns that represent the objects that the functions
-operate on. Below is an overview of the main actions and objects within
-fastreg.
-
-::: callout-tip
-For a list of all the public functions, see the
-[Reference](https://dp-next.github.io/fastreg/reference/index.html)
-page.
-:::
+The interface (the functions and objects that are exposed to users) is
+based on some specific naming conventions. Specifically, we generally
+name function by the **action** they perform and the **object(s)** they
+perform it on in the format `{action}_{object}()`. **Actions** are verbs
+that describe what a function does, while **objects** are nouns that
+represent the objects that the functions operate on. Below is an
+overview of the main actions and objects within fastreg.
 
 The actions are:
 
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
-- `list`:    List files in a directory, e.g., SAS or Parquet files.
-- `read`:    Read a Parquet register into R as a DuckDB table.
+- `list`: List files in a directory, e.g., SAS or Parquet files.
+- `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Use a template in the current project.
 
 While the objects are:
