@@ -2,7 +2,6 @@
 
 export(convert_file)
 export(convert_register)
-export(list_parquet_files)
 export(list_sas_files)
 export(read_register)
 export(save_as_sas)
