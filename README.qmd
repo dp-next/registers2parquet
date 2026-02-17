@@ -67,7 +67,7 @@ pak::pak("dp-next/fastreg")
 
 ## Usage
 
-To convert a single SAS file to Parquet, use `convert_file()`:
+Use `convert_file()` to convert a single SAS file to Parquet in Hive partition format:
 
 ```{r, eval = FALSE}
 library(fastreg)
