@@ -61,7 +61,6 @@ install.packages("fastreg")
 Install the latest development version from GitHub:
 
 ```{r, eval = FALSE}
-# Development version on GitHub
 pak::pak("dp-next/fastreg")
 ```
 
@@ -78,8 +77,9 @@ convert_file(
 )
 ```
 
-Use `convert_register()` to convert several SAS files from the same register
-into a Hive partitioned Parquet dataset. To list all SAS files in a directory, you can use the helper function `list_sas_files()`:
+Use `convert_register()` to convert several SAS files from the same
+register into a Hive partitioned Parquet dataset. To list all SAS files
+in a directory, you can use the helper function `list_sas_files()`:
 
 ```{r, eval = FALSE}
 convert_register(
