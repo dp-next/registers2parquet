@@ -5,12 +5,12 @@ inst/doc
 /Meta/
 _ignore
 .quarto
+/.quarto/
+**/*.quarto_ipynb
 *.out
 *.Rout
 *_files
 _freeze
 *_freeze
 docs
-
-/.quarto/
-**/*.quarto_ipynb
+.rumdl_cache/
