@@ -181,7 +181,7 @@ section:
 ```{r config}
 config <- list(
   input_dir = fs::path_temp("sas-dir"),
-  output_dir = fs::path_temp("parquet-registers")
+  output_dir = fs::path(pipeline_dir, "parquet-registers")
 )
 ```
 
