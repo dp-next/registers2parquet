@@ -97,6 +97,15 @@ larger-than-memory data) with a default of reading 1 million rows,
 extracts 4-digit years from filenames for partitioning, and lowercases
 column names. See `?convert_file` for more details.
 
+::: callout-note
+When a SAS file contains more rows than the `chunk_size`, multiple
+Parquet files will be created from it. This doesn't affect how the data
+is loaded with `read_register()` (see
+[Reading a Parquet register](#reading-a-parquet-register) below), it
+only means you may see more Parquet files in the output than input SAS
+files.
+:::
+
 Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
 
