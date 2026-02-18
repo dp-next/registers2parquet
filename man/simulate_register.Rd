@@ -17,11 +17,11 @@ simulate_register(register, year = "", n = 1000)
 }
 \value{
 A named list of tibbles following the naming scheme
-\verb{\{register\}_\{year\}} or just \code{{register}} when year = "".
+\verb{\{register\}\{year\}} or just \code{{register}} when year = "".
 }
 \description{
-The data is simulated using \code{osdc::simulate_registers()}. It's used
-in vignettes and tests.
+This is a helper function that simulates data using
+\code{osdc::simulate_registers()}. It's used in vignettes and tests.
 }
 \examples{
 simulate_register(register = "kontakter", year = c("1999", "2000"))
