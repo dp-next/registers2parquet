@@ -7,9 +7,10 @@
 ^doc$
 ^Meta$
 ^_ignore$
+^\.rumdl_cache$
 ^vignettes/articles$
 ^dev$
-^vignettes/*_files$
+^.*_files$
 ^\.github$
 ^air\.toml$
 ^\.cz\.toml$
@@ -24,4 +25,5 @@
 ^\.typos\.toml$
 ^\.rumdl\.toml$
 ^_targets\.R$
+^.*/\.quarto$
 ^cran-comments\.md$
