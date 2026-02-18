@@ -14,8 +14,6 @@
 
 ## Helper functions
 
-- [`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet_files.md)
-  : List Parquet files in a directory
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
   : List SAS files in a directory
 - [`save_as_sas()`](https://dp-next.github.io/fastreg/reference/save_as_sas.md)
