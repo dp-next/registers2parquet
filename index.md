@@ -12,14 +12,16 @@ disk, faster to read, and work well with modern tools like
 
 A *register* in this context refers to a collection of related data
 files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
-`kontakter_2021.sas7bdat` (from Landspatientregisteret, LPR3).
+`kontakter_2021.sas7bdat` (from
+[Landspatientregisteret](https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/landspatientregisteret),
+LPR3).
 
 fastreg provides functions to:
 
 - Convert SAS files to Parquet.
 - Read Parquet registers.
 - Create a [targets](https://docs.ropensci.org/targets/) pipeline from a
-  template for parallel batch conversion.
+  template for parallel conversion.
 - List SAS and Parquet files in directories.
 
 ## Purpose
@@ -33,38 +35,62 @@ performance in data analysis workflows.
 
 ## Installation
 
-``` r
-# install.packages("fastreg")
+Install from CRAN:
 
-# Development version on GitHub
+``` r
+install.packages("fastreg")
+```
+
+Install the latest development version from GitHub:
+
+``` r
 pak::pak("dp-next/fastreg")
 ```
 
 ## Usage
 
+Use
+[`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
+to convert a single SAS file to Parquet in Hive partition format:
+
 ``` r
 library(fastreg)
 
-# Convert single SAS file to Parquet
 convert_file(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Convert SAS files from same register to Parquet
+Use
+[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
+to convert several SAS files from the same register into a Hive
+partitioned Parquet dataset. To list all SAS files in a directory, you
+can use the helper function
+[`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md):
+
+``` r
 convert_register(
   path = list_sas_files("path/to/sas_register/"),
   output_dir = "path/to/output_dir/"
 )
+```
 
-# Use targets template to convert multiple registers in parallel
+Use
+[`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
+to copy a [targets](https://books.ropensci.org/targets/) template that
+converts multiple registers in parallel into your project:
+
+``` r
 use_targets_template()
+```
 
-# Read Parquet register (as DuckDB table)
+Use
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+to read a Parquet register as a DuckDB table:
+
+``` r
 read_register("path/to/parquet_register/")
-
-# List files
-list_sas_files("path/to/directory/with/sas_files")
 ```
 
 See
