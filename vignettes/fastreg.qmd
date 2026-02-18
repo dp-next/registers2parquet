@@ -41,7 +41,7 @@ formats like CSV), Parquet offers:
 ## Setup
 
 For the examples below, we've simulated SAS register data for two
-registers, `bef` and `diagnoser`:
+registers, `bef` and `lmdb`:
 
 ```{r prepare}
 #| code-fold: true
@@ -57,14 +57,14 @@ bef_list <- simulate_register(
   n = 1000
 )
 
-diagnoser_list <- simulate_register(
-  "diagnoser",
+lmdb_list <- simulate_register(
+  "lmdb",
   c("2020", "2021"),
   n = 1000
 )
 
 save_as_sas(
-  c(bef_list, diagnoser_list),
+  c(bef_list, lmdb_list),
   sas_dir
 )
 ```
