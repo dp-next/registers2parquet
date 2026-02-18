@@ -1,58 +1,49 @@
 # Design
 
-## Scope
+This page documents the general design of fastreg. It covers some
+requirements, the public-facing interface, and some diagrams
+highlighting the general flow of the main functions.
 
-fastreg:
+## Requirements
 
-1.  Converts Danish register data from SAS files to the modern and
+The core requirements of fastreg are to:
+
+1.  Convert Danish register data from SAS files to the modern and
     efficient Parquet format.
-2.  Reads register Parquet files into R as a DuckDB table.
-3.  Provides a [targets](https://docs.ropensci.org/targets/) pipeline
+2.  Read register Parquet files into R as a DuckDB table.
+3.  Provide a [targets](https://docs.ropensci.org/targets/) pipeline
     template to convert multiple registers in parallel.
-4.  Provides functions to list available SAS or Parquet register files
+4.  Provide functions to list available SAS or Parquet register files
     directly from R.
 
 ## Interface
 
-Before implementation, we identified the main actions and objects of the
-package and mapped out the interface with diagrams of expected
-workflows.
-
-### Naming conventions
-
-We generally name function by the **action** the perform and the
-**object(s)** they perform it on, `{action}_{object}()`. **Actions** are
-verbs that describe what a function does, while **objects** are nouns
-that represent the parameters that the functions operate on. Below is an
+The interface (the functions and objects that are exposed to users) is
+based on some specific naming conventions. Specifically, we generally
+name function by the **action** they perform and the **object(s)** they
+perform it on in the format `{action}_{object}()`. **Actions** are verbs
+that describe what a function does, while **objects** are nouns that
+represent the objects that the functions operate on. Below is an
 overview of the main actions and objects within fastreg.
+
+The actions are:
+
+- `convert`: Convert a register SAS file (or multiple) to Parquet.
+- `list`: List files in a directory, e.g., SAS or Parquet files.
+- `read`: Read a Parquet register into R as a DuckDB table.
+- `use`: Use a template in the current project.
+
+While the objects are:
+
+- `chunk_size`: Number of rows to read per chunk during conversion.
+- `path`: A character vector of one or more paths.
+- `output_dir`: The directory to save the Parquet output to.
 
 > **Tip**
 >
-> See the
+> For a list of all the public functions, see the
 > [Reference](https://dp-next.github.io/fastreg/reference/index.html)
-> for a function overview.
-
-### Actions
-
-| Action    | Description                                                        |
-|-----------|--------------------------------------------------------------------|
-| `convert` | Convert a register SAS file (or multiple) to Parquet.              |
-| `get`     | Get or extract metadata, e.g., the register name from a file path. |
-| `list`    | List files in a directory, e.g., SAS or Parquet files.             |
-| `read`    | Read a Parquet register into R as a DuckDB table.                  |
-| `use`     | Use a template in the current project.                             |
-
-Actions used in fastreg.
-
-### Objects
-
-| Object       | Description                                         |
-|--------------|-----------------------------------------------------|
-| `chunk_size` | Number of rows to read per chunk during conversion. |
-| `path`       | A character vector of one or more paths.            |
-| `output_dir` | The directory to save the Parquet output to.        |
-
-Objects used in fastreg.
+> page.
 
 ### Converting SAS files from a single register
 
@@ -110,4 +101,5 @@ flowchart TD
 ```
 
 Figure 3: Expected workflow for reading a Parquet register as a DuckDB
-table.
+table using
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md).

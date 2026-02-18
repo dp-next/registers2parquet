@@ -70,84 +70,45 @@
 
 
 
-    <section class="level2"><h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
+    <p>This page documents the general design of fastreg. It covers some requirements, the public-facing interface, and some diagrams highlighting the general flow of the main functions.</p>
+<section class="level2"><h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h2>
-<p>fastreg:</p>
+<p>The core requirements of fastreg are to:</p>
 <ol type="1">
-<li>Converts Danish register data from SAS files to the modern and efficient Parquet format.</li>
-<li>Reads register Parquet files into R as a DuckDB table.</li>
-<li>Provides a <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline template to convert multiple registers in parallel.</li>
-<li>Provides functions to list available SAS or Parquet register files directly from R.</li>
+<li>Convert Danish register data from SAS files to the modern and efficient Parquet format.</li>
+<li>Read register Parquet files into R as a DuckDB table.</li>
+<li>Provide a <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline template to convert multiple registers in parallel.</li>
+<li>Provide functions to list available SAS or Parquet register files directly from R.</li>
 </ol></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
 </h2>
-<p>Before implementation, we identified the main actions and objects of the package and mapped out the interface with diagrams of expected workflows.</p>
-<section class="level3"><h3 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
-</h3>
-<p>We generally name function by the <strong>action</strong> the perform and the <strong>object(s)</strong> they perform it on, <code>{action}_{object}()</code>. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the parameters that the functions operate on. Below is an overview of the main actions and objects within fastreg.</p>
+<p>The interface (the functions and objects that are exposed to users) is based on some specific naming conventions. Specifically, we generally name function by the <strong>action</strong> they perform and the <strong>object(s)</strong> they perform it on in the format <code>{action}_{object}()</code>. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the objects that the functions operate on. Below is an overview of the main actions and objects within fastreg.</p>
+<p>The actions are:</p>
+<ul>
+<li>
+<code>convert</code>: Convert a register SAS file (or multiple) to Parquet.</li>
+<li>
+<code>list</code>: List files in a directory, e.g., SAS or Parquet files.</li>
+<li>
+<code>read</code>: Read a Parquet register into R as a DuckDB table.</li>
+<li>
+<code>use</code>: Use a template in the current project.</li>
+</ul>
+<p>While the objects are:</p>
+<ul>
+<li>
+<code>chunk_size</code>: Number of rows to read per chunk during conversion.</li>
+<li>
+<code>path</code>: A character vector of one or more paths.</li>
+<li>
+<code>output_dir</code>: The directory to save the Parquet output to.</li>
+</ul>
 <div>
 <blockquote>
 <p><strong>Tip</strong></p>
-<p>See the <a href="https://dp-next.github.io/fastreg/reference/index.html">Reference</a> for a function overview.</p>
-<!-- TODO: Use relative path instead? -->
+<p>For a list of all the public functions, see the <a href="https://dp-next.github.io/fastreg/reference/index.html">Reference</a> page.</p>
 </blockquote>
 </div>
-</section><section class="level3"><h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
-</h3>
-<table class="table caption-top">
-<caption>Actions used in fastreg.</caption>
-<colgroup>
-<col style="width: 34%">
-<col style="width: 65%">
-</colgroup>
-<thead><tr class="header">
-<th>Action</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>convert</code></td>
-<td>Convert a register SAS file (or multiple) to Parquet.</td>
-</tr>
-<tr class="even">
-<td><code>get</code></td>
-<td>Get or extract metadata, e.g., the register name from a file path.</td>
-</tr>
-<tr class="odd">
-<td><code>list</code></td>
-<td>List files in a directory, e.g., SAS or Parquet files.</td>
-</tr>
-<tr class="even">
-<td><code>read</code></td>
-<td>Read a Parquet register into R as a DuckDB table.</td>
-</tr>
-<tr class="odd">
-<td><code>use</code></td>
-<td>Use a template in the current project.</td>
-</tr>
-</tbody>
-</table></section><section class="level3"><h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a>
-</h3>
-<table class="table caption-top">
-<caption>Objects used in fastreg.</caption>
-<thead><tr class="header">
-<th>Object</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>chunk_size</code></td>
-<td>Number of rows to read per chunk during conversion.</td>
-</tr>
-<tr class="even">
-<td><code>path</code></td>
-<td>A character vector of one or more paths.</td>
-</tr>
-<tr class="odd">
-<td><code>output_dir</code></td>
-<td>The directory to save the Parquet output to.</td>
-</tr>
-</tbody>
-</table></section><section class="level3"><h3 id="converting-sas-files-from-a-single-register">Converting SAS files from a single register<a class="anchor" aria-label="anchor" href="#converting-sas-files-from-a-single-register"></a>
+<section class="level3"><h3 id="converting-sas-files-from-a-single-register">Converting SAS files from a single register<a class="anchor" aria-label="anchor" href="#converting-sas-files-from-a-single-register"></a>
 </h3>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -224,7 +185,7 @@ Figure 2: Expected workflow for converting multiple registers using the targets
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Expected workflow for reading a Parquet register as a DuckDB table.
+Figure 3: Expected workflow for reading a Parquet register as a DuckDB table using <code><a href="../reference/read_register.html">read_register()</a></code>.
 </figcaption></figure>
 </div>
 </div>
