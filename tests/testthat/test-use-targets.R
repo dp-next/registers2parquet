@@ -47,10 +47,10 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   fs::dir_create(output_dir)
 
   # Create SAS files.
-  kontakter_list <- simulate_register("kontakter", c("1999", "2020"))
-  diagnoser_list <- simulate_register("diagnoser", c("2020", "2021"))
-  save_as_sas(kontakter_list, input_dir)
-  save_as_sas(diagnoser_list, input_dir)
+  bef_list <- simulate_register("bef", c("1999", "2020"))
+  lmdb_list <- simulate_register("lmdb", c("2020", "2021"))
+  save_as_sas(bef_list, input_dir)
+  save_as_sas(lmdb_list, input_dir)
 
   # Read template and replace placeholder paths.
   modified_content <- template_content |>
@@ -67,26 +67,26 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   parquet_files <- fs::dir_ls(output_dir, recurse = TRUE, glob = "*.parquet")
   expect_equal(
     length(parquet_files),
-    sum(length(kontakter_list), length(diagnoser_list))
+    sum(length(bef_list), length(lmdb_list))
   )
 
   # Check nrows per register.
-  n_expected_kontakter <- sum(purrr::map_int(kontakter_list, nrow))
-  n_expected_diagnoser <- sum(purrr::map_int(diagnoser_list, nrow))
+  n_expected_bef <- sum(purrr::map_int(bef_list, nrow))
+  n_expected_lmdb <- sum(purrr::map_int(lmdb_list, nrow))
 
-  n_actual_kontakter <- arrow::open_dataset(fs::path(
+  n_actual_bef <- arrow::open_dataset(fs::path(
     output_dir,
-    "kontakter"
+    "bef"
   )) |>
     dplyr::collect() |>
     nrow()
-  n_actual_diagnoser <- arrow::open_dataset(fs::path(
+  n_actual_lmdb <- arrow::open_dataset(fs::path(
     output_dir,
-    "diagnoser"
+    "lmdb"
   )) |>
     dplyr::collect() |>
     nrow()
 
-  expect_equal(n_actual_kontakter, n_expected_kontakter)
-  expect_equal(n_actual_diagnoser, n_expected_diagnoser)
+  expect_equal(n_actual_bef, n_expected_bef)
+  expect_equal(n_actual_lmdb, n_expected_lmdb)
 })

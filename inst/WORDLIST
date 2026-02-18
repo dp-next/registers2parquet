@@ -1,8 +1,7 @@
+BEF
 Changelog
 Commitizen
 DuckDB
-LPR
-Landspatientregisteret
 SemVar
 Tidyverse
 UUID
@@ -21,6 +20,7 @@ lifecycle
 lowercases
 msg
 optimised
+organise
 parallelises
 param
 pre

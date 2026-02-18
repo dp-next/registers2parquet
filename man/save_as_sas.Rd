@@ -21,7 +21,7 @@ directory. The file names are determined from the list names.
 }
 \examples{
 save_as_sas(
-  data_list = simulate_register("kontakter", "2020"),
+  data_list = simulate_register("bef", "2020"),
   path = fs::path_temp()
 )
 }

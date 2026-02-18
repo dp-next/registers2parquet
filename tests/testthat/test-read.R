@@ -1,13 +1,13 @@
 # Setup ------------------------------------------------------------------------
-register_name <- "kontakter"
-kontakter_list <- simulate_register(register_name, c("", "2020"))
-sas_path <- fs::path_temp("sas_kontakter")
-save_as_sas(kontakter_list, sas_path)
-sas_kontakter <- fs::dir_ls(sas_path)
+register_name <- "bef"
+bef_list <- simulate_register(register_name, c("", "2020"))
+sas_path <- fs::path_temp("sas_bef")
+save_as_sas(bef_list, sas_path)
+sas_bef <- fs::dir_ls(sas_path)
 output_dir <- fs::path_temp("output_dir")
 
 # Use convert_register() for conversion
-convert_register(path = sas_kontakter, output_dir = output_dir)
+convert_register(path = sas_bef, output_dir = output_dir)
 
 # Test read_register() ---------------------------------------------------------
 
@@ -23,7 +23,7 @@ test_that("read_register() reads a single Parquet file", {
   ))) |>
     dplyr::collect()
 
-  expected_source_file <- stringr::str_subset(sas_kontakter, year)
+  expected_source_file <- stringr::str_subset(sas_bef, year)
   expected_data <- haven::read_sas(expected_source_file)
 
   expect_equal(
@@ -37,27 +37,27 @@ test_that("read_register() reads a single Parquet file", {
 test_that("read_register() reads a partitioned Parquet register", {
   actual <- read_register(output_dir) |> dplyr::collect()
 
-  expected <- purrr::map(sas_kontakter, \(path) haven::read_sas(path)) |>
+  expected <- purrr::map(sas_bef, \(path) haven::read_sas(path)) |>
     dplyr::bind_rows()
-  expected_years <- get_year_from_filename(sas_kontakter)
+  expected_years <- get_year_from_filename(sas_bef)
 
   # Data is as expected (column names, data types, nrows)
-  # Sort dataframes by cpr and dw_ek_kontakt to ensure consistent ordering,
+  # Sort dataframes by koen and pnr to ensure consistent ordering,
   # and use ignore_attr = TRUE to ignore row.names differences.
   expect_equal(
     actual |>
       dplyr::select(-c("source_file", "year")) |>
-      dplyr::arrange(cpr, dw_ek_kontakt),
+      dplyr::arrange(koen, pnr),
     expected |>
-      dplyr::arrange(cpr, dw_ek_kontakt),
+      dplyr::arrange(koen, pnr),
     ignore_attr = TRUE
   )
 
   # source_file column.
   expect_equal(
     sort(unique(actual$source_file)),
-    # Convert sas_kontakter to character, otherwise it's an fs_path.
-    sort(as.character(sas_kontakter))
+    # Convert sas_bef to character, otherwise it's an fs_path.
+    sort(as.character(sas_bef))
   )
   # year column.
   expect_equal(
@@ -98,6 +98,6 @@ test_that("read_register() errors when file is not Parquet", {
 
 test_that("files with extension .parq can also be read", {
   path <- fs::path_temp("file.parq")
-  arrow::write_parquet(simulate_register("kontakter")[[1]], sink = path)
+  arrow::write_parquet(simulate_register("bef")[[1]], sink = path)
   expect_no_error(read_register(path))
 })

@@ -14,7 +14,7 @@
 #'
 #' @export
 #' @examples
-#' simulate_register(register = "kontakter", year = c("1999", "2000"))
+#' simulate_register(register = "bef", year = c("1999", "2000"))
 simulate_register <- function(register, year = "", n = 1000) {
   checkmate::assert_string(register)
   checkmate::assert_character(year)
@@ -46,7 +46,7 @@ simulate_register <- function(register, year = "", n = 1000) {
 #' @export
 #' @examples
 #' save_as_sas(
-#'   data_list = simulate_register("kontakter", "2020"),
+#'   data_list = simulate_register("bef", "2020"),
 #'   path = fs::path_temp()
 #' )
 save_as_sas <- function(data_list, path) {
