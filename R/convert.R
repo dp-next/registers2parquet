@@ -29,7 +29,7 @@
 #' @param output_dir Directory to save the Parquet output to. Must not include
 #'  the register name as this will be extracted from `path` to create the
 #'  register folder.
-#' @param chunk_size Number of rows to read at a time.
+#' @param chunk_size Number of rows to read and convert at a time.
 #'
 #' @returns `output_dir`, invisibly.
 #'
@@ -45,7 +45,7 @@ convert_register <- function(
   output_dir,
   chunk_size = 10000000L
 ) {
-  # Check that register dir is empty (if exist) to avoid duplicating data
+  # Check that register dir is empty (if exists) to avoid duplicating data
   # since parts are named with UUIDs.
   # Get register name checks that only one register is in `path`.
   register_dir <- fs::path(output_dir, get_register_name(path))

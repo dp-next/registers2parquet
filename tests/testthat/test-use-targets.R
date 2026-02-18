@@ -21,7 +21,7 @@ test_that("use_targets_template() creates file matching template content", {
   )
 })
 
-test_that("use_targets_template() creates valid R code", {
+test_that("use_targets_template() creates R code", {
   expect_no_error(parse(file = template_path))
 })
 
