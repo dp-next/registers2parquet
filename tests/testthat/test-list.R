@@ -26,7 +26,7 @@ test_that("list_sas_files() lists expected SAS files", {
   expect_equal(as.character(actual), as.character(expected))
 })
 
-test_that("list_sas_files() error when no relevant files are found", {
+test_that("list_sas_files() errors when no relevant files are found", {
   no_relevant_files_dir <- fs::path_temp("no_relevant_files")
   fs::dir_create(no_relevant_files_dir)
   fs::file_create(fs::path(no_relevant_files_dir, "unrelated.txt"))
@@ -34,7 +34,7 @@ test_that("list_sas_files() error when no relevant files are found", {
   expect_error(list_sas_files(no_relevant_files_dir))
 })
 
-test_that("list_sas_files() error when path does not exist", {
+test_that("list_sas_files() errors when path does not exist", {
   non_existent_dir <- fs::path_temp("non_existent")
 
   expect_error(
