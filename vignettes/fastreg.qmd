@@ -94,9 +94,9 @@ convert_file(
 ```
 
 `convert_file()` reads files in chunks (to be able to handle
-larger-than-memory data) with a default of reading 1 million rows, extracts 4-digit years from filenames for
-partitioning, and lowercases column names. See `?convert_file` for
-more details.
+larger-than-memory data) with a default of reading 1 million rows,
+extracts 4-digit years from filenames for partitioning, and lowercases
+column names. See `?convert_file` for more details.
 
 Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
@@ -136,23 +136,39 @@ from file names.
 show_tree(output_register_dir)
 ```
 
-`convert_register()` uses `convert_file()` internally to reads files in chunks (to be able to handle
-larger-than-memory data), extracts 4-digit years from filenames for
-partitioning, and lowercases column names. See `?convert_file` and `?convert_register` for
-more details.
+`convert_register()` uses `convert_file()` internally to reads files in
+chunks (to be able to handle larger-than-memory data), extracts 4-digit
+years from filenames for partitioning, and lowercases column names. See
+`?convert_file` and `?convert_register` for more details.
 
 There are four different ways that the SAS files can be converted into
-Parquet. Using the `bef` register as an example, if we have a set of SAS
-files in a `Grunddata/` folder that looks like below:
+Parquet. Using the `bef` register as an example, we have a set of input
+SAS files in the `Grunddata/` folder and a set of converted
+Hive-partitioned Parquet files in the output folder
+`parquet-registers/bef/` that are both listed below:
 
 ``` text
+# Original SAS files (input)
 Grunddata/
-├── bef2020.sas7bdat # <1>
-├── bef2021.sas7bdat # <2>
+├── bef2020.sas7bdat # 1
+├── bef2021.sas7bdat # 2
 ├── December_2023/
-│   └── bef2021.sas7bdat # <2>
-├── bef2022.sas7bdat # <3>
-└── bef.sas7bdat # <4>
+│   └── bef2021.sas7bdat # 2
+├── bef2022.sas7bdat # 3
+└── bef.sas7bdat # 4
+
+# Converted Parquet files (output)
+parquet-registers/bef/
+├── year=2020/ # 1
+│   └── part-c28221.parquet # 1
+├── year=2021/ # 2
+│   ├── part-bf73dc.parquet # 2
+│   └── part-546bed.parquet # 2
+├── year=2022/ # 3
+│   ├── part-7c041e.parquet # 3
+│   └── part-8869b7.parquet # 3
+└── year=__HIVE_DEFAULT_PARTITION__/ # 4
+    └── part-a8d52c.parquet # 4
 ```
 
 1. A single SAS file is converted to a single Parquet file, partitioned
@@ -168,23 +184,6 @@ Grunddata/
    [Apache Hive](https://hive.apache.org/docs/latest/user/configuration-properties/)
    default for missing partitions) when it is converted to Parquet.
 
-After converting the files into the Parquet Hive partition structure,
-the SAS files from above are output into something that looks like
-below:
-
-``` text
-bef/
-├── year=2020/
-│   └── part-c28221.parquet
-├── year=2021/
-│   ├── part-bf73dc.parquet
-│   └── part-546bed.parquet
-├── year=2022/
-│   ├── part-7c041e.parquet
-│   └── part-8869b7.parquet
-└── year=__HIVE_DEFAULT_PARTITION__/
-    └── part-a8d52c.parquet
-```
 
 ## Converting multiple registers in parallel
 
@@ -215,9 +214,9 @@ config <- list(
 ```
 
 The `input_dir` is the directory that contains the SAS files (searched
-recursively). This directory can contain different registers,
-rather than just one as is expected in `convert_register()`. The `output_dir` directory is where the Parquet
-files will be written to.
+recursively). This directory can contain different registers, rather
+than just one as is expected in `convert_register()`. The `output_dir`
+directory is where the Parquet files will be written to.
 
 After you've updated the `config` section, you can run the pipeline:
 
@@ -240,10 +239,10 @@ withr::with_dir(pipeline_dir, {
 })
 ```
 
-The pipeline will find all SAS files from `input_dir` and
-convert each file into a Parquet file, all done in parallel. Re-running
-`tar_make()` only re-converts registers whose source files have changed
-or if the pipeline itself has been edited.
+The pipeline will find all SAS files from `input_dir` and convert each
+file into a Parquet file, all done in parallel. Re-running `tar_make()`
+only re-converts registers whose source files have changed or if the
+pipeline itself has been edited.
 
 Below, you can see the output of running the pipeline with the example
 data:
@@ -256,8 +255,8 @@ show_tree(config$output_dir)
 
 ## Reading a Parquet register
 
-The final function reads the converted Parquet register data into
-R. This function reads the data into a [DuckDB](https://duckdb.org/) table,
+The final function reads the converted Parquet register data into R.
+This function reads the data into a [DuckDB](https://duckdb.org/) table,
 which a powerful way to query and process large data.
 
 ```{r read-register}
