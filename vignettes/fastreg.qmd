@@ -127,62 +127,26 @@ convert_register(
 )
 ```
 
-As with `convert_file()`, the output is partitioned by year, extracted
-from file names.
+`convert_register()` uses `convert_file()` internally so the same
+chunking and partitioning behaviour applies. See `?convert_file` and
+`?convert_register` for more details. As a result, the output from
+`convert_register()` is also partitioned by year, extracted from file
+names:
 
 ```{r output-tree}
 #| echo: false
 show_tree(output_register_dir)
 ```
 
-`convert_register()` uses `convert_file()` internally to reads files in
-chunks (to be able to handle larger-than-memory data), extracts 4-digit
-years from filenames for partitioning, and lowercases column names. See
-`?convert_file` and `?convert_register` for more details.
+The output is organised into a "bef" folder (register name extracted from file names) with year-based subdirectories:
 
-There are four different ways that the SAS files can be converted into
-Parquet. Using the `bef` register as an example, we have a set of input
-SAS files in the `Grunddata/` folder and a set of converted
-Hive-partitioned Parquet files in the output folder
-`parquet-registers/bef/` that are both listed below:
-
-``` text
-# Original SAS files (input)
-Grunddata/
-├── bef2020.sas7bdat # 1
-├── bef2021.sas7bdat # 2
-├── December_2023/
-│   └── bef2021.sas7bdat # 2
-├── bef2022.sas7bdat # 3
-└── bef.sas7bdat # 4
-
-# Converted Parquet files (output)
-parquet-registers/bef/
-├── year=2020/ # 1
-│   └── part-c28221.parquet # 1
-├── year=2021/ # 2
-│   ├── part-bf73dc.parquet # 2
-│   └── part-546bed.parquet # 2
-├── year=2022/ # 3
-│   ├── part-7c041e.parquet # 3
-│   └── part-8869b7.parquet # 3
-└── year=__HIVE_DEFAULT_PARTITION__/ # 4
-    └── part-a8d52c.parquet # 4
-```
-
-1. A single SAS file is converted to a single Parquet file, partitioned
-   by year from filename.
-2. Multiple SAS files with the same register and year are converted into
-   separate Parquet files in the same partition (shown below). Rows
-   between these several SAS files are not deduplicated, so you'll have
-   to check for duplicates after conversion.
-3. A large SAS file is split into multiple Parquet files that are only
-   as many rows as is determined by the `chunk_size` option.
-4. A SAS file without a year in file name is placed in the
-   `year=__HIVE_DEFAULT_PARTITION__/` folder (the
-   [Apache Hive](https://hive.apache.org/docs/latest/user/configuration-properties/)
-   default for missing partitions) when it is converted to Parquet.
-
+- The data from the two SAS files with "1999" in their file names are
+  located in the subfolder "year=1999"
+- The data from the SAS file from 2020 are located in the subfolder
+  "year=2020"
+- One SAS file didn't have a year in its file name, `bef.sas7bdat`. The
+  data from this file is placed in the "year=**HIVE_DEFAULT_PARTITION**"
+  folder, the default for files without a year in their name.
 
 ## Converting multiple registers in parallel
 
