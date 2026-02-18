@@ -23,7 +23,7 @@ simulate_register <- function(register, year = "", n = 1000) {
   names <- dplyr::if_else(
     year == "",
     register,
-    paste(register, year, sep = "_")
+    paste(register, year, sep = "")
   )
 
   purrr::map(names, \(name) {
