@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- :bug: use `pipeline_dir` as `output_path` to avoid macOS temp dir permission errors (#219)
+- :bug: use `pipeline_dir` as `output_path` to avoid macOS temp dir
+  permission errors (#219)
 
 ## 0.8.15 (2026-02-18)
 
