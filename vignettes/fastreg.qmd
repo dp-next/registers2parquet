@@ -52,7 +52,7 @@ fs::dir_create(sas_dir)
 
 bef_list <- simulate_register(
   "bef",
-  c("", "1999_1", "1999_2", "2020"),
+  c("", "1999", "1999_1", "2020"),
   n = 1000
 )
 
