@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>fastreg converts large SAS register files (<code>.sas7bdat</code>) into <a href="https://parquet.apache.org/" class="external-link">Apache Parquet</a> format. This is particularly useful for researchers working with Danish registers at Statistics Denmark, where large SAS files are common. Parquet files are smaller on disk, faster to read, and work well with modern tools like <a href="https://r.duckdb.org/" class="external-link">DuckDB</a> and <a href="https://arrow.apache.org/docs/r/" class="external-link">Arrow</a>.</p>
-<p>A <em>register</em> in this context refers to a collection of related data files, typically with yearly snapshots like <code>kontakter_2020.sas7bdat</code>, <code>kontakter_2021.sas7bdat</code> (from <a href="https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/landspatientregisteret" class="external-link">Landspatientregisteret</a>, LPR3).</p>
+<p>A <em>register</em> in this context refers to a collection of related data files, typically with yearly snapshots like <code>bef2020.sas7bdat</code>, <code>bef2021.sas7bdat</code> (from the <a href="https://dst-doc.dk/registry/bef/" class="external-link">BEF</a> register)</p>
 <p>fastreg provides functions to:</p>
 <ul>
 <li>Convert SAS files to Parquet.</li>

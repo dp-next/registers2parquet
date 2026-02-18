@@ -28,7 +28,7 @@ save_as_sas(data_list, path)
 
 ``` r
 save_as_sas(
-  data_list = simulate_register("kontakter", "2020"),
+  data_list = simulate_register("bef", "2020"),
   path = fs::path_temp()
 )
 ```

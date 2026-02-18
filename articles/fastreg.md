@@ -4,8 +4,8 @@ One of the main purposes of fastreg is to ease the conversion of SAS
 register files (`.sas7bdat`) into
 [Parquet](https://parquet.apache.org/). A *register* in this context
 refers to a collection of related data files that belong to the same
-dataset, typically with yearly snapshots (e.g.,
-`kontakter2020.sas7bdat`, `kontakter2021.sas7bdat`).
+dataset, typically with yearly snapshots (e.g., `bef2020.sas7bdat`,
+`bef2021.sas7bdat`).
 
 ## Why Parquet?
 
@@ -26,7 +26,7 @@ formats like CSV), Parquet offers:
 ## Setup
 
 For the examples below, we’ve simulated SAS register data for two
-registers, `kontakter` and `diagnoser`:
+registers, `bef` and `lmdb`:
 
 Show setup code
 
@@ -36,31 +36,31 @@ library(fastreg)
 sas_dir <- fs::path_temp("sas-dir")
 fs::dir_create(sas_dir)
 
-kontakter_list <- simulate_register(
-  "kontakter",
+bef_list <- simulate_register(
+  "bef",
   c("", "1999_1", "1999_2", "2020"),
   n = 1000
 )
 
-diagnoser_list <- simulate_register(
-  "diagnoser",
+lmdb_list <- simulate_register(
+  "lmdb",
   c("2020", "2021"),
   n = 1000
 )
 
 save_as_sas(
-  c(kontakter_list, diagnoser_list),
+  c(bef_list, lmdb_list),
   sas_dir
 )
 ```
 
     #> sas-dir
-    #> ├── diagnoser2020.sas7bdat
-    #> ├── diagnoser2021.sas7bdat
-    #> ├── kontakter.sas7bdat
-    #> ├── kontakter1999_1.sas7bdat
-    #> ├── kontakter1999_2.sas7bdat
-    #> └── kontakter2020.sas7bdat
+    #> ├── bef.sas7bdat
+    #> ├── bef1999_1.sas7bdat
+    #> ├── bef1999_2.sas7bdat
+    #> ├── bef2020.sas7bdat
+    #> ├── lmdb2020.sas7bdat
+    #> └── lmdb2021.sas7bdat
 
 ## Converting a single file
 
@@ -74,14 +74,14 @@ function to convert a single SAS file to a year-partitioned Parquet
 format:
 
 ``` r
-sas_file <- fs::path(sas_dir, "kontakter2020.sas7bdat")
+sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
 output_file_dir <- fs::path_temp("output-file-dir")
 
 convert_file(
   path = sas_file,
   output_dir = output_file_dir
 )
-#> ✔ Converted 'kontakter2020.sas7bdat'
+#> ✔ Converted 'bef2020.sas7bdat'
 ```
 
 [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
@@ -95,9 +95,9 @@ Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
 
     #> output-file-dir
-    #> └── kontakter
+    #> └── bef
     #>     └── year=2020
-    #>         └── part-49fb31.parquet
+    #>         └── part-14ccd6.parquet
 
 ## Converting a register
 
@@ -110,30 +110,30 @@ to convert them.
 expects files to be from the **same register** based on file names.
 
 ``` r
-kontakter_sas_files <- list_sas_files(sas_dir) |>
-  stringr::str_subset("kontakter")
-kontakter_sas_files
-#> /tmp/RtmpuQgOBq/sas-dir/kontakter.sas7bdat
-#> /tmp/RtmpuQgOBq/sas-dir/kontakter1999_1.sas7bdat
-#> /tmp/RtmpuQgOBq/sas-dir/kontakter1999_2.sas7bdat
-#> /tmp/RtmpuQgOBq/sas-dir/kontakter2020.sas7bdat
+bef_sas_files <- list_sas_files(sas_dir) |>
+  stringr::str_subset("bef")
+bef_sas_files
+#> /tmp/RtmpTpyr4S/sas-dir/bef.sas7bdat
+#> /tmp/RtmpTpyr4S/sas-dir/bef1999_1.sas7bdat
+#> /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat
+#> /tmp/RtmpTpyr4S/sas-dir/bef2020.sas7bdat
 ```
 
 ``` r
 output_register_dir <- fs::path_temp("output-register-dir")
 
 convert_register(
-  path = kontakter_sas_files,
+  path = bef_sas_files,
   output_dir = output_register_dir
 )
-#> ✔ Converted 'kontakter.sas7bdat'
-#> ✔ Converted 'kontakter1999_1.sas7bdat'
-#> ✔ Converted 'kontakter1999_2.sas7bdat'
-#> ✔ Converted 'kontakter2020.sas7bdat'
+#> ✔ Converted 'bef.sas7bdat'
+#> ✔ Converted 'bef1999_1.sas7bdat'
+#> ✔ Converted 'bef1999_2.sas7bdat'
+#> ✔ Converted 'bef2020.sas7bdat'
 #> ✔ Successfully converted 4 files.
-#> • Input: "kontakter.sas7bdat", "kontakter1999_1.sas7bdat",
-#>   "kontakter1999_2.sas7bdat", and "kontakter2020.sas7bdat"
-#> • Output: Register files in '/tmp/RtmpuQgOBq/output-register-dir/kontakter'
+#> • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999_2.sas7bdat", and
+#>   "bef2020.sas7bdat"
+#> • Output: Register files in '/tmp/RtmpTpyr4S/output-register-dir/bef'
 ```
 
 As with
@@ -141,14 +141,14 @@ As with
 the output is partitioned by year, extracted from file names.
 
     #> output-register-dir
-    #> └── kontakter
+    #> └── bef
     #>     ├── year=1999
-    #>     │   ├── part-8cb892.parquet
-    #>     │   └── part-ef768d.parquet
+    #>     │   ├── part-6e16e6.parquet
+    #>     │   └── part-8bbcee.parquet
     #>     ├── year=2020
-    #>     │   └── part-54ddc2.parquet
+    #>     │   └── part-c1401d.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-82587d.parquet
+    #>         └── part-7d47b0.parquet
 
 [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
 uses
@@ -221,7 +221,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpuQgOBq/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpTpyr4S/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -257,19 +257,19 @@ Below, you can see the output of running the pipeline with the example
 data:
 
     #> parquet-registers
-    #> ├── diagnoser
+    #> ├── bef
+    #> │   ├── year=1999
+    #> │   │   ├── part-7e5c41.parquet
+    #> │   │   └── part-b49716.parquet
     #> │   ├── year=2020
-    #> │   │   └── part-104af6.parquet
-    #> │   └── year=2021
-    #> │       └── part-c42bfd.parquet
-    #> └── kontakter
-    #>     ├── year=1999
-    #>     │   ├── part-d54bef.parquet
-    #>     │   └── part-f4101e.parquet
+    #> │   │   └── part-118b87.parquet
+    #> │   └── year=__HIVE_DEFAULT_PARTITION__
+    #> │       └── part-75eabe.parquet
+    #> └── lmdb
     #>     ├── year=2020
-    #>     │   └── part-93b8da.parquet
-    #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-84288d.parquet
+    #>     │   └── part-04c541.parquet
+    #>     └── year=2021
+    #>         └── part-661099.parquet
 
 ## Reading a Parquet register
 
@@ -280,20 +280,20 @@ which a powerful way to query and process large data.
 ``` r
 register <- read_register(output_register_dir)
 register
-#> # Source:   table<arrow_001> [?? x 6]
+#> # Source:   table<arrow_001> [?? x 5]
 #> # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]
-#>    cpr          dw_ek_kontakt     dato_start hovedspeciale_ans source_file  year
-#>    <chr>        <chr>             <chr>      <chr>             <chr>       <int>
-#>  1 108684730664 9201662543457744… 20170316   Fysio- og ergote… /tmp/Rtmpu…  1999
-#>  2 982144017357 0759727820625697… 20081030   Thoraxkirurgi     /tmp/Rtmpu…  1999
-#>  3 672580814975 1765362830036030… 19781226   Klinisk immunolo… /tmp/Rtmpu…  1999
-#>  4 439008110445 5816242949650462… 20040706   Akut medicin      /tmp/Rtmpu…  1999
-#>  5 489714666740 8142102823445808… 20160613   Karkirurgi        /tmp/Rtmpu…  1999
-#>  6 155331797020 3938857359733134… 20001231   Nefrologi         /tmp/Rtmpu…  1999
-#>  7 777951655096 8361795065466867… 20250325   Diagnostisk radi… /tmp/Rtmpu…  1999
-#>  8 167007504860 8141754368465387… 19961124   Pædiatri          /tmp/Rtmpu…  1999
-#>  9 132473802596 5081335938814873… 19970403   Klinisk immunolo… /tmp/Rtmpu…  1999
-#> 10 876820784981 3250770638911327… 19990709   Geriatri          /tmp/Rtmpu…  1999
+#>     koen pnr          foed_dato source_file                                 year
+#>    <dbl> <chr>        <chr>     <chr>                                      <int>
+#>  1     2 108684730664 19320112  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  2     2 982144017357 20070716  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  3     2 672580814975 19800805  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  4     2 439008110445 20090628  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  5     1 489714666740 20170225  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  6     2 155331797020 19730330  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  7     1 777951655096 19341022  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  8     2 167007504860 20010318  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#>  9     1 132473802596 19530901  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
+#> 10     2 876820784981 19310817  /tmp/RtmpTpyr4S/sas-dir/bef1999_2.sas7bdat  1999
 #> # ℹ more rows
 ```
 
