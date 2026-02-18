@@ -26,7 +26,7 @@ convert_file(path, output_dir, chunk_size = 10000000L)
 
 - chunk_size:
 
-  Number of rows to read at a time.
+  Number of rows to read and convert at a time.
 
 ## Value
 

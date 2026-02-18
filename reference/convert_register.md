@@ -48,7 +48,7 @@ convert_register(path, output_dir, chunk_size = 10000000L)
 
 - chunk_size:
 
-  Number of rows to read at a time.
+  Number of rows to read and convert at a time.
 
 ## Value
 
@@ -65,5 +65,5 @@ convert_register(
 #> ✔ Converted test.sas7bdat
 #> ✔ Successfully converted 1 file.
 #> • Input: "test.sas7bdat"
-#> • Output: Register files in /tmp/RtmpWNXcMZ/path/to/output/register/test
+#> • Output: Register files in /tmp/RtmpLDUvqc/path/to/output/register/test
 ```

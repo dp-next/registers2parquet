@@ -1,7 +1,8 @@
 # Save a list of data frames as SAS files
 
-Writes each element of a named list as a SAS file to the given
-directory. The file names are derived from the list names.
+This helper function is used for testing fastreg code and in the docs.
+It will write each element of a named list as a SAS file to the given
+directory. The file names are determined from the list names.
 
 ## Usage
 
@@ -26,5 +27,8 @@ save_as_sas(data_list, path)
 ## Examples
 
 ``` r
-save_as_sas(data_list = simulate_register("kontakter", "2020"), path = fs::path_temp())
+save_as_sas(
+  data_list = simulate_register("kontakter", "2020"),
+  path = fs::path_temp()
+)
 ```

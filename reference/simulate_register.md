@@ -1,6 +1,6 @@
 # Simulate an example register
 
-The data is simulated using
+This is a helper function that simulates data using
 [`osdc::simulate_registers()`](https://steno-aarhus.github.io/osdc/reference/simulate_registers.html).
 It's used in vignettes and tests.
 
@@ -28,7 +28,7 @@ simulate_register(register, year = "", n = 1000)
 
 ## Value
 
-A named list of tibbles following the naming scheme `{register}_{year}`
+A named list of tibbles following the naming scheme `{register}{year}`
 or just `{register}` when year = "".
 
 ## Examples
