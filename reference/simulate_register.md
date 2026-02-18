@@ -35,7 +35,7 @@ or just `{register}` when year = "".
 
 ``` r
 simulate_register(register = "kontakter", year = c("1999", "2000"))
-#> $kontakter_1999
+#> $kontakter1999
 #> # A tibble: 1,000 × 4
 #>    cpr          dw_ek_kontakt      dato_start hovedspeciale_ans    
 #>    <chr>        <chr>              <chr>      <chr>                
@@ -51,7 +51,7 @@ simulate_register(register = "kontakter", year = c("1999", "2000"))
 #> 10 876820784981 325077063891132755 19990709   Geriatri             
 #> # ℹ 990 more rows
 #> 
-#> $kontakter_2000
+#> $kontakter2000
 #> # A tibble: 1,000 × 4
 #>    cpr          dw_ek_kontakt      dato_start hovedspeciale_ans    
 #>    <chr>        <chr>              <chr>      <chr>                
