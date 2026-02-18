@@ -19,8 +19,8 @@ One of the main purposes of fastreg is to ease the conversion of SAS
 register files (`.sas7bdat`) into
 [Parquet](https://parquet.apache.org/). A *register* in this context
 refers to a collection of related data files that belong to the same
-dataset, typically with yearly snapshots (e.g.,
-`kontakter2020.sas7bdat`, `kontakter2021.sas7bdat`).
+dataset, typically with yearly snapshots (e.g., `bef2020.sas7bdat`,
+`bef2021.sas7bdat`).
 
 ## Why Parquet?
 
@@ -41,7 +41,7 @@ formats like CSV), Parquet offers:
 ## Setup
 
 For the examples below, we've simulated SAS register data for two
-registers, `kontakter` and `diagnoser`:
+registers, `bef` and `diagnoser`:
 
 ```{r prepare}
 #| code-fold: true
@@ -51,8 +51,8 @@ library(fastreg)
 sas_dir <- fs::path_temp("sas-dir")
 fs::dir_create(sas_dir)
 
-kontakter_list <- simulate_register(
-  "kontakter",
+bef_list <- simulate_register(
+  "bef",
   c("", "1999_1", "1999_2", "2020"),
   n = 1000
 )
@@ -64,7 +64,7 @@ diagnoser_list <- simulate_register(
 )
 
 save_as_sas(
-  c(kontakter_list, diagnoser_list),
+  c(bef_list, diagnoser_list),
   sas_dir
 )
 ```
@@ -84,7 +84,7 @@ extracted from the file name. Use the `convert_file()` function to
 convert a single SAS file to a year-partitioned Parquet format:
 
 ```{r convert-file}
-sas_file <- fs::path(sas_dir, "kontakter2020.sas7bdat")
+sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
 output_file_dir <- fs::path_temp("output-file-dir")
 
 convert_file(
@@ -114,16 +114,16 @@ subdirectories), then use `convert_register()` to convert them.
 based on file names.
 
 ```{r locate}
-kontakter_sas_files <- list_sas_files(sas_dir) |>
-  stringr::str_subset("kontakter")
-kontakter_sas_files
+bef_sas_files <- list_sas_files(sas_dir) |>
+  stringr::str_subset("bef")
+bef_sas_files
 ```
 
 ```{r convert-register}
 output_register_dir <- fs::path_temp("output-register-dir")
 
 convert_register(
-  path = kontakter_sas_files,
+  path = bef_sas_files,
   output_dir = output_register_dir
 )
 ```

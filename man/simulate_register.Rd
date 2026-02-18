@@ -24,5 +24,5 @@ This is a helper function that simulates data using
 \code{osdc::simulate_registers()}. It's used in vignettes and tests.
 }
 \examples{
-simulate_register(register = "kontakter", year = c("1999", "2000"))
+simulate_register(register = "bef", year = c("1999", "2000"))
 }

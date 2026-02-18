@@ -28,10 +28,9 @@ smaller on disk, faster to read, and work well with modern tools like
 [Arrow](https://arrow.apache.org/docs/r/).
 
 A *register* in this context refers to a collection of related data
-files, typically with yearly snapshots like `kontakter_2020.sas7bdat`,
-`kontakter_2021.sas7bdat` (from
-[Landspatientregisteret](https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/landspatientregisteret),
-LPR3).
+files, typically with yearly snapshots like `bef2020.sas7bdat`,
+`bef2021.sas7bdat` (from the [BEF](https://dst-doc.dk/registry/bef/)
+register)
 
 fastreg provides functions to:
 
