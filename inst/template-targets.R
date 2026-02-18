@@ -7,7 +7,7 @@
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
-# For more information on targets see: https://books.ropensci.org/targets/
+# For more information on targets, see https://books.ropensci.org/targets/
 
 library(targets)
 
