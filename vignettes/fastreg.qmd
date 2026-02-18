@@ -80,9 +80,8 @@ Converting one file from SAS to Parquet in fastreg isn't a simple change
 of file extension. We make use of Parquet's Hive partitioning to
 organise the output by year, for easier querying and management. So the
 output Parquet file is written to a subdirectory named after the year
-extracted from the file name. You use the `convert_file()` function to
-convert a single file to an output directory and the function will
-create the Parquet file in the correct partition format:
+extracted from the file name. Use the `convert_file()` function to
+convert a single SAS file to a year-partitioned Parquet format:
 
 ```{r convert-file}
 sas_file <- fs::path(sas_dir, "kontakter2020.sas7bdat")
@@ -94,15 +93,20 @@ convert_file(
 )
 ```
 
+`convert_file()` reads files in chunks (to be able to handle
+larger-than-memory data) with a default of reading 1 million rows, extracts 4-digit years from filenames for
+partitioning, and lowercases column names. See `?convert_file` for
+more details.
+
 Even though this only converts a single file, the output is partitioned
-by year extracted from the file name.
+by the year extracted from the file name as seen below:
 
 ```{r output-tree-file}
 #| echo: false
 show_tree(output_file_dir)
 ```
 
-## Converting a single register
+## Converting a register
 
 Use `list_sas_files()` to find SAS files in a directory (and any
 subdirectories), then use `convert_register()` to convert them.
@@ -132,14 +136,14 @@ from file names.
 show_tree(output_register_dir)
 ```
 
-`convert_register()` reads files in chunks (to be able to handle
+`convert_register()` uses `convert_file()` internally to reads files in chunks (to be able to handle
 larger-than-memory data), extracts 4-digit years from filenames for
-partitioning, and lowercases column names. See `?convert_register` for
+partitioning, and lowercases column names. See `?convert_file` and `?convert_register` for
 more details.
 
 There are four different ways that the SAS files can be converted into
 Parquet. Using the `bef` register as an example, if we have a set of SAS
-files in the `Grunddata/` folder that looks like below:
+files in a `Grunddata/` folder that looks like below:
 
 ``` text
 Grunddata/
@@ -191,7 +195,7 @@ but that can be adjusted in the pipeline in the `_targets.R` file to not
 consume too many cores on a shared server.
 
 To create the pipeline file, you can use the `use_targets_template()`
-function. In this example, we're outputting it to a temporary file.
+function. In this example, we're outputting it to a temporary directory.
 
 ```{r use-targets}
 pipeline_dir <- fs::path_temp("pipeline-dir")
@@ -211,8 +215,8 @@ config <- list(
 ```
 
 The `input_dir` is the directory that contains the SAS files (searched
-recursively). This directory can contain many different registers,
-rather than just one. The `output_dir` directory is where the Parquet
+recursively). This directory can contain different registers,
+rather than just one as is expected in `convert_register()`. The `output_dir` directory is where the Parquet
 files will be written to.
 
 After you've updated the `config` section, you can run the pipeline:
@@ -236,7 +240,7 @@ withr::with_dir(pipeline_dir, {
 })
 ```
 
-The pipeline will find all SAS files from all the registers listed and
+The pipeline will find all SAS files from `input_dir` and
 convert each file into a Parquet file, all done in parallel. Re-running
 `tar_make()` only re-converts registers whose source files have changed
 or if the pipeline itself has been edited.
@@ -252,8 +256,8 @@ show_tree(config$output_dir)
 
 ## Reading a Parquet register
 
-The final function is to read the converted Parquet register data into
-R. fastreg reads the data into a [DuckDB](https://duckdb.org/) table,
+The final function reads the converted Parquet register data into
+R. This function reads the data into a [DuckDB](https://duckdb.org/) table,
 which a powerful way to query and process large data.
 
 ```{r read-register}
