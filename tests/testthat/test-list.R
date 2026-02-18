@@ -17,7 +17,7 @@ fs::file_create(parquet_file1)
 fs::file_create(parquet_file2)
 fs::file_create(parquet_file3)
 
-# Test list_sas_files() ------------------------------------------------------
+# Test list_sas_files() --------------------------------------------------------
 
 test_that("list_sas_files() lists expected SAS files", {
   expected <- sort(c(sas_file1, sas_file2, sas_file3))
