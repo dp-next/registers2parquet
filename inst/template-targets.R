@@ -7,6 +7,10 @@
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
+# Note: this pipeline re-converts all files on every `tar_make()` call by
+# deleting files in the output directory before converting. The main benefit of
+# targets here is parallel execution across workers.
+#
 # For more information on targets, see https://books.ropensci.org/targets/
 
 library(targets)
@@ -17,11 +21,11 @@ config <- list(
   # Path to locate SAS files in.
   input_dir = "/path/to/register/sas/files/directory",
   # Path to output Parquet files in. Parquet files will be located in
-  # subdirectories of this path.
+  # subdirectories of this directory.
   output_dir = "/path/to/output/directory"
 )
 
-# Check input path.
+# Check input directory.
 if (!dir.exists(config$input_dir)) {
   cli::cli_abort(
     message = "Input directory does not exist: {config$input_dir}"
@@ -61,12 +65,29 @@ list(
     deployment = "main"
   ),
 
+  # Empty output directory before writing to avoid outdated Parquet files.
+  # Runs on every `tar_make()` call (mode = "always") to ensure a clean slate.
+  tar_target(
+    name = output_dir,
+    command = {
+      if (fs::dir_exists(config$output_dir)) {
+        fs::dir_delete(config$output_dir)
+      }
+      fs::dir_create(config$output_dir)
+      config$output_dir
+    },
+    deployment = "main",
+    cue = tar_cue(mode = "always")
+  ),
+
+  # Convert each SAS file in parallel. mode = "always" is required because
+  # `output_dir` returns the same path string on every run, so targets would
+  # otherwise consider this target up-to-date and skip it despite the output
+  # directory having been cleaned.
   tar_target(
     name = parquet_files,
-    command = convert_file(
-      path = sas_paths,
-      output_dir = config$output_dir
-    ),
-    pattern = map(sas_paths)
+    command = convert_file(path = sas_paths, output_dir = output_dir),
+    pattern = map(sas_paths),
+    cue = tar_cue(mode = "always")
   )
 )
