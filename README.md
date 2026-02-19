@@ -29,7 +29,7 @@ disk, faster to read, and work well with modern tools like
 A *register* in this context refers to a collection of related data
 files, typically with yearly snapshots like `bef2020.sas7bdat`,
 `bef2021.sas7bdat` (from the [BEF](https://dst-doc.dk/registry/bef/)
-register)
+register).
 
 fastreg provides functions to:
 
