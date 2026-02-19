@@ -1,6 +1,6 @@
 
 
-# fastreg
+# fastreg <a href="https://dp-next.github.io/fastreg/"><img src="man/figures/logo.svg" align="right" height="139" alt="fastreg website" /></a>
 
 <!-- badges: start -->
 
