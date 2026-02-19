@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.17 (2026-02-19)
+
+### Fix
+
+- :bug: always clean up targets template `output_dir` before converting to Parquet (#224)
+
 ## 0.8.16 (2026-02-18)
 
 ### Fix
