@@ -74,7 +74,7 @@
 
 
 
-    <p>One of the main purposes of fastreg is to ease the conversion of SAS register files (<code>.sas7bdat</code>) into <a href="https://parquet.apache.org/" class="external-link">Parquet</a>. A <em>register</em> in this context refers to a collection of related data files that belong to the same dataset, typically with yearly snapshots (e.g., <code>bef2020.sas7bdat</code>, <code>bef2021.sas7bdat</code>).</p>
+    <p>fastreg aims to make working with Danish registers simpler and faster by providing functionality to convert the SAS register files (<code>.sas7bdat</code>) into <a href="https://parquet.apache.org/" class="external-link">Parquet</a> and read the resulting Parquet files. A <em>register</em> in this context refers to a collection of related data files that belong to the same dataset, typically with yearly snapshots (e.g., <code>bef2020.sas7bdat</code>,<code>bef2021.sas7bdat</code>).</p>
 <section class="level2"><h2 id="why-parquet">Why Parquet?<a class="anchor" aria-label="anchor" href="#why-parquet"></a>
 </h2>
 <p><a href="https://parquet.apache.org/" class="external-link">Parquet</a> is a columnar storage file format optimised for analytical workloads. Compared to <a href="https://fileinfo.com/extension/sas7bdat" class="external-link">SAS</a> files (and row-based formats like CSV), Parquet offers:</p>
@@ -97,7 +97,7 @@
 <span></span>
 <span><span class="va">bef_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_register.html">simulate_register</a></span><span class="op">(</span></span>
 <span>  <span class="st">"bef"</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"1999_1"</span>, <span class="st">"1999_2"</span>, <span class="st">"2020"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"1999"</span>, <span class="st">"1999_1"</span>, <span class="st">"2020"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -116,8 +116,8 @@
 <div class="cell">
 <pre><code><span><span class="co">#&gt; sas-dir</span></span>
 <span><span class="co">#&gt; ├── bef.sas7bdat</span></span>
+<span><span class="co">#&gt; ├── bef1999.sas7bdat</span></span>
 <span><span class="co">#&gt; ├── bef1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; ├── bef1999_2.sas7bdat</span></span>
 <span><span class="co">#&gt; ├── bef2020.sas7bdat</span></span>
 <span><span class="co">#&gt; ├── lmdb2020.sas7bdat</span></span>
 <span><span class="co">#&gt; └── lmdb2021.sas7bdat</span></span></code></pre>
@@ -137,12 +137,18 @@
 <span><span class="co">#&gt; ✔ Converted 'bef2020.sas7bdat'</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/convert_file.html">convert_file()</a></code> reads files in chunks (to be able to handle larger-than-memory data) with a default of reading 1 million rows, extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert_file.html">?convert_file</a></code> for more details.</p>
+<div>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>When a SAS file contains more rows than the <code>chunk_size</code>, multiple Parquet files will be created from it. This doesn’t affect how the data is loaded with <code><a href="../reference/read_register.html">read_register()</a></code> (see <a href="#reading-a-parquet-register">Reading a Parquet register</a> below), it only means you may see more Parquet files in the output than input SAS files.</p>
+</blockquote>
+</div>
 <p>Even though this only converts a single file, the output is partitioned by the year extracted from the file name as seen below:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-9a4c59.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-230fb5.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-register">Converting a register<a class="anchor" aria-label="anchor" href="#converting-a-register"></a>
 </h2>
@@ -152,10 +158,10 @@
 <code class="sourceCode R"><span><span class="va">bef_sas_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">sas_dir</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html" class="external-link">str_subset</a></span><span class="op">(</span><span class="st">"bef"</span><span class="op">)</span></span>
 <span><span class="va">bef_sas_files</span></span>
-<span><span class="co">#&gt; /tmp/RtmpV1pOW6/sas-dir/bef.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpV1pOW6/sas-dir/bef1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/RtmpV1pOW6/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/Rtmpc9nPFM/sas-dir/bef.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmpc9nPFM/sas-dir/bef1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmpc9nPFM/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
@@ -167,69 +173,46 @@
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Converted 'bef.sas7bdat'</span></span>
 <span><span class="co">#&gt; ✔ Converted 'bef1999_1.sas7bdat'</span></span>
-<span><span class="co">#&gt; ✔ Converted 'bef1999_2.sas7bdat'</span></span>
+<span><span class="co">#&gt; ✔ Converted 'bef1999.sas7bdat'</span></span>
 <span><span class="co">#&gt; ✔ Converted 'bef2020.sas7bdat'</span></span>
 <span><span class="co">#&gt; ✔ Successfully converted 4 files.</span></span>
-<span><span class="co">#&gt; • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999_2.sas7bdat", and</span></span>
+<span><span class="co">#&gt; • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and</span></span>
 <span><span class="co">#&gt;   "bef2020.sas7bdat"</span></span>
-<span><span class="co">#&gt; • Output: Register files in '/tmp/RtmpV1pOW6/output-register-dir/bef'</span></span></code></pre></div>
+<span><span class="co">#&gt; • Output: Register files in '/tmp/Rtmpc9nPFM/output-register-dir/bef'</span></span></code></pre></div>
 </div>
-<p>As with <code><a href="../reference/convert_file.html">convert_file()</a></code>, the output is partitioned by year, extracted from file names.</p>
+<p><code><a href="../reference/convert_register.html">convert_register()</a></code> uses <code><a href="../reference/convert_file.html">convert_file()</a></code> internally so the same chunking and partitioning behaviour applies. See <code><a href="../reference/convert_file.html">?convert_file</a></code> and <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details. As a result, the output from <code><a href="../reference/convert_register.html">convert_register()</a></code> is also partitioned by year, extracted from file names:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-register-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-494068.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-e18ce1.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-8cd0a7.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-a9b451.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-680f04.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-0bd235.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-090660.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-1eb010.parquet</span></span></code></pre>
 </div>
-<p><code><a href="../reference/convert_register.html">convert_register()</a></code> uses <code><a href="../reference/convert_file.html">convert_file()</a></code> internally to reads files in chunks (to be able to handle larger-than-memory data), extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert_file.html">?convert_file</a></code> and <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details.</p>
-<p>There are four different ways that the SAS files can be converted into Parquet. Using the <code>bef</code> register as an example, we have a set of input SAS files in the <code>Grunddata/</code> folder and a set of converted Hive-partitioned Parquet files in the output folder <code>parquet-registers/bef/</code> that are both listed below:</p>
-<pre class="text"><code># Original SAS files (input)
-Grunddata/
-├── bef2020.sas7bdat # 1
-├── bef2021.sas7bdat # 2
-├── December_2023/
-│   └── bef2021.sas7bdat # 2
-├── bef2022.sas7bdat # 3
-└── bef.sas7bdat # 4
-
-# Converted Parquet files (output)
-parquet-registers/bef/
-├── year=2020/ # 1
-│   └── part-c28221.parquet # 1
-├── year=2021/ # 2
-│   ├── part-bf73dc.parquet # 2
-│   └── part-546bed.parquet # 2
-├── year=2022/ # 3
-│   ├── part-7c041e.parquet # 3
-│   └── part-8869b7.parquet # 3
-└── year=__HIVE_DEFAULT_PARTITION__/ # 4
-    └── part-a8d52c.parquet # 4</code></pre>
-<ol type="1">
-<li>A single SAS file is converted to a single Parquet file, partitioned by year from filename.</li>
-<li>Multiple SAS files with the same register and year are converted into separate Parquet files in the same partition (shown below). Rows between these several SAS files are not deduplicated, so you’ll have to check for duplicates after conversion.</li>
-<li>A large SAS file is split into multiple Parquet files that are only as many rows as is determined by the <code>chunk_size</code> option.</li>
-<li>A SAS file without a year in file name is placed in the <code>year=__HIVE_DEFAULT_PARTITION__/</code> folder (the <a href="https://hive.apache.org/docs/latest/user/configuration-properties/" class="external-link">Apache Hive</a> default for missing partitions) when it is converted to Parquet.</li>
-</ol></section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
+<p>The output is organised into a “bef” folder (register name extracted from file names) with year-based subdirectories:</p>
+<ul>
+<li>The data from the two SAS files with “1999” in their file names are located in the subfolder “year=1999”</li>
+<li>The data from the SAS file from 2020 are located in the subfolder “year=2020”</li>
+<li>One SAS file didn’t have a year in its file name, <code>bef.sas7bdat</code>. The data from this file is placed in the “year=<strong>HIVE_DEFAULT_PARTITION</strong>” folder, the default for files without a year in their name.</li>
+</ul></section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
 </h2>
 <p>For many or large files, fastreg provides a <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline template that parallelises conversion across CPU cores. By default it uses 10 workers, but that can be adjusted in the pipeline in the <code>_targets.R</code> file to not consume too many cores on a shared server.</p>
 <p>To create the pipeline file, you can use the <code><a href="../reference/use_targets_template.html">use_targets_template()</a></code> function. In this example, we’re outputting it to a temporary directory.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pipeline_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"pipeline-dir"</span><span class="op">)</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/RtmpV1pOW6/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpc9nPFM/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  input_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"sas-dir"</span><span class="op">)</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">pipeline_dir</span>, <span class="st">"parquet-registers"</span><span class="op">)</span></span>
@@ -238,7 +221,7 @@ parquet-registers/bef/
 <p>The <code>input_dir</code> is the directory that contains the SAS files (searched recursively). This directory can contain different registers, rather than just one as is expected in <code><a href="../reference/convert_register.html">convert_register()</a></code>. The <code>output_dir</code> directory is where the Parquet files will be written to.</p>
 <p>After you’ve updated the <code>config</code> section, you can run the pipeline:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_make.html" class="external-link">tar_make</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>The pipeline will find all SAS files from <code>input_dir</code> and convert each file into a Parquet file, all done in parallel. Re-running <code>tar_make()</code> only re-converts registers whose source files have changed or if the pipeline itself has been edited.</p>
@@ -247,39 +230,39 @@ parquet-registers/bef/
 <pre><code><span><span class="co">#&gt; parquet-registers</span></span>
 <span><span class="co">#&gt; ├── bef</span></span>
 <span><span class="co">#&gt; │   ├── year=1999</span></span>
-<span><span class="co">#&gt; │   │   ├── part-0b18bf.parquet</span></span>
-<span><span class="co">#&gt; │   │   └── part-1ce06a.parquet</span></span>
+<span><span class="co">#&gt; │   │   ├── part-4f0e5b.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-f39ddb.parquet</span></span>
 <span><span class="co">#&gt; │   ├── year=2020</span></span>
-<span><span class="co">#&gt; │   │   └── part-ee8a2e.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-e10b2b.parquet</span></span>
 <span><span class="co">#&gt; │   └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt; │       └── part-dbf5fa.parquet</span></span>
+<span><span class="co">#&gt; │       └── part-47099c.parquet</span></span>
 <span><span class="co">#&gt; └── lmdb</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-896ebb.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-972312.parquet</span></span>
 <span><span class="co">#&gt;     └── year=2021</span></span>
-<span><span class="co">#&gt;         └── part-11ac0e.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-8bfda8.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
 </h2>
 <p>The final function reads the converted Parquet register data into R. This function reads the data into a <a href="https://duckdb.org/" class="external-link">DuckDB</a> table, which a powerful way to query and process large data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">register</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_register.html">read_register</a></span><span class="op">(</span><span class="va">output_register_dir</span><span class="op">)</span></span>
 <span><span class="va">register</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;arrow_001&gt; [?? x 5]</span></span>
 <span><span class="co">#&gt; # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]</span></span>
-<span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  9     1 132473802596 19530901  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpV1pOW6/sas-dir/bef1999_2.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  9     1 132473802596 19530901  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpc9nPFM/sas-dir/bef1999.sas7bdat  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>You can pass a directory to read the full partitioned register or a file path to read a single <code>.parquet</code> file. The data is read lazily, so it won’t load into memory until collected with e.g. <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::collect()</a></code>.</p>
