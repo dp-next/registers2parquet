@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- :bug: always clean up targets template `output_dir` before converting to Parquet (#224)
+- :bug: always clean up targets template `output_dir` before converting
+  to Parquet (#224)
 
 ## 0.8.16 (2026-02-18)
 
