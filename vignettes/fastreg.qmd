@@ -15,11 +15,12 @@ show_tree <- function(dir) {
 }
 ```
 
-fastreg aims to ease the conversion of SAS register files (`.sas7bdat`)
-into [Parquet](https://parquet.apache.org/) and the reading of those Parquet files. A *register* in this
-context refers to a collection of related data files that belong to the
-same dataset, typically with yearly snapshots (e.g., `bef2020.sas7bdat`,
-`bef2021.sas7bdat`).
+fastreg aims to make working with Danish registers simpler and faster by
+providing functionality to convert the SAS register files (`.sas7bdat`)
+into [Parquet](https://parquet.apache.org/) and read the resulting
+Parquet files. A *register* in this context refers to a collection of
+related data files that belong to the same dataset, typically with
+yearly snapshots (e.g., `bef2020.sas7bdat`,`bef2021.sas7bdat`).
 
 ## Why Parquet?
 
