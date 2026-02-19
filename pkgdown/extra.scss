@@ -1,0 +1,29 @@
+// Simplified from https://github.com/tidyverse/tidytemplate
+
+.page-header {
+  border-bottom: none;
+  margin-bottom: 2rem
+}
+
+.template-home {
+  .page-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 2rem 0;
+    h1 {margin-top: 0rem}
+
+    @include media-breakpoint-down(sm) {
+      margin: 0.5rem 0;
+      padding: 0.5rem 0;
+    }
+  }
+  img.logo {
+    margin-left: 0;
+
+    @include media-breakpoint-down(sm) {
+      width: 100px;
+    }
+  }
+}
