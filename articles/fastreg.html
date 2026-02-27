@@ -148,7 +148,7 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-50d249.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-cd631a.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-register">Converting a register<a class="anchor" aria-label="anchor" href="#converting-a-register"></a>
 </h2>
@@ -158,10 +158,10 @@
 <code class="sourceCode R"><span><span class="va">bef_sas_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">sas_dir</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html" class="external-link">str_subset</a></span><span class="op">(</span><span class="st">"bef"</span><span class="op">)</span></span>
 <span><span class="va">bef_sas_files</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp72f2nE/sas-dir/bef.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp72f2nE/sas-dir/bef1999.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmp72f2nE/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/RtmptGDKDk/sas-dir/bef.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmptGDKDk/sas-dir/bef1999.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/RtmptGDKDk/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
@@ -178,19 +178,19 @@
 <span><span class="co">#&gt; ✔ Successfully converted 4 files.</span></span>
 <span><span class="co">#&gt; • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and</span></span>
 <span><span class="co">#&gt;   "bef2020.sas7bdat"</span></span>
-<span><span class="co">#&gt; • Output: Register files in '/tmp/Rtmp72f2nE/output-register-dir/bef'</span></span></code></pre></div>
+<span><span class="co">#&gt; • Output: Register files in '/tmp/RtmptGDKDk/output-register-dir/bef'</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/convert_register.html">convert_register()</a></code> uses <code><a href="../reference/convert_file.html">convert_file()</a></code> internally so the same chunking and partitioning behaviour applies. See <code><a href="../reference/convert_file.html">?convert_file</a></code> and <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details. As a result, the output from <code><a href="../reference/convert_register.html">convert_register()</a></code> is also partitioned by year, extracted from file names:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-register-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-934e11.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-e806f4.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-913e3e.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-f6f348.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-62651f.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-8b4062.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-6c11dd.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-d93828.parquet</span></span></code></pre>
 </div>
 <p>The output is organised into a “bef” folder (register name extracted from file names) with year-based subdirectories:</p>
 <ul>
@@ -207,7 +207,7 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmp72f2nE/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmptGDKDk/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
@@ -230,17 +230,17 @@
 <pre><code><span><span class="co">#&gt; parquet-registers</span></span>
 <span><span class="co">#&gt; ├── bef</span></span>
 <span><span class="co">#&gt; │   ├── year=1999</span></span>
-<span><span class="co">#&gt; │   │   ├── part-358b62.parquet</span></span>
-<span><span class="co">#&gt; │   │   └── part-3efd0c.parquet</span></span>
+<span><span class="co">#&gt; │   │   ├── part-3a7fb3.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-d998ed.parquet</span></span>
 <span><span class="co">#&gt; │   ├── year=2020</span></span>
-<span><span class="co">#&gt; │   │   └── part-ae3b2a.parquet</span></span>
+<span><span class="co">#&gt; │   │   └── part-82ebe3.parquet</span></span>
 <span><span class="co">#&gt; │   └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt; │       └── part-48152c.parquet</span></span>
+<span><span class="co">#&gt; │       └── part-aa5201.parquet</span></span>
 <span><span class="co">#&gt; └── lmdb</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-c3ac3e.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-616893.parquet</span></span>
 <span><span class="co">#&gt;     └── year=2021</span></span>
-<span><span class="co">#&gt;         └── part-9f24f8.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-f96ab0.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
 </h2>
@@ -250,19 +250,19 @@
 <code class="sourceCode R"><span><span class="va">register</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_register.html">read_register</a></span><span class="op">(</span><span class="va">output_register_dir</span><span class="op">)</span></span>
 <span><span class="va">register</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;arrow_001&gt; [?? x 5]</span></span>
-<span><span class="co">#&gt; # Database: DuckDB 1.4.4 [unknown@Linux 6.11.0-1018-azure:R 4.5.2/:memory:]</span></span>
+<span><span class="co">#&gt; # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  9     1 132473802596 19530901  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmp72f2nE/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmptGDKDk/sas-dir/bef1999_1.sas7bdat  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>You can pass a directory to read the full partitioned register or a file path to read a single <code>.parquet</code> file. The data is read lazily, so it won’t load into memory until collected with e.g. <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::collect()</a></code>.</p>
