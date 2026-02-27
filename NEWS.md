@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.18 (2026-02-27)
+
+### Fix
+
+- :bug: set `sas_path` target to `mode = "always"` to detect new SAS files in `input_dir` (#233)
+
 ## 0.8.17 (2026-02-19)
 
 ### Fix
