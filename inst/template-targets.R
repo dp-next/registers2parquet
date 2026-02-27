@@ -62,7 +62,8 @@ list(
   tar_target(
     name = sas_paths,
     command = list_sas_files(config$input_dir),
-    deployment = "main"
+    deployment = "main",
+    cue = tar_cue(mode = "always")
   ),
 
   # Empty output directory before writing to avoid outdated Parquet files.
