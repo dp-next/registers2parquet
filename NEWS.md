@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- :bug: set `sas_path` target to `mode = "always"` to detect new SAS files in `input_dir` (#233)
+- :bug: set `sas_path` target to `mode = "always"` to detect new SAS
+  files in `input_dir` (#233)
 
 ## 0.8.17 (2026-02-19)
 
