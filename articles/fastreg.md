@@ -107,7 +107,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-f07764.parquet
+    #>         └── part-946d8a.parquet
 
 ## Converting a register
 
@@ -123,10 +123,10 @@ expects files to be from the **same register** based on file names.
 bef_sas_files <- list_sas_files(sas_dir) |>
   stringr::str_subset("bef")
 bef_sas_files
-#> /tmp/RtmpZKADCv/sas-dir/bef.sas7bdat
-#> /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat
-#> /tmp/RtmpZKADCv/sas-dir/bef1999.sas7bdat
-#> /tmp/RtmpZKADCv/sas-dir/bef2020.sas7bdat
+#> /tmp/RtmpeoLmlN/sas-dir/bef.sas7bdat
+#> /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat
+#> /tmp/RtmpeoLmlN/sas-dir/bef1999.sas7bdat
+#> /tmp/RtmpeoLmlN/sas-dir/bef2020.sas7bdat
 ```
 
 ``` r
@@ -143,7 +143,7 @@ convert_register(
 #> ✔ Successfully converted 4 files.
 #> • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and
 #>   "bef2020.sas7bdat"
-#> • Output: Register files in '/tmp/RtmpZKADCv/output-register-dir/bef'
+#> • Output: Register files in '/tmp/RtmpeoLmlN/output-register-dir/bef'
 ```
 
 [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
@@ -160,12 +160,12 @@ is also partitioned by year, extracted from file names:
     #> output-register-dir
     #> └── bef
     #>     ├── year=1999
-    #>     │   ├── part-44ad48.parquet
-    #>     │   └── part-69aa38.parquet
+    #>     │   ├── part-c0e692.parquet
+    #>     │   └── part-ea22c5.parquet
     #>     ├── year=2020
-    #>     │   └── part-c1be79.parquet
+    #>     │   └── part-5acfe9.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-15d57e.parquet
+    #>         └── part-1ed904.parquet
 
 The output is organised into a “bef” folder (register name extracted
 from file names) with year-based subdirectories:
@@ -195,7 +195,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpZKADCv/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpeoLmlN/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -233,17 +233,17 @@ data:
     #> parquet-registers
     #> ├── bef
     #> │   ├── year=1999
-    #> │   │   ├── part-077d70.parquet
-    #> │   │   └── part-f02661.parquet
+    #> │   │   ├── part-062615.parquet
+    #> │   │   └── part-ff07a4.parquet
     #> │   ├── year=2020
-    #> │   │   └── part-2eb1ae.parquet
+    #> │   │   └── part-3eec6c.parquet
     #> │   └── year=__HIVE_DEFAULT_PARTITION__
-    #> │       └── part-27b6ce.parquet
+    #> │       └── part-795a86.parquet
     #> └── lmdb
     #>     ├── year=2020
-    #>     │   └── part-e48793.parquet
+    #>     │   └── part-5c6ade.parquet
     #>     └── year=2021
-    #>         └── part-642d86.parquet
+    #>         └── part-1e76bf.parquet
 
 ## Reading a Parquet register
 
@@ -258,16 +258,16 @@ register
 #> # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]
 #>     koen pnr          foed_dato source_file                                 year
 #>    <dbl> <chr>        <chr>     <chr>                                      <int>
-#>  1     2 108684730664 19320112  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  2     2 982144017357 20070716  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  3     1 672580814975 19800805  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  4     2 439008110445 20090628  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  5     2 489714666740 20170225  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  6     2 155331797020 19730330  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  7     2 777951655096 19341022  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  8     2 167007504860 20010318  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#>  9     2 132473802596 19530901  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
-#> 10     2 876820784981 19310817  /tmp/RtmpZKADCv/sas-dir/bef1999_1.sas7bdat  1999
+#>  1     2 108684730664 19320112  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  2     2 982144017357 20070716  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  3     1 672580814975 19800805  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  4     2 439008110445 20090628  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  5     2 489714666740 20170225  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  6     2 155331797020 19730330  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  7     2 777951655096 19341022  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  8     2 167007504860 20010318  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#>  9     2 132473802596 19530901  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
+#> 10     2 876820784981 19310817  /tmp/RtmpeoLmlN/sas-dir/bef1999_1.sas7bdat  1999
 #> # ℹ more rows
 ```
 
