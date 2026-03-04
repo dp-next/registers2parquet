@@ -18,6 +18,7 @@ reference:
   - use_targets_template
 - title: Helper functions
 - contents:
+  - get_project_dir
   - starts_with("list")
   - save_as_sas
   - simulate_register
