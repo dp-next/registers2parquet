@@ -265,4 +265,3 @@ register
 You can pass a directory to read the full partitioned register or a file
 path to read a single `.parquet` file. The data is read lazily, so it
 won't load into memory until collected with e.g. `dplyr::collect()`.
-
