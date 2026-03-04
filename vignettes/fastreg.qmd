@@ -41,15 +41,20 @@ formats like CSV), Parquet offers:
 ## Setup
 
 For the examples below, we've simulated SAS register data for two
-registers, `bef` and `lmdb`:
+registers, `bef` and `lmdb`, and placed them in a `Grunddata/` folder
+within a project with ID `123456`:
 
 ```{r prepare}
 #| code-fold: true
 #| code-summary: "Show setup code"
 library(fastreg)
 
-sas_dir <- fs::path_temp("sas-dir")
-fs::dir_create(sas_dir)
+project_dir <- fs::path_temp(123456)
+grunddata_dir <- fs::path(project_dir, "Grunddata")
+fs::dir_create(grunddata_dir)
+
+# Set project dir as wd.
+knitr::opts_knit$set(root.dir = project_dir)
 
 bef_list <- simulate_register(
   "bef",
@@ -65,14 +70,25 @@ lmdb_list <- simulate_register(
 
 save_as_sas(
   c(bef_list, lmdb_list),
-  sas_dir
+  grunddata_dir
 )
 ```
 
 ```{r setup-tree}
 #| echo: false
-show_tree(sas_dir)
+show_tree(project_dir)
 ```
+
+::: callout-tip
+The functions within fastreg takes absolute paths as inputs. To avoid
+having to copy paste full paths, fastreg provides a helper to get the
+project directory based on the project ID:
+
+```{r define-project-dir}
+project_dir <- fastreg::get_project_dir(project_id = 123456)
+```
+
+:::
 
 ## Converting a single file
 
@@ -80,15 +96,17 @@ Converting one file from SAS to Parquet in fastreg isn't a simple change
 of file extension. We make use of Parquet's Hive partitioning to
 organise the output by year, for easier querying and management. So the
 output Parquet file is written to a subdirectory named after the year
-extracted from the file name. Use the `convert_file()` function to
-convert a single SAS file to a year-partitioned Parquet format:
+extracted from the file name.
+
+Use `convert_file()` to convert a single SAS file to a year-partitioned
+Parquet format:
 
 ```{r convert-file}
-sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
-output_file_dir <- fs::path_temp("output-file-dir")
+sas_file_path <- fs::path(project_dir, "Grunddata", "bef2020.sas7bdat")
+output_file_dir <- fs::path_(project_dir, _"parquet-file")
 
 convert_file(
-  path = sas_file,
+  path = sas_file_path,
   output_dir = output_file_dir
 )
 ```
@@ -123,13 +141,13 @@ subdirectories), then use `convert_register()` to convert them.
 based on file names.
 
 ```{r locate}
-bef_sas_files <- list_sas_files(sas_dir) |>
+bef_sas_files <- list_sas_files(fs::path(project_dir, "Grunddata")) |>
   stringr::str_subset("bef")
 bef_sas_files
 ```
 
 ```{r convert-register}
-output_register_dir <- fs::path_temp("output-register-dir")
+output_register_dir <- fs::path(project_dir, "parquet-register")
 
 convert_register(
   path = bef_sas_files,
@@ -140,15 +158,16 @@ convert_register(
 `convert_register()` uses `convert_file()` internally so the same
 chunking and partitioning behaviour applies. See `?convert_file` and
 `?convert_register` for more details. As a result, the output from
-`convert_register()` is also partitioned by year, extracted from file
-names:
+`convert_register()` is also partitioned by year, extracted from the
+file names:
 
 ```{r output-tree}
 #| echo: false
 show_tree(output_register_dir)
 ```
 
-The output is organised into a "bef" folder (register name extracted from file names) with year-based subdirectories:
+The output is organised into a "bef" folder (register name extracted
+from file names) with year-based subdirectories:
 
 - The data from the two SAS files with "1999" in their file names are
   located in the subfolder "year=1999"
@@ -166,23 +185,25 @@ parallelises conversion across CPU cores. By default it uses 10 workers,
 but that can be adjusted in the pipeline in the `_targets.R` file to not
 consume too many cores on a shared server.
 
-To create the pipeline file, you can use the `use_targets_template()`
-function. In this example, we're outputting it to a temporary directory.
+To create the pipeline file, you can use `use_targets_template()`. By
+default, it outputs the pipeline file, `_targets.R`, in the current
+working directory.
 
 ```{r use-targets}
-pipeline_dir <- fs::path_temp("pipeline-dir")
-fs::dir_create(pipeline_dir)
-
-use_targets_template(path = pipeline_dir)
+use_targets_template()
 ```
 
-Once the `_targets.R` file is created, open it and edit the `config`
-section:
+Once the `_targets.R` file is created, open it and edit `project_id` and
+`config` variables in the "Configuration" section as needed. Here, we
+only edit the `project_id`:
 
 ```{r config}
+project_id <- 123456 # Edited from NA to 123456
+project_dir <- fastreg::get_project_dir(project_id)
+
 config <- list(
-  input_dir = fs::path_temp("sas-dir"),
-  output_dir = fs::path(pipeline_dir, "parquet-registers")
+  input_dir = fs::path(project_dir, "Grunddata"),
+  output_dir = fs::path(project_dir, "parquet")
 )
 ```
 
@@ -191,25 +212,28 @@ recursively). This directory can contain different registers, rather
 than just one as is expected in `convert_register()`. The `output_dir`
 directory is where the Parquet files will be written to.
 
-After you've updated the `config` section, you can run the pipeline:
+::: callout-note
+By default, `config$input_dir` and `config$output_dir` are defined as
+the folders "Grunddata" and "parquet" respectively within the project
+directory. You can edit these as needed in the "Configuration" section
+in the pipeline.
+:::
 
-```{r tar-make}
-#| eval: false
-targets::tar_make()
-```
-
-```{r edit-and-run-pipeline}
+```{r edit-pipeline}
 #| echo: false
 #| eval: !expr rlang::is_installed("targets")
-template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
+template_content <- readLines(fs::path(project_dir, "_targets.R"))
 modified_content <- template_content |>
-  stringr::str_replace("/path/to/register/sas/files/directory", config$input_dir) |>
-  stringr::str_replace("/path/to/output/directory", config$output_dir)
+  stringr::str_replace("project_id <- NA", glue::glue("project_id <-", project_id))
 
-withr::with_dir(pipeline_dir, {
-  writeLines(modified_content, "_targets.R")
-  targets::tar_make(callr_function = NULL, reporter = "silent")
-})
+writeLines(modified_content, "_targets.R")
+```
+
+After you've updated the `config` section, you can run the pipeline:
+
+```{r run-pipeline}
+#| eval: !expr rlang::is_installed("targets")
+targets::tar_make()
 ```
 
 The pipeline will find all SAS files from `input_dir` and convert each
@@ -233,10 +257,12 @@ This function reads the data into a [DuckDB](https://duckdb.org/) table,
 which a powerful way to query and process large data.
 
 ```{r read-register}
-register <- read_register(output_register_dir)
+register <- read_register(
+  fs::path(project_dir, "parquet"))
 register
 ```
 
 You can pass a directory to read the full partitioned register or a file
 path to read a single `.parquet` file. The data is read lazily, so it
 won't load into memory until collected with e.g. `dplyr::collect()`.
+
