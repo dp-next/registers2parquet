@@ -80,7 +80,7 @@ show_tree(project_dir)
 ```
 
 ::: callout-tip
-The functions within fastreg takes absolute paths as inputs. To avoid
+The functions within fastreg take absolute paths as inputs. To avoid
 having to copy paste full paths, fastreg provides a helper to get the
 project directory based on the project ID:
 
@@ -103,7 +103,7 @@ Parquet format:
 
 ```{r convert-file}
 sas_file_path <- fs::path(project_dir, "Grunddata", "bef2020.sas7bdat")
-output_file_dir <- fs::path_(project_dir, _"parquet-file")
+output_file_dir <- fs::path(project_dir, "parquet-file")
 
 convert_file(
   path = sas_file_path,
@@ -166,11 +166,11 @@ file names:
 show_tree(output_register_dir)
 ```
 
-The output is organised into a "bef" folder (register name extracted
+The output is organised into a `bef/` folder (register name extracted
 from file names) with year-based subdirectories:
 
 - The data from the two SAS files with "1999" in their file names are
-  located in the subfolder "year=1999"
+  located in the subfolder `year=1999/`
 - The data from the SAS file from 2020 are located in the subfolder
   "year=2020"
 - One SAS file didn't have a year in its file name, `bef.sas7bdat`. The
