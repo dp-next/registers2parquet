@@ -249,3 +249,14 @@ register |>
   dplyr::compute()
 ```
 
+After the query (filer and mutate), we execute it with
+`dplyr::compute()`. This save the result as a temporary table inside
+DuckDB, without loading it into R memory.
+
+
+::: callout-note
+If you need to load the data into memory in R, you can use
+`dplyr::collect()`. However, for large registers this can take a long
+time, so only do this when it's absolutely necessary and make sure to
+filter the data before collecting.
+:::
