@@ -57,10 +57,10 @@ convert_register <- function(
   }
 
   # Convert files.
-  purrr::walk(
-    path,
-    \(p) convert_file(p, output_dir, chunk_size)
-  )
+  purrr::walk(path, \(p) {
+    convert_file(p, output_dir, chunk_size)
+    gc()
+  })
 
   # Success message.
   cli::cli_alert_success("Successfully converted {length(path)} file{?s}.")
