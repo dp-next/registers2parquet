@@ -253,7 +253,7 @@ register |>
 
 You can also transform columns before filtering. For example,
 `foed_dato` is stored character in the simulated data (`"YYYYMMDD"`), so
-you can cast it to a date (using `strptime`) before filtering it:
+you can change it to a date (using `strptime`) before filtering it:
 
 ```{r filter-date}
 register |>
