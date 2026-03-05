@@ -181,7 +181,7 @@ section:
 
 ```{r config}
 config <- list(
-  input_dir = fs::path_temp("sas-dir"),
+  sas_paths = list_sas_files(fs::path_temp("sas-dir")),
   output_dir = fs::path(pipeline_dir, "parquet-registers")
 )
 ```
@@ -203,7 +203,10 @@ targets::tar_make()
 #| eval: !expr rlang::is_installed("targets")
 template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
 modified_content <- template_content |>
-  stringr::str_replace("/path/to/register/sas/files/directory", config$input_dir) |>
+  stringr::str_replace(
+    "/path/to/sas/directory",
+    fs::path_temp("sas-dir")
+  ) |>
   stringr::str_replace("/path/to/output/directory", config$output_dir)
 
 withr::with_dir(pipeline_dir, {
