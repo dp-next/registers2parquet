@@ -18,8 +18,8 @@ library(targets)
 # Configuration ----------------------------------------------------------------
 
 config <- list(
-  # Path to locate SAS files in.
-  input_dir = "/path/to/register/sas/files/directory",
+  # Paths to SAS files
+  sas_paths = list_sas_files("/path/to/sas/directory"),
   # Path to output Parquet files in. Parquet files will be located in
   # subdirectories of this directory.
   output_dir = "/path/to/output/directory"
@@ -61,9 +61,7 @@ tar_option_set(
 list(
   tar_target(
     name = sas_paths,
-    command = list_sas_files(config$input_dir),
-    deployment = "main",
-    cue = tar_cue(mode = "always")
+    command = config$sas_paths
   ),
 
   # Empty output directory before writing to avoid outdated Parquet files.
