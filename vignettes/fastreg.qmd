@@ -228,9 +228,19 @@ show_tree(config$output_dir)
 
 ## Reading a Parquet register
 
-The final function reads the converted Parquet register data into R.
-This function reads the data into a [DuckDB](https://duckdb.org/) table,
-which a powerful way to query and process large data.
+The final function reads the converted Parquet register data into R,
+returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
+a powerful way to query and process large data without loading it all
+into memory.
+
+You can pass a file path to read a single Parquet file:
+
+```{r read-file}
+file <- read_register(output_file_dir)
+file
+```
+
+Or you can pass a directory to read the full partitioned register:
 
 ```{r read-register}
 register <- read_register(output_register_dir)
