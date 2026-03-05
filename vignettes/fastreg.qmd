@@ -255,7 +255,7 @@ then filter:
 ```{r filter-register}
 register |>
   dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |> 
+  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
   dplyr::compute()
 ```
 
