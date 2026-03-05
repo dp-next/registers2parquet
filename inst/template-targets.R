@@ -3,13 +3,14 @@
 #
 # Setup:
 #
-# 1. Set the `input_dir` and `output_dir` under "Configuration" below.
+# 1. Set `sas_paths` and `output_dir` under "Configuration" below.
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
-# Note: this pipeline re-converts all files on every `tar_make()` call by
-# deleting files in the output directory before converting. The main benefit of
-# targets here is parallel execution across workers.
+# Note: on every `tar_make()` call, the output directory is cleared and all
+# SAS files are re-converted. The `sas_paths` target only re-runs when the
+# list of input files changes. The main benefit of targets here is parallel
+# execution across workers.
 #
 # For more information on targets, see https://books.ropensci.org/targets/
 
