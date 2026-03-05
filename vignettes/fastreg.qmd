@@ -237,27 +237,15 @@ register <- read_register(output_register_dir)
 register
 ```
 
-You can pass a directory to read the full partitioned register or a file
-path to read a single `.parquet` file. The data is read lazily, so it
-won't load into memory until collected with e.g. `dplyr::collect()`.
-
-Since the data is lazy, you can filter before collecting. Only the
-matching rows are loaded into memory when using `dplyr::collect()` after
-filtering:
+The resulting DuckDB table can be filtered and transformed with `dplyr`.
+For example, `foed_dato` is stored character in the simulated data
+(`"YYYYMMDD"`), so you can change it to a date (using `strptime`) and
+then filter:
 
 ```{r filter-register}
 register |>
-  dplyr::filter(koen == 2) |>
-  dplyr::collect()
-```
-
-You can also transform columns before filtering. For example,
-`foed_dato` is stored character in the simulated data (`"YYYYMMDD"`), so
-you can change it to a date (using `strptime`) before filtering it:
-
-```{r filter-date}
-register |>
   dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-  dplyr::filter(foed_dato > "2000-01-01") |>
-  dplyr::collect()
+  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |> 
+  dplyr::compute()
 ```
+
