@@ -253,6 +253,9 @@ After the query (filer and mutate), we execute it with
 `dplyr::compute()`. This save the result as a temporary table inside
 DuckDB, without loading it into R memory.
 
+Notice the `??` in the first line of the output. This shows us that the
+total number of matching rows is not yet known because the data isn't
+loaded into memory.
 
 ::: callout-note
 If you need to load the data into memory in R, you can use
