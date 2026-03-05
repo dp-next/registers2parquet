@@ -1,0 +1,19 @@
+---
+title: Limitations
+vignette: >
+  %\VignetteIndexEntry{Limitations}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+We attempt to keep fastreg a rather small and simple package. However,
+this comes with some limitations as listed below.
+
+1. `convert_file()`, the core function behind converting SAS files to
+   Parquet and used within `convert_register()` and the targets
+   template, creates an Arrow schema with data types based on the first
+   file chunk. This means that data type schemas are defined *within*
+   files only. As a result, if there's a drift in data types across SAS
+   files in the same register, this this not be caught in the conversion
+   process, but will become evident when attempting to read the
+   register.
