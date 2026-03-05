@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.8.19 (2026-03-04)
+
+### Fix
+
+- :bug: add `gc()` to `convert_register()` (#240)
+
 ## 0.8.18 (2026-02-27)
 
 ### Fix
