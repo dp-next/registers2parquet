@@ -14,6 +14,6 @@ this comes with some limitations as listed below.
    template, creates an Arrow schema with data types based on the first
    file chunk. This means that data type schemas are defined *within*
    files only. As a result, if there's a drift in data types across SAS
-   files in the same register, this this not be caught in the conversion
+   files in the same register, this may not be identified in the conversion
    process, but will become evident when attempting to read the
    register.
