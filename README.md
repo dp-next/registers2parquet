@@ -13,7 +13,7 @@ status](https://results.pre-commit.ci/badge/github/dp-next/fastreg/main.svg)](ht
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
+[![CRAN status](https://www.r-pkg.org/badges/version/fastreg)](https://CRAN.R-project.org/package=fastreg)
 <!-- badges: end -->
 
 ## Overview
