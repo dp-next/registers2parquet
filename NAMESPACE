@@ -2,6 +2,7 @@
 
 export(convert_file)
 export(convert_register)
+export(get_project_id)
 export(list_sas_files)
 export(read_register)
 export(save_as_sas)
