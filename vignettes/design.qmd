@@ -108,3 +108,57 @@ flowchart TD
     path --> read_register --> output
 
 ```
+
+## Conversion report
+
+When `convert_file()` is called with `report = TRUE` (the default), a
+conversion report is written to `output_dir`. The report compares each
+SAS chunk with its corresponding Parquet file to check that the
+conversion was successful.
+
+Columns that are identical in the SAS chunk and Parquet file are
+described as `[OK]` with statistics shown on a single line. Columns that
+differ between the SAS chunk and the Parquet file are described with
+`[DIFF]` and the statistics is expanded to a full side-by-side
+comparison so it is easy to spot what is different between them. The
+column names are lowercased, as in the Parquet file, and the column
+types (in brackets) are the Arrow types used in the Parquet file.
+
+Statistics depend on the column type:
+
+- **Numeric** (`int32`, `float64`): min, max, mean, median, Q25, Q75, NA
+  count
+- **Datetime** (`timestamp`, `date32`): min, max, NA count
+- **Categorical** (`large_utf8`, `bool`): NA count + top 5 value counts;
+  remaining values shown as `(+N more)`
+
+Below is shown an example of how the report is structured:
+
+```{.text filename="conversion-report-20260316-143022.txt"}
+# Conversion report 2026-03-16 14:30:22
+
+[OK]   Checked stats are identical between SAS and Parquet. Shown on one line.
+[DIFF] At least one stat differs. Expanded with SAS and Parquet side by side.
+
+If you come across a problem, please report it at:
+https://github.com/dp-next/fastreg/issues/new
+
+## lmdb2020.sas7bdat
+
+### Chunk 1
+Rows: SAS=1000 Parquet=1000
+
+volume [double] [OK]  min=4.62 max=9.95 mean=7.32 median=7.38 q25=6.12 q75=8.55 na=0
+pnr [large_utf8] [OK]  na=0 108684730664=1 982144017357=1 672580814975=1 439008110445=1 489714666740=1 (+995 more)
+atc [large_utf8] [OK]  na=0 A10AE56=201 C03BX03=189 H01BB02=156 L04AA06=143 V03AB03=132 (+12 more)
+
+apk [double] [DIFF]
+        SAS    Parquet
+  min   1.01   0.99
+  max   9.99   9.99
+  mean  5.51   5.49
+  ...
+
+### Chunk 2
+...
+```
