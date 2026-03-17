@@ -1,6 +1,11 @@
-#' Get (or guess) the project ID from the current working directory
+#' Get the project ID from the current working directory path
 #'
-#' @returns The project ID as a character string.
+#' Gets a numeric project ID from the current working directory path by looking
+#' for a folder name with only digits. Errors if a project ID with an unexpected
+#' length was found.
+#'
+#' @returns A 6-digit character string, or `NA` if no project ID is found in the
+#'   path.
 #' @export
 get_project_id <- function() {
   id <- fs::path_wd() |>
@@ -16,11 +21,11 @@ get_project_id <- function() {
     )
   }
 
-  if (stringr::str_length(id) != 7 && !is.na(id)) {
+  if (stringr::str_length(id) != 6 && !is.na(id)) {
     cli::cli_abort(
-      "Found an ID, but it was too long to be a project ID.",
+      "Found an ID, but it was too long or too short to be a project ID.",
       c(
-        "i" = "The ID found was {id}. Project IDs are 7 digits long."
+        "i" = "The ID found was {id}. Project IDs are expected to be 6 digits long."
       )
     )
   }
