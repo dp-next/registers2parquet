@@ -147,9 +147,9 @@ https://github.com/dp-next/fastreg/issues/new
 
 ### Chunk 1
 
-Rows: 
+Rows:
 
-- SAS: 1000 
+- SAS: 1000
 - Parquet: 1000
 
 volume [double] [OK]  min=4.62 max=9.95 mean=7.32 median=7.38 q25=6.12 q75=8.55 na=0
