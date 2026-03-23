@@ -6,7 +6,7 @@ ci:
 
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.1
+    rev: v8.30.0
     hooks:
       - id: gitleaks
 
@@ -30,6 +30,6 @@ repos:
       - id: typos
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.53
+    rev: v0.1.58
     hooks:
       - id: rumdl-fmt # Auto-format
