@@ -135,31 +135,38 @@ Below is an example of how the report is structured:
 ```{.text filename="conversion-report-20260316-143022.txt"}
 # Conversion report 2026-03-16 14:30:22
 
-- `Ok`: Checked stats are identical between SAS and Parquet. Shown on one line.
-- `Diff`: At least one statistic is different. Expanded with SAS and Parquet side by side.
+
+Each column is followed by [OK] or [DIFF]:
+- [OK]: Checked statistics are identical in the SAS chunk and written
+  Parquet file.
+- [DIFF]: At least one stat differs. Expanded with SAS and Parquet side
+  by side.
 
 If you come across a problem, please report it at:
-https://github.com/dp-next/fastreg/issues/new
+https://github.com/dp-next/fastreg/issues/new.
 
 ## lmdb2020.sas7bdat
 
 ### Chunk 1
+
+Parquet file name: `lmdb/year=2020/d39f98.parquet`
 
 Rows:
 
 - SAS: 1000
 - Parquet: 1000
 
-volume [double] [OK]  min=4.62 max=9.95 mean=7.32 median=7.38 q25=6.12 q75=8.55 na=0
-pnr [large_utf8] [OK]  na=0 108684730664=1 982144017357=1 672580814975=1 439008110445=1 489714666740=1 (+995 more)
-atc [large_utf8] [OK]  na=0 A10AE56=201 C03BX03=189 H01BB02=156 L04AA06=143 V03AB03=132 (+12 more)
+| Variable | Status |
+| --- | --- |
+| pnr | OK |
+| pnr | OK |
+| atc | OK |
+| apk | DIFF |
 
 apk [double] [DIFF]
-        SAS    Parquet
-  min   1.01   0.99
-  max   9.99   9.99
-  mean  5.51   5.49
-  ...
+| --- | SAS | Parquet |
+| min | 1.01 | 0.99 |
+| mean | 5.51 | 5.49 |
 
 ### Chunk 2
 ...
