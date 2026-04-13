@@ -171,3 +171,29 @@ apk [double] [DIFF]
 ### Chunk 2
 ...
 ```
+
+Overview of the implementation of the conversion report:
+
+- Report helper functions are be placed in `write-report.R`
+- Report functions are called within `convert_file()` since both
+  `convert_register()` and the targets template rely on that function.
+- To lower the risk of workers writing at the same time (the target
+  pipeline parallelises per *SAS file*), the report lines are collected
+  for all chunks within a file before writing to the report.
+- `initialise_report()` creates the report file
+  `conversion_report_<datetime>.txt` in the beginning of
+  `convert_file()`, before the repeat.
+- We use the already existing `read_register_file()` to read the written
+  Parquet file that will be compared to the chunk.
+- `create_chunk_comparison()` returns the report of the current chunk,
+  e.g., the "Chunk 1" section above, as a character vector.
+- Chunk comparisons are collected in a list `chunk_comparisons` within
+  the repeat loop.
+- `write_file_report()` then takes `chunk_comparisons` and writes them
+  to the conversion report starting with a level-2 header with the SAS
+  file name.
+- Potentially: The targets template includes a target that reports on
+  whether any "[DIFF]" is found within the conversion report so users
+  won't have to inspect the conversion report manually.
+
+<!--TODO: How do we handle parallel workers writing to the same file in the targets template?-->
