@@ -116,13 +116,11 @@ conversion report is written to `output_dir`. The report compares each
 SAS chunk with its corresponding Parquet file to check that the
 conversion was successful.
 
-Columns that are identical in the SAS chunk and Parquet file are
-described as `[OK]` with statistics shown on a single line. Columns that
-differ between the SAS chunk and the Parquet file are described with
-`[DIFF]` and the statistics is expanded to a full side-by-side
-comparison so it is easy to spot what is different between them. The
-column names are lowercased, as in the Parquet file, and the column
-types (in brackets) are the Arrow types used in the Parquet file.
+The Parquet file is read into R and compared column-by-column against
+the SAS chunk. Identical columns are marked [OK], while differing
+columns are marked [DIFF] showin with a side-by-side comparison. Column
+names are lowercased and the types are Arrow types, matching the Parquet
+file.
 
 Statistics depend on the column type:
 
@@ -132,7 +130,7 @@ Statistics depend on the column type:
 - **Categorical** (`large_utf8`, `bool`): NA count + top 5 value counts;
   remaining values shown as `(+N more)`
 
-Below is shown an example of how the report is structured:
+Below is an example of how the report is structured:
 
 ```{.text filename="conversion-report-20260316-143022.txt"}
 # Conversion report 2026-03-16 14:30:22
