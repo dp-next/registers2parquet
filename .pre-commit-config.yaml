@@ -17,7 +17,7 @@ repos:
       - id: end-of-file-fixer
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.13.9
+    rev: v4.13.10
     hooks:
       - id: commitizen
 
@@ -30,6 +30,6 @@ repos:
       - id: typos
 
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.67
+    rev: v0.1.71
     hooks:
       - id: rumdl-fmt # Auto-format
