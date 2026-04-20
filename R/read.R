@@ -72,6 +72,7 @@ check_parquet_path <- function(path) {
 #' the register.
 #'
 #' @name read_parquet
+#' @rdname read_parquet
 #' @param path Path to a directory with the Parquet files within or a path to a
 #'   Parquet file.
 #' @inherit read_register return
