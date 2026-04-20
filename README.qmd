@@ -67,7 +67,8 @@ pak::pak("dp-next/fastreg")
 
 ## Usage
 
-Use `convert_file()` to convert a single SAS file to Parquet in Hive partition format:
+Use `convert_file()` to convert a single SAS file to Parquet in Hive
+partition format:
 
 ```{r, eval = FALSE}
 library(fastreg)
@@ -89,7 +90,9 @@ convert_register(
 )
 ```
 
-Use `use_targets_template()` to copy a [targets](https://books.ropensci.org/targets/) template that converts multiple registers in parallel into your project:
+Use `use_targets_template()` to copy a
+[targets](https://books.ropensci.org/targets/) template that converts
+multiple registers in parallel into your project:
 
 ```{r, eval = FALSE}
 use_targets_template()
