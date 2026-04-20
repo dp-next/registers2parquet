@@ -2,13 +2,16 @@
 % Please edit documentation in R/get.R
 \name{get_project_id}
 \alias{get_project_id}
-\title{Get (or guess) the project ID from the current working directory}
+\title{Get the project ID from the current working directory path}
 \usage{
 get_project_id()
 }
 \value{
-The project ID as a character string.
+A 6-digit character string, or \code{NA} if no project ID is found in the
+path.
 }
 \description{
-Get (or guess) the project ID from the current working directory
+Gets a numeric project ID from the current working directory path by looking
+for a folder name with only digits. Errors if a project ID with an unexpected
+length was found.
 }
