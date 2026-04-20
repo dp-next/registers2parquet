@@ -30,9 +30,9 @@ read_register <- function(
   # If input path is a directory, read as partitioned Parquet register,
   # else read as Parquet file.
   if (fs::is_dir(path)) {
-    read_register_partition(path)
+    read_parquet_partition(path)
   } else {
-    read_register_file(path)
+    read_parquet_file(path)
   }
 }
 
@@ -66,15 +66,21 @@ check_parquet_path <- function(path) {
   invisible(path)
 }
 
-#' Read a partitioned Parquet register as DuckDB table
+#' Read a single Parquet file or a partitioned dataset as DuckDB table
 #'
-#' @param path Path to a Parquet register directory.
+#' This is useful when the [read_register()] incorrectly guesses or can't find
+#' the register.
 #'
+#' @name read_parquet
+#' @rdname read_parquet
+#' @param path Path to a directory with the Parquet files within or a path to a
+#'   Parquet file.
 #' @inherit read_register return
-#'
-#' @keywords internal
-#' @noRd
-read_register_partition <- function(path) {
+NULL
+
+#' @describeIn read_parquet Reads a Parquet partitioned directory.
+#' @export
+read_parquet_partition <- function(path) {
   path |>
     arrow::open_dataset(
       unify_schemas = TRUE,
@@ -85,15 +91,9 @@ read_register_partition <- function(path) {
     arrow::to_duckdb()
 }
 
-#' Read a Parquet file as DuckDB table
-#'
-#' @param path Path to a Parquet file.
-#'
-#' @inherit read_register return
-#'
-#' @keywords internal
-#' @noRd
-read_register_file <- function(path) {
+#' @describeIn read_parquet Reads a single Parquet file.
+#' @export
+read_parquet_file <- function(path) {
   path |>
     arrow::read_parquet() |>
     arrow::to_duckdb()

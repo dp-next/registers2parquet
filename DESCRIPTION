@@ -1,6 +1,6 @@
 Package: fastreg
 Title: Fast Conversion and Querying of Danish Registers with 'Parquet'
-Version: 0.8.20
+Version: 0.9.0
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0000-2208-7088")),
