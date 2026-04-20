@@ -148,7 +148,8 @@ names:
 show_tree(output_register_dir)
 ```
 
-The output is organised into a "bef" folder (register name extracted from file names) with year-based subdirectories:
+The output is organised into a "bef" folder (register name extracted
+from file names) with year-based subdirectories:
 
 - The data from the two SAS files with "1999" in their file names are
   located in the subfolder "year=1999"

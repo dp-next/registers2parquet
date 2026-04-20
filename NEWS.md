@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.9.0 (2026-04-20)
+
+### Feat
+
+- :sparkles: export originally private `read_parquet_*()` functions (#259)
+
 ## 0.8.20 (2026-03-06)
 
 ### Refactor
