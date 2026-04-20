@@ -120,4 +120,3 @@ cleanup: _cleanup-vignettes _clean-pkgdown
 # List all TODO items in the repository
 list-todos:
   grep -R -n --exclude="justfile" --exclude-dir="docs/deps" --exclude="*.json" --exclude="*.html" "TODO" *
-
