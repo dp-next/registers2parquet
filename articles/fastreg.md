@@ -107,7 +107,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-28bb65.parquet
+    #>         └── part-2cfaed.parquet
 
 ## Converting a register
 
@@ -123,10 +123,10 @@ expects files to be from the **same register** based on file names.
 bef_sas_files <- list_sas_files(sas_dir) |>
   stringr::str_subset("bef")
 bef_sas_files
-#> /tmp/RtmpPRQ9Wl/sas-dir/bef.sas7bdat
-#> /tmp/RtmpPRQ9Wl/sas-dir/bef1999_1.sas7bdat
-#> /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat
-#> /tmp/RtmpPRQ9Wl/sas-dir/bef2020.sas7bdat
+#> /tmp/RtmpUW6xck/sas-dir/bef.sas7bdat
+#> /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat
+#> /tmp/RtmpUW6xck/sas-dir/bef1999.sas7bdat
+#> /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat
 ```
 
 ``` r
@@ -143,7 +143,7 @@ convert_register(
 #> ✔ Successfully converted 4 files.
 #> • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and
 #>   "bef2020.sas7bdat"
-#> • Output: Register files in '/tmp/RtmpPRQ9Wl/output-register-dir/bef'
+#> • Output: Register files in '/tmp/RtmpUW6xck/output-register-dir/bef'
 ```
 
 [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
@@ -160,12 +160,12 @@ is also partitioned by year, extracted from file names:
     #> output-register-dir
     #> └── bef
     #>     ├── year=1999
-    #>     │   ├── part-563ffd.parquet
-    #>     │   └── part-cf1023.parquet
+    #>     │   ├── part-0b07ae.parquet
+    #>     │   └── part-ad3edb.parquet
     #>     ├── year=2020
-    #>     │   └── part-f8e87a.parquet
+    #>     │   └── part-a91982.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-c2ce2d.parquet
+    #>         └── part-d8992a.parquet
 
 The output is organised into a “bef” folder (register name extracted
 from file names) with year-based subdirectories:
@@ -195,7 +195,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpPRQ9Wl/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpUW6xck/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -204,7 +204,7 @@ section:
 
 ``` r
 config <- list(
-  input_dir = fs::path_temp("sas-dir"),
+  sas_paths = list_sas_files(fs::path_temp("sas-dir")),
   output_dir = fs::path(pipeline_dir, "parquet-registers")
 )
 ```
@@ -230,48 +230,97 @@ pipeline itself has been edited.
 Below, you can see the output of running the pipeline with the example
 data:
 
-    #> parquet-registers
-    #> ├── bef
-    #> │   ├── year=1999
-    #> │   │   ├── part-4694ea.parquet
-    #> │   │   └── part-52ca59.parquet
-    #> │   ├── year=2020
-    #> │   │   └── part-75468f.parquet
-    #> │   └── year=__HIVE_DEFAULT_PARTITION__
-    #> │       └── part-227e2a.parquet
-    #> └── lmdb
-    #>     ├── year=2020
-    #>     │   └── part-c033fe.parquet
-    #>     └── year=2021
-    #>         └── part-074376.parquet
-
 ## Reading a Parquet register
 
-The final function reads the converted Parquet register data into R.
-This function reads the data into a [DuckDB](https://duckdb.org/) table,
-which a powerful way to query and process large data.
+The final function reads the converted Parquet register data into R,
+returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
+a powerful way to query and process large data without loading it all
+into memory.
+
+You can pass a file path to read a single Parquet file:
+
+``` r
+file <- read_register(output_file_dir)
+file
+#> # Source:   table<arrow_001> [?? x 5]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
+#>     koen pnr          foed_dato source_file                               year
+#>    <dbl> <chr>        <chr>     <chr>                                    <int>
+#>  1     2 108684730664 19320112  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 982144017357 20070716  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  3     1 672580814975 19800805  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 439008110445 20090628  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 489714666740 20170225  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 155331797020 19730330  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 777951655096 19341022  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 132473802596 19530901  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/RtmpUW6xck/sas-dir/bef2020.sas7bdat  2020
+#> # ℹ more rows
+```
+
+Or you can pass a directory to read the full partitioned register:
 
 ``` r
 register <- read_register(output_register_dir)
 register
-#> # Source:   table<arrow_001> [?? x 5]
-#> # Database: DuckDB 1.4.4 [unknown@Linux 6.14.0-1017-azure:R 4.5.2/:memory:]
-#>     koen pnr          foed_dato source_file                               year
-#>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 108684730664 19320112  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  2     2 982144017357 20070716  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  3     1 672580814975 19800805  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  4     2 439008110445 20090628  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  5     2 489714666740 20170225  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  6     2 155331797020 19730330  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  7     2 777951655096 19341022  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  8     2 167007504860 20010318  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#>  9     2 132473802596 19530901  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
-#> 10     2 876820784981 19310817  /tmp/RtmpPRQ9Wl/sas-dir/bef1999.sas7bdat  1999
+#> # Source:   table<arrow_002> [?? x 5]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
+#>     koen pnr          foed_dato source_file                                 year
+#>    <dbl> <chr>        <chr>     <chr>                                      <int>
+#>  1     2 108684730664 19320112  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  2     2 982144017357 20070716  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  3     1 672580814975 19800805  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  4     2 439008110445 20090628  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  5     2 489714666740 20170225  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  6     2 155331797020 19730330  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  7     2 777951655096 19341022  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  8     2 167007504860 20010318  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#>  9     2 132473802596 19530901  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
+#> 10     2 876820784981 19310817  /tmp/RtmpUW6xck/sas-dir/bef1999_1.sas7bdat  1999
 #> # ℹ more rows
 ```
 
-You can pass a directory to read the full partitioned register or a file
-path to read a single `.parquet` file. The data is read lazily, so it
-won’t load into memory until collected with
-e.g. [`dplyr::collect()`](https://dplyr.tidyverse.org/reference/compute.html).
+The resulting DuckDB table can be filtered and transformed with `dplyr`.
+For example, `foed_dato` is stored as a character in the simulated data
+(`"YYYYMMDD"`), so you can change it to a date (using
+[`strptime()`](https://rdrr.io/r/base/strptime.html)) and then filter:
+
+``` r
+register |>
+  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
+  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+  dplyr::compute()
+#> # Source:   table<dbplyr_TDD6kZ7SxR> [?? x 5]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
+#>     koen pnr          foed_dato           source_file                       year
+#>    <dbl> <chr>        <dttm>              <chr>                            <int>
+#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/RtmpUW6xck/sas-dir/bef1999…  1999
+#> # ℹ more rows
+```
+
+After the query (filer and mutate), we execute it with
+[`dplyr::compute()`](https://dplyr.tidyverse.org/reference/compute.html).
+This save the result as a temporary table inside DuckDB, without loading
+it into R memory.
+
+Notice the `??` in the first line of the output. This shows us that the
+total number of matching rows is not yet known because the data isn’t
+loaded into memory.
+
+> **Note**
+>
+> If you need to load the data into memory in R, you can use
+> [`dplyr::collect()`](https://dplyr.tidyverse.org/reference/compute.html).
+> However, for large registers this can take a long time, so only do
+> this when it’s absolutely necessary and make sure to filter the data
+> before collecting.

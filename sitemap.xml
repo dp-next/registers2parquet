@@ -7,6 +7,7 @@
 <url><loc>https://dp-next.github.io/fastreg/articles/design.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/articles/fastreg.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/articles/index.html</loc></url>
+<url><loc>https://dp-next.github.io/fastreg/articles/limitations.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/authors.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/index.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/news/index.html</loc></url>
@@ -14,6 +15,7 @@
 <url><loc>https://dp-next.github.io/fastreg/reference/convert_register.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/index.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/list_sas_files.html</loc></url>
+<url><loc>https://dp-next.github.io/fastreg/reference/read_parquet.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/read_register.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/save_as_sas.html</loc></url>
 <url><loc>https://dp-next.github.io/fastreg/reference/simulate_register.html</loc></url>

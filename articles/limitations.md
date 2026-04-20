@@ -1,0 +1,15 @@
+# Limitations
+
+We attempt to keep fastreg a rather small and simple package. However,
+this comes with some limitations as listed below.
+
+1.  [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md),
+    the core function behind converting SAS files to Parquet and used
+    within
+    [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
+    and the targets template, creates an Arrow schema with data types
+    based on the first file chunk. This means that data type schemas are
+    defined *within* files only. As a result, if there’s a drift in data
+    types across SAS files in the same register, this may not be
+    identified in the conversion process, but will become evident when
+    attempting to read the register.
