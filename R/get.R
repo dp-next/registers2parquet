@@ -12,10 +12,10 @@ get_project_id <- function() {
     stringr::str_extract("/[0-9]+/") |>
     stringr::str_remove_all("/")
 
-  if (is.na(id)) {
+  if (is.na(id) || id == "") {
     cli::cli_warn(
-      "No project ID could be found in the path of the current working directory, so outputting `NA`.",
       c(
+        "No project ID could be found in the path of the current working directory, so outputting `NA`.",
         "i" = "Your path is {fs::path_wd()}. Maybe you need to change into a directory within a project?"
       )
     )
