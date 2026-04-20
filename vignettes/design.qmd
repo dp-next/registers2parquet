@@ -111,24 +111,52 @@ flowchart TD
 
 ## Conversion report
 
-When `convert_file()` is called with `report = TRUE` (the default), a
-conversion report is written to `output_dir`. The report compares each
-SAS chunk with its corresponding Parquet file to check that the
-conversion was successful.
+The conversion report exists to give confidence that the resulting
+Parquet dataset can be read correctly with `unify_schemas`. Because a
+register is split into multiple Parquet part files (one per chunk), all
+parts must have identical column names, types, and counts; any
+discrepancy could cause columns to be silently dropped or read as the
+wrong type when reading the full dataset.
 
-The Parquet file is read into R and compared column-by-column against
-the SAS chunk. Identical columns are marked [OK], while differing
-columns are marked [DIFF] shown with a side-by-side comparison. Column
-names are lowercased and the types are Arrow types, matching the Parquet
-file.
+This report addresses two overall checks:
 
-Statistics depend on the column type:
+1. That the column names and data types are identical for all Parquet
+   partitions for a single register.
+2. That the chunking and writing pipeline works correctly (checking that
+   the data is *the same* if read from the SAS file and read in from the
+   written Parquet file).
 
-- **Numeric** (`int32`, `float64`): min, max, mean, median, Q25, Q75, NA
-  count
-- **Datetime** (`timestamp`, `date32`): min, max, NA count
-- **Categorical** (`large_utf8`, `bool`): NA count + top 5 value counts;
-  remaining values shown as `(+N more)`
+The "sameness" notion in the list above covers a row count, column name
+comparison, and a comparison of a minimal set of statistics:
+
+| Type            | Stats                           |
+|-----------------|---------------------------------|
+| Numeric         | sum, missing count              |
+| Date/datetime   | sum (as integer), missing count |
+| Character       | missing count                   |
+| Logical         | sum, missing count              |
+| Factor/labelled | missing count                   |
+
+The report compares each SAS chunk against its corresponding Parquet
+part. Since users also access data through R (or Python), R-to-R
+comparisons are a helpful check: a dropped chunk will show up as a row
+count mismatch, a corrupted value will show up as a stat difference.
+
+Note that this report cannot guarantee that all SAS values are perfectly
+preserved after conversion, since SAS file formats are proprietary, and
+reading SAS files in R relies on `haven`, which is a reverse-engineered
+effort to read in SAS in environments like R.
+
+We coerce a SAS file's data types using a fixed Arrow schema by deriving
+from the first chunk and apply this schema to all subsequent chunks,
+ensuring consistent types across all part files. However, this only
+ensures type alignment within chunks from a single SAS file. Since
+fastreg outputs several SAS files into the same register dataset (e.g.,
+`bef2020.sas7bdat` and `bef2021.sas7bdat` into the same `bef/` folder),
+we also need to ensure that the data types are the same in the Parquet
+files within the entire register (e.g., the `bef/` folder), so the
+register can be read into R collectively.
+
 
 Below is an example of how the report is structured:
 
