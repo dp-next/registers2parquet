@@ -21,8 +21,6 @@ The core requirements of fastreg are to:
    template to convert multiple registers in parallel.
 4. Provide helper functions to list available SAS or Parquet register
    files directly from R.
-5. Provide a helper function to get the full path to the project
-   directory by its ID.
 
 ## Interface
 
@@ -36,9 +34,9 @@ overview of the main actions and objects within fastreg.
 
 The actions are:
 
-- `get`: Get a project directory.
-- `convert`: Convert a register SAS file (or multiple) to Parquet.
+- `get`: Get project IDs or paths.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
+- `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Use a template in the current project.
 
@@ -46,7 +44,7 @@ While the objects are:
 
 - `chunk_size`: Number of rows to read per chunk during conversion.
 - `path`: A character vector of one or more paths.
-- `project_id`: A double indicating the project id, e.g., on Denmark's
+- `project_id`: A number indicating the project id, e.g., on Denmark's
   Statistics.
 - `output_dir`: The directory to save the Parquet output to.
 
@@ -63,7 +61,8 @@ page.
 %%| fig-cap: "Expected workflow for converting SAS files from a single register using `convert_register()`."
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
 flowchart TD
-    identify_paths("Identify register path(s) using get_project_dir() and list_sas_files()")
+    get_project_dir("get_project_dir()")
+    list_sas_files("list_sas_files()")
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
@@ -71,12 +70,9 @@ flowchart TD
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    identify_paths -.-> path --> convert_register
+    get_project_dir --> list_sas_files --> path --> convert_register
     output_dir & chunk_size --> convert_register
     convert_register --> output
-
-    %% Style
-    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
 ### Converting multiple registers in parallel
@@ -98,21 +94,80 @@ flowchart TD
     style edit fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-### Reading a Parquet register
+### Reading a Parquet files
+
+fastreg provides three ways to read in a Parquet registers depending on
+the use case.
+
+`read_register()` is the main read function. We wanted a function that
+could make it really easy to use and read in a particular register
+(along with all of it's years if it is in a partition format). For
+example, to read in `bef` (population register) as a DuckDB table, we
+wanted it as simple as `read_register("bef")`. It should automatically
+find the relevant Parquet dataset (as partition) and read them in as a
+single DuckDB table.
 
 ```{mermaid}
-%%| label: fig-flow-use
+%%| label: fig-flow-read-register
 %%| fig-cap: "Expected workflow for reading a Parquet register as a DuckDB table using `read_register()`."
 %%| fig-alt: "A flowchart showing the expected flow of reading a Parquet register created with the fastreg package."
-flowchart TD
-    identify_path("Identify register path using get_project_dir()")
-    path[/"path<br>[Character scalar]"/]
+flowchart LR
+    path[/"name<br>[Character scalar]"/]
     read_register("read_register()")
     output[/"Output<br>[DuckDB table]"/]
 
     %% Edges
-    identify_path --> path --> read_register --> output
-
-    %% Style
-    style identify_path fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+    path --> read_register --> output
 ```
+
+However, we can't guarantee that the `read_register()` function will
+correctly guess and/or find the register as a Parquet dataset. So we
+also provide two more flexible functions: `read_parquet_partition()` and
+`read_parquet_file()`.
+
+`read_parquet_partition()` underlies `read_register()`, but without
+guessing the path. It takes a direct path to the Parquet dataset (the
+directory containing the Hive-partitioned Parquet files), applies some
+settings to more smoothly read in the datasets, and converts it into a
+DuckDB table. This function would be used if `read_register()` failed to
+correctly read the right dataset.
+
+`read_parquet_file()` is the simplest read function. It takes a direct
+path to a `.parquet` file (not a partitioned dataset) and reads it in as
+a DuckDB table. This would be used if the register wasn't in a
+partitioned format.
+
+### List SAS and Parquet files
+
+To help with management as well as discovery of available registers
+(that we also want to use internally for some of the other functions),
+we also provide some helper functions to list the available SAS and
+Parquet files and partitioned datasets.
+
+`list_parquet_files()` takes the directory of the project ID and lists
+all Parquet files found within either the `rawdata` or `workdata`
+directories and following the `part-*.parquet` pattern. We decided to
+look in both `rawdata` (where the original SAS files are also kept) as
+well as `workdata` because some projects have managers with access to
+saving files (like Parquet files) to `rawdata` but other projects don't,
+so they need to save files in `workdata`. By default, we also have a
+function (`get_project_dir()`) that will automatically find the project
+ID directory root from the current working directory. That way, users
+can use `list_parquet_files()` without any arguments and it will
+automatically find and list all the Parquet files within the project.
+
+`list_parquet_datasets()` builds on top of `list_parquet_files()`. It
+takes the output of `list_parquet_files()`, goes to the Parquet
+partition root (hard-coded to two levels back, before the folders with
+`year=`), and lists all the datasets. We use this function internally in
+`read_register()` as a check to see whether the register name provided
+by the user matches any of the available Parquet datasets. But this
+function is also useful to interactively discover the different Parquet
+datasets that are available within the project.
+
+`list_sas_files()` takes the directory of the project ID and lists all
+SAS files found within the `rawdata` directories. We only look in
+`rawdata` because DST stores the original SAS files there. Like
+`list_parquet_files()`, it also uses `get_project_dir()` by default to
+automatically find the project directory and list all the SAS files
+within it.
