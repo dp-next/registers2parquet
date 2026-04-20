@@ -5,6 +5,9 @@
   "git.autofetch": false,
   "editor.tabCompletion": "on",
   "editor.snippetSuggestions": "inline",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.rumdl": "explicit"
+  },
   "conventional-branch.type": [
     "build", // Changes that affect the build system or external dependencies
     "ci", // Changes to our CI configuration files and scripts

@@ -54,7 +54,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
 
   # Read template and replace placeholder paths.
   modified_content <- template_content |>
-    stringr::str_replace("/path/to/register/sas/files/directory", input_dir) |>
+    stringr::str_replace("/path/to/sas/directory", input_dir) |>
     stringr::str_replace("/path/to/output/directory", output_dir)
 
   # Write and run pipeline.

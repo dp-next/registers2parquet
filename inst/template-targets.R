@@ -3,13 +3,14 @@
 #
 # Setup:
 #
-# 1. Set the `input_dir` and `output_dir` under "Configuration" below.
+# 1. Set `sas_paths` and `output_dir` under "Configuration" below.
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
-# Note: this pipeline re-converts all files on every `tar_make()` call by
-# deleting files in the output directory before converting. The main benefit of
-# targets here is parallel execution across workers.
+# Note: on every `tar_make()` call, the output directory is cleared and all
+# SAS files are re-converted. The `sas_paths` target only re-runs when the
+# list of input files changes. The main benefit of targets here is parallel
+# execution across workers.
 #
 # For more information on targets, see https://books.ropensci.org/targets/
 
@@ -18,19 +19,12 @@ library(targets)
 # Configuration ----------------------------------------------------------------
 
 config <- list(
-  # Path to locate SAS files in.
-  input_dir = "/path/to/register/sas/files/directory",
+  # Paths to SAS files
+  sas_paths = list_sas_files("/path/to/sas/directory"),
   # Path to output Parquet files in. Parquet files will be located in
   # subdirectories of this directory.
   output_dir = "/path/to/output/directory"
 )
-
-# Check input directory.
-if (!dir.exists(config$input_dir)) {
-  cli::cli_abort(
-    message = "Input directory does not exist: {config$input_dir}"
-  )
-}
 
 # Target options ---------------------------------------------------------------
 
@@ -61,9 +55,7 @@ tar_option_set(
 list(
   tar_target(
     name = sas_paths,
-    command = list_sas_files(config$input_dir),
-    deployment = "main",
-    cue = tar_cue(mode = "always")
+    command = config$sas_paths
   ),
 
   # Empty output directory before writing to avoid outdated Parquet files.

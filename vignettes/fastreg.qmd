@@ -252,9 +252,19 @@ show_tree(config$output_dir)
 
 ## Reading a Parquet register
 
-The final function reads the converted Parquet register data into R.
-This function reads the data into a [DuckDB](https://duckdb.org/) table,
-which a powerful way to query and process large data.
+The final function reads the converted Parquet register data into R,
+returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
+a powerful way to query and process large data without loading it all
+into memory.
+
+You can pass a file path to read a single Parquet file:
+
+```{r read-file}
+file <- read_register(output_file_dir)
+file
+```
+
+Or you can pass a directory to read the full partitioned register:
 
 ```{r read-register}
 register <- read_register(
@@ -262,6 +272,29 @@ register <- read_register(
 register
 ```
 
-You can pass a directory to read the full partitioned register or a file
-path to read a single `.parquet` file. The data is read lazily, so it
-won't load into memory until collected with e.g. `dplyr::collect()`.
+The resulting DuckDB table can be filtered and transformed with `dplyr`.
+For example, `foed_dato` is stored as a character in the simulated data
+(`"YYYYMMDD"`), so you can change it to a date (using `strptime()`) and
+then filter:
+
+```{r filter-register}
+register |>
+  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
+  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+  dplyr::compute()
+```
+
+After the query (filer and mutate), we execute it with
+`dplyr::compute()`. This save the result as a temporary table inside
+DuckDB, without loading it into R memory.
+
+Notice the `??` in the first line of the output. This shows us that the
+total number of matching rows is not yet known because the data isn't
+loaded into memory.
+
+::: callout-note
+If you need to load the data into memory in R, you can use
+`dplyr::collect()`. However, for large registers this can take a long
+time, so only do this when it's absolutely necessary and make sure to
+filter the data before collecting.
+:::
