@@ -17,6 +17,7 @@ reference:
 - contents:
   - starts_with("convert")
   - read_register
+  - read_parquet
   - use_targets_template
 - title: Helper functions
 - contents:
