@@ -27,4 +27,3 @@
 ^_targets\.R$
 ^.*/\.quarto$
 ^cran-comments\.md$
-^Rscript.*$
