@@ -18,6 +18,15 @@ install-deps:
   )
   pak::pak(c("styler", "spelling", "urlchecker", "devtools", "usethis"))
 
+# Install the pre-commit hooks
+install-precommit:
+    # Install pre-commit hooks
+    uvx pre-commit install
+    # Run pre-commit hooks on all files
+    uvx pre-commit run --all-files
+    # Update versions of pre-commit hooks
+    uvx pre-commit autoupdate
+
 # Check spelling using devtools and typos package
 check-spelling: _check-spelling-devtools _check-spelling-typos
 
