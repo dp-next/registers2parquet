@@ -118,7 +118,7 @@ conversion was successful.
 
 The Parquet file is read into R and compared column-by-column against
 the SAS chunk. Identical columns are marked [OK], while differing
-columns are marked [DIFF] showin with a side-by-side comparison. Column
+columns are marked [DIFF] shown with a side-by-side comparison. Column
 names are lowercased and the types are Arrow types, matching the Parquet
 file.
 
