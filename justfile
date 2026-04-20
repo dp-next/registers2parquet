@@ -16,6 +16,7 @@ install-deps:
     ),
     ask = FALSE
   )
+  pak::pak(c("styler", "spelling", "urlchecker", "devtools", "usethis"))
 
 # Check spelling using devtools and typos package
 check-spelling: _check-spelling-devtools _check-spelling-typos
@@ -26,7 +27,7 @@ check-spelling: _check-spelling-devtools _check-spelling-typos
   devtools::spell_check()
 
 # Check the spelling using typos package
-@_check-spelling-devtools:
+@_check-spelling-typos:
   uvx typos .
 
 # Update wordlist
@@ -79,7 +80,7 @@ check-cran:
   devtools::check(error_on = "note")
 
 # Build all documentation
-build-docs: build-rd build-website build-readme
+build-docs: _build-rd _build-website _build-readme
 
 # Build the Rd documentation files
 @_build-rd:
@@ -110,7 +111,7 @@ cleanup: _cleanup-vignettes _clean-pkgdown
 
 # Clean up generated HTML and R files from vignettes
 @_cleanup-vignettes:
-  rm vignettes/*.R vignettes/*.html vignettes/articles/*.R vignettes/articles/*.html
+  rm -f vignettes/*.R vignettes/*.html vignettes/articles/*.R vignettes/articles/*.html
 
 # Clean up pkgdown website files
 @_clean-pkgdown:
