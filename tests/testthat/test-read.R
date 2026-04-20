@@ -24,7 +24,9 @@ test_that("read_register() reads a single Parquet file", {
     dplyr::collect()
 
   expected_source_file <- stringr::str_subset(sas_bef, year)
-  expected_data <- haven::read_sas(expected_source_file)
+  expected_data <- haven::read_sas(expected_source_file) |>
+    haven::zap_labels() |>
+    haven::zap_formats()
 
   expect_equal(
     # year col doesn't exist when only one file is read.

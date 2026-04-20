@@ -39,7 +39,10 @@ test_that("`get_project_id()` warns for not finding a project ID", {
     temp_dir,
     {
       expect_warning(get_project_id(), regexp = "`NA`")
-      expect_identical(get_project_id(), NA_character_)
+      expect_identical(
+        suppressWarnings(get_project_id()),
+        NA_character_
+      )
     }
   )
 })
