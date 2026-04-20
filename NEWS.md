@@ -20,7 +20,8 @@ each release.
 
 ### Feat
 
-- :sparkles: export originally private `read_parquet_*()` functions (#259)
+- :sparkles: export originally private `read_parquet_*()` functions
+  (#259)
 
 ## 0.8.20 (2026-03-06)
 
