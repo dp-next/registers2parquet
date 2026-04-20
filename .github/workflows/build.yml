@@ -29,7 +29,7 @@ jobs:
         run: air format . --check
 
       - name: Lint
-        uses: etiennebacher/setup-jarl@v0.1.0
+        uses: etiennebacher/setup-jarl@v0.1.1
 
   cran-checks:
     runs-on: ${{ matrix.config.os }}
