@@ -201,7 +201,7 @@ targets::tar_make()
 
 ```{r edit-and-run-pipeline}
 #| echo: false
-#| eval: !expr rlang::is_installed("targets")
+#| eval: false
 template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
 modified_content <- template_content |>
   stringr::str_replace(
@@ -225,7 +225,7 @@ Below, you can see the output of running the pipeline with the example
 data:
 
 ```{r output-pipeline}
-#| eval: !expr rlang::is_installed("targets")
+#| eval: false
 #| echo: false
 show_tree(config$output_dir)
 ```

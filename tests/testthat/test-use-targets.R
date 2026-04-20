@@ -36,6 +36,12 @@ test_that("use_targets_template() errors with non-existing `path`", {
 
 test_that("targets pipeline template converts SAS files to Parquet", {
   skip_on_cran()
+  skip_if(
+    Sys.info()[["sysname"]] == "Windows" &&
+      # Copied directly from `testthat:::on_ci()`.
+      isTRUE(as.logical(Sys.getenv("CI", "false"))),
+    "Running parallel workers on Windows can leave files around. Skipping on Windows GitHub workflows."
+  )
   skip_if_not_installed("targets")
   skip_if_not_installed("crew")
 
