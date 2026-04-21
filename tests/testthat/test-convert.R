@@ -214,18 +214,47 @@ test_that("convert_register() converts larger files with chunking", {
   expect_equal(n_actual, n_expected)
 })
 
-test_that("convert_register() errors when files have different schemas", {
-  bef_list <- simulate_register(
-    "bef",
+test_that("convert_register() keeps columns for files with different columns", {
+  # Faux bef with lmdb structure.
+  lmdb_list <- simulate_register(
+    "lmdb",
     year = c("2021")
   )
-  bef_list$bef2021 <- bef_list$bef2021 |> dplyr::mutate("extra_col" = 1)
+  names(lmdb_list) <- "bef2021"
+  sas_path_diff_cols <- fs::path_temp("sas_diff_cols")
+  save_as_sas(c(bef_list, lmdb_list), sas_path_diff_cols)
+  sas_bef <- fs::dir_ls(sas_path_diff_cols)
 
-  save_as_sas(bef_list, sas_path)
-  sas_bef <- fs::dir_ls(sas_path)
+  output_dir = fs::path_temp("diff_cols")
+  convert_register(path = sas_bef, output_dir)
 
-  expect_error(
-    convert_register(path = sas_bef, output_dir = fs::path_temp("schema_diff")),
-    regexp = "bef2021"
+  # Define expected columns.
+  expected <- purrr::map(c("bef", "lmdb"), \(x) {
+    simulate_register(x, n = 1)[[1]]
+  }) |>
+    purrr::map(colnames) |>
+    purrr::list_c() |>
+    unique() |>
+    c("source_file", "year")
+
+  expect_identical(
+    sort(expected),
+    sort(read_register(output_dir) |> colnames())
   )
+})
+
+test_that("convert_register() doesn't error with incompatible schemas", {
+  # Create a bef file where numeric columns are changed to character, so
+  # the schema is incompatible with the other bef files.
+  incompatible_data <- bef_list[[1]] |>
+    dplyr::mutate(dplyr::across(where(is.numeric), as.character))
+
+  incompatible_sas_path <- fs::path_temp("sas_schema_incompatible")
+  save_as_sas(list(bef2099 = incompatible_data), incompatible_sas_path)
+  sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
+
+  expect_no_error(convert_register(
+    path = sas_incompatible,
+    output_dir = fs::path_temp("incompatible_schemas")
+  ))
 })
