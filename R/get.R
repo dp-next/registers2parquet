@@ -6,7 +6,7 @@
 #'
 #' @returns A 6-digit character string, or `NA` if no project ID is found in the
 #'   path.
-#' @export
+#' @noRd
 get_project_id <- function() {
   id <- fs::path_wd() |>
     stringr::str_extract("/[0-9]+/") |>
