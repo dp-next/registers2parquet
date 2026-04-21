@@ -102,9 +102,9 @@ result, if there's a drift in data types across SAS files in the same
 register, this may not be identified in the conversion process, but will
 become evident when attempting to read the register.
 
-We use this design to ensure that subsequent chunks follow the same schema
-as the first, as we don't want to have different data types across chunks
-of the same partition (e.g. `part-*.parquet`).
+We use this design to ensure that subsequent chunks follow the same
+schema as the first, as we don't want to have different data types
+across chunks of the same partition (e.g. `part-*.parquet`).
 :::
 
 ### Reading a Parquet register
