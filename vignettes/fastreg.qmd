@@ -180,10 +180,10 @@ For example, `foed_dato` is stored as a character in the simulated data
 then filter:
 
 ```{r filter-register}
-# register |>
-#   dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-#   dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
-#   dplyr::compute()
+register |>
+  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
+  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+  dplyr::compute()
 ```
 
 After the query (filer and mutate), we execute it with
