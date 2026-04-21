@@ -199,36 +199,10 @@ After you've updated the `config` section, you can run the pipeline:
 targets::tar_make()
 ```
 
-```{r edit-and-run-pipeline}
-#| echo: false
-#| eval: false
-template_content <- readLines(fs::path(pipeline_dir, "_targets.R"))
-modified_content <- template_content |>
-  stringr::str_replace(
-    "/path/to/sas/directory",
-    fs::path_temp("sas-dir")
-  ) |>
-  stringr::str_replace("/path/to/output/directory", config$output_dir)
-
-withr::with_dir(pipeline_dir, {
-  writeLines(modified_content, "_targets.R")
-  targets::tar_make(callr_function = NULL, reporter = "silent")
-})
-```
-
 The pipeline will find all SAS files from `input_dir` and convert each
 file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
 pipeline itself has been edited.
-
-Below, you can see the output of running the pipeline with the example
-data:
-
-```{r output-pipeline}
-#| eval: false
-#| echo: false
-show_tree(config$output_dir)
-```
 
 ## Reading a Parquet register
 
