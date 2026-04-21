@@ -125,117 +125,69 @@ flowchart TD
 
 ## Conversion report
 
-The conversion report exists to give confidence that the resulting
-Parquet dataset can be read correctly with `unify_schemas`. Because a
-register is split into multiple Parquet part files (one per chunk), all
-parts must have identical column names, types, and counts; any
-discrepancy could cause columns to be silently dropped or read as the
-wrong type when reading the full dataset.
+The purpose of the conversion report is to check that the conversion
+went as expected (to the extent that's possible). It addresses two
+checks:
 
-This report addresses two overall checks:
+1. Do the SAS file and the output Parquet file(s) have the same number
+   of rows?
+2. Are the column names, number of columns, and data types the same
+   across all Parquet files within a register (e.g., the files created
+   from `bef2020.sas7bdat` and `bef2021.sas7bdat`)?
 
-1. That the column names and data types are identical for all Parquet
-   partitions for a single register.
-2. That the chunking and writing pipeline works correctly (checking that
-   the data is *the same* if read from the SAS file and read in from the
-   written Parquet file).
+The report is produced by three functions with distinct
+responsibilities:
 
-The "sameness" notion in the list above covers a row count, column name
-comparison, and a comparison of a minimal set of statistics:
+- `convert_file()`: Converts a single SAS file and returns the input
+  path, the SAS row count, and the paths of the Parquet parts written.
+- `collect_parquet_info()`: Reads the Parquet parts for a single file
+  and returns the total row count, column names and data types.
+- `create_report()`: Assembles the report by taking the outputs of the
+  above two functions for all files in a register and returns a
+  structured list with the row count comparison and column information.
 
-| Type            | Stats                           |
-|-----------------|---------------------------------|
-| Numeric         | sum, missing count              |
-| Date/datetime   | sum (as integer), missing count |
-| Character       | missing count                   |
-| Logical         | sum, missing count              |
-| Factor/labelled | missing count                   |
+In the targets pipeline, `convert_file()` and `collect_parquet_info()`
+run per SAS file. A single downstream `create_report()` target assembles
+the final report once all conversions are complete.
 
-The report compares each SAS chunk against its corresponding Parquet
-part. Since users also access data through R (or Python), R-to-R
-comparisons are a helpful check: a dropped chunk will show up as a row
-count mismatch, a corrupted value will show up as a stat difference.
+### Check 1: Row count comparison
 
-Note that this report cannot guarantee that all SAS values are perfectly
-preserved after conversion, since SAS file formats are proprietary, and
-reading SAS files in R relies on `haven`, which is a reverse-engineered
-effort to read in SAS in environments like R.
+`convert_file()` tracks the number of rows read from the SAS file via
+the loop counter and returns it. `collect_parquet_info()` reads the
+written Parquet parts and returns their total row count.
+`create_report()` compares the two and records whether they match.
 
-We coerce a SAS file's data types using a fixed Arrow schema by deriving
-from the first chunk and apply this schema to all subsequent chunks,
-ensuring consistent types across all part files. However, this only
-ensures type alignment within chunks from a single SAS file. Since
-fastreg outputs several SAS files into the same register dataset (e.g.,
-`bef2020.sas7bdat` and `bef2021.sas7bdat` into the same `bef/` folder),
-we also need to ensure that the data types are the same in the Parquet
-files within the entire register (e.g., the `bef/` folder), so the
-register can be read into R collectively.
+A row count match does not guarantee that the values themselves are
+preserved correctly — it only confirms that no rows were lost during
+conversion. Its primary value is as an auditable record: if the counts
+match, there is a concrete data point to refer to when checking that a
+conversion completed as expected.
 
+::: callout-warning
+This check cannot guarantee perfect preservation of the SAS values,
+since reading SAS files in R relies on `haven`, which is a
+reverse-engineered effort to read the proprietary SAS file format.
+:::
 
-Below is an example of how the report is structured:
+### Check 2: Columns and data types across Parquet files within a register
 
-```{.text filename="conversion-report-20260316-143022.txt"}
-# Conversion report 2026-03-16 14:30:22
+Since we can't be sure that the SAS files within the same register
+contain exactly the same columns and data types, the conversion report
+helps identify any differences between these files.
 
+::: callout-note
+Discrepancies (different columns or incompatible data types) between
+files within the same register do not stop the conversion, but will be
+noted in the report.
+:::
 
-Each column is followed by [OK] or [DIFF]:
-- [OK]: Checked statistics are identical in the SAS chunk and written
-  Parquet file.
-- [DIFF]: At least one stat differs. Expanded with SAS and Parquet side
-  by side.
+`collect_parquet_info()` reads each Parquet part and collects column
+names and types. `create_report()` compares these across all files and
+reports a conclusive result for each register:
 
-If you come across a problem, please report it at:
-https://github.com/dp-next/fastreg/issues/new.
+- OK: All column names, data types, and number of columns are the same
+  across all Parquet files.
+- DIFF: One or more files have different column names, number of
+  columns, or data types.
 
-## lmdb2020.sas7bdat
-
-### Chunk 1
-
-Parquet file name: `lmdb/year=2020/d39f98.parquet`
-
-Rows:
-
-- SAS: 1000
-- Parquet: 1000
-
-| Variable | Status |
-| --- | --- |
-| pnr | OK |
-| pnr | OK |
-| atc | OK |
-| apk | DIFF |
-
-apk [double] [DIFF]
-| --- | SAS | Parquet |
-| min | 1.01 | 0.99 |
-| mean | 5.51 | 5.49 |
-
-### Chunk 2
-...
-```
-
-Overview of the implementation of the conversion report:
-
-- Report helper functions are be placed in `write-report.R`
-- Report functions are called within `convert_file()` since both
-  `convert_register()` and the targets template rely on that function.
-- To lower the risk of workers writing at the same time (the target
-  pipeline parallelises per *SAS file*), the report lines are collected
-  for all chunks within a file before writing to the report.
-- `initialise_report()` creates the report file
-  `conversion_report_<datetime>.txt` in the beginning of
-  `convert_file()`, before the repeat.
-- We use the already existing `read_register_file()` to read the written
-  Parquet file that will be compared to the chunk.
-- `create_chunk_comparison()` returns the report of the current chunk,
-  e.g., the "Chunk 1" section above, as a character vector.
-- Chunk comparisons are collected in a list `chunk_comparisons` within
-  the repeat loop.
-- `write_file_report()` then takes `chunk_comparisons` and writes them
-  to the conversion report starting with a level-2 header with the SAS
-  file name.
-- Potentially: The targets template includes a target that reports on
-  whether any "[DIFF]" is found within the conversion report so users
-  won't have to inspect the conversion report manually.
-
-<!--TODO: How do we handle parallel workers writing to the same file in the targets template?-->
+The results are written to a txt file to allow for later inspection.
