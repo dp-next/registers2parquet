@@ -9,8 +9,6 @@ navbar:
     menu:
     - text: Design
       href: articles/design.html
-    - text: Limitations
-      href: articles/limitations.html
 
 reference:
 - title: Main functions
