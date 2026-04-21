@@ -115,50 +115,6 @@ by the year extracted from the file name as seen below:
 show_tree(output_file_dir)
 ```
 
-## Converting a register
-
-Use `list_sas_files()` to find SAS files in a directory (and any
-subdirectories), then use `convert_register()` to convert them.
-`convert_register()` expects files to be from the **same register**
-based on file names.
-
-```{r locate}
-bef_sas_files <- list_sas_files(sas_dir) |>
-  stringr::str_subset("bef")
-bef_sas_files
-```
-
-```{r convert-register}
-output_register_dir <- fs::path_temp("output-register-dir")
-
-convert_register(
-  path = bef_sas_files,
-  output_dir = output_register_dir
-)
-```
-
-`convert_register()` uses `convert_file()` internally so the same
-chunking and partitioning behaviour applies. See `?convert_file` and
-`?convert_register` for more details. As a result, the output from
-`convert_register()` is also partitioned by year, extracted from file
-names:
-
-```{r output-tree}
-#| echo: false
-show_tree(output_register_dir)
-```
-
-The output is organised into a "bef" folder (register name extracted
-from file names) with year-based subdirectories:
-
-- The data from the two SAS files with "1999" in their file names are
-  located in the subfolder "year=1999"
-- The data from the SAS file from 2020 are located in the subfolder
-  "year=2020"
-- One SAS file didn't have a year in its file name, `bef.sas7bdat`. The
-  data from this file is placed in the "year=**HIVE_DEFAULT_PARTITION**"
-  folder, the default for files without a year in their name.
-
 ## Converting multiple registers in parallel
 
 For many or large files, fastreg provides a
@@ -188,9 +144,8 @@ config <- list(
 ```
 
 The `input_dir` is the directory that contains the SAS files (searched
-recursively). This directory can contain different registers, rather
-than just one as is expected in `convert_register()`. The `output_dir`
-directory is where the Parquet files will be written to.
+recursively). This directory can contain different registers. The
+`output_dir` directory is where the Parquet files will be written to.
 
 After you've updated the `config` section, you can run the pipeline:
 
@@ -211,18 +166,12 @@ returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
 a powerful way to query and process large data without loading it all
 into memory.
 
-You can pass a file path to read a single Parquet file:
+You can pass a directory to read a full partitioned register or a file
+path to read a single Parquet file:
 
 ```{r read-file}
 file <- read_register(output_file_dir)
 file
-```
-
-Or you can pass a directory to read the full partitioned register:
-
-```{r read-register}
-register <- read_register(output_register_dir)
-register
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
@@ -231,10 +180,10 @@ For example, `foed_dato` is stored as a character in the simulated data
 then filter:
 
 ```{r filter-register}
-register |>
-  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
-  dplyr::compute()
+# register |>
+#   dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
+#   dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+#   dplyr::compute()
 ```
 
 After the query (filer and mutate), we execute it with
