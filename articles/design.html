@@ -44,7 +44,6 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
 <li><a class="dropdown-item" href="../articles/design.html">Design</a></li>
-    <li><a class="dropdown-item" href="../articles/limitations.html">Limitations</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -171,6 +170,13 @@ Figure 2: Expected workflow for converting multiple registers using the targets
 </figcaption></figure>
 </div>
 </div>
+</div>
+<div>
+<blockquote>
+<p><strong>Warning</strong></p>
+<p><code><a href="../reference/convert_file.html">convert_file()</a></code>, the core function behind converting SAS files to Parquet and used within <code><a href="../reference/convert_register.html">convert_register()</a></code> and the targets template, creates an Arrow schema with data types based on the first file chunk. This means that data type schemas are defined <em>within</em> files only. As a result, if there’s a drift in data types across SAS files in the same register, this may not be identified in the conversion process, but will become evident when attempting to read the register.</p>
+<p>We use this design to ensure that subsequent chunks follow the same schema as the first, as we don’t want to have different data types across chunks of the same partition (e.g. <code>part-*.parquet</code>).</p>
+</blockquote>
 </div>
 </section><section class="level3"><h3 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
 </h3>

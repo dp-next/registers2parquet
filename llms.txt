@@ -143,4 +143,3 @@ contributing to this project, you agree to abide by its terms.
 - [Design](https://dp-next.github.io/fastreg/articles/design.md):
 - [Getting
   started](https://dp-next.github.io/fastreg/articles/fastreg.md):
-- [Limitations](https://dp-next.github.io/fastreg/articles/limitations.md):

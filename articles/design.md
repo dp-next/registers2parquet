@@ -88,6 +88,23 @@ flowchart TD
 Figure 2: Expected workflow for converting multiple registers using the
 targets pipeline.
 
+> **Warning**
+>
+> [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md),
+> the core function behind converting SAS files to Parquet and used
+> within
+> [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
+> and the targets template, creates an Arrow schema with data types
+> based on the first file chunk. This means that data type schemas are
+> defined *within* files only. As a result, if there’s a drift in data
+> types across SAS files in the same register, this may not be
+> identified in the conversion process, but will become evident when
+> attempting to read the register.
+>
+> We use this design to ensure that subsequent chunks follow the same
+> schema as the first, as we don’t want to have different data types
+> across chunks of the same partition (e.g. `part-*.parquet`).
+
 ### Reading a Parquet register
 
 ``` mermaid
