@@ -31,3 +31,57 @@ get_project_id <- function() {
   }
   id
 }
+
+#' Get the data directory path for the current project
+#'
+#' Looks in the [options()] for `fastreg.project_rawdata_dir` and
+#' `fastreg.project_workdata_dir` first, and if not found, constructs a path
+#' based on the project ID using [get_project_id()]. The constructed path is
+#' `E:/<project_id>/rawdata/` for raw data and `E:/<project_id>/workdata/` for n
+#' work data.
+#'
+#' @returns A path object.
+#' @noRd
+get_project_rawdata_dir <- function() {
+  rawdata_path <- getOption("fastreg.project_rawdata_dir")
+  if (!is.null(rawdata_path)) {
+    return(fs::path(rawdata_path))
+  }
+
+  id <- get_project_id()
+  if (is.na(id) || id == "") {
+    cli::cli_abort(
+      c(
+        "Can't set the {.path rawdata/} path without a project ID.",
+        "i" = "Use {.code options(fastreg.project_rawdata_dir = '<path>')} or change into a directory within a project."
+      )
+    )
+
+    glue::glue("E:/{id}/rawdata/") |>
+      fs::path()
+  }
+}
+
+#' @describeIn get_project_rawdata_dir Gets the project workdata directory.
+#' @noRd
+get_project_workdata_dir <- function() {
+  workdata_path <- getOption("fastreg.project_workdata_dir")
+  if (!is.null(workdata_path)) {
+    return(fs::path(workdata_path))
+  }
+
+  id <- get_project_id()
+  if (is.na(id) || id == "") {
+    cli::cli_abort(
+      c(
+        "Can't set the {.path workdata/} path without a project ID.",
+        "i" = "Use {.code options(fastreg.project_workdata_dir = '<path>')} or change into a directory within a project."
+      )
+    )
+
+    glue::glue("E:/{id}/rawdata/") |>
+      fs::path()
+  }
+  glue::glue("E:/{id}/workdata/") |>
+    fs::path()
+}
