@@ -48,6 +48,22 @@ While the objects are:
   Statistics.
 - `output_dir`: The directory to save the Parquet output to.
 
+And two settings:
+
+- `fastreg.project_rawdata_dir`: The directory where either the SAS or
+  Parquet files are stored. The `rawdata/` directory is read-only and
+  contains the original SAS files. A project manager with the correct
+  permissions can move (or request to move) Parquet files into this
+  directory.
+- `fastreg.project_workdata_dir`: The `workdata/` directory is where
+  Parquet files are stored for projects without a project manager and
+  where the users don't have permissions to save the converted files
+  into `rawdata/`. Usually this directory is used to store and edit R
+  scripts, documents, and other files, but can also store Parquet files.
+
+These two settings are used to help make the experience of working with
+and managing the conversion and reading of registers smoother.
+
 ::: callout-tip
 For a list of all the public functions, see the
 [Reference](https://dp-next.github.io/fastreg/reference/index.html)
@@ -126,11 +142,12 @@ also provide two more flexible functions: `read_parquet_partition()` and
 `read_parquet_file()`.
 
 `read_parquet_partition()` underlies `read_register()`, but without
-guessing the path. It takes a direct path to the Parquet dataset (the
-directory containing the Hive-partitioned Parquet files), applies some
-settings to more smoothly read in the datasets, and converts it into a
-DuckDB table. This function would be used if `read_register()` failed to
-correctly read the right dataset.
+guessing the path (or when the setting hasn't been set). It takes a
+direct path to the Parquet dataset (the directory containing the
+Hive-partitioned Parquet files), applies some settings to more smoothly
+read in the datasets, and converts it into a DuckDB table. This function
+would be used if `read_register()` failed to correctly read the right
+dataset.
 
 `read_parquet_file()` is the simplest read function. It takes a direct
 path to a `.parquet` file (not a partitioned dataset) and reads it in as
@@ -144,17 +161,18 @@ To help with management as well as discovery of available registers
 we also provide some helper functions to list the available SAS and
 Parquet files and partitioned datasets.
 
-`list_parquet_files()` takes the directory of the project ID and lists
-all Parquet files found within either the `rawdata` or `workdata`
-directories and following the `part-*.parquet` pattern. We decided to
-look in both `rawdata` (where the original SAS files are also kept) as
-well as `workdata` because some projects have managers with access to
-saving files (like Parquet files) to `rawdata` but other projects don't,
-so they need to save files in `workdata`. By default, we also have a
-function (`get_project_dir()`) that will automatically find the project
-ID directory root from the current working directory. That way, users
-can use `list_parquet_files()` without any arguments and it will
-automatically find and list all the Parquet files within the project.
+`list_parquet_files()` takes the directories given within the settings
+and lists all Parquet files found within those directories that follow
+the `part-*.parquet` pattern. If no setting is given, the project ID
+will be guessed from the working directory path and the default location
+will be the `rawdata/` and `workdata/` directories. If those locations
+are different, the setting must be set. That way, users can use
+`list_parquet_files()` without any arguments and it will automatically
+find and list all the Parquet files within the project. We decided to
+look in both `rawdata/` (where the original SAS files are also kept) as
+well as `workdata/` because some projects have managers with access to
+saving files (like Parquet files) to `rawdata/` but other projects
+don't, so they need to save files in `workdata/`.
 
 `list_parquet_datasets()` builds on top of `list_parquet_files()`. It
 takes the output of `list_parquet_files()`, goes to the Parquet
@@ -166,8 +184,8 @@ function is also useful to interactively discover the different Parquet
 datasets that are available within the project.
 
 `list_sas_files()` takes the directory of the project ID and lists all
-SAS files found within the `rawdata` directories. We only look in
-`rawdata` because DST stores the original SAS files there. Like
-`list_parquet_files()`, it also uses `get_project_dir()` by default to
-automatically find the project directory and list all the SAS files
-within it.
+SAS files found within the `rawdata/` directories set in the settings.
+We only look in `rawdata` because DST stores the original SAS files
+there. Like `list_parquet_files()`, if the setting isn't set, it will
+also guess the project ID and look in the `rawdata/` of that project for
+any SAS files.
