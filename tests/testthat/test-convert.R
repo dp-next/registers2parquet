@@ -213,3 +213,19 @@ test_that("convert_register() converts larger files with chunking", {
   ))
   expect_equal(n_actual, n_expected)
 })
+
+test_that("convert_register() errors when files have different schemas", {
+  bef_list <- simulate_register(
+    "bef",
+    year = c("2021")
+  )
+  bef_list$bef2021 <- bef_list$bef2021 |> dplyr::mutate("extra_col" = 1)
+
+  save_as_sas(bef_list, sas_path)
+  sas_bef <- fs::dir_ls(sas_path)
+
+  expect_error(
+    convert_register(path = sas_bef, output_dir = fs::path_temp("testing")),
+    regexp = "bef2021"
+  )
+})
