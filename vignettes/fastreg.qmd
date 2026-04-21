@@ -226,14 +226,13 @@ register
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
-For example, `foed_dato` is stored as a character in the simulated data
-(`"YYYYMMDD"`), so you can change it to a date (using `strptime()`) and
-then filter:
+For example, you can extract the birth year from `foed_dato` and filter
+on that:
 
 ```{r filter-register}
-register |>
-  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+file |>
+  dplyr::mutate(birth_year = year(foed_dato)) |>
+  dplyr::filter(koen == 2 & birth_year > 2000) |>
   dplyr::compute()
 ```
 
