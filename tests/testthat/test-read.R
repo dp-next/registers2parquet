@@ -143,7 +143,7 @@ test_that("read_register() errors with incompatible schemas", {
   save_as_sas(list(bef2099 = incompatible_data), incompatible_sas_path)
   sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
 
-  incompatible_output <- fs::path_temp("incompatible_schemas")
+  incompatible_output <- fs::path_temp("incompatible")
   convert_register(path = sas_incompatible, output_dir = incompatible_output)
 
   expect_error(read_register(incompatible_output), "incompatible")
