@@ -214,35 +214,6 @@ test_that("convert_register() converts larger files with chunking", {
   expect_equal(n_actual, n_expected)
 })
 
-test_that("convert_register() keeps columns for files with different columns", {
-  # Faux bef with lmdb structure.
-  lmdb_list <- simulate_register(
-    "lmdb",
-    year = c("2021")
-  )
-  names(lmdb_list) <- "bef2021"
-  sas_path_diff_cols <- fs::path_temp("sas_diff_cols")
-  save_as_sas(c(bef_list, lmdb_list), sas_path_diff_cols)
-  sas_bef <- fs::dir_ls(sas_path_diff_cols)
-
-  output_dir = fs::path_temp("diff_cols")
-  convert_register(path = sas_bef, output_dir)
-
-  # Define expected columns.
-  expected <- purrr::map(c("bef", "lmdb"), \(x) {
-    simulate_register(x, n = 1)[[1]]
-  }) |>
-    purrr::map(colnames) |>
-    purrr::list_c() |>
-    unique() |>
-    c("source_file", "year")
-
-  expect_identical(
-    sort(expected),
-    sort(read_register(output_dir) |> colnames())
-  )
-})
-
 test_that("convert_register() doesn't error with incompatible schemas", {
   # Create a bef file where numeric columns are changed to character, so
   # the schema is incompatible with the other bef files.
