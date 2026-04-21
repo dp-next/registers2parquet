@@ -213,3 +213,19 @@ test_that("convert_register() converts larger files with chunking", {
   ))
   expect_equal(n_actual, n_expected)
 })
+
+test_that("convert_register() doesn't error with incompatible schemas", {
+  # Create a bef file where numeric columns are changed to character, so
+  # the schema is incompatible with the other bef files.
+  incompatible_data <- bef_list[[1]] |>
+    dplyr::mutate(dplyr::across(where(is.numeric), as.character))
+
+  incompatible_sas_path <- fs::path_temp("sas_schema_incompatible")
+  save_as_sas(list(bef2099 = incompatible_data), incompatible_sas_path)
+  sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
+
+  expect_no_error(convert_register(
+    path = sas_incompatible,
+    output_dir = fs::path_temp("incompatible_schemas")
+  ))
+})
