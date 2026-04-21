@@ -148,7 +148,7 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-2eaa37.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-825e24.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-register">Converting a register<a class="anchor" aria-label="anchor" href="#converting-a-register"></a>
 </h2>
@@ -158,10 +158,10 @@
 <code class="sourceCode R"><span><span class="va">bef_sas_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">sas_dir</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html" class="external-link">str_subset</a></span><span class="op">(</span><span class="st">"bef"</span><span class="op">)</span></span>
 <span><span class="va">bef_sas_files</span></span>
-<span><span class="co">#&gt; /tmp/Rtmpdl4g0L/sas-dir/bef.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmpdl4g0L/sas-dir/bef1999.sas7bdat</span></span>
-<span><span class="co">#&gt; /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/Rtmp4Ldcu3/sas-dir/bef.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmp4Ldcu3/sas-dir/bef1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat</span></span>
+<span><span class="co">#&gt; /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
@@ -178,19 +178,19 @@
 <span><span class="co">#&gt; ✔ Successfully converted 4 files.</span></span>
 <span><span class="co">#&gt; • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and</span></span>
 <span><span class="co">#&gt;   "bef2020.sas7bdat"</span></span>
-<span><span class="co">#&gt; • Output: Register files in '/tmp/Rtmpdl4g0L/output-register-dir/bef'</span></span></code></pre></div>
+<span><span class="co">#&gt; • Output: Register files in '/tmp/Rtmp4Ldcu3/output-register-dir/bef'</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/convert_register.html">convert_register()</a></code> uses <code><a href="../reference/convert_file.html">convert_file()</a></code> internally so the same chunking and partitioning behaviour applies. See <code><a href="../reference/convert_file.html">?convert_file</a></code> and <code><a href="../reference/convert_register.html">?convert_register</a></code> for more details. As a result, the output from <code><a href="../reference/convert_register.html">convert_register()</a></code> is also partitioned by year, extracted from file names:</p>
 <div class="cell">
 <pre><code><span><span class="co">#&gt; output-register-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     ├── year=1999</span></span>
-<span><span class="co">#&gt;     │   ├── part-99b76a.parquet</span></span>
-<span><span class="co">#&gt;     │   └── part-9bdf65.parquet</span></span>
+<span><span class="co">#&gt;     │   ├── part-29ab56.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-a246b2.parquet</span></span>
 <span><span class="co">#&gt;     ├── year=2020</span></span>
-<span><span class="co">#&gt;     │   └── part-50e9a0.parquet</span></span>
+<span><span class="co">#&gt;     │   └── part-566cd4.parquet</span></span>
 <span><span class="co">#&gt;     └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;         └── part-3ae27c.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-ba7920.parquet</span></span></code></pre>
 </div>
 <p>The output is organised into a “bef” folder (register name extracted from file names) with year-based subdirectories:</p>
 <ul>
@@ -207,7 +207,7 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpdl4g0L/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/Rtmp4Ldcu3/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
@@ -237,16 +237,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>Or you can pass a directory to read the full partitioned register:</p>
@@ -256,18 +256,18 @@
 <span><span class="va">register</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;arrow_002&gt; [?? x 5]</span></span>
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
-<span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, <code>foed_dato</code> is stored as a character in the simulated data (<code>"YYYYMMDD"</code>), so you can change it to a date (using <code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime()</a></code>) and then filter:</p>
@@ -281,16 +281,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato           source_file                       year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;dttm&gt;              &lt;chr&gt;                            &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt;  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
-<span><span class="co">#&gt; 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt;  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
+<span><span class="co">#&gt; 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>After the query (filer and mutate), we execute it with <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::compute()</a></code>. This save the result as a temporary table inside DuckDB, without loading it into R memory.</p>

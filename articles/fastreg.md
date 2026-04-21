@@ -107,7 +107,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-2eaa37.parquet
+    #>         └── part-825e24.parquet
 
 ## Converting a register
 
@@ -123,10 +123,10 @@ expects files to be from the **same register** based on file names.
 bef_sas_files <- list_sas_files(sas_dir) |>
   stringr::str_subset("bef")
 bef_sas_files
-#> /tmp/Rtmpdl4g0L/sas-dir/bef.sas7bdat
-#> /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat
-#> /tmp/Rtmpdl4g0L/sas-dir/bef1999.sas7bdat
-#> /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat
+#> /tmp/Rtmp4Ldcu3/sas-dir/bef.sas7bdat
+#> /tmp/Rtmp4Ldcu3/sas-dir/bef1999_1.sas7bdat
+#> /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat
+#> /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat
 ```
 
 ``` r
@@ -143,7 +143,7 @@ convert_register(
 #> ✔ Successfully converted 4 files.
 #> • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and
 #>   "bef2020.sas7bdat"
-#> • Output: Register files in '/tmp/Rtmpdl4g0L/output-register-dir/bef'
+#> • Output: Register files in '/tmp/Rtmp4Ldcu3/output-register-dir/bef'
 ```
 
 [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
@@ -160,12 +160,12 @@ is also partitioned by year, extracted from file names:
     #> output-register-dir
     #> └── bef
     #>     ├── year=1999
-    #>     │   ├── part-99b76a.parquet
-    #>     │   └── part-9bdf65.parquet
+    #>     │   ├── part-29ab56.parquet
+    #>     │   └── part-a246b2.parquet
     #>     ├── year=2020
-    #>     │   └── part-50e9a0.parquet
+    #>     │   └── part-566cd4.parquet
     #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-3ae27c.parquet
+    #>         └── part-ba7920.parquet
 
 The output is organised into a “bef” folder (register name extracted
 from file names) with year-based subdirectories:
@@ -195,7 +195,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmpdl4g0L/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/Rtmp4Ldcu3/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -243,16 +243,16 @@ file
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 108684730664 19320112  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 982144017357 20070716  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  3     1 672580814975 19800805  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 439008110445 20090628  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 489714666740 20170225  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 155331797020 19730330  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 777951655096 19341022  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 132473802596 19530901  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/Rtmpdl4g0L/sas-dir/bef2020.sas7bdat  2020
+#>  1     2 108684730664 19320112  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 982144017357 20070716  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  3     1 672580814975 19800805  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 439008110445 20090628  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 489714666740 20170225  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 155331797020 19730330  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 777951655096 19341022  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 132473802596 19530901  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/Rtmp4Ldcu3/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
@@ -263,18 +263,18 @@ register <- read_register(output_register_dir)
 register
 #> # Source:   table<arrow_002> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
-#>     koen pnr          foed_dato source_file                                 year
-#>    <dbl> <chr>        <chr>     <chr>                                      <int>
-#>  1     2 108684730664 19320112  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  2     2 982144017357 20070716  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  3     1 672580814975 19800805  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  4     2 439008110445 20090628  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  5     2 489714666740 20170225  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  6     2 155331797020 19730330  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  7     2 777951655096 19341022  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  8     2 167007504860 20010318  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#>  9     2 132473802596 19530901  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
-#> 10     2 876820784981 19310817  /tmp/Rtmpdl4g0L/sas-dir/bef1999_1.sas7bdat  1999
+#>     koen pnr          foed_dato source_file                               year
+#>    <dbl> <chr>        <chr>     <chr>                                    <int>
+#>  1     2 108684730664 19320112  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  2     2 982144017357 20070716  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  3     1 672580814975 19800805  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  4     2 439008110445 20090628  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  5     2 489714666740 20170225  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  6     2 155331797020 19730330  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  7     2 777951655096 19341022  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  8     2 167007504860 20010318  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#>  9     2 132473802596 19530901  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
+#> 10     2 876820784981 19310817  /tmp/Rtmp4Ldcu3/sas-dir/bef1999.sas7bdat  1999
 #> # ℹ more rows
 ```
 
@@ -292,16 +292,16 @@ register |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     koen pnr          foed_dato           source_file                       year
 #>    <dbl> <chr>        <dttm>              <chr>                            <int>
-#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
-#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpdl4g0L/sas-dir/bef1999…  1999
+#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
+#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmp4Ldcu3/sas-dir/bef1999…  1999
 #> # ℹ more rows
 ```
 
