@@ -76,14 +76,15 @@ show_tree(sas_dir)
 
 ## Settings to correct paths
 
-Many of fastreg's functions depend on the correct locations to the original
-SAS files and the eventual Parquet files. This applies to both the conversion
-and writing functions, as well as to the reading functions. Through `options()`
-you can set these paths in our two settings: `fastreg.project_rawdata_dir` and
+Many of fastreg's functions depend on the correct locations to the
+original SAS files and the eventual Parquet files. This applies to both
+the conversion and writing functions, as well as to the reading
+functions. Through `options()` you can set these paths in our two
+settings: `fastreg.project_rawdata_dir` and
 `fastreg.project_workdata_dir`. You can set these `options()` at the top
 of your R script or Quarto document, in your R Project's `.Rprofile`, or
-in your user-level `.Rprofile`. To add to the file, at the top, write out
-(using a temporary directory here for these examples):
+in your user-level `.Rprofile`. To add to the file, at the top, write
+out (using a temporary directory here for these examples):
 
 ```{r options}
 options(
@@ -102,10 +103,11 @@ Or, if you want to set those exact same options for the R Project's
 usethis::edit_r_profile("project")
 ```
 
-Which opens up the `.Rprofile` file for the project. You can then add the same `options()`
-to that file and save it. The next time you open the project, those options will be set.
-Or, to set it for all of your R projects and sessions, you can set it globally
-in your user-level `.Rprofile`:
+Which opens up the `.Rprofile` file for the project. You can then add
+the same `options()` to that file and save it. The next time you open
+the project, those options will be set. Or, to set it for all of your R
+projects and sessions, you can set it globally in your user-level
+`.Rprofile`:
 
 ```{r options-user-profile}
 #| filename: "Console"

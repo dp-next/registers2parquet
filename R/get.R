@@ -56,10 +56,10 @@ get_project_rawdata_dir <- function() {
         "i" = "Use {.code options(fastreg.project_rawdata_dir = '<path>')} or change into a directory within a project."
       )
     )
-
-    glue::glue("E:/{id}/rawdata/") |>
-      fs::path()
   }
+
+  glue::glue("E:/{id}/rawdata/") |>
+    fs::path()
 }
 
 #' @describeIn get_project_rawdata_dir Gets the project workdata directory.
@@ -78,9 +78,6 @@ get_project_workdata_dir <- function() {
         "i" = "Use {.code options(fastreg.project_workdata_dir = '<path>')} or change into a directory within a project."
       )
     )
-
-    glue::glue("E:/{id}/rawdata/") |>
-      fs::path()
   }
   glue::glue("E:/{id}/workdata/") |>
     fs::path()
