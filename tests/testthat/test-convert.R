@@ -225,7 +225,7 @@ test_that("convert_register() errors when files have different schemas", {
   sas_bef <- fs::dir_ls(sas_path)
 
   expect_error(
-    convert_register(path = sas_bef, output_dir = fs::path_temp("testing")),
+    convert_register(path = sas_bef, output_dir = fs::path_temp("schema_diff")),
     regexp = "bef2021"
   )
 })
