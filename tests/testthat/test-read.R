@@ -29,9 +29,13 @@ test_that("read_register() reads a single Parquet file", {
   expect_equal(
     # year col doesn't exist when only one file is read.
     actual_data |> dplyr::select(-"source_file"),
-    expected_data
+    expected_data,
+    ignore_attr = TRUE
   )
-  expect_all_equal(actual_data$source_file, expected_source_file)
+  expect_all_equal(
+    actual_data$source_file,
+    expected_source_file
+  )
 })
 
 test_that("read_register() reads a partitioned Parquet register", {
@@ -100,4 +104,47 @@ test_that("files with extension .parq can also be read", {
   path <- fs::path_temp("file.parq")
   arrow::write_parquet(simulate_register("bef")[[1]], sink = path)
   expect_no_error(read_register(path))
+})
+
+
+test_that("read_register() reads files with different columns", {
+  # Faux bef with lmdb structure, saved separately and combined with sas_bef.
+  lmdb_list <- simulate_register("lmdb", year = c("2021"))
+  names(lmdb_list) <- "bef2021"
+  lmdb_sas_path <- fs::path_temp("sas_lmdb_as_bef")
+  save_as_sas(lmdb_list, lmdb_sas_path)
+  sas_diff_cols <- c(sas_bef, fs::dir_ls(lmdb_sas_path))
+
+  diff_cols_output <- fs::path_temp("diff_cols")
+  convert_register(path = sas_diff_cols, output_dir = diff_cols_output)
+
+  # Define expected columns.
+  expected <- purrr::map(c("bef", "lmdb"), \(x) {
+    simulate_register(x, n = 1)[[1]]
+  }) |>
+    purrr::map(colnames) |>
+    purrr::list_c() |>
+    unique() |>
+    c("source_file", "year")
+
+  expect_identical(
+    sort(expected),
+    sort(read_register(diff_cols_output) |> colnames())
+  )
+})
+
+test_that("read_register() errors with incompatible schemas", {
+  # Create a bef file where numeric columns are changed to character, so
+  # the schema is incompatible with the other bef files.
+  incompatible_data <- bef_list[[1]] |>
+    dplyr::mutate(dplyr::across(where(is.numeric), as.character))
+
+  incompatible_sas_path <- fs::path_temp("sas_schema_incompatible")
+  save_as_sas(list(bef2099 = incompatible_data), incompatible_sas_path)
+  sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
+
+  incompatible_output <- fs::path_temp("incompatible_schemas")
+  convert_register(path = sas_incompatible, output_dir = incompatible_output)
+
+  expect_error(read_register(incompatible_output), "incompatible")
 })
