@@ -107,76 +107,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-bf4a58.parquet
-
-## Converting a register
-
-Use
-[`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
-to find SAS files in a directory (and any subdirectories), then use
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-to convert them.
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-expects files to be from the **same register** based on file names.
-
-``` r
-bef_sas_files <- list_sas_files(sas_dir) |>
-  stringr::str_subset("bef")
-bef_sas_files
-#> /tmp/Rtmpczc0yk/sas-dir/bef.sas7bdat
-#> /tmp/Rtmpczc0yk/sas-dir/bef1999_1.sas7bdat
-#> /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat
-#> /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat
-```
-
-``` r
-output_register_dir <- fs::path_temp("output-register-dir")
-
-convert_register(
-  path = bef_sas_files,
-  output_dir = output_register_dir
-)
-#> ✔ Converted 'bef.sas7bdat'
-#> ✔ Converted 'bef1999_1.sas7bdat'
-#> ✔ Converted 'bef1999.sas7bdat'
-#> ✔ Converted 'bef2020.sas7bdat'
-#> ✔ Successfully converted 4 files.
-#> • Input: "bef.sas7bdat", "bef1999_1.sas7bdat", "bef1999.sas7bdat", and
-#>   "bef2020.sas7bdat"
-#> • Output: Register files in '/tmp/Rtmpczc0yk/output-register-dir/bef'
-```
-
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-uses
-[`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
-internally so the same chunking and partitioning behaviour applies. See
-[`?convert_file`](https://dp-next.github.io/fastreg/reference/convert_file.md)
-and
-[`?convert_register`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-for more details. As a result, the output from
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-is also partitioned by year, extracted from file names:
-
-    #> output-register-dir
-    #> └── bef
-    #>     ├── year=1999
-    #>     │   ├── part-97b8cf.parquet
-    #>     │   └── part-fb48f7.parquet
-    #>     ├── year=2020
-    #>     │   └── part-cac836.parquet
-    #>     └── year=__HIVE_DEFAULT_PARTITION__
-    #>         └── part-bce83e.parquet
-
-The output is organised into a “bef” folder (register name extracted
-from file names) with year-based subdirectories:
-
-- The data from the two SAS files with “1999” in their file names are
-  located in the subfolder “year=1999”
-- The data from the SAS file from 2020 are located in the subfolder
-  “year=2020”
-- One SAS file didn’t have a year in its file name, `bef.sas7bdat`. The
-  data from this file is placed in the “year=**HIVE_DEFAULT_PARTITION**”
-  folder, the default for files without a year in their name.
+    #>         └── part-918794.parquet
 
 ## Converting multiple registers in parallel
 
@@ -195,7 +126,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmpczc0yk/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/Rtmpxwg2AK/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -210,11 +141,8 @@ config <- list(
 ```
 
 The `input_dir` is the directory that contains the SAS files (searched
-recursively). This directory can contain different registers, rather
-than just one as is expected in
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md).
-The `output_dir` directory is where the Parquet files will be written
-to.
+recursively). This directory can contain different registers. The
+`output_dir` directory is where the Parquet files will be written to.
 
 After you’ve updated the `config` section, you can run the pipeline:
 
@@ -234,7 +162,8 @@ returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
 a powerful way to query and process large data without loading it all
 into memory.
 
-You can pass a file path to read a single Parquet file:
+You can pass a directory to read a full partitioned register or a file
+path to read a single Parquet file:
 
 ``` r
 file <- read_register(output_file_dir)
@@ -243,38 +172,16 @@ file
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 108684730664 19320112  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 982144017357 20070716  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  3     1 672580814975 19800805  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 439008110445 20090628  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 489714666740 20170225  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 155331797020 19730330  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 777951655096 19341022  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 132473802596 19530901  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/Rtmpczc0yk/sas-dir/bef2020.sas7bdat  2020
-#> # ℹ more rows
-```
-
-Or you can pass a directory to read the full partitioned register:
-
-``` r
-register <- read_register(output_register_dir)
-register
-#> # Source:   table<arrow_002> [?? x 5]
-#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
-#>     koen pnr          foed_dato source_file                               year
-#>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 108684730664 19320112  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  2     2 982144017357 20070716  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  3     1 672580814975 19800805  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  4     2 439008110445 20090628  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  5     2 489714666740 20170225  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  6     2 155331797020 19730330  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  7     2 777951655096 19341022  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  8     2 167007504860 20010318  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#>  9     2 132473802596 19530901  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
-#> 10     2 876820784981 19310817  /tmp/Rtmpczc0yk/sas-dir/bef1999.sas7bdat  1999
+#>  1     2 108684730664 19320112  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 982144017357 20070716  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  3     1 672580814975 19800805  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 439008110445 20090628  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 489714666740 20170225  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 155331797020 19730330  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 777951655096 19341022  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 132473802596 19530901  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/Rtmpxwg2AK/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
@@ -284,7 +191,7 @@ For example, `foed_dato` is stored as a character in the simulated data
 [`strptime()`](https://rdrr.io/r/base/strptime.html)) and then filter:
 
 ``` r
-register |>
+file |>
   dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
   dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
   dplyr::compute()
@@ -292,16 +199,16 @@ register |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     koen pnr          foed_dato           source_file                       year
 #>    <dbl> <chr>        <dttm>              <chr>                            <int>
-#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
-#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpczc0yk/sas-dir/bef1999…  1999
+#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
+#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpxwg2AK/sas-dir/bef2020…  2020
 #> # ℹ more rows
 ```
 

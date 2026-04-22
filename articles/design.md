@@ -45,7 +45,7 @@ While the objects are:
 > [Reference](https://dp-next.github.io/fastreg/reference/index.html)
 > page.
 
-### Converting SAS files from a single register
+### Converting one SAS file
 
 ``` mermaid
 flowchart TD
@@ -53,21 +53,20 @@ flowchart TD
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
-    convert_register("convert_register()")
+    convert_file("convert_file()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    identify_paths -.-> path --> convert_register
-    output_dir & chunk_size --> convert_register
-    convert_register --> output
+    identify_paths -.-> path --> convert_file
+    output_dir & chunk_size --> convert_file
+    convert_file --> output
 
     %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-Figure 1: Expected workflow for converting SAS files from a single
-register using
-[`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md).
+Figure 1: Expected workflow for converting one SAS file using
+[`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md).
 
 ### Converting multiple registers in parallel
 
@@ -91,15 +90,13 @@ targets pipeline.
 > **Warning**
 >
 > [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md),
-> the core function behind converting SAS files to Parquet and used
-> within
-> [`convert_register()`](https://dp-next.github.io/fastreg/reference/convert_register.md)
-> and the targets template, creates an Arrow schema with data types
-> based on the first file chunk. This means that data type schemas are
-> defined *within* files only. As a result, if there’s a drift in data
-> types across SAS files in the same register, this may not be
-> identified in the conversion process, but will become evident when
-> attempting to read the register.
+> the core function behind converting SAS files to Parquet used within
+> the targets template, creates an Arrow schema with data types based on
+> the first file chunk. This means that data type schemas are defined
+> *within* files only. As a result, if there’s a drift in data types
+> across SAS files in the same register, this may not be identified in
+> the conversion process, but will become evident when attempting to
+> read the register.
 >
 > We use this design to ensure that subsequent chunks follow the same
 > schema as the first, as we don’t want to have different data types
