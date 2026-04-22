@@ -40,26 +40,26 @@ The actions are:
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Use a template in the current project.
 
-While the objects are:
+The objects are:
 
 - `chunk_size`: Number of rows to read per chunk during conversion.
 - `path`: A character vector of one or more paths.
-- `project_id`: A number indicating the project id, e.g., on Denmark's
+- `project_id`: A number indicating the project ID on Denmark's
   Statistics.
 - `output_dir`: The directory to save the Parquet output to.
 
-And two settings:
+The settings are:
 
 - `fastreg.project_rawdata_dir`: The directory where either the SAS or
-  Parquet files are stored. The `rawdata/` directory is read-only and
+  Parquet files are stored. The `rawdata/` directory is read-only on Statistics Denmark server and
   contains the original SAS files. A project manager with the correct
   permissions can move (or request to move) Parquet files into this
   directory.
 - `fastreg.project_workdata_dir`: The `workdata/` directory is where
   Parquet files are stored for projects without a project manager and
   where the users don't have permissions to save the converted files
-  into `rawdata/`. Usually this directory is used to store and edit R
-  scripts, documents, and other files, but can also store Parquet files.
+  into `rawdata/`. Usually, this directory is used to store and edit R
+  scripts, documents, and other files, but it can also store data files (e.g., SAS or Parquet files).
 
 These two settings are used to help make the experience of working with
 and managing the conversion and reading of registers smoother.
@@ -112,12 +112,12 @@ flowchart TD
 
 ### Reading a Parquet files
 
-fastreg provides three ways to read in a Parquet registers depending on
+fastreg provides three ways to read Parquet registers depending on
 the use case.
 
 `read_register()` is the main read function. We wanted a function that
 could make it really easy to use and read in a particular register
-(along with all of it's years if it is in a partition format). For
+(with data from all available years if it is in a partitioned Partition format). For
 example, to read in `bef` (population register) as a DuckDB table, we
 wanted it as simple as `read_register("bef")`. It should automatically
 find the relevant Parquet dataset (as partition) and read them in as a
@@ -145,20 +145,19 @@ also provide two more flexible functions: `read_parquet_partition()` and
 guessing the path (or when the setting hasn't been set). It takes a
 direct path to the Parquet dataset (the directory containing the
 Hive-partitioned Parquet files), applies some settings to more smoothly
-read in the datasets, and converts it into a DuckDB table. This function
-would be used if `read_register()` failed to correctly read the right
+read in the datasets, and reads it as a DuckDB table. This function
+can be used if `read_register()` failed to correctly read the right
 dataset.
 
 `read_parquet_file()` is the simplest read function. It takes a direct
-path to a `.parquet` file (not a partitioned dataset) and reads it in as
-a DuckDB table. This would be used if the register wasn't in a
+path to a `.parquet` file (not a partitioned dataset) and reads it as
+a DuckDB table. This can used if the register isn't in a
 partitioned format.
 
 ### List SAS and Parquet files
 
-To help with management as well as discovery of available registers
-(that we also want to use internally for some of the other functions),
-we also provide some helper functions to list the available SAS and
+To help with management as well as discovery of available registers,
+we also provide helper functions to list the available SAS and
 Parquet files and partitioned datasets.
 
 `list_parquet_files()` takes the directories given within the settings
@@ -166,7 +165,7 @@ and lists all Parquet files found within those directories that follow
 the `part-*.parquet` pattern. If no setting is given, the project ID
 will be guessed from the working directory path and the default location
 will be the `rawdata/` and `workdata/` directories. If those locations
-are different, the setting must be set. That way, users can use
+are different than was is expected bt default, the setting must be set. That way, users can use
 `list_parquet_files()` without any arguments and it will automatically
 find and list all the Parquet files within the project. We decided to
 look in both `rawdata/` (where the original SAS files are also kept) as
