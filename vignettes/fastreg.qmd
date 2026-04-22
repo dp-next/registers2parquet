@@ -105,7 +105,7 @@ usethis::edit_r_profile("project")
 
 You can then add
 the same `options()` as shown in the R script example above to that file and save it. The next time you open
-the project, those options will be set. 
+the project, those options will be set.
 
 If you want to set these options for all of your R
 projects and sessions, you can add them globally in your user-level
