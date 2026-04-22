@@ -36,7 +36,7 @@ get_project_id <- function() {
 #'
 #' Looks in the [options()] for `fastreg.project_rawdata_dir` and
 #' `fastreg.project_workdata_dir` first, and if not found, constructs a path
-#' based on the project ID using [get_project_id()]. The constructed path is
+#' based on the project ID using `get_project_id()`. The constructed path is
 #' `E:/<project_id>/rawdata/` for raw data and `E:/<project_id>/workdata/` for n
 #' work data.
 #'
