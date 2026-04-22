@@ -76,15 +76,14 @@ show_tree(sas_dir)
 
 ## Settings to correct paths
 
-Many of fastreg's functions depend on the locations of the
-original SAS files and the eventual Parquet files including
-the conversion, writing, and reading
-functions. Through `options()` you can set these paths in two
-settings: `fastreg.project_rawdata_dir` and
+Many of fastreg's functions depend on the locations of the original SAS
+files and the eventual Parquet files including the conversion, writing,
+and reading functions. Through `options()` you can set these paths in
+two settings: `fastreg.project_rawdata_dir` and
 `fastreg.project_workdata_dir`. You can set these `options()` at the top
 of your R script or Quarto document, in your R Project's `.Rprofile`, or
-in your user-level `.Rprofile`. To add to the file, at the top of an R script, write
-(using a temporary directory here for these examples):
+in your user-level `.Rprofile`. To add to the file, at the top of an R
+script, write (using a temporary directory here for these examples):
 
 ```{r options}
 options(
@@ -95,7 +94,8 @@ options(
 ```
 
 If you want to set those exact same options in the R Project's
-`.Rprofile`, run the following line in your Console to open up the `.Rprofile` file for the project:
+`.Rprofile`, run the following line in your Console to open up the
+`.Rprofile` file for the project:
 
 ```{r options-project-profile}
 #| filename: "Console"
@@ -103,13 +103,13 @@ If you want to set those exact same options in the R Project's
 usethis::edit_r_profile("project")
 ```
 
-You can then add
-the same `options()` as shown in the R script example above to that file and save it. The next time you open
-the project, those options will be set.
+You can then add the same `options()` as shown in the R script example
+above to that file and save it. The next time you open the project,
+those options will be set.
 
-If you want to set these options for all of your R
-projects and sessions, you can add them globally in your user-level
-`.Rprofile`. To open the `.Rprofile`, run:
+If you want to set these options for all of your R projects and
+sessions, you can add them globally in your user-level `.Rprofile`. To
+open the `.Rprofile`, run:
 
 ```{r options-user-profile}
 #| filename: "Console"

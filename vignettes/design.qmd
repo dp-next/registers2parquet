@@ -38,8 +38,8 @@ The actions are:
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Use a template in the current project.
-- `get`: Get or guess some information, e.g., the project ID, workdata directory, or rawdata directory from the
-  current working directory.
+- `get`: Get or guess some information, e.g., the project ID, workdata
+  directory, or rawdata directory from the current working directory.
 
 While the objects are:
 
