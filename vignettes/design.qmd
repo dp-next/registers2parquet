@@ -140,7 +140,7 @@ responsibilities:
 
 - `convert_file()`: Converts a single SAS file and returns the input
   path, the SAS row count, and the paths of the Parquet parts written.
-- `collect_parquet_info()`: Reads the Parquet parts for a single file
+- `get_parquet_info()`: Reads the Parquet parts for a single file
   and returns the total row count, column names and data types.
 - `create_report()`: Assembles the report by taking the outputs of the
   above two functions for all files in a register and returns a
@@ -183,7 +183,7 @@ noted in the report.
 
 `collect_parquet_info()` reads each Parquet part and collects column
 names and types. `create_report()` compares these across all files and
-reports a conclusive result for each register:
+reports on the findings of the checks for the register:
 
 - OK: All column names, data types, and number of columns are the same
   across all Parquet files.
