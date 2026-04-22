@@ -16,7 +16,7 @@ get_project_id <- function() {
     cli::cli_warn(
       c(
         "No project ID could be found in the path of the current working directory, so outputting `NA`.",
-        "i" = "Your path is {fs::path_wd()}. Maybe you need to change into a directory within a project?"
+        "i" = "Your path is {fs::path_wd()}. Maybe change to a working directory within a project?"
       )
     )
   }
@@ -32,7 +32,7 @@ get_project_id <- function() {
   id
 }
 
-#' Get the data directory path for the current project
+#' Get the path to the rawdata or workdata directory for the current project
 #'
 #' Looks in the [options()] for `fastreg.project_rawdata_dir` and
 #' `fastreg.project_workdata_dir` first, and if not found, constructs a path
