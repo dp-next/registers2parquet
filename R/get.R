@@ -75,7 +75,7 @@ get_project_workdata_dir <- function() {
     cli::cli_abort(
       c(
         "Can't set the {.path workdata/} path without a project ID.",
-        "i" = "Use {.code options(fastreg.project_workdata_dir = '<path>')} or change into a directory within a project."
+        "i" = "Use {.code options(fastreg.project_workdata_dir = '<path>')} or change into a working directory within a project."
       )
     )
   }

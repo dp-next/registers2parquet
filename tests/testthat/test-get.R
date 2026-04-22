@@ -33,7 +33,7 @@ test_that("`get_project_id()` errors for IDs not of length 6", {
 test_that("`get_project_id()` warns for not finding a project ID", {
   temp_dir <- fs::path_temp("non-number/test/project/")
   fs::dir_create(temp_dir, recurse = TRUE)
-  project_id <- withr::with_dir(
+  withr::with_dir(
     temp_dir,
     {
       expect_warning(get_project_id(), regexp = "`NA`")
@@ -45,7 +45,7 @@ test_that("`get_project_id()` warns for not finding a project ID", {
   )
 })
 
-test_that("should fail as no `E:` drive exists", {
+test_that("should fail if no `E:` drive exists", {
   temp_path <- fs::path_temp("701010/")
   fs::dir_create(temp_path)
   withr::with_dir(
