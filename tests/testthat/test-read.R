@@ -6,8 +6,10 @@ save_as_sas(bef_list, sas_path)
 sas_bef <- fs::dir_ls(sas_path)
 output_dir <- fs::path_temp("output_dir")
 
-# Use convert_register() for conversion
-convert_register(path = sas_bef, output_dir = output_dir)
+# Convert files.
+purrr::walk(sas_bef, \(path) {
+  convert_file(path, output_dir)
+})
 
 # Test read_register() ---------------------------------------------------------
 
@@ -116,7 +118,11 @@ test_that("read_register() reads files with different columns", {
   sas_diff_cols <- c(sas_bef, fs::dir_ls(lmdb_sas_path))
 
   diff_cols_output <- fs::path_temp("diff_cols")
-  convert_register(path = sas_diff_cols, output_dir = diff_cols_output)
+
+  # Convert files.
+  purrr::walk(sas_diff_cols, \(path) {
+    convert_file(path, diff_cols_output)
+  })
 
   # Define expected columns.
   expected <- purrr::map(c("bef", "lmdb"), \(x) {
@@ -144,7 +150,10 @@ test_that("read_register() errors with incompatible schemas", {
   sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
 
   incompatible_output <- fs::path_temp("incompatible")
-  convert_register(path = sas_incompatible, output_dir = incompatible_output)
+  # Convert files.
+  purrr::walk(sas_incompatible, \(path) {
+    convert_file(path, incompatible_output)
+  })
 
   expect_error(read_register(incompatible_output), "incompatible")
 })

@@ -1,77 +1,3 @@
-#' Convert register SAS file(s) and save to Parquet format
-#'
-#' @description
-#' This function reads one or more SAS files for a given register, and saves the
-#' data in Parquet format. It expects the input SAS files to come from the same
-#' register, e.g., different years of the same register. The function checks
-#' that all files belong to the same register by comparing the alphabetic
-#' characters in the file name(s).
-#'
-#' The function looks for a year (1900-2099) in the file
-#' names in `path` to use the year as partition, see `vignette("design")`
-#' for more information about the partitioning.
-#'
-#' If a year is found, the data is saved as a partition by year in the output
-#' directory, e.g., `output_dir/register_name/year=2020/part-ad5b.parquet`
-#' (the ending being a UUID). If no year is found in the file name, the data
-#' is saved in a
-#' `year=__HIVE_DEFAULT_PARTITION__` partition, which is the standard Hive
-#' convention for missing partition values.
-#'
-#' Two columns are added to the output: `source_file` (the original SAS file
-#' path) and `year` (extracted from the file name, used as partition key).
-#'
-#' To be able to handle larger-than-memory SAS files, this function uses
-#' `convert_file()` internally and only converts one file at a time in chunks.
-#' As a result, identical rows are not deduplicated.
-#'
-#' @param path Paths to SAS files for one register. See [list_sas_files()].
-#' @param output_dir Directory to save the Parquet output to. Must not include
-#'  the register name as this will be extracted from `path` to create the
-#'  register folder.
-#' @param chunk_size Number of rows to read and convert at a time.
-#'
-#' @returns `output_dir`, invisibly.
-#'
-#' @export
-#' @examples
-#' sas_file_directory <- fs::path_package("fastreg", "extdata")
-#' convert_register(
-#'   path = list_sas_files(sas_file_directory),
-#'   output_dir = fs::path_temp("path/to/output/register/")
-#' )
-convert_register <- function(
-  path,
-  output_dir,
-  chunk_size = 10000000L
-) {
-  # Check that register dir is empty (if exists) to avoid duplicating data
-  # since parts are named with UUIDs.
-  # Get register name checks that only one register is in `path`.
-  register_dir <- fs::path(output_dir, get_register_name(path))
-  if (fs::dir_exists(register_dir) && length(fs::dir_ls(register_dir)) > 0) {
-    cli::cli_abort(c(
-      "Output directory is not empty: {.path {register_dir}}",
-      "i" = "Delete the directory manually before re-running."
-    ))
-  }
-
-  # Convert files.
-  purrr::walk(path, \(p) {
-    convert_file(p, output_dir, chunk_size)
-    gc()
-  })
-
-  # Success message.
-  cli::cli_alert_success("Successfully converted {length(path)} file{?s}.")
-  cli::cli_bullets(c(
-    "*" = "Input: {.val {fs::path_file(path)}}",
-    "*" = "Output: Register files in {.path {fs::path(output_dir, get_register_name(path))}}"
-  ))
-
-  invisible(output_dir)
-}
-
 #' Convert a single register SAS file to Parquet
 #'
 #' To be able to handle larger-than-memory files, the SAS file is converted in
@@ -80,7 +6,10 @@ convert_register <- function(
 #' exists in the directory, since files are saved with UUIDs in their names.
 #'
 #' @param path Path to a single SAS file.
-#' @inheritParams convert_register
+#' @param output_dir Directory to save the Parquet output to. Must not include
+#'  the register name as this will be extracted from `path` to create the
+#'  register folder.
+#' @param chunk_size Number of rows to read and convert at a time.
 #'
 #' @returns `output_dir`, invisibly.
 #'
