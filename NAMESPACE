@@ -2,7 +2,6 @@
 
 export(convert_file)
 export(convert_register)
-export(get_project_id)
 export(list_sas_files)
 export(read_parquet_file)
 export(read_parquet_partition)
