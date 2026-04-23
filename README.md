@@ -4,6 +4,8 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/fastreg.png)](https://CRAN.R-project.org/package=fastreg)
 [![GitHub
 Release](https://img.shields.io/github/v/release/dp-next/fastreg.svg)](https://github.com/dp-next/fastreg/releases/latest)
 [![Build](https://github.com/dp-next/fastreg/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/fastreg/actions/workflows/build.yml)
@@ -13,7 +15,7 @@ status](https://results.pre-commit.ci/badge/github/dp-next/fastreg/main.svg)](ht
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![CRAN status](https://www.r-pkg.org/badges/version/fastreg)](https://CRAN.R-project.org/package=fastreg)
+
 <!-- badges: end -->
 
 ## Overview
@@ -73,17 +75,6 @@ library(fastreg)
 
 convert_file(
   path = "path/to/file.sas7bdat",
-  output_dir = "path/to/output_dir/"
-)
-```
-
-Use `convert_register()` to convert several SAS files from the same
-register into a Hive partitioned Parquet dataset. To list all SAS files
-in a directory, you can use the helper function `list_sas_files()`:
-
-``` r
-convert_register(
-  path = list_sas_files("path/to/sas_register/"),
   output_dir = "path/to/output_dir/"
 )
 ```
