@@ -79,7 +79,7 @@ list(
   # directory having been cleaned.
   tar_target(
     name = parquet_files,
-    command = convert_file(path = sas_paths, output_dir = output_dir),
+    command = convert(path = sas_paths, output_dir = output_dir),
     pattern = map(sas_paths),
     cue = tar_cue(mode = "always")
   )

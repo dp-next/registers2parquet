@@ -8,7 +8,7 @@ output_dir <- fs::path_temp("output_dir")
 
 # Convert files.
 purrr::walk(sas_bef, \(path) {
-  convert_file(path, output_dir)
+  convert(path, output_dir)
 })
 
 # Test read_register() ---------------------------------------------------------
@@ -121,7 +121,7 @@ test_that("read_register() reads files with different columns", {
 
   # Convert files.
   purrr::walk(sas_diff_cols, \(path) {
-    convert_file(path, diff_cols_output)
+    convert(path, diff_cols_output)
   })
 
   # Define expected columns.
@@ -152,7 +152,7 @@ test_that("read_register() errors with incompatible schemas", {
   incompatible_output <- fs::path_temp("incompatible")
   # Convert files.
   purrr::walk(sas_incompatible, \(path) {
-    convert_file(path, incompatible_output)
+    convert(path, incompatible_output)
   })
 
   expect_error(read_register(incompatible_output), "incompatible")
