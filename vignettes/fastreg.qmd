@@ -55,7 +55,12 @@ bef_list <- simulate_register(
   "bef",
   c("", "1999", "1999_1", "2020"),
   n = 1000
-)
+) |>
+  # Randomly (re)generate koen, so we don't rely on any potential future
+  # changes to the simulated data from osdc.
+  purrr::map(\(x) {
+    x |> dplyr::mutate("koen" = sample(c(1, 2), 1000, replace = TRUE))
+  })
 
 lmdb_list <- simulate_register(
   "lmdb",
@@ -226,13 +231,11 @@ register
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
-For example, you can extract the birth year from `foed_dato` and filter
-on that:
+For example, you can filter the data:
 
 ```{r filter-register}
 file |>
-  dplyr::mutate(birth_year = year(foed_dato)) |>
-  dplyr::filter(koen == 2 & birth_year > 2000) |>
+  dplyr::filter(koen == 2) |>
   dplyr::compute()
 ```
 
