@@ -48,7 +48,7 @@ The actions are:
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `read`: Read a Parquet register into R as a DuckDB table.
-- `use`: Use a template in the current project.
+- `use`: Set up `_targets.R` and a Quarto report template.
 - `get`: Get or guess some information, e.g., the project ID, workdata
   directory, or rawdata directory from the current working directory.
 
@@ -144,28 +144,73 @@ within the same register contain exactly the same columns and data
 types, the conversion report helps identify any differences between
 these files.
 
-It addresses the following question:
-
-- Are the column names, number of columns, and data types the same
-  across all Parquet files within a register?
-
-The report is produced by the following functions with distinct
-responsibilities:
-
-- `get_parquet_info()`: Reads the Parquet parts for a single file and
-  returns the column names and data types.
-- `create_report()`: Assembles the report by taking the outputs of
-  `get_parquet_info()` for all files in a register and returns a
-  structured list with a comparison and basic check of the files. It
-  reports the findings of the check for the register as either OK (ll
-  column names, data types, and number of columns are the same across
-  all Parquet files) or DIFF (one or more files have different column
-  names, number of columns, or data types).
-
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
 files within the same register do not stop the conversion, but will be
 noted in the report.
 :::
 
-The results are written to a txt file to allow for later inspection.
+`convert_file()` returns a metadata tibble with one row per written
+chunk. This can be queried with `dplyr` directly or rendered into a
+Quarto report.
+
+### Return value of `convert_file()`
+
+`convert_file()` returns a tibble with one row per written chunk:
+
+| Column         | Description                                  |
+|----------------|----------------------------------------------|
+| `input_path`   | Path to the source SAS file                  |
+| `output_path`  | Path to the written Parquet part file        |
+| `row_count`    | Number of rows in the chunk                  |
+| `column_count` | Number of columns in the chunk               |
+| `columns`      | Nested tibble with column `name` and `type`  |
+
+The information is derived from the chunk already in memory, not by
+reading the Parquet file back.
+
+```r
+# Before repeat loop.
+chunk_info_list <- list()
+
+# Inside the repeat loop, after writing.
+chunk_info_list <- c(chunk_info_list, list(tibble::tibble(
+  input_path   = path,
+  output_path  = fs::path(file_path),
+  row_count    = nrow(chunk),
+  column_count = ncol(chunk),
+  columns      = list(tibble::tibble(
+    name = colnames(chunk),
+    type = purrr::map_chr(chunk, class)
+  ))
+)))
+
+# After the loop, bind all chunk tibbles.
+dplyr::bind_rows(chunk_info_list)
+```
+
+### Quarto report template
+
+`use_fastreg_template()` copies both `_targets.R` and
+`conversion_report.qmd` into the current working directory. The Quarto
+doc reads `chunk_info` via `targets::tar_read()` and produces an HTML or
+PDF report for review.
+
+<!-- TODO: What should the default format be? -->
+
+```r
+chunk_info <- targets::tar_read(chunk_info)
+
+# Nice overview of the info + schema comparison within registers.
+...
+```
+
+The report is added to the targets pipeline as a last target:
+
+```r
+tar_target(
+  name = report,
+  command = quarto::quarto_render("conversion_report.qmd"),
+  deployment = "main"
+)
+```
