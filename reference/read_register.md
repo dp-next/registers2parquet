@@ -30,7 +30,7 @@ read_register(fs::path_package(
   "test.parquet"
 ))
 #> # Source:   table<arrow_001> [?? x 3]
-#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1011-azure:R 4.5.3/:memory:]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     pnr  koen foed_dato 
 #>   <int> <int> <date>    
 #> 1     1     0 2000-01-01

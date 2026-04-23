@@ -32,6 +32,8 @@ The actions are:
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Use a template in the current project.
+- `get`: Get or guess some information, e.g., the project ID, workdata
+  directory, or rawdata directory from the current working directory.
 
 While the objects are:
 
@@ -106,12 +108,12 @@ targets pipeline.
 
 ``` mermaid
 flowchart TD
-    path[/"path<br>[Character scalar]"/]
+    name[/"name<br>[Character scalar]"/]
     read_register("read_register()")
     output[/"Output<br>[DuckDB table]"/]
 
     %% Edges
-    path --> read_register --> output
+    name --> read_register --> output
 ```
 
 Figure 3: Expected workflow for reading a Parquet register as a DuckDB

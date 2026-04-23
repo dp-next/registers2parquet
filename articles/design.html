@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,6 +97,8 @@
 <code>read</code>: Read a Parquet register into R as a DuckDB table.</li>
 <li>
 <code>use</code>: Use a template in the current project.</li>
+<li>
+<code>get</code>: Get or guess some information, e.g., the project ID, workdata directory, or rawdata directory from the current working directory.</li>
 </ul>
 <p>While the objects are:</p>
 <ul>
@@ -186,13 +188,12 @@ Figure 2: Expected workflow for converting multiple registers using the targets
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-flow-use-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <pre class="mermaid mermaid-js" data-label="fig-flow-use">flowchart TD
-    path[/"path&lt;br&gt;[Character scalar]"/]
+    name[/"name&lt;br&gt;[Character scalar]"/]
     read_register("read_register()")
     output[/"Output&lt;br&gt;[DuckDB table]"/]
 
     %% Edges
-    path --&gt; read_register --&gt; output
-
+    name --&gt; read_register --&gt; output
 </pre>
 </div>
 </div>
