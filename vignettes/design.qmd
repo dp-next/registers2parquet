@@ -141,10 +141,10 @@ responsibilities:
 - `convert_file()`: Converts a single SAS file and returns the input
   path, the SAS row count, and the paths of the Parquet parts written.
 - `get_parquet_info()`: Reads the Parquet parts for a single file
-  and returns the total row count, column names and data types.
+  and returns the column names and data types.
 - `create_report()`: Assembles the report by taking the outputs of the
   above two functions for all files in a register and returns a
-  structured list with the row count comparison and column information.
+  structured list with a comparison and basic check of the files.
 
 In the targets pipeline, `convert_file()` and `collect_parquet_info()`
 run per SAS file. A single downstream `create_report()` target assembles
