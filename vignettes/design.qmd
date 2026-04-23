@@ -126,68 +126,34 @@ flowchart TD
 ## Conversion report
 
 The purpose of the conversion report is to check that the conversion
-went as expected (to the extent that's possible). It addresses two
-checks:
+went as expected so the partitioned Parquet register(s) can be read into
+R collectively afterwards. Since we can't be sure that the SAS files
+within the same register contain exactly the same columns and data
+types, the conversion report helps identify any differences between
+these files.
 
-1. Do the SAS file and the output Parquet file(s) have the same number
-   of rows?
-2. Are the column names, number of columns, and data types the same
-   across all Parquet files within a register (e.g., the files created
-   from `bef2020.sas7bdat` and `bef2021.sas7bdat`)?
+It addresses the following question:
 
-The report is produced by three functions with distinct
+- Are the column names, number of columns, and data types the same
+  across all Parquet files within a register?
+
+The report is produced by the following functions with distinct
 responsibilities:
 
-- `convert_file()`: Converts a single SAS file and returns the input
-  path, the SAS row count, and the paths of the Parquet parts written.
-- `get_parquet_info()`: Reads the Parquet parts for a single file
-  and returns the column names and data types.
-- `create_report()`: Assembles the report by taking the outputs of the
-  above two functions for all files in a register and returns a
-  structured list with a comparison and basic check of the files.
-
-In the targets pipeline, `convert_file()` and `collect_parquet_info()`
-run per SAS file. A single downstream `create_report()` target assembles
-the final report once all conversions are complete.
-
-### Check 1: Row count comparison
-
-`convert_file()` tracks the number of rows read from the SAS file via
-the loop counter and returns it. `collect_parquet_info()` reads the
-written Parquet parts and returns their total row count.
-`create_report()` compares the two and records whether they match.
-
-A row count match does not guarantee that the values themselves are
-preserved correctly — it only confirms that no rows were lost during
-conversion. Its primary value is as an auditable record: if the counts
-match, there is a concrete data point to refer to when checking that a
-conversion completed as expected.
-
-::: callout-warning
-This check cannot guarantee perfect preservation of the SAS values,
-since reading SAS files in R relies on `haven`, which is a
-reverse-engineered effort to read the proprietary SAS file format.
-:::
-
-### Check 2: Columns and data types across Parquet files within a register
-
-Since we can't be sure that the SAS files within the same register
-contain exactly the same columns and data types, the conversion report
-helps identify any differences between these files.
+- `get_parquet_info()`: Reads the Parquet parts for a single file and
+  returns the column names and data types.
+- `create_report()`: Assembles the report by taking the outputs of
+  `get_parquet_info()` for all files in a register and returns a
+  structured list with a comparison and basic check of the files. It
+  reports the findings of the check for the register as either OK (ll
+  column names, data types, and number of columns are the same across
+  all Parquet files) or DIFF (one or more files have different column
+  names, number of columns, or data types).
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
 files within the same register do not stop the conversion, but will be
 noted in the report.
 :::
-
-`collect_parquet_info()` reads each Parquet part and collects column
-names and types. `create_report()` compares these across all files and
-reports on the findings of the checks for the register:
-
-- OK: All column names, data types, and number of columns are the same
-  across all Parquet files.
-- DIFF: One or more files have different column names, number of
-  columns, or data types.
 
 The results are written to a txt file to allow for later inspection.
