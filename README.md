@@ -79,17 +79,6 @@ convert_file(
 )
 ```
 
-Use `convert_register()` to convert several SAS files from the same
-register into a Hive partitioned Parquet dataset. To list all SAS files
-in a directory, you can use the helper function `list_sas_files()`:
-
-``` r
-convert_register(
-  path = list_sas_files("path/to/sas_register/"),
-  output_dir = "path/to/output_dir/"
-)
-```
-
 Use `use_targets_template()` to copy a
 [targets](https://books.ropensci.org/targets/) template that converts
 multiple registers in parallel into your project:
