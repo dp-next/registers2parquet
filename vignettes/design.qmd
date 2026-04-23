@@ -10,6 +10,17 @@ This page documents the general design of fastreg. It covers some
 requirements, the public-facing interface, and some diagrams
 highlighting the general flow of the main functions.
 
+::: callout-note
+Using R to read SAS can't guarantee perfect preservation of the SAS
+values, since reading SAS files in R relies on
+[`haven`](https://haven.tidyverse.org/index.html), which is a
+reverse-engineered effort to read the proprietary SAS file format.
+
+However, `haven` is a mature library and explicitly supports reading
+`sas7bdat` files, which is the register format used by Statistics
+Denmark.
+:::
+
 ## Requirements
 
 The core requirements of fastreg are to:
