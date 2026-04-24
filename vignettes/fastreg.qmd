@@ -22,6 +22,12 @@ Parquet files. A *register* in this context refers to a collection of
 related data files that belong to the same dataset, typically with
 yearly snapshots (e.g., `bef2020.sas7bdat`,`bef2021.sas7bdat`).
 
+::: callout-note
+We use package prefixes (`fastreg::`) throughout the documentation
+rather than `library()` calls, to make the package origin of each
+function explicit and avoid naming conflicts.
+:::
+
 ## Why Parquet?
 
 [Parquet](https://parquet.apache.org/) is a columnar storage file format
