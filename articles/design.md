@@ -55,20 +55,20 @@ flowchart TD
     path[/"path<br>[Character vector]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
-    convert_file("convert_file()")
+    convert("convert()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    identify_paths -.-> path --> convert_file
-    output_dir & chunk_size --> convert_file
-    convert_file --> output
+    identify_paths -.-> path --> convert
+    output_dir & chunk_size --> convert
+    convert --> output
 
     %% Style
     style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
 Figure 1: Expected workflow for converting one SAS file using
-[`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md).
+[`convert()`](https://dp-next.github.io/fastreg/reference/convert.md).
 
 ### Converting multiple registers in parallel
 
@@ -91,7 +91,7 @@ targets pipeline.
 
 > **Warning**
 >
-> [`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md),
+> [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md),
 > the core function behind converting SAS files to Parquet used within
 > the targets template, creates an Arrow schema with data types based on
 > the first file chunk. This means that data type schemas are defined

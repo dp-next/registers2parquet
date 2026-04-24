@@ -50,13 +50,13 @@ pak::pak("dp-next/fastreg")
 ## Usage
 
 Use
-[`convert_file()`](https://dp-next.github.io/fastreg/reference/convert_file.md)
-to convert a single SAS file to Parquet in Hive partition format:
+[`convert()`](https://dp-next.github.io/fastreg/reference/convert.md) to
+convert a single SAS file to Parquet in Hive partition format:
 
 ``` r
 library(fastreg)
 
-convert_file(
+convert(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
 )
