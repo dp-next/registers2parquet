@@ -59,7 +59,6 @@ list(
   ),
 
   # Empty output directory before writing to avoid outdated Parquet files.
-  # Runs on every `tar_make()` call (mode = "always") to ensure a clean slate.
   tar_target(
     name = output_dir,
     command = {
@@ -70,17 +69,24 @@ list(
       config$output_dir
     },
     deployment = "main",
+    # Always run to ensure a clean slate.
     cue = tar_cue(mode = "always")
   ),
 
-  # Convert each SAS file in parallel. mode = "always" is required because
-  # `output_dir` returns the same path string on every run, so targets would
-  # otherwise consider this target up-to-date and skip it despite the output
-  # directory having been cleaned.
+  # Convert each SAS file in parallel.
   tar_target(
-    name = parquet_files,
+    name = chunk_info,
     command = convert(path = sas_paths, output_dir = output_dir),
     pattern = map(sas_paths),
+    # mode = "always" is required because the target `output_dir` returns the
+    # same path string on every run. Otherwise, targets would consider this
+    # target up-to-date and skip it despite the output directory having been
+    # cleaned.
     cue = tar_cue(mode = "always")
+  ),
+  tar_target(
+    name = report,
+    command = quarto::quarto_render("conversion_report.qmd"),
+    deployment = "main"
   )
 )
