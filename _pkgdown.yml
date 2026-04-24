@@ -9,16 +9,14 @@ navbar:
     menu:
     - text: Design
       href: articles/design.html
-    - text: Limitations
-      href: articles/limitations.html
 
 reference:
 - title: Main functions
 - contents:
-  - starts_with("convert")
+  - convert
   - read_register
   - read_parquet
-  - use_targets_template
+  - use_template
 - title: Helper functions
 - contents:
   - starts_with("list")
