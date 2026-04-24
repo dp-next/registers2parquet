@@ -49,7 +49,7 @@ The actions are:
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `read`: Read a Parquet register into R as a DuckDB table.
-- `use`: Set up `_targets.R` and a Quarto report template.
+- `use`: Set up `_targets.R` and a Quarto log template.
 - `get`: Get or guess some information, e.g., the project ID, workdata
   directory, or rawdata directory from the current working directory.
 
@@ -151,8 +151,7 @@ be included in the log.
 :::
 
 `convert()` returns a metadata tibble with one row per written chunk.
-This can be queried with dplyr directly or rendered into a Quarto
-report.
+This can be queried with dplyr directly or rendered into a Quarto log.
 
 ### Return value of `convert()`
 
@@ -192,12 +191,12 @@ chunk_info <- dplyr::bind_rows(
 chunk_info
 ```
 
-### Quarto report template
+### Quarto log template
 
-`use_template()` copies both `_targets.R` and `conversion_report.qmd`
-into the current working directory. The Quarto doc reads `chunk_info`
-via `targets::tar_read()` and produces an HTML or PDF report for review.
-The default is PDF, but it can easily be changed in the Quarto file.
+`use_template()` copies both `_targets.R` and `conversion_log.qmd` into
+the current working directory. The Quarto doc reads `chunk_info` via
+`targets::tar_read()` and produces an HTML or PDF log for review. The
+default is PDF, but it can easily be changed in the Quarto file.
 
 ```r
 chunk_info <- targets::tar_read(chunk_info)
@@ -206,11 +205,11 @@ chunk_info <- targets::tar_read(chunk_info)
 ...
 ```
 
-The report is added to the targets pipeline as a last target:
+The log is added to the targets pipeline as a last target:
 
 ```r
 tar_quarto(
-  name = report,
-  path = "conversion_report.qmd"
+  name = log,
+  path = "conversion_log.qmd"
 )
 ```
