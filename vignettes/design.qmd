@@ -191,7 +191,7 @@ dplyr::bind_rows(chunk_info_list)
 
 ### Quarto report template
 
-`use_fastreg_template()` copies both `_targets.R` and
+`use_template()` copies both `_targets.R` and
 `conversion_report.qmd` into the current working directory. The Quarto
 doc reads `chunk_info` via `targets::tar_read()` and produces an HTML or
 PDF report for review.
