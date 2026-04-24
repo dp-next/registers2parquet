@@ -199,8 +199,6 @@ into the current working directory. The Quarto doc reads `chunk_info`
 via `targets::tar_read()` and produces an HTML or PDF report for review.
 The default is PDF, but it can easily be changed in the Quarto file.
 
-<!-- TODO: What should the default format be? -->
-
 ```r
 chunk_info <- targets::tar_read(chunk_info)
 
