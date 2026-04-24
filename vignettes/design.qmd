@@ -13,10 +13,10 @@ highlighting the general flow of the main functions.
 ::: callout-note
 Using R to read SAS can't guarantee perfect preservation of the SAS
 values, since reading SAS files in R relies on
-[`haven`](https://haven.tidyverse.org/index.html), which is a
-reverse-engineered effort to read the proprietary SAS file format.
+[haven](https://haven.tidyverse.org/index.html), which is based on
+[ReadStat](https://github.com/WizardMac/ReadStat), a reverse-engineered effort to read the proprietary SAS file format.
 
-However, `haven` is a mature library and explicitly supports reading
+However, haven and the underlying ReadStat are mature packages and explicitly support reading
 `sas7bdat` files, which is the register format used by Statistics
 Denmark.
 :::
@@ -135,35 +135,33 @@ flowchart TD
     name --> read_register --> output
 ```
 
-## Conversion report
+## Conversion log
 
-The purpose of the conversion report is to check that the conversion
-went as expected so the partitioned Parquet register(s) can be read into
-R collectively afterwards. Since we can't be sure that the SAS files
+The purpose of the conversion log is to describe the details of the conversion
+to provide an audit trail.
+Since we can't be sure that the SAS files
 within the same register contain exactly the same columns and data
-types, the conversion report helps identify any differences between
+types, the conversion log helps identify any differences between
 these files.
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
-files within the same register do not stop the conversion, but it will be
-noted in the report.
+files within the same register do not stop the conversion, but it will be included in the log.
 :::
 
-`convert_file()` returns a metadata tibble with one row per written
-chunk. This can be queried with `dplyr` directly or rendered into a
+`convert()` returns a metadata tibble with one row per written
+chunk. This can be queried with dplyr directly or rendered into a
 Quarto report.
 
-### Return value of `convert_file()`
+### Return value of `convert()`
 
-`convert_file()` returns a tibble with one row per written chunk:
+`convert()` returns a tibble with one row per written chunk:
 
 | Column         | Description                                  |
 |----------------|----------------------------------------------|
 | `input_path`   | Path to the source SAS file                  |
 | `output_path`  | Path to the written Parquet part file        |
 | `row_count`    | Number of rows in the chunk                  |
-| `column_count` | Number of columns in the chunk               |
 | `columns`      | Nested tibble with column `name` and `type`  |
 
 The information is derived from the chunk already in memory, not by
@@ -171,22 +169,26 @@ reading the Parquet file back.
 
 ```r
 # Before repeat loop.
-chunk_info_list <- list()
+chunk_info <- tibble::tribble(
+  ~input_path, ~output_path, ~row_count, ~columns
+)
 
 # Inside the repeat loop, after writing.
-chunk_info_list <- c(chunk_info_list, list(tibble::tibble(
-  input_path   = path,
-  output_path  = fs::path(file_path),
-  row_count    = nrow(chunk),
-  column_count = ncol(chunk),
-  columns      = list(tibble::tibble(
-    name = colnames(chunk),
-    type = purrr::map_chr(chunk, class)
-  ))
-)))
+chunk_info <- dplyr::bind_rows(
+  chunk_info, 
+  tibble::tibble(
+    input_path   = path,
+    output_path  = fs::path(file_path),
+    row_count    = nrow(chunk),
+    columns      = tibble::tibble(
+      name = colnames(chunk),
+      type = purrr::map_chr(chunk, class)
+    )
+  )
+)
 
-# After the loop, bind all chunk tibbles.
-dplyr::bind_rows(chunk_info_list)
+# After the loop, return the collected information.
+chunk_info
 ```
 
 ### Quarto report template
@@ -194,7 +196,7 @@ dplyr::bind_rows(chunk_info_list)
 `use_template()` copies both `_targets.R` and
 `conversion_report.qmd` into the current working directory. The Quarto
 doc reads `chunk_info` via `targets::tar_read()` and produces an HTML or
-PDF report for review.
+PDF report for review. The default is PDF, but it can easily be changed in the Quarto file.
 
 <!-- TODO: What should the default format be? -->
 
@@ -208,9 +210,8 @@ chunk_info <- targets::tar_read(chunk_info)
 The report is added to the targets pipeline as a last target:
 
 ```r
-tar_target(
+tar_quarto(
   name = report,
-  command = quarto::quarto_render("conversion_report.qmd"),
-  deployment = "main"
+  path = "conversion_report.qmd"
 )
 ```
