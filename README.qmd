@@ -79,12 +79,12 @@ convert(
 )
 ```
 
-Use `use_targets_template()` to copy a
+Use `use_template()` to copy a
 [targets](https://books.ropensci.org/targets/) template that converts
 multiple registers in parallel into your project:
 
 ```{r, eval = FALSE}
-use_targets_template()
+use_template()
 ```
 
 Use `read_register()` to read a Parquet register as a DuckDB table:
