@@ -83,10 +83,5 @@ list(
     # target up-to-date and skip it despite the output directory having been
     # cleaned.
     cue = tar_cue(mode = "always")
-  ),
-  tar_target(
-    name = report,
-    command = quarto::quarto_render("conversion_report.qmd"),
-    deployment = "main"
   )
 )
