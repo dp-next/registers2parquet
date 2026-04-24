@@ -175,7 +175,7 @@ chunk_info <- tibble::tribble(
 
 # Inside the repeat loop, after writing.
 chunk_info <- dplyr::bind_rows(
-  chunk_info, 
+  chunk_info,
   tibble::tibble(
     input_path   = path,
     output_path  = fs::path(file_path),
