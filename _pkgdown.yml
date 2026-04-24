@@ -13,7 +13,7 @@ navbar:
 reference:
 - title: Main functions
 - contents:
-  - starts_with("convert")
+  - convert
   - read_register
   - read_parquet
   - use_targets_template

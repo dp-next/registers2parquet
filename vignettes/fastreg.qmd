@@ -123,23 +123,23 @@ Converting one file from SAS to Parquet in fastreg isn't a simple change
 of file extension. We make use of Parquet's Hive partitioning to
 organise the output by year, for easier querying and management. So the
 output Parquet file is written to a subdirectory named after the year
-extracted from the file name. Use the `convert_file()` function to
-convert a single SAS file to a year-partitioned Parquet format:
+extracted from the file name. Use the `convert()` function to convert a
+single SAS file to a year-partitioned Parquet format:
 
 ```{r convert-file}
 sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
 output_file_dir <- fs::path_temp("output-file-dir")
 
-convert_file(
+convert(
   path = sas_file,
   output_dir = output_file_dir
 )
 ```
 
-`convert_file()` reads files in chunks (to be able to handle
+`convert()` reads files in chunks (to be able to handle
 larger-than-memory data) with a default of reading 1 million rows,
 extracts 4-digit years from filenames for partitioning, and lowercases
-column names. See `?convert_file` for more details.
+column names. See `?convert` for more details.
 
 ::: callout-note
 When a SAS file contains more rows than the `chunk_size`, multiple
