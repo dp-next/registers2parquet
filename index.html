@@ -101,18 +101,16 @@
 </h2>
 <p>Use <code><a href="reference/convert.html">convert()</a></code> to convert a single SAS file to Parquet in Hive partition format:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dp-next.github.io/fastreg/">fastreg</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/convert.html">convert</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/convert.html">convert</a></span><span class="op">(</span></span>
 <span>  path <span class="op">=</span> <span class="st">"path/to/file.sas7bdat"</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="st">"path/to/output_dir/"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Use <code><a href="reference/use_targets_template.html">use_targets_template()</a></code> to copy a <a href="https://books.ropensci.org/targets/" class="external-link">targets</a> template that converts multiple registers in parallel into your project:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Use <code><a href="reference/read_register.html">read_register()</a></code> to read a Parquet register as a DuckDB table:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/read_register.html">read_register</a></span><span class="op">(</span><span class="st">"path/to/parquet_register/"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/read_register.html">read_register</a></span><span class="op">(</span><span class="st">"path/to/parquet_register/"</span><span class="op">)</span></span></code></pre></div>
 <p>See <code><a href="articles/fastreg.html">vignette("fastreg")</a></code> for a complete guide.</p>
 </div>
 <div class="section level2">
