@@ -14,11 +14,12 @@ highlighting the general flow of the main functions.
 Using R to read SAS can't guarantee perfect preservation of the SAS
 values, since reading SAS files in R relies on
 [haven](https://haven.tidyverse.org/index.html), which is based on
-[ReadStat](https://github.com/WizardMac/ReadStat), a reverse-engineered effort to read the proprietary SAS file format.
+[ReadStat](https://github.com/WizardMac/ReadStat), a reverse-engineered
+effort to read the proprietary SAS file format.
 
-However, haven and the underlying ReadStat are mature packages and explicitly support reading
-`sas7bdat` files, which is the register format used by Statistics
-Denmark.
+However, haven and the underlying ReadStat are mature packages and
+explicitly support reading `sas7bdat` files, which is the register
+format used by Statistics Denmark.
 :::
 
 ## Requirements
@@ -137,21 +138,21 @@ flowchart TD
 
 ## Conversion log
 
-The purpose of the conversion log is to describe the details of the conversion
-to provide an audit trail.
-Since we can't be sure that the SAS files
-within the same register contain exactly the same columns and data
-types, the conversion log helps identify any differences between
+The purpose of the conversion log is to describe the details of the
+conversion to provide an audit trail. Since we can't be sure that the
+SAS files within the same register contain exactly the same columns and
+data types, the conversion log helps identify any differences between
 these files.
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
-files within the same register do not stop the conversion, but it will be included in the log.
+files within the same register do not stop the conversion, but it will
+be included in the log.
 :::
 
-`convert()` returns a metadata tibble with one row per written
-chunk. This can be queried with dplyr directly or rendered into a
-Quarto report.
+`convert()` returns a metadata tibble with one row per written chunk.
+This can be queried with dplyr directly or rendered into a Quarto
+report.
 
 ### Return value of `convert()`
 
@@ -193,10 +194,10 @@ chunk_info
 
 ### Quarto report template
 
-`use_template()` copies both `_targets.R` and
-`conversion_report.qmd` into the current working directory. The Quarto
-doc reads `chunk_info` via `targets::tar_read()` and produces an HTML or
-PDF report for review. The default is PDF, but it can easily be changed in the Quarto file.
+`use_template()` copies both `_targets.R` and `conversion_report.qmd`
+into the current working directory. The Quarto doc reads `chunk_info`
+via `targets::tar_read()` and produces an HTML or PDF report for review.
+The default is PDF, but it can easily be changed in the Quarto file.
 
 <!-- TODO: What should the default format be? -->
 
