@@ -146,7 +146,7 @@ these files.
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
-files within the same register do not stop the conversion, but will be
+files within the same register do not stop the conversion, but it will be
 noted in the report.
 :::
 
