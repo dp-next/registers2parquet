@@ -40,7 +40,12 @@ bef_list <- simulate_register(
   "bef",
   c("", "1999", "1999_1", "2020"),
   n = 1000
-)
+) |>
+  # Randomly (re)generate koen, so we don't rely on any potential future
+  # changes to the simulated data from osdc.
+  purrr::map(\(x) {
+    x |> dplyr::mutate("koen" = sample(c(1, 2), 1000, replace = TRUE))
+  })
 
 lmdb_list <- simulate_register(
   "lmdb",
@@ -153,7 +158,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-bad9f9.parquet
+    #>         └── part-078255.parquet
 
 ## Converting multiple registers in parallel
 
@@ -172,7 +177,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 use_targets_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmpu9OzVe/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpED5cKs/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -218,43 +223,40 @@ file
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 108684730664 19320112  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 982144017357 20070716  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  3     1 672580814975 19800805  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 439008110445 20090628  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 489714666740 20170225  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 155331797020 19730330  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 777951655096 19341022  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 132473802596 19530901  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020
+#>  1     1 108684730664 19320112  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  2     1 982144017357 20070716  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  3     2 672580814975 19800805  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  4     1 439008110445 20090628  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  5     1 489714666740 20170225  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 155331797020 19730330  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  7     1 777951655096 19341022  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 132473802596 19530901  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
-For example, `foed_dato` is stored as a character in the simulated data
-(`"YYYYMMDD"`), so you can change it to a date (using
-[`strptime()`](https://rdrr.io/r/base/strptime.html)) and then filter:
+For example, you can filter the data:
 
 ``` r
 file |>
-  dplyr::mutate(foed_dato = strptime(foed_dato, "%Y%m%d")) |>
-  dplyr::filter(koen == 2 & foed_dato > "2000-01-01") |>
+  dplyr::filter(koen == 2) |>
   dplyr::compute()
 #> # Source:   table<dbplyr_TDD6kZ7SxR> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]
-#>     koen pnr          foed_dato           source_file                       year
-#>    <dbl> <chr>        <dttm>              <chr>                            <int>
-#>  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#>  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
-#> 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020
+#>     koen pnr          foed_dato source_file                               year
+#>    <dbl> <chr>        <chr>     <chr>                                    <int>
+#>  1     2 672580814975 19800805  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 155331797020 19730330  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  3     2 167007504860 20010318  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 132473802596 19530901  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 876820784981 19310817  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 527918979807 19540605  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 932479108596 19490511  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 983125164454 19011009  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 702393367207 19600605  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 398008617406 20061118  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 

@@ -99,7 +99,12 @@
 <span>  <span class="st">"bef"</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"1999"</span>, <span class="st">"1999_1"</span>, <span class="st">"2020"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1000</span></span>
-<span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="co"># Randomly (re)generate koen, so we don't rely on any potential future</span></span>
+<span>  <span class="co"># changes to the simulated data from osdc.</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">x</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"koen"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">1000</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lmdb_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_register.html">simulate_register</a></span><span class="op">(</span></span>
 <span>  <span class="st">"lmdb"</span>,</span>
@@ -180,7 +185,7 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-bad9f9.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-078255.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
 </h2>
@@ -192,7 +197,7 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpu9OzVe/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpED5cKs/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
@@ -222,39 +227,38 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpu9OzVe/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  1     1 108684730664 19320112  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  4     1 439008110445 20090628  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
-<p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, <code>foed_dato</code> is stored as a character in the simulated data (<code>"YYYYMMDD"</code>), so you can change it to a date (using <code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime()</a></code>) and then filter:</p>
+<p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, you can filter the data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">file</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>foed_dato <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime</a></span><span class="op">(</span><span class="va">foed_dato</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">koen</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">&amp;</span> <span class="va">foed_dato</span> <span class="op">&gt;</span> <span class="st">"2000-01-01"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">koen</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;dbplyr_TDD6kZ7SxR&gt; [?? x 5]</span></span>
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
-<span><span class="co">#&gt;     koen pnr          foed_dato           source_file                       year</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;dttm&gt;              &lt;chr&gt;                            &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 982144017357 2007-07-16 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  2     2 439008110445 2009-06-28 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  3     2 489714666740 2017-02-25 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  4     2 167007504860 2001-03-18 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  5     2 398008617406 2006-11-18 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  6     2 618760652262 2010-04-29 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  7     2 362243614874 2004-01-14 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  8     2 594290906244 2003-10-05 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt;  9     2 736038118634 2022-06-15 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
-<span><span class="co">#&gt; 10     2 837052913533 2020-01-11 00:00:00 /tmp/Rtmpu9OzVe/sas-dir/bef2020…  2020</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1     2 672580814975 19800805  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  2     2 155331797020 19730330  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  3     2 167007504860 20010318  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  4     2 132473802596 19530901  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  5     2 876820784981 19310817  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  6     2 527918979807 19540605  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  7     2 932479108596 19490511  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  8     2 983125164454 19011009  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  9     2 702393367207 19600605  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt; 10     2 398008617406 20061118  /tmp/RtmpED5cKs/sas-dir/bef2020.sas7bdat  2020</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>After the query (filer and mutate), we execute it with <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::compute()</a></code>. This save the result as a temporary table inside DuckDB, without loading it into R memory.</p>
