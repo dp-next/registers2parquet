@@ -9,7 +9,7 @@
 - [`read_parquet_partition()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
   [`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
   : Read a single Parquet file or a partitioned dataset as DuckDB table
-- [`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
+- [`use_template()`](https://dp-next.github.io/fastreg/reference/use_template.md)
   : Use a targets pipeline template for converting SAS registers to
   Parquet
 

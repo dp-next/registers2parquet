@@ -189,19 +189,19 @@
 <pre><code><span><span class="co">#&gt; output-file-dir</span></span>
 <span><span class="co">#&gt; └── bef</span></span>
 <span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-789f7b.parquet</span></span></code></pre>
+<span><span class="co">#&gt;         └── part-7c372c.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
 </h2>
 <p>For many or large files, fastreg provides a <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline template that parallelises conversion across CPU cores. By default it uses 10 workers, but that can be adjusted in the pipeline in the <code>_targets.R</code> file to not consume too many cores on a shared server.</p>
-<p>To create the pipeline file, you can use the <code><a href="../reference/use_targets_template.html">use_targets_template()</a></code> function. In this example, we’re outputting it to a temporary directory.</p>
+<p>To create the pipeline file, you can use the <code><a href="../reference/use_template.html">use_template()</a></code> function. In this example, we’re outputting it to a temporary directory.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pipeline_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"pipeline-dir"</span><span class="op">)</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/use_targets_template.html">use_targets_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpp6IUiL/pipeline-dir/_targets.R'</span></span>
+<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/use_template.html">use_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpi1GnED/pipeline-dir/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
@@ -231,16 +231,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     1 108684730664 19320112  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     1 439008110445 20090628  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  1     1 108684730664 19320112  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  4     1 439008110445 20090628  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, you can filter the data:</p>
@@ -253,16 +253,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.5.3/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 672580814975 19800805  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     2 155331797020 19730330  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     2 167007504860 20010318  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     2 132473802596 19530901  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     2 876820784981 19310817  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     2 527918979807 19540605  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     2 932479108596 19490511  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 983125164454 19011009  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     2 702393367207 19600605  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 398008617406 20061118  /tmp/Rtmpp6IUiL/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  1     2 672580814975 19800805  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  2     2 155331797020 19730330  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  3     2 167007504860 20010318  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  4     2 132473802596 19530901  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  5     2 876820784981 19310817  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  6     2 527918979807 19540605  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  7     2 932479108596 19490511  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  8     2 983125164454 19011009  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;  9     2 702393367207 19600605  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt; 10     2 398008617406 20061118  /tmp/Rtmpi1GnED/sas-dir/bef2020.sas7bdat  2020</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>After the query (filer and mutate), we execute it with <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::compute()</a></code>. This save the result as a temporary table inside DuckDB, without loading it into R memory.</p>

@@ -61,12 +61,12 @@ fastreg::convert(
 ```
 
 Use
-[`use_targets_template()`](https://dp-next.github.io/fastreg/reference/use_targets_template.md)
+[`use_template()`](https://dp-next.github.io/fastreg/reference/use_template.md)
 to copy a [targets](https://books.ropensci.org/targets/) template that
 converts multiple registers in parallel into your project:
 
 ``` r
-fastreg::use_targets_template()
+fastreg::use_template()
 ```
 
 Use
