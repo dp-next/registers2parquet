@@ -14,7 +14,7 @@ sas_bef <- fs::dir_ls(sas_path)
 
 # Setup: Convert single file
 single_file_path <- fs::path_temp("parquet_single_file")
-single_file_output <- convert(
+output <- convert(
   path = sas_bef[[1]],
   output_dir = single_file_path
 )
@@ -23,28 +23,26 @@ data_actual <- arrow::open_dataset(
   partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
-data_expected <- haven::read_sas(sas_bef[[1]])
+data_expected <- haven::read_sas(sas_bef[[1]]) |>
+  dplyr::mutate(source_file = as.character(sas_bef[[1]]), year = NA_integer_)
 
-test_that("convert() returns output_dir", {
-  expect_equal(single_file_output, single_file_path)
+test_that("convert() returns a tibble describing the written chunks", {
+  expect_s3_class(output, "tbl_df")
+  expect_equal(nrow(output), 1L)
+  expect_equal(output$input_path, sas_bef[[1]])
+  expect_true(fs::file_exists(output$output_path))
+  expect_equal(output$row_count, nrow(data_expected))
 })
 
 test_that("convert() preserves source data and adds expected columns", {
   expect_equal(nrow(data_actual), nrow(data_expected))
-  expect_identical(
-    data_actual |> dplyr::select(-c("source_file", "year")),
-    data_expected
-  )
-  expect_all_equal(
-    data_actual$source_file,
-    as.character(sas_bef[[1]])
-  )
+  expect_identical(data_actual, data_expected)
   expect_identical(
     purrr::map(
-      data_actual |> dplyr::select(c("source_file", "year")),
+      data_actual |> dplyr::select("year"),
       class
     ),
-    list(source_file = "character", year = "integer")
+    list(year = "integer")
   )
 })
 
@@ -60,12 +58,12 @@ test_that("convert() creates parts with expected naming pattern", {
 test_that("convert() errors with incorrect input parameters", {
   # Incorrect path type.
   expect_error(
-    convert(path = 1, output_dir = single_file_output),
+    convert(path = 1, output_dir = single_file_path),
     regexp = "character"
   )
   # Path must exist.
   expect_error(
-    convert(path = fs::file_temp(), output_dir = single_file_output),
+    convert(path = fs::file_temp(), output_dir = single_file_path),
     regexp = "does not exist"
   )
   # Incorrect output_dir type.
@@ -77,7 +75,7 @@ test_that("convert() errors with incorrect input parameters", {
   expect_error(
     convert(
       path = sas_bef[[1]],
-      output_dir = rep(single_file_output, times = 2)
+      output_dir = rep(single_file_path, times = 2)
     ),
     regexp = "length 1"
   )
@@ -85,7 +83,7 @@ test_that("convert() errors with incorrect input parameters", {
   expect_error(
     convert(
       path = sas_bef[[1]],
-      output_dir = single_file_output,
+      output_dir = single_file_path,
       chunk_size = 10L
     ),
     regexp = ">= 10000"
@@ -94,7 +92,7 @@ test_that("convert() errors with incorrect input parameters", {
 
 test_that("convert() partitions by year based on file name", {
   expected <- fs::path(
-    single_file_output,
+    single_file_path,
     register_name,
     "year=__HIVE_DEFAULT_PARTITION__"
   )
