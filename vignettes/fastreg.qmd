@@ -46,12 +46,10 @@ registers, `bef` and `lmdb`:
 ```{r prepare}
 #| code-fold: true
 #| code-summary: "Show setup code"
-library(fastreg)
-
 sas_dir <- fs::path_temp("sas-dir")
 fs::dir_create(sas_dir)
 
-bef_list <- simulate_register(
+bef_list <- fastreg::simulate_register(
   "bef",
   c("", "1999", "1999_1", "2020"),
   n = 1000
@@ -62,13 +60,13 @@ bef_list <- simulate_register(
     x |> dplyr::mutate("koen" = sample(c(1, 2), 1000, replace = TRUE))
   })
 
-lmdb_list <- simulate_register(
+lmdb_list <- fastreg::simulate_register(
   "lmdb",
   c("2020", "2021"),
   n = 1000
 )
 
-save_as_sas(
+fastreg::save_as_sas(
   c(bef_list, lmdb_list),
   sas_dir
 )
@@ -135,7 +133,7 @@ single SAS file to a year-partitioned Parquet format:
 sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
 output_file_dir <- fs::path_temp("output-file-dir")
 
-convert(
+fastreg::convert(
   path = sas_file,
   output_dir = output_file_dir
 )
@@ -178,7 +176,7 @@ function. In this example, we're outputting it to a temporary directory.
 pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
-use_targets_template(path = pipeline_dir)
+fastreg::use_targets_template(path = pipeline_dir)
 ```
 
 Once the `_targets.R` file is created, open it and edit the `config`
@@ -186,7 +184,7 @@ section:
 
 ```{r config}
 config <- list(
-  sas_paths = list_sas_files(fs::path_temp("sas-dir")),
+  sas_paths = fastreg::list_sas_files(fs::path_temp("sas-dir")),
   output_dir = fs::path(pipeline_dir, "parquet-registers")
 )
 ```
@@ -218,7 +216,7 @@ You can pass a directory to read a full partitioned register or a file
 path to read a single Parquet file:
 
 ```{r read-file}
-file <- read_register(output_file_dir)
+file <- fastreg::read_register(output_file_dir)
 file
 ```
 

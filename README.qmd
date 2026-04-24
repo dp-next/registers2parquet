@@ -71,9 +71,7 @@ Use `convert()` to convert a single SAS file to Parquet in Hive
 partition format:
 
 ```{r, eval = FALSE}
-library(fastreg)
-
-convert(
+fastreg::convert(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
 )
@@ -84,13 +82,13 @@ Use `use_targets_template()` to copy a
 multiple registers in parallel into your project:
 
 ```{r, eval = FALSE}
-use_targets_template()
+fastreg::use_targets_template()
 ```
 
 Use `read_register()` to read a Parquet register as a DuckDB table:
 
 ```{r, eval = FALSE}
-read_register("path/to/parquet_register/")
+fastreg::read_register("path/to/parquet_register/")
 ```
 
 See `vignette("fastreg")` for a complete guide.
