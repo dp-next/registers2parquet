@@ -16,11 +16,11 @@
 #' @export
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
-#' convert_file(
+#' convert(
 #'   path = sas_file,
 #'   output_dir = fs::path_temp("path/to/output/file")
 #' )
-convert_file <- function(
+convert <- function(
   path,
   output_dir,
   chunk_size = 10000000L
@@ -69,7 +69,7 @@ convert_file <- function(
 #' Read SAS chunk
 #'
 #' @param skip Number of rows to skip.
-#' @inheritParams convert_file
+#' @inheritParams convert
 #'
 #' @returns A tibble.
 #'
@@ -86,7 +86,7 @@ read_sas_chunk <- function(path, skip, chunk_size) {
 #' Gets the year and register name from the file name in `path` and creates
 #' a partition path `{output_dir}/{register_name}/year={year}/`.
 #'
-#' @inheritParams convert_file
+#' @inheritParams convert
 #'
 #' @returns The partition path.
 #'

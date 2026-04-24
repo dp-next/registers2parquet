@@ -10,8 +10,8 @@
 #'
 #' @export
 #' @examples
-#' use_targets_template(path = fs::path_temp(""))
-use_targets_template <- function(
+#' use_template(path = fs::path_temp(""))
+use_template <- function(
   path = ".",
   open = rlang::is_interactive()
 ) {

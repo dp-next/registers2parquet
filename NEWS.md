@@ -16,6 +16,18 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.10.2 (2026-04-24)
+
+### Refactor
+
+- :truck: rename `use-targets-template()` to `use-template()` (#284)
+
+## 0.10.1 (2026-04-24)
+
+### Refactor
+
+- :truck: rename `convert_file()` -> `convert()` (#281)
+
 ## 0.10.0 (2026-04-23)
 
 ### Feat
