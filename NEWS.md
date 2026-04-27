@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.10.3 (2026-04-27)
+
+### Refactor
+
+- ♻️ change `convert()` to output `chunk_info` tibble (#286)
+
 ## 0.10.2 (2026-04-24)
 
 ### Refactor
