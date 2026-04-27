@@ -10,9 +10,6 @@ list_parquet_datasets()
 
 list_parquet_files()
 }
-\arguments{
-\item{project_id}{The project ID to look for.}
-}
 \value{
 The path(s) to the Parquet datasets (as directories) or files.
 }

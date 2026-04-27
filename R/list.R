@@ -40,7 +40,6 @@ list_sas_files <- function(path) {
 #'
 #' @name list_parquet
 #' @rdname list_parquet
-#' @param project_id The project ID to look for.
 #' @returns The path(s) to the Parquet datasets (as directories) or files.
 NULL
 
