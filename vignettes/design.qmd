@@ -10,6 +10,18 @@ This page documents the general design of fastreg. It covers some
 requirements, the public-facing interface, and some diagrams
 highlighting the general flow of the main functions.
 
+::: callout-note
+Using R to read SAS can't guarantee perfect preservation of the SAS
+values, since reading SAS files in R relies on
+[haven](https://haven.tidyverse.org/index.html), which is based on
+[ReadStat](https://github.com/WizardMac/ReadStat), a reverse-engineered
+effort to read the proprietary SAS file format.
+
+However, haven and the underlying ReadStat are mature packages and
+explicitly support reading `sas7bdat` files, which is the register
+format used by Statistics Denmark.
+:::
+
 ## Requirements
 
 The core requirements of fastreg are to:
@@ -38,7 +50,9 @@ The actions are:
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
-- `use`: Use a template in the current project.
+- `use`: Set up `_targets.R` and a Quarto log template.
+- `get`: Get or guess some information, e.g., the project ID, workdata
+  directory, or rawdata directory from the current working directory.
 
 The objects are:
 
@@ -51,15 +65,16 @@ The objects are:
 The settings are:
 
 - `fastreg.project_rawdata_dir`: The directory where either the SAS or
-  Parquet files are stored. The `rawdata/` directory is read-only on Statistics Denmark server and
-  contains the original SAS files. A project manager with the correct
-  permissions can move (or request to move) Parquet files into this
-  directory.
+  Parquet files are stored. The `rawdata/` directory is read-only on
+  Statistics Denmark server and contains the original SAS files. A
+  project manager with the correct permissions can move (or request to
+  move) Parquet files into this directory.
 - `fastreg.project_workdata_dir`: The `workdata/` directory is where
   Parquet files are stored for projects without a project manager and
   where the users don't have permissions to save the converted files
   into `rawdata/`. Usually, this directory is used to store and edit R
-  scripts, documents, and other files, but it can also store data files (e.g., SAS or Parquet files).
+  scripts, documents, and other files, but it can also store data files
+  (e.g., SAS or Parquet files).
 
 These two settings are used to help make the experience of working with
 and managing the conversion and reading of registers smoother.
@@ -112,16 +127,16 @@ flowchart TD
 
 ### Reading a Parquet files
 
-fastreg provides three ways to read Parquet registers depending on
-the use case.
+fastreg provides three ways to read Parquet registers depending on the
+use case.
 
 `read_register()` is the main read function. We wanted a function that
-could make it really easy to use and read in a particular register
-(with data from all available years if it is in a partitioned Partition format). For
-example, to read in `bef` (population register) as a DuckDB table, we
-wanted it as simple as `read_register("bef")`. It should automatically
-find the relevant Parquet dataset (as partition) and read them in as a
-single DuckDB table.
+could make it really easy to use and read in a particular register (with
+data from all available years if it is in a partitioned Partition
+format). For example, to read in `bef` (population register) as a DuckDB
+table, we wanted it as simple as `read_register("bef")`. It should
+automatically find the relevant Parquet dataset (as partition) and read
+them in as a single DuckDB table.
 
 ```{mermaid}
 %%| label: fig-flow-read-register
@@ -145,34 +160,33 @@ also provide two more flexible functions: `read_parquet_partition()` and
 guessing the path (or when the setting hasn't been set). It takes a
 direct path to the Parquet dataset (the directory containing the
 Hive-partitioned Parquet files), applies some settings to more smoothly
-read in the datasets, and reads it as a DuckDB table. This function
-can be used if `read_register()` failed to correctly read the right
-dataset.
+read in the datasets, and reads it as a DuckDB table. This function can
+be used if `read_register()` failed to correctly read the right dataset.
 
 `read_parquet_file()` is the simplest read function. It takes a direct
-path to a `.parquet` file (not a partitioned dataset) and reads it as
-a DuckDB table. This can used if the register isn't in a
-partitioned format.
+path to a `.parquet` file (not a partitioned dataset) and reads it as a
+DuckDB table. This can used if the register isn't in a partitioned
+format.
 
 ### List SAS and Parquet files
 
-To help with management as well as discovery of available registers,
-we also provide helper functions to list the available SAS and
-Parquet files and partitioned datasets.
+To help with management as well as discovery of available registers, we
+also provide helper functions to list the available SAS and Parquet
+files and partitioned datasets.
 
 `list_parquet_files()` takes the directories given within the settings
 and lists all Parquet files found within those directories that follow
 the `part-*.parquet` pattern. If no setting is given, the project ID
 will be guessed from the working directory path and the default location
 will be the `rawdata/` and `workdata/` directories, e.g. commonly looks
-like `E:/rawdata/<project-id>/` on DST. If those locations
-are different than was is expected bt default, the setting must be set. That way, users can use
-`list_parquet_files()` without any arguments and it will automatically
-find and list all the Parquet files within the project. We decided to
-look in both `rawdata/` (where the original SAS files are also kept) as
-well as `workdata/` because some projects have managers with access to
-saving files (like Parquet files) to `rawdata/` but other projects
-don't, so they need to save files in `workdata/`.
+like `E:/rawdata/<project-id>/` on DST. If those locations are different
+than was is expected bt default, the setting must be set. That way,
+users can use `list_parquet_files()` without any arguments and it will
+automatically find and list all the Parquet files within the project. We
+decided to look in both `rawdata/` (where the original SAS files are
+also kept) as well as `workdata/` because some projects have managers
+with access to saving files (like Parquet files) to `rawdata/` but other
+projects don't, so they need to save files in `workdata/`.
 
 `list_parquet_datasets()` builds on top of `list_parquet_files()`. It
 takes the output of `list_parquet_files()`, goes to the Parquet
@@ -189,3 +203,81 @@ We only look in `rawdata` because DST stores the original SAS files
 there. Like `list_parquet_files()`, if the setting isn't set, it will
 also guess the project ID and look in the `rawdata/` of that project for
 any SAS files.
+
+## Conversion log
+
+The purpose of the conversion log is to describe the details of the
+conversion to provide an audit trail. Since we can't be sure that the
+SAS files within the same register contain exactly the same columns and
+data types, the conversion log helps identify any differences between
+these files.
+
+::: callout-note
+Discrepancies (different columns or incompatible data types) between
+files within the same register do not stop the conversion, but it will
+be included in the log.
+:::
+
+`convert()` returns a metadata tibble with one row per written chunk.
+This can be queried with dplyr directly or rendered into a Quarto log.
+
+### Return value of `convert()`
+
+`convert()` returns a tibble with one row per written chunk:
+
+| Column         | Description                                  |
+|----------------|----------------------------------------------|
+| `input_path`   | Path to the source SAS file                  |
+| `output_path`  | Path to the written Parquet part file        |
+| `row_count`    | Number of rows in the chunk                  |
+| `columns`      | Nested tibble with column `name` and `type`  |
+
+The information is derived from the chunk already in memory, not by
+reading the Parquet file back.
+
+```r
+# Before repeat loop.
+chunk_info <- tibble::tribble(
+  ~input_path, ~output_path, ~row_count, ~columns
+)
+
+# Inside the repeat loop, after writing.
+chunk_info <- dplyr::bind_rows(
+  chunk_info,
+  tibble::tibble(
+    input_path   = path,
+    output_path  = fs::path(file_path),
+    row_count    = nrow(chunk),
+    columns      = tibble::tibble(
+      name = colnames(chunk),
+      type = purrr::map_chr(chunk, class)
+    )
+  )
+)
+
+# After the loop, return the collected information.
+chunk_info
+```
+
+### Quarto log template
+
+`use_template()` copies both `_targets.R` and `conversion_log.qmd` into
+the current working directory. The Quarto doc reads `chunk_info` via
+`targets::tar_read()` and produces an HTML or PDF log for review. The
+default is PDF, but it can easily be changed in the Quarto file.
+
+```r
+chunk_info <- targets::tar_read(chunk_info)
+
+# Nice overview of the info + schema comparison within registers.
+...
+```
+
+The log is added to the targets pipeline as a last target:
+
+```r
+tar_quarto(
+  name = log,
+  path = "conversion_log.qmd"
+)
+```

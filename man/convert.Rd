@@ -16,7 +16,7 @@ register folder.}
 \item{chunk_size}{Number of rows to read and convert at a time.}
 }
 \value{
-\code{output_dir}, invisibly.
+A tibble with some information about each written chunk.
 }
 \description{
 To be able to handle larger-than-memory files, the SAS file is converted in

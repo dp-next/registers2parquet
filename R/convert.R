@@ -11,7 +11,7 @@
 #'  register folder.
 #' @param chunk_size Number of rows to read and convert at a time.
 #'
-#' @returns `output_dir`, invisibly.
+#' @returns A tibble with some information about each written chunk.
 #'
 #' @export
 #' @examples
@@ -35,6 +35,7 @@ convert <- function(
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
   skip <- 0L
+  chunk_info <- tibble::tribble(~input_path, ~output_path, ~row_count, ~columns)
 
   # Read first chunk to establish schema.
   chunk <- read_sas_chunk(path, skip, chunk_size)
@@ -46,14 +47,27 @@ convert <- function(
       break
     }
 
+    file_path <- fs::path(
+      partition_path,
+      glue::glue("part-{part}.parquet")
+    )
     chunk |>
       arrow::as_arrow_table(schema = schema) |>
-      arrow::write_parquet(
-        sink = fs::path(
-          partition_path,
-          glue::glue("part-{part}.parquet")
-        )
+      arrow::write_parquet(sink = file_path)
+
+    # Add current chunk's info to list.
+    chunk_info <- dplyr::bind_rows(
+      chunk_info,
+      tibble::tibble(
+        input_path = path,
+        output_path = fs::path(file_path),
+        row_count = nrow(chunk),
+        columns = list(tibble::tibble(
+          name = colnames(chunk),
+          type = purrr::map_chr(chunk, class)
+        ))
       )
+    )
 
     skip <- skip + nrow(chunk)
     part <- create_part_uuid()
@@ -63,7 +77,7 @@ convert <- function(
 
   cli::cli_alert_success("Converted {.path {fs::path_file(path)}}")
 
-  invisible(output_dir)
+  chunk_info
 }
 
 #' Read SAS chunk
