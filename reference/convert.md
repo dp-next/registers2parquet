@@ -30,7 +30,7 @@ convert(path, output_dir, chunk_size = 10000000L)
 
 ## Value
 
-`output_dir`, invisibly.
+A tibble with some information about each written chunk.
 
 ## Examples
 
@@ -41,4 +41,8 @@ convert(
   output_dir = fs::path_temp("path/to/output/file")
 )
 #> ✔ Converted test.sas7bdat
+#> # A tibble: 1 × 4
+#>   input_path                                      output_path row_count columns 
+#>   <fs::path>                                      <fs::path>      <int> <list>  
+#> 1 …rk/_temp/Library/fastreg/extdata/test.sas7bdat …ab.parquet      1000 <tibble>
 ```
