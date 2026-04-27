@@ -10,6 +10,18 @@ This page documents the general design of fastreg. It covers some
 requirements, the public-facing interface, and some diagrams
 highlighting the general flow of the main functions.
 
+::: callout-note
+Using R to read SAS can't guarantee perfect preservation of the SAS
+values, since reading SAS files in R relies on
+[haven](https://haven.tidyverse.org/index.html), which is based on
+[ReadStat](https://github.com/WizardMac/ReadStat), a reverse-engineered
+effort to read the proprietary SAS file format.
+
+However, haven and the underlying ReadStat are mature packages and
+explicitly support reading `sas7bdat` files, which is the register
+format used by Statistics Denmark.
+:::
+
 ## Requirements
 
 The core requirements of fastreg are to:
@@ -37,7 +49,7 @@ The actions are:
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `read`: Read a Parquet register into R as a DuckDB table.
-- `use`: Use a template in the current project.
+- `use`: Set up `_targets.R` and a Quarto log template.
 - `get`: Get or guess some information, e.g., the project ID, workdata
   directory, or rawdata directory from the current working directory.
 
@@ -122,4 +134,82 @@ flowchart TD
 
     %% Edges
     name --> read_register --> output
+```
+
+## Conversion log
+
+The purpose of the conversion log is to describe the details of the
+conversion to provide an audit trail. Since we can't be sure that the
+SAS files within the same register contain exactly the same columns and
+data types, the conversion log helps identify any differences between
+these files.
+
+::: callout-note
+Discrepancies (different columns or incompatible data types) between
+files within the same register do not stop the conversion, but it will
+be included in the log.
+:::
+
+`convert()` returns a metadata tibble with one row per written chunk.
+This can be queried with dplyr directly or rendered into a Quarto log.
+
+### Return value of `convert()`
+
+`convert()` returns a tibble with one row per written chunk:
+
+| Column         | Description                                  |
+|----------------|----------------------------------------------|
+| `input_path`   | Path to the source SAS file                  |
+| `output_path`  | Path to the written Parquet part file        |
+| `row_count`    | Number of rows in the chunk                  |
+| `columns`      | Nested tibble with column `name` and `type`  |
+
+The information is derived from the chunk already in memory, not by
+reading the Parquet file back.
+
+```r
+# Before repeat loop.
+chunk_info <- tibble::tribble(
+  ~input_path, ~output_path, ~row_count, ~columns
+)
+
+# Inside the repeat loop, after writing.
+chunk_info <- dplyr::bind_rows(
+  chunk_info,
+  tibble::tibble(
+    input_path   = path,
+    output_path  = fs::path(file_path),
+    row_count    = nrow(chunk),
+    columns      = tibble::tibble(
+      name = colnames(chunk),
+      type = purrr::map_chr(chunk, class)
+    )
+  )
+)
+
+# After the loop, return the collected information.
+chunk_info
+```
+
+### Quarto log template
+
+`use_template()` copies both `_targets.R` and `conversion_log.qmd` into
+the current working directory. The Quarto doc reads `chunk_info` via
+`targets::tar_read()` and produces an HTML or PDF log for review. The
+default is PDF, but it can easily be changed in the Quarto file.
+
+```r
+chunk_info <- targets::tar_read(chunk_info)
+
+# Nice overview of the info + schema comparison within registers.
+...
+```
+
+The log is added to the targets pipeline as a last target:
+
+```r
+tar_quarto(
+  name = log,
+  path = "conversion_log.qmd"
+)
 ```
