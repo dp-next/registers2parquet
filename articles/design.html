@@ -76,6 +76,13 @@
 
 
     <p>This page documents the general design of fastreg. It covers some requirements, the public-facing interface, and some diagrams highlighting the general flow of the main functions.</p>
+<div>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>Using R to read SAS can’t guarantee perfect preservation of the SAS values, since reading SAS files in R relies on <a href="https://haven.tidyverse.org/index.html" class="external-link">haven</a>, which is based on <a href="https://github.com/WizardMac/ReadStat" class="external-link">ReadStat</a>, a reverse-engineered effort to read the proprietary SAS file format.</p>
+<p>However, haven and the underlying ReadStat are mature packages and explicitly support reading <code>sas7bdat</code> files, which is the register format used by Statistics Denmark.</p>
+</blockquote>
+</div>
 <section class="level2"><h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h2>
 <p>The core requirements of fastreg are to:</p>
@@ -96,7 +103,7 @@
 <li>
 <code>read</code>: Read a Parquet register into R as a DuckDB table.</li>
 <li>
-<code>use</code>: Use a template in the current project.</li>
+<code>use</code>: Set up <code>_targets.R</code> and a Quarto log template.</li>
 <li>
 <code>get</code>: Get or guess some information, e.g., the project ID, workdata directory, or rawdata directory from the current working directory.</li>
 </ul>
@@ -203,6 +210,82 @@ Figure 3: Expected workflow for reading a Parquet register as a DuckDB table us
 </div>
 </div>
 </div>
+</section></section><section class="level2"><h2 id="conversion-log">Conversion log<a class="anchor" aria-label="anchor" href="#conversion-log"></a>
+</h2>
+<p>The purpose of the conversion log is to describe the details of the conversion to provide an audit trail. Since we can’t be sure that the SAS files within the same register contain exactly the same columns and data types, the conversion log helps identify any differences between these files.</p>
+<div>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>Discrepancies (different columns or incompatible data types) between files within the same register do not stop the conversion, but it will be included in the log.</p>
+</blockquote>
+</div>
+<p><code><a href="../reference/convert.html">convert()</a></code> returns a metadata tibble with one row per written chunk. This can be queried with dplyr directly or rendered into a Quarto log.</p>
+<section class="level3"><h3 id="return-value-of-convert">Return value of <code>convert()</code>
+<a class="anchor" aria-label="anchor" href="#return-value-of-convert"></a>
+</h3>
+<p><code><a href="../reference/convert.html">convert()</a></code> returns a tibble with one row per written chunk:</p>
+<table class="table caption-top">
+<thead><tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td>Path to the source SAS file</td>
+</tr>
+<tr class="even">
+<td><code>output_path</code></td>
+<td>Path to the written Parquet part file</td>
+</tr>
+<tr class="odd">
+<td><code>row_count</code></td>
+<td>Number of rows in the chunk</td>
+</tr>
+<tr class="even">
+<td><code>columns</code></td>
+<td>Nested tibble with column <code>name</code> and <code>type</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The information is derived from the chunk already in memory, not by reading the Parquet file back.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Before repeat loop.</span></span>
+<span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
+<span>  <span class="op">~</span><span class="va">input_path</span>, <span class="op">~</span><span class="va">output_path</span>, <span class="op">~</span><span class="va">row_count</span>, <span class="op">~</span><span class="va">columns</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Inside the repeat loop, after writing.</span></span>
+<span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>  <span class="va">chunk_info</span>,</span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>    input_path   <span class="op">=</span> <span class="va">path</span>,</span>
+<span>    output_path  <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span>,</span>
+<span>    row_count    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chunk</span><span class="op">)</span>,</span>
+<span>    columns      <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>      name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">chunk</span><span class="op">)</span>,</span>
+<span>      type <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">chunk</span>, <span class="va">class</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># After the loop, return the collected information.</span></span>
+<span><span class="va">chunk_info</span></span></code></pre></div>
+</section><section class="level3"><h3 id="quarto-log-template">Quarto log template<a class="anchor" aria-label="anchor" href="#quarto-log-template"></a>
+</h3>
+<p><code><a href="../reference/use_template.html">use_template()</a></code> copies both <code>_targets.R</code> and <code>conversion_log.qmd</code> into the current working directory. The Quarto doc reads <code>chunk_info</code> via <code><a href="https://docs.ropensci.org/targets/reference/tar_read.html" class="external-link">targets::tar_read()</a></code> and produces an HTML or PDF log for review. The default is PDF, but it can easily be changed in the Quarto file.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_read.html" class="external-link">tar_read</a></span><span class="op">(</span><span class="va">chunk_info</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Nice overview of the info + schema comparison within registers.</span></span>
+<span><span class="va">...</span></span></code></pre></div>
+<p>The log is added to the targets pipeline as a last target:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tar_quarto</span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="va">log</span>,</span>
+<span>  path <span class="op">=</span> <span class="st">"conversion_log.qmd"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
