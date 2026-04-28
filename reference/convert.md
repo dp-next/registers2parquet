@@ -44,5 +44,5 @@ convert(
 #> # A tibble: 1 × 4
 #>   input_path                                      output_path row_count columns 
 #>   <fs::path>                                      <fs::path>      <int> <list>  
-#> 1 …rk/_temp/Library/fastreg/extdata/test.sas7bdat …5c.parquet      1000 <tibble>
+#> 1 …rk/_temp/Library/fastreg/extdata/test.sas7bdat …cb.parquet      1000 <tibble>
 ```
