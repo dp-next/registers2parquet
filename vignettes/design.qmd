@@ -85,25 +85,25 @@ For a list of all the public functions, see the
 page.
 :::
 
-### Converting SAS files from a single register
+### Converting one SAS file
 
 ```{mermaid}
 %%| label: fig-flow
-%%| fig-cap: "Expected workflow for converting SAS files from a single register using `convert_register()`."
-%%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files."
+%%| fig-cap: "Expected workflow for converting one SAS file from a single register using `convert()`."
+%%| fig-alt: "A flowchart showing the expected flow of converting one SAS file to a Parquet file."
 flowchart TD
-    get_project_dir("get_project_dir()")
+    opts_project_dir("options()")
     list_sas_files("list_sas_files()")
-    path[/"path<br>[Character vector]"/]
+    path[/"path<br>[Character scalar]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
-    convert_register("convert_register()")
+    convert("convert()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    get_project_dir --> list_sas_files --> path --> convert_register
-    output_dir & chunk_size --> convert_register
-    convert_register --> output
+    opts_project_dir --> list_sas_files -->|Select one path| path --> convert
+    output_dir & chunk_size --> convert
+    convert --> output
 ```
 
 ### Converting multiple registers in parallel
@@ -113,7 +113,7 @@ flowchart TD
 %%| fig-cap: "Expected workflow for converting multiple registers using the targets pipeline."
 %%| fig-alt: "A flowchart showing the expected flow of converting register SAS files to Parquet files using the provided targets pipeline template."
 flowchart TD
-    copy_pipeline("use_targets_template()")
+    copy_pipeline("use_template()")
     edit["Edit _targets.R as needed"]
     run_pipeline("targets::tar_make()")
     output[/"Parquet file(s)<br>written to directory<br>specified in _targets.R"/]
