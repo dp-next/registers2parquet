@@ -35,7 +35,7 @@ list_sas_files <- function(path) {
 #'
 #' Only lists Parquet files that end in `part-*.parquet`. For datasets,
 #' it will only look for Parquet files with a `year=YYYY` in its path.
-#' This function will search the whole system for the project ID, so might
+#' This function will search the whole system for the project ID, so it might
 #' be slow sometimes.
 #'
 #' @name list_parquet
