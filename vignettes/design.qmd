@@ -58,8 +58,8 @@ The objects are:
 
 - `chunk_size`: Number of rows to read per chunk during conversion.
 - `path`: A character vector of one or more paths.
-- `project_id`: A number indicating the project ID on Denmark's
-  Statistics.
+- `project_id`: A number indicating the project ID on Statistics
+  Denmark.
 - `output_dir`: The directory to save the Parquet output to.
 
 The settings are:
