@@ -16,7 +16,7 @@ The path(s) to the Parquet datasets (as directories) or files.
 \description{
 Only lists Parquet files that end in \verb{part-*.parquet}. For datasets,
 it will only look for Parquet files with a \code{year=YYYY} in its path.
-This function will search the whole system for the project ID, so might
+This function will search the whole system for the project ID, so it might
 be slow sometimes.
 }
 \section{Functions}{
