@@ -141,7 +141,7 @@ fastreg::convert(
 #> # A tibble: 1 × 4
 #>   input_path                               output_path        row_count columns 
 #>   <fs::path>                               <fs::path>             <int> <list>  
-#> 1 /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat …rt-704ce0.parquet      1000 <tibble>
+#> 1 /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat …rt-39d121.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -167,7 +167,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-704ce0.parquet
+    #>         └── part-39d121.parquet
 
 ## Converting multiple registers in parallel
 
@@ -186,7 +186,7 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmp0KTAJP/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpPzWp5l/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -215,6 +215,29 @@ file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
 pipeline itself has been edited.
 
+## Listing available Parquet files and datasets
+
+To list what Parquet files or datasets are available, use the
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
+and
+[`list_parquet_datasets()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
+functions. These look in the `fastreg.project_workdata_dir` and
+`fastreg.project_rawdata_dir` directories (set with
+[`options()`](https://rdrr.io/r/base/options.html)) for any Parquet
+files following a specific pattern. See the reference documentation for
+more details.
+
+You can use them interactively in the Console:
+
+    Console
+
+``` r
+# For individual files
+list_parquet_files()
+# For datasets (registers with all years).
+list_parquet_datasets()
+```
+
 ## Reading a Parquet register
 
 The final function reads the converted Parquet register data into R,
@@ -232,16 +255,16 @@ file
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     1 108684730664 19320112  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  2     1 982144017357 20070716  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  3     2 672580814975 19800805  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  4     1 439008110445 20090628  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  5     1 489714666740 20170225  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 155331797020 19730330  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  7     1 777951655096 19341022  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 132473802596 19530901  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
+#>  1     1 108684730664 19320112  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  2     1 982144017357 20070716  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  3     2 672580814975 19800805  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  4     1 439008110445 20090628  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  5     1 489714666740 20170225  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 155331797020 19730330  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  7     1 777951655096 19341022  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 132473802596 19530901  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
@@ -256,16 +279,16 @@ file |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1010-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 672580814975 19800805  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 155331797020 19730330  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  3     2 167007504860 20010318  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 132473802596 19530901  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 876820784981 19310817  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 527918979807 19540605  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 932479108596 19490511  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 983125164454 19011009  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 702393367207 19600605  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 398008617406 20061118  /tmp/Rtmp0KTAJP/sas-dir/bef2020.sas7bdat  2020
+#>  1     2 672580814975 19800805  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 155331797020 19730330  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  3     2 167007504860 20010318  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 132473802596 19530901  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 876820784981 19310817  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 527918979807 19540605  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 932479108596 19490511  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 983125164454 19011009  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 702393367207 19600605  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 398008617406 20061118  /tmp/RtmpPzWp5l/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
