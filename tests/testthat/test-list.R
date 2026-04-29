@@ -42,3 +42,55 @@ test_that("list_sas_files() errors when path does not exist", {
     regexp = "does not exist"
   )
 })
+
+# Test list_parquet_datasets() -------------------------------------------------
+
+# Make all combinations of paths to Parquet files for testing.
+parquet_files <- tidyr::expand_grid(
+  root = c("rawdata", "workdata"),
+  project = "701010",
+  register = c("bef", "lmdb"),
+  year = c("year=2023", "year=2024", "year=__HIVE_DEFAULT_PARTITION__"),
+  file = c("part-bae04.parquet", "part-04df1.parquet")
+) |>
+  purrr::pmap_chr(
+    \(root, project, register, year, file) {
+      fs::path(fs::path_temp(root), project, register, year, file)
+    }
+  ) |>
+  fs::path()
+
+purrr::walk(parquet_files, \(path) fs::dir_create(fs::path_dir(path)))
+purrr::walk(parquet_files, fs::file_create)
+# purrr::walk(parquet_files, \(path) fs::file_delete(path))
+
+test_that("list expected Parquet files and datasets", {
+  withr::with_options(
+    list(
+      fastreg.project_rawdata_dir = fs::path_temp("rawdata/701010/"),
+      fastreg.project_workdata_dir = fs::path_temp("workdata/701010/")
+    ),
+    {
+      expected_files <- parquet_files |>
+        sort()
+      actual_files <- list_parquet_files() |>
+        # Need to remove name attributes for comparison.
+        unname() |>
+        sort()
+
+      expect_identical(actual_files, expected_files)
+
+      expected_datasets <- parquet_files |>
+        fs::path_dir() |>
+        fs::path_dir() |>
+        unique() |>
+        fs::path() |>
+        sort()
+
+      actual_datasets <- list_parquet_datasets() |>
+        sort()
+
+      expect_identical(actual_datasets, expected_datasets)
+    }
+  )
+})

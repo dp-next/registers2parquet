@@ -35,6 +35,7 @@ Imports:
     uuid
 Suggests:
     crew,
+    tidyr,
     dbplyr,
     devtools,
     duckdb,

@@ -211,6 +211,28 @@ file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
 pipeline itself has been edited.
 
+## Listing available Parquet files and datasets
+
+To list what Parquet files or datasets are available, use the
+`list_parquet_files()` and `list_parquet_datasets()` functions.
+These look in the `fastreg.project_workdata_dir` and
+`fastreg.project_rawdata_dir` directories (set with `options()`) for any
+Parquet files following a specific pattern. See the reference documentation
+for more details.
+
+You can use them interactively in the Console:
+
+<!-- TODO: remove eval false when other functions have been revised to match this style -->
+
+```{r list-files}
+#| filename: "Console"
+#| eval: false
+# For individual files
+list_parquet_files()
+# For datasets (registers with all years).
+list_parquet_datasets()
+```
+
 ## Reading a Parquet register
 
 The final function reads the converted Parquet register data into R,
