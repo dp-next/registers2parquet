@@ -39,6 +39,7 @@ Suggests:
     dbplyr,
     devtools,
     duckdb,
+    knitr,
     qs2,
     quarto,
     targets,

@@ -23,3 +23,6 @@ reference:
   - starts_with("get")
   - save_as_sas
   - simulate_register
+- title: Log functions
+- contents:
+  - contains("log")
