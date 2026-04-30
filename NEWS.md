@@ -20,7 +20,8 @@ each release.
 
 ### Feat
 
-- :sparkles: `list_parquet_files()` and `list_parquet_datasets()` helpers (#272)
+- :sparkles: `list_parquet_files()` and `list_parquet_datasets()`
+  helpers (#272)
 
 ## 0.10.3 (2026-04-27)
 

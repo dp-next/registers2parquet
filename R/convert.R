@@ -63,8 +63,8 @@ convert <- function(
         output_path = fs::path(file_path),
         row_count = nrow(chunk),
         columns = list(tibble::tibble(
-          name = colnames(chunk),
-          type = purrr::map_chr(chunk, class)
+          column_name = colnames(chunk),
+          data_type = purrr::map_chr(chunk, class)
         ))
       )
     )
