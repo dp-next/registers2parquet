@@ -16,11 +16,18 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.11.1 (2026-04-30)
+
+### Refactor
+
+- :truck: rename `chunk_info$columns` cols to be more descriptive (#289)
+
 ## 0.11.0 (2026-04-29)
 
 ### Feat
 
-- :sparkles: `list_parquet_files()` and `list_parquet_datasets()` helpers (#272)
+- :sparkles: `list_parquet_files()` and `list_parquet_datasets()`
+  helpers (#272)
 
 ## 0.10.3 (2026-04-27)
 
