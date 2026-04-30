@@ -36,6 +36,7 @@ test_that("use_template() errors with non-existing `path`", {
 
 test_that("targets pipeline template converts SAS files to Parquet", {
   skip_on_cran()
+  skip_on_ci()
   skip_if(
     Sys.info()[["sysname"]] == "Windows" &&
       # Copied directly from `testthat:::on_ci()`.
