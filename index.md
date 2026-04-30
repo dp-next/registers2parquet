@@ -38,12 +38,14 @@ performance in data analysis workflows.
 Install from CRAN:
 
 ``` r
+
 install.packages("fastreg")
 ```
 
 Install the latest development version from GitHub:
 
 ``` r
+
 pak::pak("dp-next/fastreg")
 ```
 
@@ -54,6 +56,7 @@ Use
 convert a single SAS file to Parquet in Hive partition format:
 
 ``` r
+
 fastreg::convert(
   path = "path/to/file.sas7bdat",
   output_dir = "path/to/output_dir/"
@@ -66,6 +69,7 @@ to copy a [targets](https://books.ropensci.org/targets/) template that
 converts multiple registers in parallel into your project:
 
 ``` r
+
 fastreg::use_template()
 ```
 
@@ -74,6 +78,7 @@ Use
 to read a Parquet register as a DuckDB table:
 
 ``` r
+
 fastreg::read_register("path/to/parquet_register/")
 ```
 

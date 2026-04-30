@@ -25,8 +25,8 @@ The core requirements of fastreg are to:
 2.  Read register Parquet files into R as a DuckDB table.
 3.  Provide a [targets](https://docs.ropensci.org/targets/) pipeline
     template to convert multiple registers in parallel.
-4.  Provide functions to list available SAS or Parquet register files
-    directly from R.
+4.  Provide helper functions to list available SAS or Parquet register
+    files directly from R.
 
 ## Interface
 
@@ -40,18 +40,38 @@ overview of the main actions and objects within fastreg.
 
 The actions are:
 
-- `convert`: Convert a register SAS file (or multiple) to Parquet.
+- `get`: Get project IDs or paths.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
+- `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Set up `_targets.R` and a Quarto log template.
 - `get`: Get or guess some information, e.g., the project ID, workdata
   directory, or rawdata directory from the current working directory.
 
-While the objects are:
+The objects are:
 
 - `chunk_size`: Number of rows to read per chunk during conversion.
 - `path`: A character vector of one or more paths.
+- `project_id`: A number indicating the project ID on Statistics
+  Denmark.
 - `output_dir`: The directory to save the Parquet output to.
+
+The settings are:
+
+- `fastreg.project_rawdata_dir`: The directory where either the SAS or
+  Parquet files are stored. The `rawdata/` directory is read-only on
+  Statistics Denmark server and contains the original SAS files. A
+  project manager with the correct permissions can move (or request to
+  move) Parquet files into this directory.
+- `fastreg.project_workdata_dir`: The `workdata/` directory is where
+  Parquet files are stored for projects without a project manager and
+  where the users don’t have permissions to save the converted files
+  into `rawdata/`. Usually, this directory is used to store and edit R
+  scripts, documents, and other files, but it can also store data files
+  (e.g., SAS or Parquet files).
+
+These two settings are used to help make the experience of working with
+and managing the conversion and reading of registers smoother.
 
 > **Tip**
 >
@@ -63,30 +83,29 @@ While the objects are:
 
 ``` mermaid
 flowchart TD
-    identify_paths("Identify register path(s)<br>with list_sas_files(path)")
-    path[/"path<br>[Character vector]"/]
+    opts_project_dir("options()")
+    list_sas_files("list_sas_files()")
+    path[/"path<br>[Character scalar]"/]
     output_dir[/"output_dir<br>[Character scalar]"/]
     chunk_size[/"chunk_size<br>[Integer scalar]"/]
     convert("convert()")
     output[/"Parquet file(s)<br>written to output_dir"/]
 
     %% Edges
-    identify_paths -.-> path --> convert
+    opts_project_dir --> list_sas_files -->|Select one path| path --> convert
     output_dir & chunk_size --> convert
     convert --> output
-
-    %% Style
-    style identify_paths fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-Figure 1: Expected workflow for converting one SAS file using
+Figure 1: Expected workflow for converting one SAS file from a single
+register using
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md).
 
 ### Converting multiple registers in parallel
 
 ``` mermaid
 flowchart TD
-    copy_pipeline("use_targets_template()")
+    copy_pipeline("use_template()")
     edit["Edit _targets.R as needed"]
     run_pipeline("targets::tar_make()")
     output[/"Parquet file(s)<br>written to directory<br>specified in _targets.R"/]
@@ -101,36 +120,102 @@ flowchart TD
 Figure 2: Expected workflow for converting multiple registers using the
 targets pipeline.
 
-> **Warning**
->
-> [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md),
-> the core function behind converting SAS files to Parquet used within
-> the targets template, creates an Arrow schema with data types based on
-> the first file chunk. This means that data type schemas are defined
-> *within* files only. As a result, if there’s a drift in data types
-> across SAS files in the same register, this may not be identified in
-> the conversion process, but will become evident when attempting to
-> read the register.
->
-> We use this design to ensure that subsequent chunks follow the same
-> schema as the first, as we don’t want to have different data types
-> across chunks of the same partition (e.g. `part-*.parquet`).
+### Reading a Parquet files
 
-### Reading a Parquet register
+fastreg provides three ways to read Parquet registers depending on the
+use case.
+
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+is the main read function. We wanted a function that could make it
+really easy to use and read in a particular register (with data from all
+available years if it is in a partitioned Partition format). For
+example, to read in `bef` (population register) as a DuckDB table, we
+wanted it as simple as `read_register("bef")`. It should automatically
+find the relevant Parquet dataset (as partition) and read them in as a
+single DuckDB table.
 
 ``` mermaid
-flowchart TD
-    name[/"name<br>[Character scalar]"/]
+flowchart LR
+    path[/"name<br>[Character scalar]"/]
     read_register("read_register()")
     output[/"Output<br>[DuckDB table]"/]
 
     %% Edges
-    name --> read_register --> output
+    path --> read_register --> output
 ```
 
 Figure 3: Expected workflow for reading a Parquet register as a DuckDB
 table using
 [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md).
+
+However, we can’t guarantee that the
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+function will correctly guess and/or find the register as a Parquet
+dataset. So we also provide two more flexible functions:
+[`read_parquet_partition()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+and
+[`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md).
+
+[`read_parquet_partition()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+underlies
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md),
+but without guessing the path (or when the setting hasn’t been set). It
+takes a direct path to the Parquet dataset (the directory containing the
+Hive-partitioned Parquet files), applies some settings to more smoothly
+read in the datasets, and reads it as a DuckDB table. This function can
+be used if
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+failed to correctly read the right dataset.
+
+[`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+is the simplest read function. It takes a direct path to a `.parquet`
+file (not a partitioned dataset) and reads it as a DuckDB table. This
+can used if the register isn’t in a partitioned format.
+
+### List SAS and Parquet files
+
+To help with management as well as discovery of available registers, we
+also provide helper functions to list the available SAS and Parquet
+files and partitioned datasets.
+
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
+takes the directories given within the settings and lists all Parquet
+files found within those directories that follow the `part-*.parquet`
+pattern. If no setting is given, the project ID will be guessed from the
+working directory path and the default location will be the `rawdata/`
+and `workdata/` directories, e.g. commonly looks like
+`E:/rawdata/<project-id>/` on DST. If those locations are different than
+was is expected bt default, the setting must be set. That way, users can
+use
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
+without any arguments and it will automatically find and list all the
+Parquet files within the project. We decided to look in both `rawdata/`
+(where the original SAS files are also kept) as well as `workdata/`
+because some projects have managers with access to saving files (like
+Parquet files) to `rawdata/` but other projects don’t, so they need to
+save files in `workdata/`.
+
+[`list_parquet_datasets()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
+builds on top of
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md).
+It takes the output of
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md),
+goes to the Parquet partition root (hard-coded to two levels back,
+before the folders with `year=`), and lists all the datasets. We use
+this function internally in
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+as a check to see whether the register name provided by the user matches
+any of the available Parquet datasets. But this function is also useful
+to interactively discover the different Parquet datasets that are
+available within the project.
+
+[`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
+takes the directory of the project ID and lists all SAS files found
+within the `rawdata/` directories set in the settings. We only look in
+`rawdata` because DST stores the original SAS files there. Like
+[`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md),
+if the setting isn’t set, it will also guess the project ID and look in
+the `rawdata/` of that project for any SAS files.
 
 ## Conversion log
 
@@ -166,6 +251,7 @@ The information is derived from the chunk already in memory, not by
 reading the Parquet file back.
 
 ``` r
+
 # Before repeat loop.
 chunk_info <- tibble::tribble(
   ~input_path, ~output_path, ~row_count, ~columns
@@ -199,6 +285,7 @@ and produces an HTML or PDF log for review. The default is PDF, but it
 can easily be changed in the Quarto file.
 
 ``` r
+
 chunk_info <- targets::tar_read(chunk_info)
 
 # Nice overview of the info + schema comparison within registers.
@@ -208,6 +295,7 @@ chunk_info <- targets::tar_read(chunk_info)
 The log is added to the targets pipeline as a last target:
 
 ``` r
+
 tar_quarto(
   name = log,
   path = "conversion_log.qmd"
