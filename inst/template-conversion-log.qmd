@@ -5,6 +5,8 @@ format:
       toc: true
 ---
 
+## About this log
+
 For each register, this log includes two sections:
 
 1. Read and converted SAS files: input/output paths and row counts.
