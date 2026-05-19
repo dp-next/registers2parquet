@@ -1,9 +1,9 @@
 #' Log chunk information as a table
 #'
-#' Turns the chunk information returned by [convert()] into a pretty
+#' Turns the log information returned by [convert()] into a pretty
 #' table, showing relative input/output paths and row counts.
 #'
-#' @param chunk_info A tibble returned by [convert()], with columns
+#' @param log A tibble returned by [convert()], with columns
 #'   `input_path`, `output_path`, and `row_count`.
 #'
 #' @returns A `knitr_kable` table.
@@ -11,10 +11,10 @@
 #' @export
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
-#' chunk_info <- convert(sas_file, output_dir = fs::path_temp("output"))
-#' log_chunk_info(chunk_info)
-log_chunk_info <- function(chunk_info) {
-  chunk_info |>
+#' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
+#' log_as_table(conversion_log)
+log_as_table <- function(log) {
+  log |>
     dplyr::mutate(
       dplyr::across(c("input_path", "output_path"), fs::path_rel)
     ) |>

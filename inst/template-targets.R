@@ -76,7 +76,7 @@ list(
 
   # Convert each SAS file in parallel.
   tar_target(
-    name = chunk_info,
+    name = conversion_log,
     command = convert(path = sas_paths, output_dir = output_dir),
     pattern = map(sas_paths),
     # mode = "always" is required because the target `output_dir` returns the
