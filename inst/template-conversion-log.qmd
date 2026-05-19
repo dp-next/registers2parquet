@@ -21,11 +21,11 @@ If you experience any problems or bugs with `fastreg`, please add an
 
 conversion_log <- targets::tar_read(conversion_log)
 
-for (reg in unique(conversion_log$register)) {
+for (reg in unique(conversion_log$register_name)) {
   cat("## ", reg, "\n\n")
 
   conversion_log |>
-    dplyr::filter(register == reg) |>
+    dplyr::filter(register_name == reg) |>
     fastreg::log_chunk_info(chunk_info) |>
     print()
 }
