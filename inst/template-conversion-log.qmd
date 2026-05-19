@@ -26,7 +26,7 @@ for (reg in unique(conversion_log$register_name)) {
 
   conversion_log |>
     dplyr::filter(register_name == reg) |>
-    fastreg::log_chunk_info(chunk_info) |>
+    fastreg::log_as_table() |>
     print()
 }
 ```
