@@ -11,7 +11,7 @@
 #'  register folder.
 #' @param chunk_size Number of rows to read and convert at a time.
 #'
-#' @returns A tibble with some information about each written chunk.
+#' @returns A tibble with a conversion log about each written chunk.
 #'
 #' @export
 #' @examples
@@ -35,7 +35,7 @@ convert <- function(
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
   skip <- 0L
-  chunk_info <- tibble::tribble(~register_name, ~input_path, ~output_path, ~row_count, ~columns)
+  conversion_log <- tibble::tribble(~register_name, ~input_path, ~output_path, ~row_count, ~columns)
 
   # Read first chunk to establish schema.
   chunk <- read_sas_chunk(path, skip, chunk_size)
@@ -56,8 +56,8 @@ convert <- function(
       arrow::write_parquet(sink = file_path)
 
     # Add current chunk's info to list.
-    chunk_info <- dplyr::bind_rows(
-      chunk_info,
+    conversion_log <- dplyr::bind_rows(
+      conversion_log,
       tibble::tibble(
         register_name = get_register_name(path),
         input_path = path,
@@ -78,7 +78,7 @@ convert <- function(
 
   cli::cli_alert_success("Converted {.path {fs::path_file(path)}}")
 
-  chunk_info
+  conversion_log
 }
 
 #' Read SAS chunk
