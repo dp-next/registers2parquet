@@ -39,12 +39,14 @@ Suggests:
     dbplyr,
     devtools,
     duckdb,
+    knitr,
     qs2,
     quarto,
     targets,
     testthat (>= 3.0.0),
     tidyselect,
-    withr
+    withr,
+    tarchetypes
 VignetteBuilder:
     quarto
 Encoding: UTF-8

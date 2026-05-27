@@ -1,0 +1,34 @@
+---
+title: Conversion log
+format:
+   pdf:
+      toc: true
+---
+
+## About this log
+
+For each register, this log includes two sections:
+
+1. Read and converted SAS files: input/output paths and row counts.
+2. Schema comparisons: column names and data types are compared across
+   SAS files within each register. Where schemas differ, the most common
+   schema is shown alongside the differences.
+
+If you experience any problems or bugs with `fastreg`, please add an
+[issue on GitHub](https://github.com/dp-next/fastreg/issues/new).
+
+```{r}
+#| echo: false
+#| results: asis
+
+conversion_log <- targets::tar_read(conversion_log)
+
+for (register in unique(conversion_log$register_name)) {
+  cat("## ", register, "\n\n")
+
+  conversion_log |>
+    dplyr::filter(register_name == register) |>
+    fastreg::log_as_table() |>
+    print()
+}
+```

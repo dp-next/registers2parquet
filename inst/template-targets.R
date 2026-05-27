@@ -15,6 +15,7 @@
 # For more information on targets, see https://books.ropensci.org/targets/
 
 library(targets)
+library(tarchetypes)
 
 # Configuration ----------------------------------------------------------------
 
@@ -75,7 +76,7 @@ list(
 
   # Convert each SAS file in parallel.
   tar_target(
-    name = parquet_files,
+    name = conversion_log,
     command = convert(path = sas_paths, output_dir = output_dir),
     pattern = map(sas_paths),
     # mode = "always" is required because the target `output_dir` returns the
@@ -83,5 +84,14 @@ list(
     # target up-to-date and skip it despite the output directory having been
     # cleaned.
     cue = tar_cue(mode = "always")
+  ),
+  tar_quarto(
+    name = log,
+    path = "conversion-log.qmd",
+    output_file = glue::glue(
+      "conversion-log-",
+      format(Sys.time(), "%d%m%y-%H%M%S"),
+      ".pdf"
+    )
   )
 )

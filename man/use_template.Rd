@@ -2,13 +2,13 @@
 % Please edit documentation in R/use.R
 \name{use_template}
 \alias{use_template}
-\title{Use a targets pipeline template for converting SAS registers to Parquet}
+\title{Use a targets pipeline for converting SAS registers to Parquet}
 \usage{
 use_template(path = ".", open = rlang::is_interactive())
 }
 \arguments{
-\item{path}{Path to the directory where \verb{_targets.R} will be created.
-Defaults to the current directory.}
+\item{path}{Path to the directory where the targets pipeline and conversion
+log will be created. Defaults to the current directory.}
 
 \item{open}{Whether to open the file for editing.}
 }
@@ -16,7 +16,8 @@ Defaults to the current directory.}
 The path to the created \verb{_targets.R} file, invisibly.
 }
 \description{
-Copies a \verb{_targets.R} template to the given directory.
+Copies a \verb{_targets.R} template and a conversion log Quarto Markdown file to
+the given directory.
 }
 \examples{
 use_template(path = fs::path_temp(""))

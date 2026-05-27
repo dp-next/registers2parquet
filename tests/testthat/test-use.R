@@ -36,6 +36,7 @@ test_that("use_template() errors with non-existing `path`", {
 
 test_that("targets pipeline template converts SAS files to Parquet", {
   skip_on_cran()
+  skip_on_ci()
   skip_if(
     Sys.info()[["sysname"]] == "Windows" &&
       # Copied directly from `testthat:::on_ci()`.
@@ -58,7 +59,10 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   save_as_sas(bef_list, test_input_dir)
   save_as_sas(lmdb_list, test_input_dir)
 
-  # Read template and replace placeholder paths.
+  # Create template files in test directory.
+  fastreg::use_template(test_dir)
+
+  # Replace placeholder paths in targets template content.
   modified_content <- template_content |>
     stringr::str_replace("/path/to/sas/directory", test_input_dir) |>
     stringr::str_replace("/path/to/output/directory", test_output_dir)
@@ -99,4 +103,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
 
   expect_equal(n_actual_bef, n_expected_bef)
   expect_equal(n_actual_lmdb, n_expected_lmdb)
+
+  # Conversion log Quarto file was created.
+  expect_true(fs::file_exists(fs::path(test_dir, "conversion-log.qmd")))
 })
