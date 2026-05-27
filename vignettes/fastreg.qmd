@@ -214,11 +214,11 @@ pipeline itself has been edited.
 ## Listing available Parquet files and datasets
 
 To list what Parquet files or datasets are available, use the
-`list_parquet_files()` and `list_parquet_datasets()` functions.
-These look in the `fastreg.project_workdata_dir` and
+`list_parquet_files()` and `list_parquet_datasets()` functions. These
+look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with `options()`) for any
-Parquet files following a specific pattern. See the reference documentation
-for more details.
+Parquet files following a specific pattern. See the reference
+documentation for more details.
 
 You can use them interactively in the Console:
 
@@ -228,9 +228,9 @@ You can use them interactively in the Console:
 #| filename: "Console"
 #| eval: false
 # For individual files
-list_parquet_files()
+fastreg::list_parquet_files()
 # For datasets (registers with all years).
-list_parquet_datasets()
+fastreg::list_parquet_datasets()
 ```
 
 ## Reading a Parquet register
@@ -240,12 +240,31 @@ returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
 a powerful way to query and process large data without loading it all
 into memory.
 
-You can pass a directory to read a full partitioned register or a file
-path to read a single Parquet file:
+A quick way of reading a register is with the `read_register()`
+function, which looks for a given name of a register in either the
+`fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
+directories (set with `options()`) and reads it as a DuckDB table. You
+can also use the more specific `read_parquet_partition()` or
+`read_parquet_file()` functions to read from a specific directory or
+file path.
+
+<!-- TODO: Needs the updated simulation functions to work -->
 
 ```{r read-file}
-file <- fastreg::read_register(output_file_dir)
+#| eval: false
+file <- fastreg::read_register("bef")
 file
+```
+
+Or directly with `read_parquet_partition()` or `read_parquet_file()`:
+
+```{r read-partition}
+file <- fastreg::read_parquet_partition(output_file_dir)
+file
+
+# Or a single file
+fs::dir_ls(output_file_dir, glob = "*.parquet", recurse = TRUE)[1] |>
+  fastreg::read_parquet_file()
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.

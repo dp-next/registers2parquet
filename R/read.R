@@ -1,69 +1,41 @@
 #' Read a Parquet register
 #'
-#' If you want to read a partitioned Parquet register, provide the path to the
-#' directory (e.g., `path/to/parquet/register/`).
-#' If you want to read a single Parquet file, provide the path to the file
-#' (e.g., `path/to/parquet/register.parquet`).
+#' This function uses the options `fastreg.project_rawdata_dir` and
+#' `fastreg.project_workdata_dir` when set in [options()] or will try to guess
+#' the path by using the project ID and the base directories
+#' `E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. Will only read
+#' Parquet datasets (those that are partitioned with the pattern `year=`). If
+#' this function doesn't work, use [read_parquet_partition()] or
+#' [read_parquet_file()] instead.
 #'
-#' @param path Path to a Parquet file or directory.
+#' @param name Name of the register. See a list of available registers with
+#'   [list_parquet_datasets()].
 #'
 #' @returns A DuckDB table.
 #'
 #' @export
-#' @examples
-#' read_register(fs::path_package(
-#'   "fastreg",
-#'   "extdata",
-#'   "test.parquet"
-#' ))
 read_register <- function(
-  path
+  name
 ) {
-  # Check input.
-  checkmate::assert_string(path)
-  checkmate::assert(
-    checkmate::check_file_exists(path),
-    checkmate::check_directory_exists(path)
-  )
-  check_parquet_path(path)
+  checkmate::assert_string(name)
+  dataset_paths <- list_parquet_datasets()
+  name <- rlang::arg_match(name, fs::path_file(dataset_paths))
 
-  # If input path is a directory, read as partitioned Parquet register,
-  # else read as Parquet file.
-  if (fs::is_dir(path)) {
-    read_parquet_partition(path)
-  } else {
-    read_parquet_file(path)
-  }
-}
+  parquet_path <- dataset_paths |>
+    fs::path_filter(regexp = glue::glue("/{name}$")) |>
+    unique()
 
-
-#' Check whether path is to a Parquet file or directory with Parquet files.
-#'
-#' @inheritParams read_register
-#'
-#' @returns `path`, invisibly.
-#'
-#' @keywords internal
-#' @noRd
-check_parquet_path <- function(path) {
-  if (
-    fs::is_dir(path) &&
-      length(fs::dir_ls(path, regexp = "\\.(parquet|parq)$", recurse = TRUE)) ==
-        0
-  ) {
+  if (length(parquet_path) > 1) {
     cli::cli_abort(
-      "The path {.path {path}} does not contain any Parquet files."
-    )
-  } else if (
-    fs::is_file(path) &&
-      fs::path_ext(path) != "parquet" &&
-      fs::path_ext(path) != "parq"
-  ) {
-    cli::cli_abort(
-      "The path {.path {path}} must have a {.val .parquet} or {.val .parq} extension."
+      c(
+        "There seems to be multiple Parquet datasets of the same name but in different locations.",
+        "i" = "The paths are: {.path {parquet_path}}.",
+        "i" = "Use {.code list_parquet_datasets()} to see available datasets to try to resolve this issue."
+      )
     )
   }
-  invisible(path)
+
+  read_parquet_partition(parquet_path)
 }
 
 #' Read a single Parquet file or a partitioned dataset as DuckDB table
@@ -81,6 +53,9 @@ NULL
 #' @describeIn read_parquet Reads a Parquet partitioned directory.
 #' @export
 read_parquet_partition <- function(path) {
+  checkmate::assert_string(path)
+  checkmate::assert_directory_exists(path)
+  assert_directory_not_empty(path)
   path |>
     arrow::open_dataset(
       unify_schemas = TRUE,
@@ -94,7 +69,32 @@ read_parquet_partition <- function(path) {
 #' @describeIn read_parquet Reads a single Parquet file.
 #' @export
 read_parquet_file <- function(path) {
+  checkmate::assert_string(path)
+  checkmate::assert_file_exists(path)
+  assert_is_parquet(path)
   path |>
     arrow::read_parquet() |>
     arrow::to_duckdb()
+}
+
+assert_is_parquet <- function(path) {
+  if (!fs::path_ext(path) %in% c("parquet", "parq")) {
+    cli::cli_abort(
+      c(
+        "The file {.path {path}} does not have a Parquet extension.",
+        "i" = "Only files with extensions {.file .parquet} and {.file .parq} are supported."
+      )
+    )
+  }
+}
+
+assert_directory_not_empty <- function(path) {
+  if (length(fs::dir_ls(path, glob = "*.parquet", recurse = TRUE)) == 0) {
+    cli::cli_abort(
+      c(
+        "The directory {.path {path}} does not contain any Parquet files.",
+        "i" = "Did you mistype the path?"
+      )
+    )
+  }
 }

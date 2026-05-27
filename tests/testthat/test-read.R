@@ -11,14 +11,14 @@ purrr::walk(sas_bef, \(path) {
   convert(path, output_dir)
 })
 
-# Test read_register() ---------------------------------------------------------
+# Test read_parquet_*() ---------------------------------------------------------
 
-test_that("read_register() reads a single Parquet file", {
+test_that("read_parquet_file() reads a single Parquet file", {
   # Read single Parquet file (2020 file).
   # Because UUID is used in the convert function, we can't know the name of the
   # file.
   year <- "2020"
-  actual_data <- read_register(fs::dir_ls(fs::path(
+  actual_data <- read_parquet_file(fs::dir_ls(fs::path(
     output_dir,
     register_name,
     glue::glue("year={year}")
@@ -40,8 +40,8 @@ test_that("read_register() reads a single Parquet file", {
   )
 })
 
-test_that("read_register() reads a partitioned Parquet register", {
-  actual <- read_register(output_dir) |> dplyr::collect()
+test_that("read_parquet_partition() reads a partitioned Parquet register", {
+  actual <- read_parquet_partition(output_dir) |> dplyr::collect()
 
   expected <- purrr::map(sas_bef, \(path) haven::read_sas(path)) |>
     dplyr::bind_rows()
@@ -72,44 +72,46 @@ test_that("read_register() reads a partitioned Parquet register", {
   )
 })
 
-test_that("read_register() errors when path does not exist", {
+test_that("read_parquet_file() errors when path does not exist", {
   expect_error(
-    read_register("/non/existing/path.parquet"),
+    read_parquet_file("/non/existing/path.parquet"),
     regexp = "not exist"
   )
-  expect_error(read_register("/non/existing/directory/"), regexp = "not exist")
+  expect_error(
+    read_parquet_partition("/non/existing/directory/"),
+    regexp = "not exist"
+  )
 })
 
-test_that("read_register() errors with incorrect input type", {
-  expect_error(read_register(123), regexp = "string")
+test_that("read_parquet_file() errors with incorrect input type", {
+  expect_error(read_parquet_file(123), regexp = "string")
   expect_error(
-    read_register(c("path1.parquet", "path2.parquet")),
+    read_parquet_file(c("path1.parquet", "path2.parquet")),
     regexp = "length 1"
   )
 })
 
-test_that("read_register() errors when directory has no Parquet files", {
+test_that("read_parquet_partition() errors when directory has no Parquet files", {
   temp_empty_dir <- fs::path_temp("empty_dir")
   fs::dir_create(temp_empty_dir)
 
-  expect_error(read_register(temp_empty_dir), temp_empty_dir)
+  expect_error(read_parquet_partition(temp_empty_dir), temp_empty_dir)
 })
 
-test_that("read_register() errors when file is not Parquet", {
+test_that("read_parquet_file() errors when file is not Parquet", {
   temp_txt_file <- fs::path_temp("file.txt")
   fs::file_create(temp_txt_file)
 
-  expect_error(read_register(temp_txt_file), temp_txt_file)
+  expect_error(read_parquet_file(temp_txt_file), temp_txt_file)
 })
 
 test_that("files with extension .parq can also be read", {
   path <- fs::path_temp("file.parq")
   arrow::write_parquet(simulate_register("bef")[[1]], sink = path)
-  expect_no_error(read_register(path))
+  expect_no_error(read_parquet_file(path))
 })
 
-
-test_that("read_register() reads files with different columns", {
+test_that("read_parquet_partition() reads files with different columns", {
   # Faux bef with lmdb structure, saved separately and combined with sas_bef.
   lmdb_list <- simulate_register("lmdb", year = c("2021"))
   names(lmdb_list) <- "bef2021"
@@ -135,11 +137,11 @@ test_that("read_register() reads files with different columns", {
 
   expect_identical(
     sort(expected),
-    sort(read_register(diff_cols_output) |> colnames())
+    sort(read_parquet_partition(diff_cols_output) |> colnames())
   )
 })
 
-test_that("read_register() errors with incompatible schemas", {
+test_that("read_parquet_partition() errors with incompatible schemas", {
   # Create a bef file where numeric columns are changed to character, so
   # the schema is incompatible with the other bef files.
   incompatible_data <- bef_list[[1]] |>
@@ -155,5 +157,5 @@ test_that("read_register() errors with incompatible schemas", {
     convert(path, incompatible_output)
   })
 
-  expect_error(read_register(incompatible_output), "incompatible")
+  expect_error(read_parquet_partition(incompatible_output), "incompatible")
 })
