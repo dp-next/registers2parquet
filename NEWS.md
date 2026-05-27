@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.12.0 (2026-05-27)
+
+### Feat
+
+- ✨ add minimal conversion log with chunk information (#290)
+
 ## 0.11.1 (2026-04-30)
 
 ### Refactor
