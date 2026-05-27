@@ -58,8 +58,10 @@ script, write (using a temporary directory here for these examples):
 ```{r options}
 options(
   # With a fake project ID and the temporary directory.
-  fastreg.project_rawdata_dir = fs::path_temp("E:/rawdata/701020/"),
-  fastreg.project_workdata_dir = fs::path_temp("E:/workdata/701020/parquet-registers/")
+  # Uses `E` rather than `E:` because Windows has issues with a colon in the
+  # path when using a temporary location.
+  fastreg.project_rawdata_dir = fs::path_temp("E/rawdata/701020/"),
+  fastreg.project_workdata_dir = fs::path_temp("E/workdata/701020/parquet-registers/")
 )
 ```
 
@@ -110,7 +112,7 @@ sas_paths <- registers_tbl |>
 ```{r setup-tree}
 #| echo: false
 getOption("fastreg.project_rawdata_dir") |>
-  # Get to the `E:` directory.
+  # Get to the `E` directory.
   fs::path_dir() |>
   fs::path_dir() |>
   show_tree()
@@ -152,7 +154,7 @@ by the year extracted from the file name as seen below:
 ```{r output-tree-file}
 #| echo: false
 getOption("fastreg.project_workdata_dir") |>
-  # Get to the `E:` directory.
+  # Get to the `E` directory.
   fs::path_dir() |>
   fs::path_dir() |>
   fs::path_dir() |>
