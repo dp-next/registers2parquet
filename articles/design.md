@@ -185,8 +185,7 @@ pattern. If no setting is given, the project ID will be guessed from the
 working directory path and the default location will be the `rawdata/`
 and `workdata/` directories, e.g. commonly looks like
 `E:/rawdata/<project-id>/` on DST. If those locations are different than
-was is expected bt default, the setting must be set. That way, users can
-use
+the expected default, the setting must be set. That way, users can use
 [`list_parquet_files()`](https://dp-next.github.io/fastreg/reference/list_parquet.md)
 without any arguments and it will automatically find and list all the
 Parquet files within the project. We decided to look in both `rawdata/`
