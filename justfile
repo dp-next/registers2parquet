@@ -2,7 +2,7 @@
     just --list --unsorted
 
 # Run all recipes
-run-all: cleanup install-deps format-all check-spelling check-urls check-code test build-docs check-cran install-package
+run-all: cleanup install-deps format-all check-spelling check-urls check-code test install-package build-docs check-cran
 
 # Format Markdown and R code
 format-all: format-md format-r
