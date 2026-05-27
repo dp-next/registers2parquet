@@ -8,7 +8,7 @@ simulate_registers_nested_tbl(
   registers,
   years = "",
   n = 1000,
-  output_dir = fs::path_temp("E:/rawdata/701010/")
+  output_dir = fs::path_temp("E/rawdata/701010/")
 )
 }
 \arguments{
@@ -23,13 +23,15 @@ used as a suffix in the file name. For example for register "bef" and year
 \item{n}{Number of rows of data to simulate per year.}
 
 \item{output_dir}{The root directory to append to the create SAS paths.
-Creates a path that mimics what is on DST by adding \code{rawdata/701010} to the
-end of the output directory.}
+By default will create a path that mimics what is on DST by adding
+\code{E/rawdata/701010} to the end of the output directory. The default should
+technically be \verb{E:} on Windows, but the default temporary directory on
+Windows for R can't allow using \code{:}, so we use \code{E} instead.}
 }
 \value{
 A nested tibble with a column \code{data} containing the simulated data
 and a column \code{output_path} containing the path where the SAS file should
-be saved to. Use \code{purrr::pwalk(write_to_sas)} or \code{purrr::pmap(write_to_sas)}
+be saved to. Pipe to \code{purrr::pwalk(write_to_sas)} or \code{purrr::pmap(write_to_sas)}
 to write each simulated dataset to a SAS file.
 }
 \description{

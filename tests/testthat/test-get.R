@@ -60,17 +60,17 @@ test_that("should fail if no `E:` drive exists", {
 test_that("takes project directory from options", {
   withr::with_options(
     list(
-      fastreg.project_rawdata_dir = fs::path("E:/rawdata/701010/"),
-      fastreg.project_workdata_dir = fs::path("E:/workdata/701010/")
+      fastreg.project_rawdata_dir = fs::path("E/rawdata/701010/"),
+      fastreg.project_workdata_dir = fs::path("E/workdata/701010/")
     ),
     {
       expect_identical(
         get_project_rawdata_dir(),
-        fs::path("E:/rawdata/701010/")
+        fs::path("E/rawdata/701010/")
       )
       expect_identical(
         get_project_workdata_dir(),
-        fs::path("E:/workdata/701010/")
+        fs::path("E/workdata/701010/")
       )
     }
   )

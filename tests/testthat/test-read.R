@@ -2,7 +2,7 @@
 bef_list <- simulate_registers_nested_tbl("bef", c("", "2020"))
 sas_paths <- bef_list |>
   purrr::pwalk(write_to_sas)
-output_dir <- fs::path_temp("E:/workdata/parquet-registers/")
+output_dir <- fs::path_temp("E/workdata/parquet-registers/")
 
 # Convert files.
 purrr::walk(sas_paths$output_path, \(path) {

@@ -12,12 +12,14 @@
 #'   "1999", the file will be named `bef1999.sas7bdat`. Can also take no year.
 #' @param n Number of rows of data to simulate per year.
 #' @param output_dir The root directory to append to the create SAS paths.
-#'   Creates a path that mimics what is on DST by adding `rawdata/701010` to the
-#'   end of the output directory.
+#'   By default will create a path that mimics what is on DST by adding
+#'   `E/rawdata/701010` to the end of the output directory. The default should
+#'   technically be `E:` on Windows, but the default temporary directory on
+#'   Windows for R can't allow using `:`, so we use `E` instead.
 #'
 #' @returns A nested tibble with a column `data` containing the simulated data
 #'   and a column `output_path` containing the path where the SAS file should
-#'   be saved to. Use `purrr::pwalk(write_to_sas)` or `purrr::pmap(write_to_sas)`
+#'   be saved to. Pipe to `purrr::pwalk(write_to_sas)` or `purrr::pmap(write_to_sas)`
 #'   to write each simulated dataset to a SAS file.
 #'
 #' @export
@@ -35,7 +37,7 @@ simulate_registers_nested_tbl <- function(
   registers,
   years = "",
   n = 1000,
-  output_dir = fs::path_temp("E:/rawdata/701010/")
+  output_dir = fs::path_temp("E/rawdata/701010/")
 ) {
   checkmate::assert_character(registers)
   checkmate::assert_character(years)

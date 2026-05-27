@@ -57,7 +57,7 @@ script, write (using a temporary directory here for these examples):
 
 ```{r options}
 options(
-  # With a fake project ID.
+  # With a fake project ID and the temporary directory.
   fastreg.project_rawdata_dir = fs::path_temp("E:/rawdata/701020/"),
   fastreg.project_workdata_dir = fs::path_temp("E:/workdata/701020/parquet-registers/")
 )
