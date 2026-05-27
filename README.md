@@ -5,7 +5,7 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/fastreg.png)](https://CRAN.R-project.org/package=fastreg)
+status](https://www.r-pkg.org/badges/version/fastreg)](https://CRAN.R-project.org/package=fastreg)
 [![GitHub
 Release](https://img.shields.io/github/v/release/dp-next/fastreg.svg)](https://github.com/dp-next/fastreg/releases/latest)
 [![Build](https://github.com/dp-next/fastreg/actions/workflows/build.yml/badge.svg)](https://github.com/dp-next/fastreg/actions/workflows/build.yml)
