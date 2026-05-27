@@ -1,6 +1,7 @@
-# Use a targets pipeline template for converting SAS registers to Parquet
+# Use a targets pipeline for converting SAS registers to Parquet
 
-Copies a `_targets.R` template to the given directory.
+Copies a `_targets.R` template and a conversion log Quarto Markdown file
+to the given directory.
 
 ## Usage
 
@@ -12,8 +13,8 @@ use_template(path = ".", open = rlang::is_interactive())
 
 - path:
 
-  Path to the directory where `_targets.R` will be created. Defaults to
-  the current directory.
+  Path to the directory where the targets pipeline and conversion log
+  will be created. Defaults to the current directory.
 
 - open:
 
@@ -27,6 +28,7 @@ The path to the created `_targets.R` file, invisibly.
 
 ``` r
 use_template(path = fs::path_temp(""))
-#> ✔ Created /tmp/RtmpUMk4X3/_targets.R
+#> ✔ Created /tmp/RtmpXOXP0A/_targets.R
+#> ✔ Created /tmp/RtmpXOXP0A/_targets.R
 #> ℹ Edit the `config` section to set your paths.
 ```

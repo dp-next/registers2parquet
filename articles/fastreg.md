@@ -143,10 +143,10 @@ fastreg::convert(
   output_dir = output_file_dir
 )
 #> ✔ Converted 'bef2020.sas7bdat'
-#> # A tibble: 1 × 4
-#>   input_path                               output_path        row_count columns 
-#>   <fs::path>                               <fs::path>             <int> <list>  
-#> 1 /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat …rt-bc9116.parquet      1000 <tibble>
+#> # A tibble: 1 × 5
+#>   register_name input_path                        output_path row_count columns 
+#>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
+#> 1 bef           …pLpuDOl/sas-dir/bef2020.sas7bdat …fe.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -172,7 +172,7 @@ by the year extracted from the file name as seen below:
     #> output-file-dir
     #> └── bef
     #>     └── year=2020
-    #>         └── part-bc9116.parquet
+    #>         └── part-6f42fe.parquet
 
 ## Converting multiple registers in parallel
 
@@ -192,7 +192,8 @@ pipeline_dir <- fs::path_temp("pipeline-dir")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpnBPsd3/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpLpuDOl/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpLpuDOl/pipeline-dir/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -265,16 +266,16 @@ file
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1013-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     1 108684730664 19320112  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 982144017357 20070716  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  3     1 672580814975 19800805  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  4     1 439008110445 20090628  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 489714666740 20170225  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  6     1 155331797020 19730330  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  7     1 777951655096 19341022  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  9     1 132473802596 19530901  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
+#>  1     1 108684730664 19320112  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 982144017357 20070716  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  3     1 672580814975 19800805  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  4     1 439008110445 20090628  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 489714666740 20170225  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  6     1 155331797020 19730330  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  7     1 777951655096 19341022  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 167007504860 20010318  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  9     1 132473802596 19530901  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 876820784981 19310817  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 
@@ -290,16 +291,16 @@ file |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1013-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                               year
 #>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 982144017357 20070716  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 489714666740 20170225  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  3     2 167007504860 20010318  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 876820784981 19310817  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 527918979807 19540605  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 932479108596 19490511  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 983125164454 19011009  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 618090662466 19430309  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 702393367207 19600605  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 736071599339 19830621  /tmp/RtmpnBPsd3/sas-dir/bef2020.sas7bdat  2020
+#>  1     2 982144017357 20070716  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  2     2 489714666740 20170225  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  3     2 167007504860 20010318  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  4     2 876820784981 19310817  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  5     2 527918979807 19540605  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  6     2 932479108596 19490511  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  7     2 983125164454 19011009  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  8     2 618090662466 19430309  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#>  9     2 702393367207 19600605  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
+#> 10     2 736071599339 19830621  /tmp/RtmpLpuDOl/sas-dir/bef2020.sas7bdat  2020
 #> # ℹ more rows
 ```
 

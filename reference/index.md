@@ -10,8 +10,7 @@
   [`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
   : Read a single Parquet file or a partitioned dataset as DuckDB table
 - [`use_template()`](https://dp-next.github.io/fastreg/reference/use_template.md)
-  : Use a targets pipeline template for converting SAS registers to
-  Parquet
+  : Use a targets pipeline for converting SAS registers to Parquet
 
 ## Helper functions
 
@@ -24,3 +23,8 @@
   : Save a list of data frames as SAS files
 - [`simulate_register()`](https://dp-next.github.io/fastreg/reference/simulate_register.md)
   : Simulate an example register
+
+## Log functions
+
+- [`log_as_table()`](https://dp-next.github.io/fastreg/reference/log_as_table.md)
+  : Log chunk information as a table
