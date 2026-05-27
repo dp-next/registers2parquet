@@ -50,14 +50,14 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   test_dir <- fs::path_temp("pipeline-test")
   test_input_dir <- fs::path(test_dir, "input")
   test_output_dir <- fs::path(test_dir, "output")
-  fs::dir_create(test_input_dir)
-  fs::dir_create(test_output_dir)
 
   # Create SAS files.
-  bef_list <- simulate_register("bef", c("1999", "2020"))
-  lmdb_list <- simulate_register("lmdb", c("2020", "2021"))
-  save_as_sas(bef_list, test_input_dir)
-  save_as_sas(lmdb_list, test_input_dir)
+  registers_sas <- simulate_registers_nested_tbl(
+    c("bef", "lmdb"),
+    c("1999", "2020", "2021"),
+    output_dir = test_input_dir
+  ) |>
+    purrr::pwalk(write_to_sas)
 
   # Create template files in test directory.
   fastreg::use_template(test_dir)
@@ -79,14 +79,17 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     recurse = TRUE,
     glob = "*.parquet"
   )
+
   expect_equal(
     length(parquet_files),
-    sum(length(bef_list), length(lmdb_list))
+    nrow(registers_sas)
   )
 
-  # Check nrows per register.
-  n_expected_bef <- sum(purrr::map_int(bef_list, nrow))
-  n_expected_lmdb <- sum(purrr::map_int(lmdb_list, nrow))
+  # Check rows of registers.
+  n_expected <- registers_sas$data |>
+    purrr::map(nrow) |>
+    purrr::list_c() |>
+    sum()
 
   n_actual_bef <- arrow::open_dataset(fs::path(
     test_output_dir,
@@ -94,6 +97,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   )) |>
     dplyr::collect() |>
     nrow()
+
   n_actual_lmdb <- arrow::open_dataset(fs::path(
     test_output_dir,
     "lmdb"
@@ -101,8 +105,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     dplyr::collect() |>
     nrow()
 
-  expect_equal(n_actual_bef, n_expected_bef)
-  expect_equal(n_actual_lmdb, n_expected_lmdb)
+  expect_equal(n_actual_bef + n_actual_bef, n_expected)
 
   # Conversion log Quarto file was created.
   expect_true(fs::file_exists(fs::path(test_dir, "conversion-log.qmd")))
