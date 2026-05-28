@@ -24,11 +24,17 @@ If you experience any problems or bugs with `fastreg`, please add an
 conversion_log <- targets::tar_read(conversion_log)
 
 for (register in unique(conversion_log$register_name)) {
+  register_log <- conversion_log |>
+    dplyr::filter(register_name == register)
+
   cat("## ", register, "\n\n")
 
-  conversion_log |>
-    dplyr::filter(register_name == register) |>
+  register_log |>
     fastreg::log_as_table() |>
+    print()
+
+  register_log |>
+    fastreg::log_schema() |>
     print()
 }
 ```
