@@ -35,7 +35,7 @@ convert <- function(
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
   skip <- 0L
-  conversion_log <- tibble::tribble(~register_name, ~input_path, ~output_path, ~row_count, ~columns)
+  conversion_log <- tibble::tribble(~register_name, ~input_path, ~output_path, ~row_count, ~schema)
 
   # Read first chunk to establish schema.
   chunk <- read_sas_chunk(path, skip, chunk_size)
@@ -63,7 +63,7 @@ convert <- function(
         input_path = path,
         output_path = fs::path(file_path),
         row_count = nrow(chunk),
-        columns = list(tibble::tibble(
+        schema = list(tibble::tibble(
           column_name = colnames(chunk),
           data_type = purrr::map_chr(chunk, class)
         ))
