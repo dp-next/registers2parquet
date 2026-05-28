@@ -42,7 +42,7 @@ convert(
 )
 #> ✔ Converted test.sas7bdat
 #> # A tibble: 1 × 5
-#>   register_name input_path                        output_path row_count columns 
+#>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 test          …ry/fastreg/extdata/test.sas7bdat …07.parquet      1000 <tibble>
+#> 1 test          …ry/fastreg/extdata/test.sas7bdat …b4.parquet      1000 <tibble>
 ```
