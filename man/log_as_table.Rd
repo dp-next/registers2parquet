@@ -4,11 +4,11 @@
 \alias{log_as_table}
 \title{Log chunk information as a table}
 \usage{
-log_as_table(log)
+log_as_table(register_log)
 }
 \arguments{
-\item{log}{A tibble returned by \code{\link[=convert]{convert()}}, with columns
-\code{input_path}, \code{output_path}, and \code{row_count}.}
+\item{register_log}{A tibble returned by \code{\link[=convert]{convert()}}, filtered to only
+contain rows from a single register.}
 }
 \value{
 A \code{knitr_kable} table.

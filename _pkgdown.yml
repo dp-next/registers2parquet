@@ -26,3 +26,4 @@ reference:
 - title: Log functions
 - contents:
   - contains("log")
+  - contains("print")
