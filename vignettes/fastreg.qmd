@@ -219,11 +219,11 @@ pipeline itself has been edited.
 ## Listing available Parquet files and datasets
 
 To list what Parquet files or datasets are available, use the
-`list_parquet_files()` and `list_parquet_datasets()` functions.
-These look in the `fastreg.project_workdata_dir` and
+`list_parquet_files()` and `list_parquet_datasets()` functions. These
+look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with `options()`) for any
-Parquet files following a specific pattern. See the reference documentation
-for more details.
+Parquet files following a specific pattern. See the reference
+documentation for more details.
 
 You can use them interactively in the Console:
 
