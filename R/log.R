@@ -39,6 +39,7 @@ log_as_table <- function(register_log) {
 #'       the reference schema. If there's many files with schema differences,
 #'       there will be multiple tables, for printing purposes.
 #'
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
@@ -47,15 +48,15 @@ log_as_table <- function(register_log) {
 log_schema <- function(register_log) {
   schema_log <- register_log |>
     # Only keep first chunk per file.
-    dplyr::slice_head(n = 1, by = input_path) |>
+    dplyr::slice_head(n = 1, by = "input_path") |>
     dplyr::mutate(
-      input_file = fs::path_file(input_path) |> fs::path_ext_remove()
+      input_file = fs::path_file(.data$input_path) |> fs::path_ext_remove()
     ) |>
-    dplyr::select(c(input_file, schema))
+    dplyr::select(c("input_file", "schema"))
 
   # If two schemas occur with the same frequency, only one is chosen as ref.
-  reference <- dplyr::count(schema_log, schema) |>
-    dplyr::slice_max(n, with_ties = FALSE)
+  reference <- dplyr::count(schema_log, .data$schema) |>
+    dplyr::slice_max(.data$n, with_ties = FALSE)
   reference_schema <- reference$schema[[1]] # Get schema tibble, instead of list.
   n_reference <- reference$n
   n_total <- nrow(schema_log)
@@ -132,17 +133,17 @@ get_schema_diffs <- function(schema_log, reference_schema) {
   )
 
   diffs |>
-    tidyr::unnest(schema) |>
+    tidyr::unnest("schema") |>
     # Complete with column names from the reference schema in case the diffs
     # are missing any columns.
     tidyr::complete(
-      input_file,
+      .data$input_file,
       column_name = unique(c(column_name = reference_schema$column_name))
     ) |>
     # Drop rows (column_names and data types) that match the reference schema.
     dplyr::anti_join(reference_schema, by = c("column_name", "data_type")) |>
     # Pivot so file names are columns.
-    tidyr::pivot_wider(names_from = input_file, values_from = data_type)
+    tidyr::pivot_wider(names_from = "input_file", values_from = "data_type")
 }
 
 
@@ -164,6 +165,6 @@ chunk_diff_table <- function(diff_table, max_file_cols = 6L) {
     ceiling(seq_along(file_cols) / max_file_cols)
   )
   purrr::map(chunked_file_cols, \(cols) {
-    dplyr::select(diff_table, column_name, dplyr::all_of(cols))
+    dplyr::select(diff_table, "column_name", dplyr::all_of(cols))
   })
 }
