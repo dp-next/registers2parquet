@@ -111,6 +111,7 @@ sas_paths <- registers_tbl |>
 
 ```{r setup-tree}
 #| echo: false
+# Show how files look relative to "E" to mimic DST
 getOption("fastreg.project_rawdata_dir") |>
   # Get to the `E` directory.
   fs::path_dir() |>

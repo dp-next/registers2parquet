@@ -1,6 +1,6 @@
 #' Simulate example registers along with output paths for SAS files
 #'
-#' This is a helper function that simulates data using
+#' A helper function that simulates data using
 #' [osdc::simulate_registers()]. It's used in vignettes and tests.
 #' It simulates data for one or more registers and years.
 #'
@@ -11,11 +11,11 @@
 #'   used as a suffix in the file name. For example for register "bef" and year
 #'   "1999", the file will be named `bef1999.sas7bdat`. Can also take no year.
 #' @param n Number of rows of data to simulate per year.
-#' @param output_dir The root directory to append to the create SAS paths.
-#'   By default will create a path that mimics what is on DST by adding
-#'   `E/rawdata/701010` to the end of the output directory. The default should
+#' @param output_dir The root directory appended to the created SAS paths.
+#'   By default, the output_dir is a temp path that mimics the paths on DST,
+#'   `E/rawdata/701010`. The default should
 #'   technically be `E:` on Windows, but the default temporary directory on
-#'   Windows for R can't allow using `:`, so we use `E` instead.
+#'   Windows for R doesn't allow using `:`, so we use `E` instead.
 #'
 #' @returns A nested tibble with a column `data` containing the simulated data
 #'   and a column `output_path` containing the path where the SAS file should
@@ -59,9 +59,9 @@ simulate_registers_nested_tbl <- function(
 
 #' Write simulated data to a SAS file
 #'
-#' This is a helper function that writes a data frame to a SAS file. It's used
+#' A helper function that writes a data frame to a SAS file. It's used
 #' mainly in fastreg's vignettes and tests. Pipe the output of
-#' [simulate_registers_nested_tbl()] with [purrr::pwalk()] and this function
+#' [simulate_registers_nested_tbl()] with [purrr::pwalk()] followed by this function
 #' to write each simulated dataset to a SAS file.
 #'
 #' @param data A tibble containing the simulated data.
