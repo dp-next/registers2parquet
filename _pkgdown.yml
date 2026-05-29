@@ -14,9 +14,7 @@ reference:
   - title: Main functions
   - contents:
       - convert
-      - read_register
-      - read_parquet_partition
-      - read_parquet_file
+      - starts_with("read")
       - use_template
   - title: Helper functions
   - contents:

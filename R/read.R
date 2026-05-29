@@ -3,12 +3,12 @@
 #' This function uses the options `fastreg.project_rawdata_dir` and
 #' `fastreg.project_workdata_dir` when set in [options()] or will try to guess
 #' the path by using the project ID and the base directories
-#' `E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. Will only read
+#' `E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. It only reads
 #' Parquet datasets (those that are partitioned with the pattern `year=`). If
 #' this function doesn't work, use [read_parquet_partition()] or
 #' [read_parquet_file()] instead.
 #'
-#' @param name Name of the register. See a list of available registers with
+#' @param name Name of the Parquet dataset (i.e, the register name). See a list of available datasets with
 #'   [list_parquet_datasets()].
 #'
 #' @returns A DuckDB table.
@@ -28,9 +28,9 @@ read_register <- function(
   if (length(parquet_path) > 1) {
     cli::cli_abort(
       c(
-        "There seems to be multiple Parquet datasets of the same name but in different locations.",
+        "There seems to be multiple Parquet datasets with the same name but in different locations.",
         "i" = "The paths are: {.path {parquet_path}}.",
-        "i" = "Use {.code list_parquet_datasets()} to see available datasets to try to resolve this issue."
+        "i" = "Use {.code list_parquet_datasets()} to see available datasets."
       )
     )
   }

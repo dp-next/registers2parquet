@@ -241,7 +241,7 @@ a powerful way to query and process large data without loading it all
 into memory.
 
 A quick way of reading a register is with the `read_register()`
-function, which looks for a given name of a register in either the
+function. This function looks for a given name of a register in either the
 `fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
 directories (set with `options()`) and reads it as a DuckDB table. You
 can also use the more specific `read_parquet_partition()` or
