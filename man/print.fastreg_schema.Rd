@@ -4,10 +4,10 @@
 \alias{print.fastreg_schema}
 \title{Print method for the S3 class fastreg_schema}
 \usage{
-\method{print}{fastreg_schema}(schema, ...)
+\method{print}{fastreg_schema}(x, ...)
 }
 \arguments{
-\item{schema}{The fastreg_schema returned by \code{\link[=log_schema]{log_schema()}}.}
+\item{x}{The fastreg_schema returned by \code{\link[=log_schema]{log_schema()}}.}
 
 \item{...}{Not used; included for S3 method compatibility.}
 }

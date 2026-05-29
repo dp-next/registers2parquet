@@ -95,24 +95,24 @@ log_schema <- function(register_log) {
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
 #' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
 #' log_schema(conversion_log) |> print()
-print.fastreg_schema <- function(schema, ...) {
-  cat(schema$description, "\n\n")
-  schema$reference_schema |>
+print.fastreg_schema <- function(x, ...) {
+  cat(x$description, "\n\n")
+  x$reference_schema |>
     knitr::kable() |>
     print()
-  if (length(schema$diff_tables) > 0) {
+  if (length(x$diff_tables) > 0) {
     cat("### Schema differences\n\n")
     cat(
       "The table below shows the files have a schema that differs from the most common schema, only showing the columns that differ:\n\n"
     )
-    purrr::walk(schema$diff_tables, \(table) {
+    purrr::walk(x$diff_tables, \(table) {
       table |>
         knitr::kable() |>
         print()
     })
   }
 
-  invisible(schema)
+  invisible(x)
 }
 
 
