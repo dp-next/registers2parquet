@@ -85,7 +85,7 @@ log_schema <- function(register_log) {
 
 #' Print method for the S3 class fastreg_schema
 #'
-#' @param schema The fastreg_schema returned by [log_schema()].
+#' @param x The fastreg_schema returned by [log_schema()].
 #' @param ... Not used; included for S3 method compatibility.
 #'
 #' @returns The schema invisibly.
@@ -103,7 +103,7 @@ print.fastreg_schema <- function(x, ...) {
   if (length(x$diff_tables) > 0) {
     cat("### Schema differences\n\n")
     cat(
-      "The table below shows the files have a schema that differs from the most common schema, only showing the columns that differ:\n\n"
+      "Files with schemas differing from the most common (only showing differing columns):\n\n"
     )
     purrr::walk(x$diff_tables, \(table) {
       table |>
