@@ -34,14 +34,14 @@ all_files <- fastreg::list_sas_files(test_input_dir)
 log_bef <- all_files |>
   stringr::str_subset("bef") |>
   purrr::map(\(path) {
-    convert(path, output_dir = fs::path_temp(test_output_dir))
+    convert(path, output_dir = test_output_dir)
   }) |>
   purrr::list_rbind()
 
 log_lmdb <- all_files |>
   stringr::str_subset("lmdb") |>
   purrr::map(\(path) {
-    convert(path, output_dir = fs::path_temp(test_output_dir))
+    convert(path, output_dir = test_output_dir)
   }) |>
   purrr::list_rbind()
 
