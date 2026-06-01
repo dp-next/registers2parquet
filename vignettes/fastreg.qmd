@@ -246,10 +246,10 @@ a powerful way to query and process large data without loading it all
 into memory.
 
 A quick way of reading a register is with the `read_register()`
-function. This function looks for a given name of a register in either the
-`fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
+function. This function looks for a given name of a register in either
+the `fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
 directories (set with `options()`) and reads it as a DuckDB table. You
-can also use the more specific `read_parquet_partition()` or
+can also use the more specific `read_parquet_dataset()` or
 `read_parquet_file()` functions to read from a specific directory or
 file path.
 
@@ -261,10 +261,10 @@ file <- fastreg::read_register("bef")
 file
 ```
 
-Or directly with `read_parquet_partition()` or `read_parquet_file()`:
+Or directly with `read_parquet_dataset()` or `read_parquet_file()`:
 
 ```{r read-partition}
-file <- fastreg::read_parquet_partition(output_file_dir)
+file <- fastreg::read_parquet_dataset(output_file_dir)
 file
 
 # Or a single file

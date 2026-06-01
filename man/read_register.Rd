@@ -7,7 +7,7 @@
 read_register(name)
 }
 \arguments{
-\item{name}{Name of the register. See a list of available registers with
+\item{name}{Name of the Parquet dataset (i.e, the register name). See a list of available datasets with
 \code{\link[=list_parquet_datasets]{list_parquet_datasets()}}.}
 }
 \value{
@@ -17,8 +17,8 @@ A DuckDB table.
 This function uses the options \code{fastreg.project_rawdata_dir} and
 \code{fastreg.project_workdata_dir} when set in \code{\link[=options]{options()}} or will try to guess
 the path by using the project ID and the base directories
-\verb{E:/<project-id>/rawdata/} and \verb{E:/<project-id>/workdata/}. Will only read
+\verb{E:/<project-id>/rawdata/} and \verb{E:/<project-id>/workdata/}. It only reads
 Parquet datasets (those that are partitioned with the pattern \verb{year=}). If
-this function doesn't work, use \code{\link[=read_parquet_partition]{read_parquet_partition()}} or
+this function doesn't work, use \code{\link[=read_parquet_dataset]{read_parquet_dataset()}} or
 \code{\link[=read_parquet_file]{read_parquet_file()}} instead.
 }

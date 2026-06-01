@@ -40,8 +40,8 @@ test_that("read_parquet_file() reads a single Parquet file", {
   )
 })
 
-test_that("read_parquet_partition() reads a partitioned Parquet register", {
-  actual <- read_parquet_partition(output_dir) |> dplyr::collect()
+test_that("read_parquet_dataset() reads a partitioned Parquet register", {
+  actual <- read_parquet_dataset(output_dir) |> dplyr::collect()
 
   expected <- purrr::map(sas_bef, \(path) haven::read_sas(path)) |>
     dplyr::bind_rows()
@@ -78,7 +78,7 @@ test_that("read_parquet_file() errors when path does not exist", {
     regexp = "not exist"
   )
   expect_error(
-    read_parquet_partition("/non/existing/directory/"),
+    read_parquet_dataset("/non/existing/directory/"),
     regexp = "not exist"
   )
 })
@@ -91,11 +91,11 @@ test_that("read_parquet_file() errors with incorrect input type", {
   )
 })
 
-test_that("read_parquet_partition() errors when directory has no Parquet files", {
+test_that("read_parquet_dataset() errors when directory has no Parquet files", {
   temp_empty_dir <- fs::path_temp("empty_dir")
   fs::dir_create(temp_empty_dir)
 
-  expect_error(read_parquet_partition(temp_empty_dir), temp_empty_dir)
+  expect_error(read_parquet_dataset(temp_empty_dir), temp_empty_dir)
 })
 
 test_that("read_parquet_file() errors when file is not Parquet", {
@@ -111,7 +111,7 @@ test_that("files with extension .parq can also be read", {
   expect_no_error(read_parquet_file(path))
 })
 
-test_that("read_parquet_partition() reads files with different columns", {
+test_that("read_parquet_dataset() reads files with different columns", {
   # Faux bef with lmdb structure, saved separately and combined with sas_bef.
   lmdb_list <- simulate_register("lmdb", year = c("2021"))
   names(lmdb_list) <- "bef2021"
@@ -137,11 +137,11 @@ test_that("read_parquet_partition() reads files with different columns", {
 
   expect_identical(
     sort(expected),
-    sort(read_parquet_partition(diff_cols_output) |> colnames())
+    sort(read_parquet_dataset(diff_cols_output) |> colnames())
   )
 })
 
-test_that("read_parquet_partition() errors with incompatible schemas", {
+test_that("read_parquet_dataset() errors with incompatible schemas", {
   # Create a bef file where numeric columns are changed to character, so
   # the schema is incompatible with the other bef files.
   incompatible_data <- bef_list[[1]] |>
@@ -157,5 +157,5 @@ test_that("read_parquet_partition() errors with incompatible schemas", {
     convert(path, incompatible_output)
   })
 
-  expect_error(read_parquet_partition(incompatible_output), "incompatible")
+  expect_error(read_parquet_dataset(incompatible_output), "incompatible")
 })

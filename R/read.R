@@ -5,7 +5,7 @@
 #' the path by using the project ID and the base directories
 #' `E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. It only reads
 #' Parquet datasets (those that are partitioned with the pattern `year=`). If
-#' this function doesn't work, use [read_parquet_partition()] or
+#' this function doesn't work, use [read_parquet_dataset()] or
 #' [read_parquet_file()] instead.
 #'
 #' @param name Name of the Parquet dataset (i.e, the register name). See a list of available datasets with
@@ -35,7 +35,7 @@ read_register <- function(
     )
   }
 
-  read_parquet_partition(parquet_path)
+  read_parquet_dataset(parquet_path)
 }
 
 #' Read a single Parquet file or a partitioned dataset as DuckDB table
@@ -52,7 +52,7 @@ NULL
 
 #' @describeIn read_parquet Reads a Parquet partitioned directory.
 #' @export
-read_parquet_partition <- function(path) {
+read_parquet_dataset <- function(path) {
   checkmate::assert_string(path)
   checkmate::assert_directory_exists(path)
   assert_directory_not_empty(path)
