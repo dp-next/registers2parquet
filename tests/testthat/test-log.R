@@ -59,6 +59,11 @@ test_that("log_as_table() returns kable", {
 
 # Test print_log_schema() ------------------------------------------------------
 
+test_that("print_log_schema() returns input invisibly", {
+  actual <- expect_invisible(print_log_schema(log_bef))
+  expect_equal(actual, log_bef)
+})
+
 test_that("print_log_schema() only include expected elements with no diff", {
   # Description phrasing.
   expect_true(any(stringr::str_detect(log_schema_no_diff, "same schema")))
