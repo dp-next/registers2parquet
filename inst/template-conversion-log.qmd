@@ -35,7 +35,6 @@ for (register in unique(conversion_log$register_name)) {
     print()
 
   register_log |>
-    fastreg::log_schema() |>
-    print()
+    fastreg::print_log_schema()
 }
 ```

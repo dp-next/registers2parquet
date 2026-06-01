@@ -23,29 +23,24 @@ log_as_table <- function(log) {
 }
 
 
-#' Log schema information
+#' Print log schema comparison
 #'
-#' Turns the log schema information into a section that compares the schemas
+#' Prints the log schema information in a section that compares the schemas
 #' within one register. Finds the most common schema and if there's differences
-#' between schemas, it reports these differences.
+#' between schemas, it prints these differences.
 #'
 #' @param register_log A tibble returned by [convert()], filtered to only
 #'   contain rows from a single register.
 #'
-#' @returns A `s3` object `fastreg_schema` with the structure:
-#'   - description: Character describing the schemas (diff or no diff).
-#'   - reference_schema: Tibble with the most common schema.
-#'   - diff_tables: A list with tibble(s) showing the columns that differ from
-#'       the reference schema. If there's many files with schema differences,
-#'       there will be multiple tables, for printing purposes.
+#' @returns register_log invisibly.
 #'
 #' @export
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
-#' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
-#' log_schema(conversion_log)
-log_schema <- function(register_log) {
-  schema_log <- register_log |>
+#' log <- convert(sas_file, output_dir = fs::path_temp("output"))
+#' print_log_schema(log)
+print_log_schema <- function(register_log) {
+  file_schemas <- register_log |>
     # Only keep first chunk per file.
     dplyr::slice_head(n = 1, by = "input_path") |>
     dplyr::mutate(
@@ -54,69 +49,42 @@ log_schema <- function(register_log) {
     dplyr::select(c("input_file", "schema"))
 
   # If two schemas occur with the same frequency, only one is chosen as ref.
-  reference <- dplyr::count(schema_log, .data$schema) |>
+  reference <- dplyr::count(file_schemas, .data$schema) |>
     dplyr::slice_max(.data$n, with_ties = FALSE)
   reference_schema <- reference$schema[[1]] # Get schema tibble, instead of list.
   n_reference <- reference$n
-  n_total <- nrow(schema_log)
+  n_total <- nrow(file_schemas)
   has_diffs <- n_reference < n_total
 
-  structure(
-    list(
-      description = if (has_diffs) {
-        glue::glue(
-          "The most common schema occurs in {n_reference}/{n_total} files."
-        )
-      } else {
-        "All files in this register share the same schema."
-      },
-      reference_schema = reference_schema,
-      diff_tables = if (has_diffs) {
-        get_schema_diffs(schema_log, reference_schema) |> chunk_diff_table()
-      } else {
-        list()
-      }
-    ),
-    class = "fastreg_schema"
-  )
-}
-
-
-#' Print method for the S3 class fastreg_schema
-#'
-#' @param x The fastreg_schema returned by [log_schema()].
-#' @param ... Not used; included for S3 method compatibility.
-#'
-#' @returns The schema invisibly.
-#'
-#' @export
-#' @examples
-#' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
-#' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
-#' log_schema(conversion_log) |> print()
-print.fastreg_schema <- function(x, ...) {
   lines <- c(
-    x$description,
-    glue::glue_collapse(x$reference_schema |> knitr::kable(), "\n")
-  )
-
-  if (length(x$diff_tables) > 0) {
-    lines <- c(
-      lines,
-      "### Schema differences",
-      "Files with schemas differing from the most common (only showing differing columns):",
-      purrr::map_chr(
-        x$diff_tables,
-        \(table) {
-          glue::glue_collapse(knitr::kable(table), "\n")
-        }
+    # Description.
+    if (has_diffs) {
+      glue::glue(
+        "The most common schema occurs in {n_reference}/{n_total} files."
       )
-    )
-  }
+    } else {
+      "All files in this register share the same schema."
+    },
+    # Reference schema.
+    collapse_kable(reference_schema),
+    # Schema differences.
+    if (has_diffs) {
+      c(
+        "### Schema differences",
+        "Files with schemas differing from the most common (only showing differing columns):",
+        get_schema_diffs(file_schemas, reference_schema) |>
+          chunk_diff_table() |>
+          purrr::map_chr(collapse_kable)
+      )
+    }
+  )
   cat(glue::glue_collapse(lines, sep = "\n\n"), "\n")
 
-  invisible(x)
+  invisible(register_log)
 }
+
+#' @noRd
+collapse_kable <- \(table) glue::glue_collapse(knitr::kable(table), "\n")
 
 
 #' Get schema differences
