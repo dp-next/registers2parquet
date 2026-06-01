@@ -95,12 +95,12 @@ log_schema <- function(register_log) {
 #' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
 #' log_schema(conversion_log) |> print()
 print.fastreg_schema <- function(x, ...) {
-  cat(x$description, "\n\n")
+  cat(x$description)
   x$reference_schema |>
     knitr::kable() |>
     print()
   if (length(x$diff_tables) > 0) {
-    cat("### Schema differences\n\n")
+    cat("\n\n### Schema differences\n\n")
     cat(
       "Files with schemas differing from the most common (only showing differing columns):\n\n"
     )
