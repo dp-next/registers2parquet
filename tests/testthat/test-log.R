@@ -47,8 +47,9 @@ log_lmdb <- all_files |>
 
 # Output.
 log_table <- log_as_table(log_bef)
-log_schema_no_diff <- log_schema(log_bef)
-log_schema_diff <- log_schema(log_lmdb)
+
+log_schema_no_diff <- capture.output(print_log_schema(log_bef))
+log_schema_diff <- capture.output(print_log_schema(log_lmdb))
 
 # Test log_as_table() ----------------------------------------------------------
 
@@ -56,33 +57,33 @@ test_that("log_as_table() returns kable", {
   expect_identical(class(log_table), "knitr_kable")
 })
 
-# Test log_schema() ------------------------------------------------------------
+# Test print_log_schema() ------------------------------------------------------
 
-test_that("log_schema() returns s3 object", {
-  expect_s3_class(log_schema_no_diff, "fastreg_schema")
-  expect_s3_class(log_schema_diff, "fastreg_schema")
+test_that("print_log_schema() only include expected elements with no diff", {
+  # Description phrasing.
+  expect_true(any(stringr::str_detect(log_schema_no_diff, "same schema")))
+  # No mentions of differences throughout.
+  expect_false(any(grepl("differences", log_schema_no_diff)))
+  # Only one table (found by looking for the separator ":-").
+  n_tables <- log_schema_no_diff |>
+    stringr::str_detect("^\\|[:-]") |>
+    sum()
+  expect_equal(n_tables, 1)
 })
 
-test_that("log_schema() description include expected wording with no diff and diff", {
-  expect_match(log_schema_no_diff$description, "same schema")
-  expect_match(log_schema_diff$description, "most common")
-})
-
-test_that("log_schema() description shows expected count when schemas differ", {
-  expect_match(log_schema_diff$description, "4/11")
-})
-
-test_that("log_schema() diff_tables is empty when schemas match", {
-  expect_length(log_schema_no_diff$diff_tables, 0)
-})
-
-test_that("log_schema() diff_tables has entries when schemas differ", {
-  # Length is 2 bc there's more files with schema diffs than `max_file_cols`
-  # in chunk_diff_table().
-  expect_length(log_schema_diff$diff_tables, 2)
-})
-
-test_that("printing a fastreg_schema does not error", {
-  expect_no_error(capture.output(print(log_schema_no_diff)))
-  expect_no_error(capture.output(print(log_schema_diff)))
+test_that("print_log_schema() includes expected elements with diffs", {
+  # Description phrasing.
+  expect_true(any(stringr::str_detect(log_schema_diff, "most common")))
+  # Fraction of schemas matching most common schema/total files.
+  expect_match(log_schema_diff, "4/11", all = FALSE, fixed = TRUE)
+  # Differences header.
+  expect_true(any(stringr::str_detect(
+    log_schema_diff,
+    "Schema differences"
+  )))
+  # Three tables (found by looking for the separator ":-").
+  n_tables <- log_schema_diff |>
+    stringr::str_detect("^\\|[:-]") |>
+    sum()
+  expect_equal(n_tables, 3)
 })
