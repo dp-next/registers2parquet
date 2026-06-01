@@ -19,6 +19,7 @@ If you experience any problems or bugs with `fastreg`, please add an
 
 ```{r}
 #| echo: false
+#| message: false
 #| results: asis
 
 conversion_log <- targets::tar_read(conversion_log)
