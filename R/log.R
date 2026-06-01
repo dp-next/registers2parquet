@@ -95,21 +95,25 @@ log_schema <- function(register_log) {
 #' conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
 #' log_schema(conversion_log) |> print()
 print.fastreg_schema <- function(x, ...) {
-  cat(x$description)
-  x$reference_schema |>
-    knitr::kable() |>
-    print()
+  lines <- c(
+    x$description,
+    glue::glue_collapse(x$reference_schema |> knitr::kable(), "\n")
+  )
+
   if (length(x$diff_tables) > 0) {
-    cat("\n\n### Schema differences\n\n")
-    cat(
-      "Files with schemas differing from the most common (only showing differing columns):\n\n"
+    lines <- c(
+      lines,
+      "### Schema differences",
+      "Files with schemas differing from the most common (only showing differing columns):",
+      purrr::map_chr(
+        x$diff_tables,
+        \(table) {
+          glue::glue_collapse(knitr::kable(table), "\n")
+        }
+      )
     )
-    purrr::walk(x$diff_tables, \(table) {
-      table |>
-        knitr::kable() |>
-        print()
-    })
   }
+  cat(glue::glue_collapse(lines, sep = "\n\n"), "\n")
 
   invisible(x)
 }
