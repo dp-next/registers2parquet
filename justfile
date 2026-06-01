@@ -104,7 +104,7 @@ build-docs: _build-rd _build-website _build-readme
 # Re-build the README file from the Quarto version
 @_build-readme:
   uvx --from quarto quarto render README.qmd --to gfm
-  sed -i "s/fastreg\\.png/fastreg/" README.md
+  perl -pi -e 's/fastreg\.png/fastreg/g' README.md
 
 # Preview website locally
 preview-website:

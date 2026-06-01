@@ -170,8 +170,13 @@ parallelises conversion across CPU cores. By default it uses 10 workers,
 but that can be adjusted in the pipeline in the `_targets.R` file to not
 consume too many cores on a shared server.
 
-To create the pipeline file, you can use the `use_template()` function.
-In this example, we're outputting it to a temporary directory.
+To create the pipeline file, you can use the `use_template()` function,
+which creates two files: a `_targets.R` pipeline and a
+`conversion-log.qmd` Quarto document. When running the pipeline, the
+conversion log is written to a PDF, named
+`conversion-log-<timestamp>.pdf`, by default.
+
+In this example, we're outputting the template to a temporary directory.
 
 ```{r use-targets}
 pipeline_dir <- fs::path(getOption("fastreg.project_workdata_dir"), "conversion_pipeline")
