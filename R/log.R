@@ -39,7 +39,6 @@ log_as_table <- function(log) {
 #'       the reference schema. If there's many files with schema differences,
 #'       there will be multiple tables, for printing purposes.
 #'
-#' @importFrom rlang .data
 #' @export
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
