@@ -28,7 +28,6 @@ for (register in unique(conversion_log$register_name)) {
 
   conversion_log |>
     dplyr::filter(register_name == register) |>
-    fastreg::log_as_table() |>
-    print()
+    fastreg::print_log_row_count()
 }
 ```
