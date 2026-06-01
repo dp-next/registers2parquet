@@ -1,7 +1,7 @@
 # Setup ------------------------------------------------------------------------
 
 # n = 11000 to test chunking logic.
-bef_list <- simulate_registers_nested_tbl(
+bef_list <- simulate_registers_with_paths(
   "bef",
   years = c("", "1999_1", "1999_2", "2020")
 )

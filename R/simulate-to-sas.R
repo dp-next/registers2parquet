@@ -24,7 +24,7 @@
 #'
 #' @export
 #' @examples
-#' sim_regs <- simulate_registers_nested_tbl(
+#' sim_regs <- simulate_registers_with_paths(
 #'   registers = c("bef", "lmdb"),
 #'   years = c("1999", "2000"),
 #'   n = 10,
@@ -33,7 +33,7 @@
 #'
 #' sim_regs |>
 #'   purrr::pwalk(write_to_sas)
-simulate_registers_nested_tbl <- function(
+simulate_registers_with_paths <- function(
   registers,
   years = "",
   n = 1000,
@@ -61,13 +61,13 @@ simulate_registers_nested_tbl <- function(
 #'
 #' A helper function that writes a data frame to a SAS file. It's used
 #' mainly in fastreg's vignettes and tests. Pipe the output of
-#' [simulate_registers_nested_tbl()] with [purrr::pwalk()] followed by this function
+#' [simulate_registers_with_paths()] with [purrr::pwalk()] followed by this function
 #' to write each simulated dataset to a SAS file.
 #'
 #' @param data A tibble containing the simulated data.
 #' @param output_path A string of the path to where the SAS file should be saved.
 #'
-#' @returns Invisibly returns the path to the saved SAS file.
+#' @returns Invisibly gives the path to the saved SAS file.
 #'
 #' @export
 write_to_sas <- function(data, output_path) {

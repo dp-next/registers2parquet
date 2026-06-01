@@ -12,11 +12,11 @@ write_to_sas(data, output_path)
 \item{output_path}{A string of the path to where the SAS file should be saved.}
 }
 \value{
-Invisibly returns the path to the saved SAS file.
+Invisibly gives the path to the saved SAS file.
 }
 \description{
-This is a helper function that writes a data frame to a SAS file. It's used
+A helper function that writes a data frame to a SAS file. It's used
 mainly in fastreg's vignettes and tests. Pipe the output of
-\code{\link[=simulate_registers_nested_tbl]{simulate_registers_nested_tbl()}} with \code{\link[purrr:pwalk]{purrr::pwalk()}} and this function
+\code{\link[=simulate_registers_with_paths]{simulate_registers_with_paths()}} with \code{\link[purrr:pwalk]{purrr::pwalk()}} followed by this function
 to write each simulated dataset to a SAS file.
 }

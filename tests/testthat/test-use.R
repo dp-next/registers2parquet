@@ -52,7 +52,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   test_output_dir <- fs::path(test_dir, "output")
 
   # Create SAS files.
-  registers_sas <- simulate_registers_nested_tbl(
+  registers_sas <- simulate_registers_with_paths(
     c("bef", "lmdb"),
     c("1999", "2020", "2021"),
     output_dir = test_input_dir

@@ -95,13 +95,14 @@ For the examples below, we've simulated SAS register data for two
 registers, `bef` and `lmdb`:
 
 ```{r prepare}
-#| code-fold: true
-#| code-summary: "Show setup code"
-registers_tbl <- fastreg::simulate_registers_nested_tbl(
+rawdata_dir <- getOption("fastreg.project_rawdata_dir")
+workdata_dir <- getOption("fastreg.project_workdata_dir")
+
+registers_tbl <- fastreg::simulate_registers_with_paths(
   c("bef", "lmdb"),
   c("", "1999", "1999_1", "2020", "2021"),
   n = 1000,
-  output_dir = getOption("fastreg.project_rawdata_dir")
+  output_dir = rawdata_dir
 )
 
 sas_paths <- registers_tbl |>
@@ -112,7 +113,7 @@ sas_paths <- registers_tbl |>
 ```{r setup-tree}
 #| echo: false
 # Show how files look relative to "E" to mimic DST
-getOption("fastreg.project_rawdata_dir") |>
+rawdata_dir |>
   # Get to the `E` directory.
   fs::path_dir() |>
   fs::path_dir() |>
@@ -131,7 +132,7 @@ single SAS file to a year-partitioned Parquet format:
 ```{r convert-file}
 fastreg::convert(
   path = sas_paths[1],
-  output_dir = getOption("fastreg.project_workdata_dir")
+  output_dir = workdata_dir
 )
 ```
 
@@ -154,7 +155,7 @@ by the year extracted from the file name as seen below:
 
 ```{r output-tree-file}
 #| echo: false
-getOption("fastreg.project_workdata_dir") |>
+workdata_dir |>
   # Get to the `E` directory.
   fs::path_dir() |>
   fs::path_dir() |>
@@ -179,7 +180,7 @@ conversion log is written to a PDF, named
 In this example, we're outputting the template to a temporary directory.
 
 ```{r use-targets}
-pipeline_dir <- fs::path(getOption("fastreg.project_workdata_dir"), "conversion_pipeline")
+pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
@@ -190,8 +191,8 @@ section:
 
 ```{r config}
 config <- list(
-  sas_paths = fastreg::list_sas_files(getOption("fastreg.project_rawdata_dir")),
-  output_dir = getOption("fastreg.project_workdata_dir")
+  sas_paths = fastreg::list_sas_files(rawdata_dir),
+  output_dir = workdata_dir
 )
 ```
 
@@ -209,9 +210,9 @@ targets::tar_make()
 ```{r}
 #| label: "manual-conversion"
 #| include: false
-fastreg::list_sas_files(getOption("fastreg.project_rawdata_dir")) |>
+fastreg::list_sas_files(rawdata_dir) |>
   purrr::walk(\(path) {
-    fastreg::convert(path, getOption("fastreg.project_workdata_dir"))
+    fastreg::convert(path, workdata_dir)
   })
 ```
 
@@ -226,8 +227,7 @@ To list what Parquet files or datasets are available, use the
 `list_parquet_files()` and `list_parquet_datasets()` functions. These
 look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with `options()`) for any
-Parquet files following a specific pattern. See the reference
-documentation for more details.
+Parquet files following a specific pattern.
 
 You can use them interactively in the Console:
 

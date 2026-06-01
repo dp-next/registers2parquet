@@ -22,7 +22,7 @@ reference:
       - starts_with("list")
       - starts_with("get")
       - write_to_sas
-      - simulate_registers_nested_tbl
+      - simulate_registers_with_paths
   - title: Log functions
   - contents:
       - contains("log")

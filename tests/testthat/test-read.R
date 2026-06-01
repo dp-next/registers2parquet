@@ -1,5 +1,5 @@
 # Setup ------------------------------------------------------------------------
-bef_list <- simulate_registers_nested_tbl("bef", c("", "2020"))
+bef_list <- simulate_registers_with_paths("bef", c("", "2020"))
 sas_paths <- bef_list |>
   purrr::pwalk(write_to_sas)
 output_dir <- fs::path_temp("E/workdata/parquet-registers/")
@@ -105,7 +105,7 @@ test_that("read_register() errors when file is not Parquet", {
 test_that("files with extension .parq can also be read", {
   path <- fs::path_temp("file.parq")
   arrow::write_parquet(
-    simulate_registers_nested_tbl("bef")$data[[1]],
+    simulate_registers_with_paths("bef")$data[[1]],
     sink = path
   )
   expect_no_error(read_register(path))
@@ -116,7 +116,7 @@ test_that("read_register() reads files with different columns", {
   # Faux bef with lmdb structure, saved separately and combined with sas paths
   sas_dir <- fs::path_temp("different_columns/sas")
   parquet_dir <- fs::path_temp("different_columns/parquet")
-  register_diff_cols <- simulate_registers_nested_tbl(
+  register_diff_cols <- simulate_registers_with_paths(
     c("bef", "lmdb"),
     years = c("2021"),
     output_dir = sas_dir
