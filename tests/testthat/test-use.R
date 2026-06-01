@@ -104,6 +104,7 @@ test_that("targets pipeline template converts SAS files to Parquet", {
   expect_equal(n_actual_bef, n_expected_bef)
   expect_equal(n_actual_lmdb, n_expected_lmdb)
 
-  # Conversion log Quarto file was created.
+  # Conversion log Quarto file and PDF were created.
   expect_true(fs::file_exists(fs::path(test_dir, "conversion-log.qmd")))
+  expect_true(length(fs::dir_ls(test_dir, glob = "*.pdf")) == 1)
 })
