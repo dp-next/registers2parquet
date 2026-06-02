@@ -125,7 +125,7 @@ flowchart TD
     style edit fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
-### Reading a Parquet files
+### Reading Parquet files
 
 fastreg provides three ways to read Parquet registers depending on the
 use case.
@@ -153,10 +153,10 @@ flowchart LR
 
 However, we can't guarantee that the `read_register()` function will
 correctly guess and/or find the register as a Parquet dataset. So we
-also provide two more flexible functions: `read_parquet_partition()` and
+also provide two more flexible functions: `read_parquet_dataset()` and
 `read_parquet_file()`.
 
-`read_parquet_partition()` underlies `read_register()`, but without
+`read_parquet_dataset()` underlies `read_register()`, but without
 guessing the path (or when the setting hasn't been set). It takes a
 direct path to the Parquet dataset (the directory containing the
 Hive-partitioned Parquet files), applies some settings to more smoothly
