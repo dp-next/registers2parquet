@@ -85,7 +85,7 @@ test_that("print_log_row_count() excludes register_name and columns column", {
   expect_no_match(log_row_count, "register_name")
   expect_no_match(log_row_count, "columns")
 
-  
+
 # Test print_log_schema() ------------------------------------------------------
 
 test_that("print_log_schema() returns input invisibly", {
