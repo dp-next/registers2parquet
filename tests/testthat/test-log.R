@@ -15,6 +15,7 @@ lmdb_no_atc <- simulate_registers_with_paths(
         dplyr::select(-atc)
     })
   )
+
 lmdb_edited_cols <- simulate_registers_with_paths(
   "lmdb",
   as.character(c(2040:2043))
@@ -25,6 +26,7 @@ lmdb_edited_cols <- simulate_registers_with_paths(
         dplyr::mutate(pnr = as.numeric(pnr), new_col = 3)
     })
   )
+
 lmdb <- simulate_registers_with_paths(
   "lmdb",
   as.character(c(2020:2025, 2045))
@@ -71,7 +73,7 @@ test_that("print_log_schema() only include expected elements with no diff", {
   # Description phrasing.
   expect_true(any(stringr::str_detect(log_schema_no_diff, "same schema")))
   # No mentions of differences throughout.
-  expect_false(any(grepl("differences", log_schema_no_diff)))
+  expect_false(any(stringr::str_detect(log_schema_no_diff, "differences")))
   # Only one table (one reference).
   n_tables <- log_schema_no_diff |>
     stringr::str_detect("^\\|[:-]") |>
