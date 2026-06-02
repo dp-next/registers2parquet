@@ -1,13 +1,11 @@
 # Setup ------------------------------------------------------------------------
-register_name <- "bef"
-bef_list <- simulate_register(register_name, c("", "2020"))
-sas_path <- fs::path_temp("sas_bef")
-save_as_sas(bef_list, sas_path)
-sas_bef <- fs::dir_ls(sas_path)
-output_dir <- fs::path_temp("output_dir")
+bef_list <- simulate_registers_with_paths("bef", c("", "2020"))
+sas_paths <- bef_list |>
+  purrr::pwalk(write_to_sas)
+output_dir <- fs::path_temp("E/workdata/parquet-registers/")
 
 # Convert files.
-purrr::walk(sas_bef, \(path) {
+purrr::walk(sas_paths$output_path, \(path) {
   convert(path, output_dir)
 })
 
@@ -20,12 +18,12 @@ test_that("read_parquet_file() reads a single Parquet file", {
   year <- "2020"
   actual_data <- read_parquet_file(fs::dir_ls(fs::path(
     output_dir,
-    register_name,
+    "bef",
     glue::glue("year={year}")
   ))) |>
     dplyr::collect()
 
-  expected_source_file <- stringr::str_subset(sas_bef, year)
+  expected_source_file <- stringr::str_subset(sas_paths$output_path, year)
   expected_data <- haven::read_sas(expected_source_file)
 
   expect_equal(
@@ -43,9 +41,11 @@ test_that("read_parquet_file() reads a single Parquet file", {
 test_that("read_parquet_dataset() reads a partitioned Parquet register", {
   actual <- read_parquet_dataset(output_dir) |> dplyr::collect()
 
-  expected <- purrr::map(sas_bef, \(path) haven::read_sas(path)) |>
+  expected <- purrr::map(sas_paths$output_path, \(path) {
+    haven::read_sas(path)
+  }) |>
     dplyr::bind_rows()
-  expected_years <- get_year_from_filename(sas_bef)
+  expected_years <- get_year_from_filename(sas_paths$output_path)
 
   # Data is as expected (column names, data types, nrows)
   # Sort dataframes by koen and pnr to ensure consistent ordering,
@@ -62,8 +62,8 @@ test_that("read_parquet_dataset() reads a partitioned Parquet register", {
   # source_file column.
   expect_equal(
     sort(unique(actual$source_file)),
-    # Convert sas_bef to character, otherwise it's an fs_path.
-    sort(as.character(sas_bef))
+    # Convert sas paths to character, otherwise it's an fs_path.
+    sort(as.character(sas_paths$output_path))
   )
   # year column.
   expect_equal(
@@ -107,49 +107,60 @@ test_that("read_parquet_file() errors when file is not Parquet", {
 
 test_that("files with extension .parq can also be read", {
   path <- fs::path_temp("file.parq")
-  arrow::write_parquet(simulate_register("bef")[[1]], sink = path)
-  expect_no_error(read_parquet_file(path))
+  arrow::write_parquet(
+    simulate_registers_with_paths("bef")$data[[1]],
+    sink = path
+  )
+  expect_no_error(read_register_file(path))
 })
 
-test_that("read_parquet_dataset() reads files with different columns", {
-  # Faux bef with lmdb structure, saved separately and combined with sas_bef.
-  lmdb_list <- simulate_register("lmdb", year = c("2021"))
-  names(lmdb_list) <- "bef2021"
-  lmdb_sas_path <- fs::path_temp("sas_lmdb_as_bef")
-  save_as_sas(lmdb_list, lmdb_sas_path)
-  sas_diff_cols <- c(sas_bef, fs::dir_ls(lmdb_sas_path))
 
-  diff_cols_output <- fs::path_temp("diff_cols")
+test_that("read_register_dataset() reads files with different columns", {
+  # Faux bef with lmdb structure, saved separately and combined with sas paths
+  sas_dir <- fs::path_temp("different_columns/sas")
+  parquet_dir <- fs::path_temp("different_columns/parquet")
+  register_diff_cols <- simulate_registers_with_paths(
+    c("bef", "lmdb"),
+    years = c("2021"),
+    output_dir = sas_dir
+  ) |>
+    dplyr::mutate(
+      output_path = stringr::str_replace(output_path, "lmdb2021", "bef2022")
+    ) |>
+    purrr::pwalk(write_to_sas)
 
   # Convert files.
-  purrr::walk(sas_diff_cols, \(path) {
-    convert(path, diff_cols_output)
+  purrr::walk(register_diff_cols$output_path, \(path) {
+    convert(path, parquet_dir)
   })
 
   # Define expected columns.
-  expected <- purrr::map(c("bef", "lmdb"), \(x) {
-    simulate_register(x, n = 1)[[1]]
-  }) |>
+  expected <- register_diff_cols$data |>
     purrr::map(colnames) |>
     purrr::list_c() |>
     unique() |>
-    c("source_file", "year")
+    append(c("source_file", "year"))
 
   expect_identical(
     sort(expected),
-    sort(read_parquet_dataset(diff_cols_output) |> colnames())
+    sort(read_parquet_dataset(parquet_dir) |> colnames())
   )
 })
 
 test_that("read_parquet_dataset() errors with incompatible schemas", {
   # Create a bef file where numeric columns are changed to character, so
   # the schema is incompatible with the other bef files.
-  incompatible_data <- bef_list[[1]] |>
+  incompatible_data <- bef_list$data[[1]] |>
     dplyr::mutate(dplyr::across(where(is.numeric), as.character))
 
-  incompatible_sas_path <- fs::path_temp("sas_schema_incompatible")
-  save_as_sas(list(bef2099 = incompatible_data), incompatible_sas_path)
-  sas_incompatible <- c(sas_bef, fs::dir_ls(incompatible_sas_path))
+  incompatible_sas_path <- fs::path_temp(
+    "sas_schema_incompatible/bef2099.sas7bdat"
+  )
+  write_to_sas(incompatible_data, incompatible_sas_path)
+  sas_incompatible <- c(
+    sas_paths$output_path,
+    incompatible_sas_path
+  )
 
   incompatible_output <- fs::path_temp("incompatible")
   # Convert files.

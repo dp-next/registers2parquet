@@ -20,8 +20,8 @@ reference:
   - contents:
       - starts_with("list")
       - starts_with("get")
-      - save_as_sas
-      - simulate_register
+      - write_to_sas
+      - simulate_registers_with_paths
   - title: Log functions
   - contents:
       - contains("log")
