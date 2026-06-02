@@ -111,10 +111,21 @@ get_schema_diffs <- function(schema_log, reference_schema) {
       .data$input_file,
       column_name = unique(c(column_name = reference_schema$column_name))
     ) |>
-    # Drop rows (column_names and data types) that match the reference schema.
-    dplyr::anti_join(reference_schema, by = c("column_name", "data_type")) |>
     # Pivot so file names are columns.
-    tidyr::pivot_wider(names_from = "input_file", values_from = "data_type")
+    tidyr::pivot_wider(names_from = "input_file", values_from = "data_type") |>
+    # Add reference data_type column.
+    dplyr::left_join(reference_schema, by = "column_name") |>
+    # Keep only schema columns where at least one file has a different type or
+    # is missing the column.
+    dplyr::filter(
+      dplyr::if_any(
+        c(-"column_name", -"data_type"),
+        \(col_type) {
+          is.na(.data$data_type) | is.na(col_type) | col_type != .data$data_type
+        }
+      )
+    ) |>
+    dplyr::select(-"data_type")
 }
 
 
