@@ -59,29 +59,33 @@ print_log_schema <- function(register_log) {
   n_total <- nrow(file_schemas)
   has_diffs <- n_reference < n_total
 
+  # Prepare schema difference lines.
+  description <- "All files in this register share the same schema."
+  if (has_diffs) {
+    description <- glue::glue(
+      "The most common schema occurs in {n_reference}/{n_total} files."
+    )
+  }
+  schema_differences <- ""
+  if (has_diffs) {
+    schema_differences <- c(
+      "### Schema differences",
+      "",
+      "Files with schemas differing from the most common (only showing differing columns):",
+      "",
+      get_schema_diffs(file_schemas, reference_schema) |>
+        chunk_diff_table() |>
+        purrr::map_chr(collapse_kable)
+    )
+  }
+
   lines <- c(
     # Description.
-    dplyr::if_else(has_diffs,
-      glue::glue(
-        "The most common schema occurs in {n_reference}/{n_total} files."
-      ),
-      "All files in this register share the same schema."
-    ),
+    description,
     # Reference schema.
     collapse_kable(reference_schema),
     # Schema differences.
-    dplyr::if_else(has_diffs,
-      c(
-        "### Schema differences",
-        "",
-        "Files with schemas differing from the most common (only showing differing columns):",
-        "",
-        get_schema_diffs(file_schemas, reference_schema) |>
-          chunk_diff_table() |>
-          purrr::map_chr(collapse_kable)
-      ),
-      ""
-    )
+    schema_differences
   )
   cat(glue::glue_collapse(lines, sep = "\n\n"), "\n")
 
