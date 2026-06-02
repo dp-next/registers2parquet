@@ -108,9 +108,9 @@
 <p>Use <code><a href="reference/use_template.html">use_template()</a></code> to copy a <a href="https://books.ropensci.org/targets/" class="external-link">targets</a> template that converts multiple registers in parallel into your project:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/use_template.html">use_template</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="reference/read_register.html">read_register()</a></code> to read a Parquet register as a DuckDB table:</p>
+<p>Use <code><a href="reference/read_register.html">read_register()</a></code> to quickly read a specific register (e.g. the BEF register) as a DuckDB table:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/read_register.html">read_register</a></span><span class="op">(</span><span class="st">"path/to/parquet_register/"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="reference/read_register.html">read_register</a></span><span class="op">(</span><span class="st">"bef"</span><span class="op">)</span></span></code></pre></div>
 <p>See <code><a href="articles/fastreg.html">vignette("fastreg")</a></code> for a complete guide.</p>
 </div>
 <div class="section level2">

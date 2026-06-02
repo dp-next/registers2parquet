@@ -120,7 +120,7 @@ flowchart TD
 Figure 2: Expected workflow for converting multiple registers using the
 targets pipeline.
 
-### Reading a Parquet files
+### Reading Parquet files
 
 fastreg provides three ways to read Parquet registers depending on the
 use case.
@@ -152,11 +152,11 @@ However, we can’t guarantee that the
 [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
 function will correctly guess and/or find the register as a Parquet
 dataset. So we also provide two more flexible functions:
-[`read_parquet_partition()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+[`read_parquet_dataset()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
 and
 [`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md).
 
-[`read_parquet_partition()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+[`read_parquet_dataset()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
 underlies
 [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md),
 but without guessing the path (or when the setting hasn’t been set). It

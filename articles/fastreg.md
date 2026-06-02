@@ -138,7 +138,7 @@ fastreg::convert(
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 bef           …wQ/E/rawdata/701020/bef.sas7bdat …c2.parquet      1000 <tibble>
+#> 1 bef           …lZ/E/rawdata/701020/bef.sas7bdat …b1.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -179,7 +179,7 @@ by the year extracted from the file name as seen below:
     #>         └── parquet-registers
     #>             └── bef
     #>                 └── year=__HIVE_DEFAULT_PARTITION__
-    #>                     └── part-a781c2.parquet
+    #>                     └── part-c11db1.parquet
 
 ## Converting multiple registers in parallel
 
@@ -204,8 +204,8 @@ pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpT9MJwQ/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
-#> ✔ Created '/tmp/RtmpT9MJwQ/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -247,7 +247,8 @@ functions. These look in the `fastreg.project_workdata_dir` and
 [`options()`](https://rdrr.io/r/base/options.html)) for any Parquet
 files following a specific pattern.
 
-You can use them interactively in the Console:
+You can use them interactively in the Console (which are shown in the
+temporary directory when rendered on the website):
 
     Console
 
@@ -255,8 +256,21 @@ You can use them interactively in the Console:
 
 # For individual files
 fastreg::list_parquet_files()
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=1999/part-8836ee.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=1999/part-cef5e1.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=2020/part-dd951f.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=2021/part-0e8eb5.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-87933f.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-c11db1.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb/year=1999/part-a16eff.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb/year=1999/part-b825c7.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb/year=2020/part-8e1f1e.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb/year=2021/part-e92c47.parquet
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-2e1d1d.parquet
 # For datasets (registers with all years).
 fastreg::list_parquet_datasets()
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/bef
+#> /tmp/Rtmp5WGKlZ/E/workdata/701020/parquet-registers/lmdb
 ```
 
 ## Reading a Parquet register
@@ -266,48 +280,81 @@ returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
 a powerful way to query and process large data without loading it all
 into memory.
 
-You can pass a directory to read a full partitioned register or a file
-path to read a single Parquet file:
+A quick way of reading a register is with the
+[`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
+function. This function looks for a given name of a register in either
+the `fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
+directories (set with
+[`options()`](https://rdrr.io/r/base/options.html)) and reads it as a
+DuckDB table. You can also use the more specific
+[`read_parquet_dataset()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+or
+[`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+functions to read from a specific directory or file path.
 
 ``` r
 
-# Partitioned register
-full_register <- fastreg::list_parquet_datasets()[1] |>
-  fastreg::read_register()
-full_register
+bef <- fastreg::read_register("bef")
+bef
 #> # Source:   table<arrow_001> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                                 year
 #>    <dbl> <chr>        <chr>     <chr>                                      <int>
-#>  1     2 108684730664 19320112  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  2     1 982144017357 20070716  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  3     2 672580814975 19800805  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  4     2 439008110445 20090628  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  5     1 489714666740 20170225  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  6     2 155331797020 19730330  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  7     2 777951655096 19341022  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  8     2 167007504860 20010318  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  9     2 132473802596 19530901  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#> 10     2 876820784981 19310817  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
+#>  1     2 108684730664 19320112  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  2     1 982144017357 20070716  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  3     2 672580814975 19800805  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  4     2 439008110445 20090628  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  5     1 489714666740 20170225  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  6     2 155331797020 19730330  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  7     2 777951655096 19341022  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  8     2 167007504860 20010318  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  9     2 132473802596 19530901  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#> 10     2 876820784981 19310817  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
 #> # ℹ more rows
-# Single file
-single_register <- fastreg::list_parquet_files()[1] |>
-  fastreg::read_register()
-single_register
-#> # Source:   table<arrow_002> [?? x 4]
+```
+
+Or directly with
+[`read_parquet_dataset()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+or
+[`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md):
+
+``` r
+
+fastreg::list_parquet_datasets()[1] |>
+  fastreg::read_parquet_dataset()
+#> # Source:   table<arrow_002> [?? x 5]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
+#>     koen pnr          foed_dato source_file                                 year
+#>    <dbl> <chr>        <chr>     <chr>                                      <int>
+#>  1     2 108684730664 19320112  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  2     1 982144017357 20070716  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  3     2 672580814975 19800805  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  4     2 439008110445 20090628  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  5     1 489714666740 20170225  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  6     2 155331797020 19730330  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  7     2 777951655096 19341022  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  8     2 167007504860 20010318  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  9     2 132473802596 19530901  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#> 10     2 876820784981 19310817  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#> # ℹ more rows
+
+# Or a single file
+fastreg::list_parquet_files()[1] |>
+  fastreg::read_parquet_file()
+#> # Source:   table<arrow_003> [?? x 4]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                                     
 #>    <dbl> <chr>        <chr>     <chr>                                           
-#>  1     2 108684730664 19320112  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  2     1 982144017357 20070716  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  3     2 672580814975 19800805  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  4     2 439008110445 20090628  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  5     1 489714666740 20170225  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  6     2 155331797020 19730330  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  7     2 777951655096 19341022  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  8     2 167007504860 20010318  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#>  9     2 132473802596 19530901  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
-#> 10     2 876820784981 19310817  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_1.sas7…
+#>  1     2 108684730664 19320112  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  2     1 982144017357 20070716  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  3     2 672580814975 19800805  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  4     2 439008110445 20090628  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  5     1 489714666740 20170225  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  6     2 155331797020 19730330  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  7     2 777951655096 19341022  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  8     2 167007504860 20010318  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#>  9     2 132473802596 19530901  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
+#> 10     2 876820784981 19310817  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_1.sas7…
 #> # ℹ more rows
 ```
 
@@ -316,23 +363,23 @@ For example, you can filter the data:
 
 ``` r
 
-full_register |>
+bef |>
   dplyr::filter(koen == 2) |>
   dplyr::compute()
 #> # Source:   table<dbplyr_TDD6kZ7SxR> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato source_file                                 year
 #>    <dbl> <chr>        <chr>     <chr>                                      <int>
-#>  1     2 108684730664 19320112  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  2     2 672580814975 19800805  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  3     2 439008110445 20090628  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  4     2 155331797020 19730330  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  5     2 777951655096 19341022  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  6     2 167007504860 20010318  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  7     2 132473802596 19530901  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  8     2 876820784981 19310817  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#>  9     2 527918979807 19540605  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
-#> 10     2 932479108596 19490511  /tmp/RtmpT9MJwQ/E/rawdata/701020/bef1999_…  1999
+#>  1     2 108684730664 19320112  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  2     2 672580814975 19800805  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  3     2 439008110445 20090628  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  4     2 155331797020 19730330  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  5     2 777951655096 19341022  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  6     2 167007504860 20010318  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  7     2 132473802596 19530901  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  8     2 876820784981 19310817  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#>  9     2 527918979807 19540605  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
+#> 10     2 932479108596 19490511  /tmp/Rtmp5WGKlZ/E/rawdata/701020/bef1999_…  1999
 #> # ℹ more rows
 ```
 

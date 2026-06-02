@@ -75,11 +75,12 @@ fastreg::use_template()
 
 Use
 [`read_register()`](https://dp-next.github.io/fastreg/reference/read_register.md)
-to read a Parquet register as a DuckDB table:
+to quickly read a specific register (e.g. the BEF register) as a DuckDB
+table:
 
 ``` r
 
-fastreg::read_register("path/to/parquet_register/")
+fastreg::read_register("bef")
 ```
 
 See

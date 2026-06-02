@@ -7,7 +7,7 @@ incorrectly guesses or can't find the register.
 ## Usage
 
 ``` r
-read_parquet_partition(path)
+read_parquet_dataset(path)
 
 read_parquet_file(path)
 ```
@@ -25,6 +25,6 @@ A DuckDB table.
 
 ## Functions
 
-- `read_parquet_partition()`: Reads a Parquet partitioned directory.
+- `read_parquet_dataset()`: Reads a Parquet partitioned directory.
 
 - `read_parquet_file()`: Reads a single Parquet file.

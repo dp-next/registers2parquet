@@ -1,41 +1,31 @@
 # Read a Parquet register
 
-If you want to read a partitioned Parquet register, provide the path to
-the directory (e.g., `path/to/parquet/register/`). If you want to read a
-single Parquet file, provide the path to the file (e.g.,
-`path/to/parquet/register.parquet`).
+This function uses the options `fastreg.project_rawdata_dir` and
+`fastreg.project_workdata_dir` when set in
+[`options()`](https://rdrr.io/r/base/options.html) or will try to guess
+the path by using the project ID and the base directories
+`E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. It only
+reads Parquet datasets (those that are partitioned with the pattern
+`year=`). If this function doesn't work, use
+[`read_parquet_dataset()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+or
+[`read_parquet_file()`](https://dp-next.github.io/fastreg/reference/read_parquet.md)
+instead.
 
 ## Usage
 
 ``` r
-read_register(path)
+read_register(name)
 ```
 
 ## Arguments
 
-- path:
+- name:
 
-  Path to a Parquet file or directory.
+  Name of the Parquet dataset (i.e, the register name). See a list of
+  available datasets with
+  [`list_parquet_datasets()`](https://dp-next.github.io/fastreg/reference/list_parquet.md).
 
 ## Value
 
 A DuckDB table.
-
-## Examples
-
-``` r
-read_register(fs::path_package(
-  "fastreg",
-  "extdata",
-  "test.parquet"
-))
-#> # Source:   table<arrow_001> [?? x 3]
-#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
-#>     pnr  koen foed_dato 
-#>   <int> <int> <date>    
-#> 1     1     0 2000-01-01
-#> 2     2     1 1995-05-05
-#> 3     3     0 2010-10-10
-#> 4     4     1 1980-12-12
-#> 5     5     0 2005-03-03
-```

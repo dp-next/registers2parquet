@@ -190,7 +190,7 @@ Figure 2: Expected workflow for converting multiple registers using the targets
 </div>
 </div>
 </div>
-</section><section class="level3"><h3 id="reading-a-parquet-files">Reading a Parquet files<a class="anchor" aria-label="anchor" href="#reading-a-parquet-files"></a>
+</section><section class="level3"><h3 id="reading-parquet-files">Reading Parquet files<a class="anchor" aria-label="anchor" href="#reading-parquet-files"></a>
 </h3>
 <p>fastreg provides three ways to read Parquet registers depending on the use case.</p>
 <p><code><a href="../reference/read_register.html">read_register()</a></code> is the main read function. We wanted a function that could make it really easy to use and read in a particular register (with data from all available years if it is in a partitioned Partition format). For example, to read in <code>bef</code> (population register) as a DuckDB table, we wanted it as simple as <code>read_register("bef")</code>. It should automatically find the relevant Parquet dataset (as partition) and read them in as a single DuckDB table.</p>
@@ -215,8 +215,8 @@ Figure 3: Expected workflow for reading a Parquet register as a DuckDB table us
 </div>
 </div>
 </div>
-<p>However, we can’t guarantee that the <code><a href="../reference/read_register.html">read_register()</a></code> function will correctly guess and/or find the register as a Parquet dataset. So we also provide two more flexible functions: <code><a href="../reference/read_parquet.html">read_parquet_partition()</a></code> and <code><a href="../reference/read_parquet.html">read_parquet_file()</a></code>.</p>
-<p><code><a href="../reference/read_parquet.html">read_parquet_partition()</a></code> underlies <code><a href="../reference/read_register.html">read_register()</a></code>, but without guessing the path (or when the setting hasn’t been set). It takes a direct path to the Parquet dataset (the directory containing the Hive-partitioned Parquet files), applies some settings to more smoothly read in the datasets, and reads it as a DuckDB table. This function can be used if <code><a href="../reference/read_register.html">read_register()</a></code> failed to correctly read the right dataset.</p>
+<p>However, we can’t guarantee that the <code><a href="../reference/read_register.html">read_register()</a></code> function will correctly guess and/or find the register as a Parquet dataset. So we also provide two more flexible functions: <code><a href="../reference/read_parquet.html">read_parquet_dataset()</a></code> and <code><a href="../reference/read_parquet.html">read_parquet_file()</a></code>.</p>
+<p><code><a href="../reference/read_parquet.html">read_parquet_dataset()</a></code> underlies <code><a href="../reference/read_register.html">read_register()</a></code>, but without guessing the path (or when the setting hasn’t been set). It takes a direct path to the Parquet dataset (the directory containing the Hive-partitioned Parquet files), applies some settings to more smoothly read in the datasets, and reads it as a DuckDB table. This function can be used if <code><a href="../reference/read_register.html">read_register()</a></code> failed to correctly read the right dataset.</p>
 <p><code><a href="../reference/read_parquet.html">read_parquet_file()</a></code> is the simplest read function. It takes a direct path to a <code>.parquet</code> file (not a partitioned dataset) and reads it as a DuckDB table. This can used if the register isn’t in a partitioned format.</p>
 </section><section class="level3"><h3 id="list-sas-and-parquet-files">List SAS and Parquet files<a class="anchor" aria-label="anchor" href="#list-sas-and-parquet-files"></a>
 </h3>
