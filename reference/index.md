@@ -26,5 +26,5 @@
 
 ## Log functions
 
-- [`log_as_table()`](https://dp-next.github.io/fastreg/reference/log_as_table.md)
+- [`print_log_row_count()`](https://dp-next.github.io/fastreg/reference/print_log_row_count.md)
   : Log chunk information as a table
