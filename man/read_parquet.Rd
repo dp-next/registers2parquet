@@ -2,11 +2,11 @@
 % Please edit documentation in R/read.R
 \name{read_parquet}
 \alias{read_parquet}
-\alias{read_parquet_partition}
+\alias{read_parquet_dataset}
 \alias{read_parquet_file}
 \title{Read a single Parquet file or a partitioned dataset as DuckDB table}
 \usage{
-read_parquet_partition(path)
+read_parquet_dataset(path)
 
 read_parquet_file(path)
 }
@@ -23,7 +23,7 @@ the register.
 }
 \section{Functions}{
 \itemize{
-\item \code{read_parquet_partition()}: Reads a Parquet partitioned directory.
+\item \code{read_parquet_dataset()}: Reads a Parquet partitioned directory.
 
 \item \code{read_parquet_file()}: Reads a single Parquet file.
 

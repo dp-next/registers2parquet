@@ -4,24 +4,21 @@
 \alias{read_register}
 \title{Read a Parquet register}
 \usage{
-read_register(path)
+read_register(name)
 }
 \arguments{
-\item{path}{Path to a Parquet file or directory.}
+\item{name}{Name of the Parquet dataset (i.e, the register name). See a list of available datasets with
+\code{\link[=list_parquet_datasets]{list_parquet_datasets()}}.}
 }
 \value{
 A DuckDB table.
 }
 \description{
-If you want to read a partitioned Parquet register, provide the path to the
-directory (e.g., \verb{path/to/parquet/register/}).
-If you want to read a single Parquet file, provide the path to the file
-(e.g., \code{path/to/parquet/register.parquet}).
-}
-\examples{
-read_register(fs::path_package(
-  "fastreg",
-  "extdata",
-  "test.parquet"
-))
+This function uses the options \code{fastreg.project_rawdata_dir} and
+\code{fastreg.project_workdata_dir} when set in \code{\link[=options]{options()}} or will try to guess
+the path by using the project ID and the base directories
+\verb{E:/<project-id>/rawdata/} and \verb{E:/<project-id>/workdata/}. It only reads
+Parquet datasets (those that are partitioned with the pattern \verb{year=}). If
+this function doesn't work, use \code{\link[=read_parquet_dataset]{read_parquet_dataset()}} or
+\code{\link[=read_parquet_file]{read_parquet_file()}} instead.
 }

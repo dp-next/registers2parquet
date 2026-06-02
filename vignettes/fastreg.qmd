@@ -229,13 +229,11 @@ look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with `options()`) for any
 Parquet files following a specific pattern.
 
-You can use them interactively in the Console:
-
-<!-- TODO: remove eval false when other functions have been revised to match this style -->
+You can use them interactively in the Console (which are shown in the
+temporary directory when rendered on the website):
 
 ```{r list-files}
 #| filename: "Console"
-#| eval: false
 # For individual files
 fastreg::list_parquet_files()
 # For datasets (registers with all years).
@@ -249,25 +247,35 @@ returning a [DuckDB](https://duckdb.org/) table. Using a DuckDB table is
 a powerful way to query and process large data without loading it all
 into memory.
 
-You can pass a directory to read a full partitioned register or a file
-path to read a single Parquet file:
+A quick way of reading a register is with the `read_register()`
+function. This function looks for a given name of a register in either
+the `fastreg.project_workdata_dir` or `fastreg.project_rawdata_dir`
+directories (set with `options()`) and reads it as a DuckDB table. You
+can also use the more specific `read_parquet_dataset()` or
+`read_parquet_file()` functions to read from a specific directory or
+file path.
 
 ```{r read-file}
-# Partitioned register
-full_register <- fastreg::list_parquet_datasets()[1] |>
-  fastreg::read_register()
-full_register
-# Single file
-single_register <- fastreg::list_parquet_files()[1] |>
-  fastreg::read_register()
-single_register
+bef <- fastreg::read_register("bef")
+bef
+```
+
+Or directly with `read_parquet_dataset()` or `read_parquet_file()`:
+
+```{r read-partition}
+fastreg::list_parquet_datasets()[1] |>
+  fastreg::read_parquet_dataset()
+
+# Or a single file
+fastreg::list_parquet_files()[1] |>
+  fastreg::read_parquet_file()
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
 For example, you can filter the data:
 
 ```{r filter-file}
-full_register |>
+bef |>
   dplyr::filter(koen == 2) |>
   dplyr::compute()
 ```
