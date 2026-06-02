@@ -111,11 +111,11 @@ test_that("files with extension .parq can also be read", {
     simulate_registers_with_paths("bef")$data[[1]],
     sink = path
   )
-  expect_no_error(read_register_file(path))
+  expect_no_error(read_parquet_file(path))
 })
 
 
-test_that("read_register_dataset() reads files with different columns", {
+test_that("read_parquet_dataset() reads files with different columns", {
   # Faux bef with lmdb structure, saved separately and combined with sas paths
   sas_dir <- fs::path_temp("different_columns/sas")
   parquet_dir <- fs::path_temp("different_columns/parquet")
@@ -169,4 +169,42 @@ test_that("read_parquet_dataset() errors with incompatible schemas", {
   })
 
   expect_error(read_parquet_dataset(incompatible_output), "incompatible")
+})
+
+# Test read_register() ---------------------------------------------------------
+
+test_that("read in a register", {
+  withr::with_options(
+    list(
+      fastreg.project_rawdata_dir = fs::path_temp("E/rawdata/202020/"),
+      fastreg.project_workdata_dir = fs::path_temp("E/workdata/202020/")
+    ),
+    {
+      simulate_registers_with_paths(
+        "bef",
+        years = "2020",
+        n = 10,
+        output_dir = get_project_rawdata_dir()
+      ) |>
+        purrr::pwalk(write_to_sas)
+
+      convert(
+        get_project_rawdata_dir() |>
+          list_sas_files(),
+        get_project_workdata_dir()
+      )
+
+      expect_match(class(read_register("bef")), "duckdb", all = FALSE)
+      expect_shape(dplyr::collect(read_register("bef")), nrow = 10)
+      expect_error(
+        # Warning about project id from internal `get_project_rawdata_dir()`.
+        suppressWarnings(read_register("non_existing")),
+        regexp = "`name` must be one of"
+      )
+
+      # Clean up
+      fs::file_delete(list_sas_files(get_project_rawdata_dir()))
+      fs::file_delete(list_parquet_files())
+    }
+  )
 })
