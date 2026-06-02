@@ -1,6 +1,6 @@
 Package: fastreg
 Title: Fast Conversion and Querying of Danish Registers with 'Parquet'
-Version: 0.12.1
+Version: 0.12.2
 Authors@R: c(
     person("Signe Kirk", "Brødbæk", , "signekb@clin.au.dk", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0000-2208-7088")),
@@ -51,6 +51,6 @@ VignetteBuilder:
     quarto
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

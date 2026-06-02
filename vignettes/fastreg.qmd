@@ -44,45 +44,6 @@ formats like CSV), Parquet offers:
   [Python](https://www.python.org/), and beyond, making it easy to
   integrate into modern workflows.
 
-## Setup
-
-For the examples below, we've simulated SAS register data for two
-registers, `bef` and `lmdb`:
-
-```{r prepare}
-#| code-fold: true
-#| code-summary: "Show setup code"
-sas_dir <- fs::path_temp("sas-dir")
-fs::dir_create(sas_dir)
-
-bef_list <- fastreg::simulate_register(
-  "bef",
-  c("", "1999", "1999_1", "2020"),
-  n = 1000
-) |>
-  # Randomly (re)generate koen, so we don't rely on any potential future
-  # changes to the simulated data from osdc.
-  purrr::map(\(x) {
-    x |> dplyr::mutate("koen" = sample(c(1, 2), 1000, replace = TRUE))
-  })
-
-lmdb_list <- fastreg::simulate_register(
-  "lmdb",
-  c("2020", "2021"),
-  n = 1000
-)
-
-fastreg::save_as_sas(
-  c(bef_list, lmdb_list),
-  sas_dir
-)
-```
-
-```{r setup-tree}
-#| echo: false
-show_tree(sas_dir)
-```
-
 ## Settings to correct paths
 
 Many of fastreg's functions depend on the locations of the original SAS
@@ -96,9 +57,11 @@ script, write (using a temporary directory here for these examples):
 
 ```{r options}
 options(
-  # With a fake project ID.
-  fastreg.project_rawdata_dir = fs::path_temp("rawdata/701010/"),
-  fastreg.project_workdata_dir = fs::path_temp("workdata/701010/")
+  # With a fake project ID and the temporary directory.
+  # Uses `E` rather than `E:` because Windows has issues with a colon in the
+  # path when using a temporary location.
+  fastreg.project_rawdata_dir = fs::path_temp("E/rawdata/701020/"),
+  fastreg.project_workdata_dir = fs::path_temp("E/workdata/701020/parquet-registers/")
 )
 ```
 
@@ -126,6 +89,37 @@ open the `.Rprofile`, run:
 usethis::edit_r_profile("user")
 ```
 
+## Setup
+
+For the examples below, we've simulated SAS register data for two
+registers, `bef` and `lmdb`:
+
+```{r prepare}
+rawdata_dir <- getOption("fastreg.project_rawdata_dir")
+workdata_dir <- getOption("fastreg.project_workdata_dir")
+
+registers_tbl <- fastreg::simulate_registers_with_paths(
+  c("bef", "lmdb"),
+  c("", "1999", "1999_1", "2020", "2021"),
+  n = 1000,
+  output_dir = rawdata_dir
+)
+
+sas_paths <- registers_tbl |>
+  purrr::pwalk(fastreg::write_to_sas) |>
+  dplyr::pull(output_path)
+```
+
+```{r setup-tree}
+#| echo: false
+# Show how files look relative to "E" to mimic DST
+rawdata_dir |>
+  # Get to the `E` directory.
+  fs::path_dir() |>
+  fs::path_dir() |>
+  show_tree()
+```
+
 ## Converting a single file
 
 Converting one file from SAS to Parquet in fastreg isn't a simple change
@@ -136,12 +130,9 @@ extracted from the file name. Use the `convert()` function to convert a
 single SAS file to a year-partitioned Parquet format:
 
 ```{r convert-file}
-sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
-output_file_dir <- fs::path_temp("output-file-dir")
-
 fastreg::convert(
-  path = sas_file,
-  output_dir = output_file_dir
+  path = sas_paths[1],
+  output_dir = workdata_dir
 )
 ```
 
@@ -164,7 +155,12 @@ by the year extracted from the file name as seen below:
 
 ```{r output-tree-file}
 #| echo: false
-show_tree(output_file_dir)
+workdata_dir |>
+  # Get to the `E` directory.
+  fs::path_dir() |>
+  fs::path_dir() |>
+  fs::path_dir() |>
+  show_tree()
 ```
 
 ## Converting multiple registers in parallel
@@ -184,7 +180,7 @@ conversion log is written to a PDF, named
 In this example, we're outputting the template to a temporary directory.
 
 ```{r use-targets}
-pipeline_dir <- fs::path_temp("pipeline-dir")
+pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
@@ -195,8 +191,8 @@ section:
 
 ```{r config}
 config <- list(
-  sas_paths = fastreg::list_sas_files(fs::path_temp("sas-dir")),
-  output_dir = fs::path(pipeline_dir, "parquet-registers")
+  sas_paths = fastreg::list_sas_files(rawdata_dir),
+  output_dir = workdata_dir
 )
 ```
 
@@ -211,6 +207,15 @@ After you've updated the `config` section, you can run the pipeline:
 targets::tar_make()
 ```
 
+```{r}
+#| label: "manual-conversion"
+#| include: false
+fastreg::list_sas_files(rawdata_dir) |>
+  purrr::walk(\(path) {
+    fastreg::convert(path, workdata_dir)
+  })
+```
+
 The pipeline will find all SAS files from `input_dir` and convert each
 file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
@@ -222,8 +227,7 @@ To list what Parquet files or datasets are available, use the
 `list_parquet_files()` and `list_parquet_datasets()` functions. These
 look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with `options()`) for any
-Parquet files following a specific pattern. See the reference
-documentation for more details.
+Parquet files following a specific pattern.
 
 You can use them interactively in the Console:
 
@@ -233,9 +237,9 @@ You can use them interactively in the Console:
 #| filename: "Console"
 #| eval: false
 # For individual files
-list_parquet_files()
+fastreg::list_parquet_files()
 # For datasets (registers with all years).
-list_parquet_datasets()
+fastreg::list_parquet_datasets()
 ```
 
 ## Reading a Parquet register
@@ -249,15 +253,21 @@ You can pass a directory to read a full partitioned register or a file
 path to read a single Parquet file:
 
 ```{r read-file}
-file <- fastreg::read_register(output_file_dir)
-file
+# Partitioned register
+full_register <- fastreg::list_parquet_datasets()[1] |>
+  fastreg::read_register()
+full_register
+# Single file
+single_register <- fastreg::list_parquet_files()[1] |>
+  fastreg::read_register()
+single_register
 ```
 
 The resulting DuckDB table can be filtered and transformed with `dplyr`.
 For example, you can filter the data:
 
 ```{r filter-file}
-file |>
+full_register |>
   dplyr::filter(koen == 2) |>
   dplyr::compute()
 ```

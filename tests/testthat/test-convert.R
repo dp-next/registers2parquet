@@ -1,35 +1,38 @@
 # Setup ------------------------------------------------------------------------
 
 # n = 11000 to test chunking logic.
-register_name <- "bef"
-bef_list <- simulate_register(
-  register_name,
-  year = c("", "1999_1", "1999_2", "2020")
+bef_list <- simulate_registers_with_paths(
+  "bef",
+  years = c("", "1999_1", "1999_2", "2020")
 )
-sas_path <- fs::path_temp("sas_bef")
-save_as_sas(bef_list, sas_path)
-sas_bef <- fs::dir_ls(sas_path)
+sas_paths <- bef_list |>
+  purrr::pwalk(write_to_sas)
 
 # Test convert() ----------------------------------------------------------
 
 # Setup: Convert single file
 single_file_path <- fs::path_temp("parquet_single_file")
 output <- convert(
-  path = sas_bef[[1]],
+  path = sas_paths$output_path[1],
   output_dir = single_file_path
 )
+
 data_actual <- arrow::open_dataset(
   single_file_path,
   partitioning = arrow::hive_partition(year = arrow::int32())
 ) |>
   dplyr::as_tibble()
-data_expected <- haven::read_sas(sas_bef[[1]]) |>
-  dplyr::mutate(source_file = as.character(sas_bef[[1]]), year = NA_integer_)
+
+data_expected <- haven::read_sas(sas_paths$output_path[1]) |>
+  dplyr::mutate(
+    source_file = as.character(sas_paths$output_path[1]),
+    year = NA_integer_
+  )
 
 test_that("convert() returns a tibble describing the written chunks", {
   expect_s3_class(output, "tbl_df")
   expect_equal(nrow(output), 1L)
-  expect_equal(output$input_path, sas_bef[[1]])
+  expect_equal(output$input_path, sas_paths$output_path[1])
   expect_true(fs::file_exists(output$output_path))
   expect_equal(output$row_count, nrow(data_expected))
 })
@@ -68,13 +71,13 @@ test_that("convert() errors with incorrect input parameters", {
   )
   # Incorrect output_dir type.
   expect_error(
-    convert(path = sas_bef[[1]], output_dir = 1),
+    convert(path = sas_paths$output_path[1], output_dir = 1),
     regexp = "string"
   )
   # output_dir must be scalar.
   expect_error(
     convert(
-      path = sas_bef[[1]],
+      path = sas_paths$output_path[1],
       output_dir = rep(single_file_path, times = 2)
     ),
     regexp = "length 1"
@@ -82,7 +85,7 @@ test_that("convert() errors with incorrect input parameters", {
   # Incorrect chunk size (lower than allowed).
   expect_error(
     convert(
-      path = sas_bef[[1]],
+      path = sas_paths$output_path[1],
       output_dir = single_file_path,
       chunk_size = 10L
     ),
@@ -93,7 +96,7 @@ test_that("convert() errors with incorrect input parameters", {
 test_that("convert() partitions by year based on file name", {
   expected <- fs::path(
     single_file_path,
-    register_name,
+    "bef",
     "year=__HIVE_DEFAULT_PARTITION__"
   )
 
@@ -108,7 +111,7 @@ test_that("convert() partitions by year based on file name", {
 test_that("convert() creates expected n parts when chunk_size < nrow", {
   chunks_path <- fs::path_temp("chunks_path")
   chunk_size <- 10000L
-  sas_file <- sas_bef[[1]]
+  sas_file <- sas_paths$output_path[1]
 
   convert(
     path = sas_file,
