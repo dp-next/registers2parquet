@@ -20,7 +20,8 @@ each release.
 
 ### Refactor
 
-- ♻️ `read_register()` takes a register name as argument, not path (#299)
+- ♻️ `read_register()` takes a register name as argument, not path
+  (#299)
 
 ## 0.12.4 (2026-06-02)
 
