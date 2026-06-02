@@ -1,45 +1,48 @@
 # Setup ------------------------------------------------------------------------
 
-# TODO: Update setup when save_as_sas() is deprecated.
-test_dir <- fs::path_temp("log_dir")
-test_input_dir <- fs::path(test_dir, "input")
-test_output_dir <- fs::path(test_dir, "output")
-fs::dir_create(test_input_dir)
+test_output_dir <- fs::path_temp()
 fs::dir_create(test_output_dir)
 
 # Create SAS files.
-bef_list <- simulate_register("bef", c("1999", "2020"))
-lmdb_list <- simulate_register(
+bef <- simulate_registers_with_paths("bef", c("1999", "2020"))
+lmdb_no_atc <- simulate_registers_with_paths(
   "lmdb",
-  as.character(c(2020:2025, 2031, 2035, 2041, 2045, 2051))
-)
+  as.character(c(2030:2033))
+) |>
+  dplyr::mutate(
+    data = purrr::map(data, \(d) {
+      d |>
+        dplyr::select(-atc)
+    })
+  )
+lmdb_edited_cols <- simulate_registers_with_paths(
+  "lmdb",
+  as.character(c(2040:2043))
+) |>
+  dplyr::mutate(
+    data = purrr::map(data, \(d) {
+      d |>
+        dplyr::mutate(pnr = as.numeric(pnr), new_col = 3)
+    })
+  )
+lmdb <- simulate_registers_with_paths(
+  "lmdb",
+  as.character(c(2020:2025, 2045))
+) |>
+  rbind(lmdb_no_atc, lmdb_edited_cols)
 
-for (yr in c("2021", "2031", "2041", "2051")) {
-  lmdb_list[[paste0("lmdb", yr)]] <- lmdb_list[[paste0("lmdb", yr)]] |>
-    dplyr::mutate(pnr = as.numeric(pnr), new_col = 3) |>
-    dplyr::select(-atc)
-}
 
-for (yr in c("2025", "2035", "2045")) {
-  lmdb_list[[paste0("lmdb", yr)]] <- lmdb_list[[paste0("lmdb", yr)]] |>
-    dplyr::mutate(apk = as.numeric(apk), new_col = 3, another_new_col = "new")
-}
+bef |> purrr::pwalk(write_to_sas)
+lmdb |> purrr::pwalk(write_to_sas)
 
-purrr::walk(list(bef_list, lmdb_list), \(register) {
-  save_as_sas(register, test_input_dir)
-})
-
-all_files <- fastreg::list_sas_files(test_input_dir)
-
-log_bef <- all_files |>
-  stringr::str_subset("bef") |>
+log_bef <- bef$output_path |>
   purrr::map(\(path) {
     convert(path, output_dir = test_output_dir)
   }) |>
   purrr::list_rbind()
 
-log_lmdb <- all_files |>
-  stringr::str_subset("lmdb") |>
+
+log_lmdb <- lmdb$output_path |>
   purrr::map(\(path) {
     convert(path, output_dir = test_output_dir)
   }) |>
@@ -69,7 +72,7 @@ test_that("print_log_schema() only include expected elements with no diff", {
   expect_true(any(stringr::str_detect(log_schema_no_diff, "same schema")))
   # No mentions of differences throughout.
   expect_false(any(grepl("differences", log_schema_no_diff)))
-  # Only one table (found by looking for the separator ":-").
+  # Only one table (one reference).
   n_tables <- log_schema_no_diff |>
     stringr::str_detect("^\\|[:-]") |>
     sum()
@@ -80,13 +83,13 @@ test_that("print_log_schema() includes expected elements with diffs", {
   # Description phrasing.
   expect_true(any(stringr::str_detect(log_schema_diff, "most common")))
   # Fraction of schemas matching most common schema/total files.
-  expect_match(log_schema_diff, "4/11", all = FALSE, fixed = TRUE)
+  expect_match(log_schema_diff, "7/15", all = FALSE, fixed = TRUE)
   # Differences header.
   expect_true(any(stringr::str_detect(
     log_schema_diff,
     "Schema differences"
   )))
-  # Three tables (found by looking for the separator ":-").
+  # Three tables (one reference, two with schema diffs).
   n_tables <- log_schema_diff |>
     stringr::str_detect("^\\|[:-]") |>
     sum()
