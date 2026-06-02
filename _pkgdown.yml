@@ -3,26 +3,26 @@ template:
   bootstrap: 5
 
 navbar:
- components:
-   articles:
-    text: Vignettes
-    menu:
-    - text: Design
-      href: articles/design.html
+  components:
+    articles:
+      text: Vignettes
+      menu:
+        - text: Design
+          href: articles/design.html
 
 reference:
-- title: Main functions
-- contents:
-  - convert
-  - read_register
-  - read_parquet
-  - use_template
-- title: Helper functions
-- contents:
-  - starts_with("list")
-  - starts_with("get")
-  - save_as_sas
-  - simulate_register
-- title: Log functions
-- contents:
-  - contains("log")
+  - title: Main functions
+  - contents:
+      - convert
+      - read_register
+      - read_parquet
+      - use_template
+  - title: Helper functions
+  - contents:
+      - starts_with("list")
+      - starts_with("get")
+      - write_to_sas
+      - simulate_registers_with_paths
+  - title: Log functions
+  - contents:
+      - contains("log")
