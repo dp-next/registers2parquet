@@ -31,10 +31,7 @@ for (register in unique(conversion_log$register_name)) {
   cat("## ", register, "\n\n")
 
   register_log |>
-    fastreg::log_as_table() |>
-    print()
-
-  register_log |>
+    fastreg::print_log_row_count() |>
     fastreg::print_log_schema()
 }
 ```
