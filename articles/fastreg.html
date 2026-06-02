@@ -91,55 +91,17 @@
 <strong>Faster queries</strong>: The columnar layout speeds up analytical queries that only need a subset of columns.</li>
 <li>
 <strong>Wide tool support</strong>: Parquet is supported across data processing frameworks in <a href="https://www.r-project.org/" class="external-link">R</a>, <a href="https://www.python.org/" class="external-link">Python</a>, and beyond, making it easy to integrate into modern workflows.</li>
-</ul></section><section class="level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
-</h2>
-<p>For the examples below, we’ve simulated SAS register data for two registers, <code>bef</code> and <code>lmdb</code>:</p>
-<div class="cell">
-<details class="code-fold"><summary>Show setup code</summary><div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sas_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"sas-dir"</span><span class="op">)</span></span>
-<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">sas_dir</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">bef_list</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/simulate_register.html">simulate_register</a></span><span class="op">(</span></span>
-<span>  <span class="st">"bef"</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"1999"</span>, <span class="st">"1999_1"</span>, <span class="st">"2020"</span><span class="op">)</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">1000</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="co"># Randomly (re)generate koen, so we don't rely on any potential future</span></span>
-<span>  <span class="co"># changes to the simulated data from osdc.</span></span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">x</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"koen"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">1000</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lmdb_list</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/simulate_register.html">simulate_register</a></span><span class="op">(</span></span>
-<span>  <span class="st">"lmdb"</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020"</span>, <span class="st">"2021"</span><span class="op">)</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">1000</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/save_as_sas.html">save_as_sas</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bef_list</span>, <span class="va">lmdb_list</span><span class="op">)</span>,</span>
-<span>  <span class="va">sas_dir</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details>
-</div>
-<div class="cell">
-<pre><code><span><span class="co">#&gt; sas-dir</span></span>
-<span><span class="co">#&gt; ├── bef.sas7bdat</span></span>
-<span><span class="co">#&gt; ├── bef1999.sas7bdat</span></span>
-<span><span class="co">#&gt; ├── bef1999_1.sas7bdat</span></span>
-<span><span class="co">#&gt; ├── bef2020.sas7bdat</span></span>
-<span><span class="co">#&gt; ├── lmdb2020.sas7bdat</span></span>
-<span><span class="co">#&gt; └── lmdb2021.sas7bdat</span></span></code></pre>
-</div>
-</section><section class="level2"><h2 id="settings-to-correct-paths">Settings to correct paths<a class="anchor" aria-label="anchor" href="#settings-to-correct-paths"></a>
+</ul></section><section class="level2"><h2 id="settings-to-correct-paths">Settings to correct paths<a class="anchor" aria-label="anchor" href="#settings-to-correct-paths"></a>
 </h2>
 <p>Many of fastreg’s functions depend on the locations of the original SAS files and the eventual Parquet files including the conversion, writing, and reading functions. Through <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> you can set these paths in two settings: <code>fastreg.project_rawdata_dir</code> and <code>fastreg.project_workdata_dir</code>. You can set these <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> at the top of your R script or Quarto document, in your R Project’s <code>.Rprofile</code>, or in your user-level <code>.Rprofile</code>. To add to the file, at the top of an R script, write (using a temporary directory here for these examples):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span></span>
-<span>  <span class="co"># With a fake project ID.</span></span>
-<span>  fastreg.project_rawdata_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"rawdata/701010/"</span><span class="op">)</span>,</span>
-<span>  fastreg.project_workdata_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"workdata/701010/"</span><span class="op">)</span></span>
+<span>  <span class="co"># With a fake project ID and the temporary directory.</span></span>
+<span>  <span class="co"># Uses `E` rather than `E:` because Windows has issues with a colon in the</span></span>
+<span>  <span class="co"># path when using a temporary location.</span></span>
+<span>  fastreg.project_rawdata_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"E/rawdata/701020/"</span><span class="op">)</span>,</span>
+<span>  fastreg.project_workdata_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"E/workdata/701020/parquet-registers/"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>If you want to set those exact same options in the R Project’s <code>.Rprofile</code>, run the following line in your Console to open up the <code>.Rprofile</code> file for the project:</p>
@@ -148,7 +110,7 @@
 <div class="code-with-filename-file">
 <pre><strong>Console</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/edit.html" class="external-link">edit_r_profile</a></span><span class="op">(</span><span class="st">"project"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -159,27 +121,58 @@
 <div class="code-with-filename-file">
 <pre><strong>Console</strong></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/edit.html" class="external-link">edit_r_profile</a></span><span class="op">(</span><span class="st">"user"</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+</section><section class="level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
+<p>For the examples below, we’ve simulated SAS register data for two registers, <code>bef</code> and <code>lmdb</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rawdata_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fastreg.project_rawdata_dir"</span><span class="op">)</span></span>
+<span><span class="va">workdata_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fastreg.project_workdata_dir"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">registers_tbl</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/simulate_registers_with_paths.html">simulate_registers_with_paths</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bef"</span>, <span class="st">"lmdb"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"1999"</span>, <span class="st">"1999_1"</span>, <span class="st">"2020"</span>, <span class="st">"2021"</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="va">rawdata_dir</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sas_paths</span> <span class="op">&lt;-</span> <span class="va">registers_tbl</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html" class="external-link">pwalk</a></span><span class="op">(</span><span class="fu">fastreg</span><span class="fu">::</span><span class="va"><a href="../reference/write_to_sas.html">write_to_sas</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">output_path</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="cell">
+<pre><code><span><span class="co">#&gt; E</span></span>
+<span><span class="co">#&gt; └── rawdata</span></span>
+<span><span class="co">#&gt;     └── 701020</span></span>
+<span><span class="co">#&gt;         ├── bef.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── bef1999.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── bef1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── bef2020.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── bef2021.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── lmdb.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── lmdb1999.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── lmdb1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt;         ├── lmdb2020.sas7bdat</span></span>
+<span><span class="co">#&gt;         └── lmdb2021.sas7bdat</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-a-single-file">Converting a single file<a class="anchor" aria-label="anchor" href="#converting-a-single-file"></a>
 </h2>
 <p>Converting one file from SAS to Parquet in fastreg isn’t a simple change of file extension. We make use of Parquet’s Hive partitioning to organise the output by year, for easier querying and management. So the output Parquet file is written to a subdirectory named after the year extracted from the file name. Use the <code><a href="../reference/convert.html">convert()</a></code> function to convert a single SAS file to a year-partitioned Parquet format:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sas_file</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">sas_dir</span>, <span class="st">"bef2020.sas7bdat"</span><span class="op">)</span></span>
-<span><span class="va">output_file_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"output-file-dir"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/convert.html">convert</a></span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="va">sas_file</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">output_file_dir</span></span>
+<code class="sourceCode R"><span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/convert.html">convert</a></span><span class="op">(</span></span>
+<span>  path <span class="op">=</span> <span class="va">sas_paths</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="va">workdata_dir</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Converted 'bef2020.sas7bdat'</span></span>
+<span><span class="co">#&gt; ✔ Converted 'bef.sas7bdat'</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 5</span></span>
 <span><span class="co">#&gt;   register_name input_path                        output_path row_count schema  </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;         &lt;fs::path&gt;                        &lt;fs::path&gt;      &lt;int&gt; &lt;list&gt;  </span></span>
-<span><span class="co">#&gt; 1 bef           …pq10HDm/sas-dir/bef2020.sas7bdat …32.parquet      1000 &lt;tibble&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 bef           …jb/E/rawdata/701020/bef.sas7bdat …04.parquet      1000 &lt;tibble&gt;</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/convert.html">convert()</a></code> reads files in chunks (to be able to handle larger-than-memory data) with a default of reading 1 million rows, extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert.html">?convert</a></code> for more details.</p>
 <div>
@@ -190,10 +183,25 @@
 </div>
 <p>Even though this only converts a single file, the output is partitioned by the year extracted from the file name as seen below:</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; output-file-dir</span></span>
-<span><span class="co">#&gt; └── bef</span></span>
-<span><span class="co">#&gt;     └── year=2020</span></span>
-<span><span class="co">#&gt;         └── part-d5eb32.parquet</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; E</span></span>
+<span><span class="co">#&gt; ├── rawdata</span></span>
+<span><span class="co">#&gt; │   └── 701020</span></span>
+<span><span class="co">#&gt; │       ├── bef.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── bef1999.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── bef1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── bef2020.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── bef2021.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── lmdb.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── lmdb1999.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── lmdb1999_1.sas7bdat</span></span>
+<span><span class="co">#&gt; │       ├── lmdb2020.sas7bdat</span></span>
+<span><span class="co">#&gt; │       └── lmdb2021.sas7bdat</span></span>
+<span><span class="co">#&gt; └── workdata</span></span>
+<span><span class="co">#&gt;     └── 701020</span></span>
+<span><span class="co">#&gt;         └── parquet-registers</span></span>
+<span><span class="co">#&gt;             └── bef</span></span>
+<span><span class="co">#&gt;                 └── year=__HIVE_DEFAULT_PARTITION__</span></span>
+<span><span class="co">#&gt;                     └── part-0f9504.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
 </h2>
@@ -202,20 +210,20 @@
 <p>In this example, we’re outputting the template to a temporary directory.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pipeline_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"pipeline-dir"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pipeline_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">workdata_dir</span>, <span class="st">"conversion_pipeline"</span><span class="op">)</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/use_template.html">use_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpq10HDm/pipeline-dir/_targets.R'</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/Rtmpq10HDm/pipeline-dir/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpPrHWjb/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpPrHWjb/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  sas_paths <span class="op">=</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html" class="external-link">path_temp</a></span><span class="op">(</span><span class="st">"sas-dir"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">pipeline_dir</span>, <span class="st">"parquet-registers"</span><span class="op">)</span></span>
+<span>  sas_paths <span class="op">=</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_sas_files.html">list_sas_files</a></span><span class="op">(</span><span class="va">rawdata_dir</span><span class="op">)</span>,</span>
+<span>  output_dir <span class="op">=</span> <span class="va">workdata_dir</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>The <code>input_dir</code> is the directory that contains the SAS files (searched recursively). This directory can contain different registers. The <code>output_dir</code> directory is where the Parquet files will be written to.</p>
@@ -227,7 +235,7 @@
 <p>The pipeline will find all SAS files from <code>input_dir</code> and convert each file into a Parquet file, all done in parallel. Re-running <code>tar_make()</code> only re-converts registers whose source files have changed or if the pipeline itself has been edited.</p>
 </section><section class="level2"><h2 id="listing-available-parquet-files-and-datasets">Listing available Parquet files and datasets<a class="anchor" aria-label="anchor" href="#listing-available-parquet-files-and-datasets"></a>
 </h2>
-<p>To list what Parquet files or datasets are available, use the <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> and <code><a href="../reference/list_parquet.html">list_parquet_datasets()</a></code> functions. These look in the <code>fastreg.project_workdata_dir</code> and <code>fastreg.project_rawdata_dir</code> directories (set with <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>) for any Parquet files following a specific pattern. See the reference documentation for more details.</p>
+<p>To list what Parquet files or datasets are available, use the <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> and <code><a href="../reference/list_parquet.html">list_parquet_datasets()</a></code> functions. These look in the <code>fastreg.project_workdata_dir</code> and <code>fastreg.project_rawdata_dir</code> directories (set with <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>) for any Parquet files following a specific pattern.</p>
 <p>You can use them interactively in the Console:</p>
 <!-- TODO: remove eval false when other functions have been revised to match this style -->
 <div class="cell">
@@ -237,9 +245,9 @@
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># For individual files</span></span>
-<span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_files</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_files</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># For datasets (registers with all years).</span></span>
-<span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_datasets</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_datasets</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 </section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
@@ -248,44 +256,65 @@
 <p>You can pass a directory to read a full partitioned register or a file path to read a single Parquet file:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/read_register.html">read_register</a></span><span class="op">(</span><span class="va">output_file_dir</span><span class="op">)</span></span>
-<span><span class="va">file</span></span>
+<code class="sourceCode R"><span><span class="co"># Partitioned register</span></span>
+<span><span class="va">full_register</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_datasets</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/read_register.html">read_register</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">full_register</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;arrow_001&gt; [?? x 5]</span></span>
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
-<span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     1 108684730664 19320112  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     2 982144017357 20070716  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     1 672580814975 19800805  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     1 439008110445 20090628  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     2 489714666740 20170225  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     1 155331797020 19730330  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     1 777951655096 19341022  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     1 132473802596 19530901  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt; # ℹ more rows</span></span>
+<span><span class="co"># Single file</span></span>
+<span><span class="va">single_register</span> <span class="op">&lt;-</span> <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_files</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/read_register.html">read_register</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">single_register</span></span>
+<span><span class="co">#&gt; # Source:   table&lt;arrow_002&gt; [?? x 4]</span></span>
+<span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                                     </span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                           </span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, you can filter the data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">file</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="va">full_register</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">koen</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # Source:   table&lt;dbplyr_TDD6kZ7SxR&gt; [?? x 5]</span></span>
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
-<span><span class="co">#&gt;     koen pnr          foed_dato source_file                               year</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 982144017357 20070716  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  2     2 489714666740 20170225  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  3     2 167007504860 20010318  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  4     2 876820784981 19310817  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  5     2 527918979807 19540605  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  6     2 932479108596 19490511  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  7     2 983125164454 19011009  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  8     2 618090662466 19430309  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt;  9     2 702393367207 19600605  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
-<span><span class="co">#&gt; 10     2 736071599339 19830621  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020</span></span>
+<span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  2     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  3     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  4     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  5     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  6     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  7     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  8     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt;  9     2 527918979807 19540605  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
+<span><span class="co">#&gt; 10     2 932479108596 19490511  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>After the query (filer and mutate), we execute it with <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::compute()</a></code>. This save the result as a temporary table inside DuckDB, without loading it into R memory.</p>

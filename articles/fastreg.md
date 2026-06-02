@@ -30,49 +30,6 @@ formats like CSV), Parquet offers:
   [Python](https://www.python.org/), and beyond, making it easy to
   integrate into modern workflows.
 
-## Setup
-
-For the examples below, we’ve simulated SAS register data for two
-registers, `bef` and `lmdb`:
-
-Show setup code
-
-``` r
-
-sas_dir <- fs::path_temp("sas-dir")
-fs::dir_create(sas_dir)
-
-bef_list <- fastreg::simulate_register(
-  "bef",
-  c("", "1999", "1999_1", "2020"),
-  n = 1000
-) |>
-  # Randomly (re)generate koen, so we don't rely on any potential future
-  # changes to the simulated data from osdc.
-  purrr::map(\(x) {
-    x |> dplyr::mutate("koen" = sample(c(1, 2), 1000, replace = TRUE))
-  })
-
-lmdb_list <- fastreg::simulate_register(
-  "lmdb",
-  c("2020", "2021"),
-  n = 1000
-)
-
-fastreg::save_as_sas(
-  c(bef_list, lmdb_list),
-  sas_dir
-)
-```
-
-    #> sas-dir
-    #> ├── bef.sas7bdat
-    #> ├── bef1999.sas7bdat
-    #> ├── bef1999_1.sas7bdat
-    #> ├── bef2020.sas7bdat
-    #> ├── lmdb2020.sas7bdat
-    #> └── lmdb2021.sas7bdat
-
 ## Settings to correct paths
 
 Many of fastreg’s functions depend on the locations of the original SAS
@@ -89,9 +46,11 @@ write (using a temporary directory here for these examples):
 ``` r
 
 options(
-  # With a fake project ID.
-  fastreg.project_rawdata_dir = fs::path_temp("rawdata/701010/"),
-  fastreg.project_workdata_dir = fs::path_temp("workdata/701010/")
+  # With a fake project ID and the temporary directory.
+  # Uses `E` rather than `E:` because Windows has issues with a colon in the
+  # path when using a temporary location.
+  fastreg.project_rawdata_dir = fs::path_temp("E/rawdata/701020/"),
+  fastreg.project_workdata_dir = fs::path_temp("E/workdata/701020/parquet-registers/")
 )
 ```
 
@@ -122,6 +81,42 @@ open the `.Rprofile`, run:
 usethis::edit_r_profile("user")
 ```
 
+## Setup
+
+For the examples below, we’ve simulated SAS register data for two
+registers, `bef` and `lmdb`:
+
+``` r
+
+rawdata_dir <- getOption("fastreg.project_rawdata_dir")
+workdata_dir <- getOption("fastreg.project_workdata_dir")
+
+registers_tbl <- fastreg::simulate_registers_with_paths(
+  c("bef", "lmdb"),
+  c("", "1999", "1999_1", "2020", "2021"),
+  n = 1000,
+  output_dir = rawdata_dir
+)
+
+sas_paths <- registers_tbl |>
+  purrr::pwalk(fastreg::write_to_sas) |>
+  dplyr::pull(output_path)
+```
+
+    #> E
+    #> └── rawdata
+    #>     └── 701020
+    #>         ├── bef.sas7bdat
+    #>         ├── bef1999.sas7bdat
+    #>         ├── bef1999_1.sas7bdat
+    #>         ├── bef2020.sas7bdat
+    #>         ├── bef2021.sas7bdat
+    #>         ├── lmdb.sas7bdat
+    #>         ├── lmdb1999.sas7bdat
+    #>         ├── lmdb1999_1.sas7bdat
+    #>         ├── lmdb2020.sas7bdat
+    #>         └── lmdb2021.sas7bdat
+
 ## Converting a single file
 
 Converting one file from SAS to Parquet in fastreg isn’t a simple change
@@ -135,18 +130,15 @@ format:
 
 ``` r
 
-sas_file <- fs::path(sas_dir, "bef2020.sas7bdat")
-output_file_dir <- fs::path_temp("output-file-dir")
-
 fastreg::convert(
-  path = sas_file,
-  output_dir = output_file_dir
+  path = sas_paths[1],
+  output_dir = workdata_dir
 )
-#> ✔ Converted 'bef2020.sas7bdat'
+#> ✔ Converted 'bef.sas7bdat'
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 bef           …pq10HDm/sas-dir/bef2020.sas7bdat …32.parquet      1000 <tibble>
+#> 1 bef           …jb/E/rawdata/701020/bef.sas7bdat …04.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -169,10 +161,25 @@ more details.
 Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
 
-    #> output-file-dir
-    #> └── bef
-    #>     └── year=2020
-    #>         └── part-d5eb32.parquet
+    #> E
+    #> ├── rawdata
+    #> │   └── 701020
+    #> │       ├── bef.sas7bdat
+    #> │       ├── bef1999.sas7bdat
+    #> │       ├── bef1999_1.sas7bdat
+    #> │       ├── bef2020.sas7bdat
+    #> │       ├── bef2021.sas7bdat
+    #> │       ├── lmdb.sas7bdat
+    #> │       ├── lmdb1999.sas7bdat
+    #> │       ├── lmdb1999_1.sas7bdat
+    #> │       ├── lmdb2020.sas7bdat
+    #> │       └── lmdb2021.sas7bdat
+    #> └── workdata
+    #>     └── 701020
+    #>         └── parquet-registers
+    #>             └── bef
+    #>                 └── year=__HIVE_DEFAULT_PARTITION__
+    #>                     └── part-0f9504.parquet
 
 ## Converting multiple registers in parallel
 
@@ -193,12 +200,12 @@ In this example, we’re outputting the template to a temporary directory.
 
 ``` r
 
-pipeline_dir <- fs::path_temp("pipeline-dir")
+pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmpq10HDm/pipeline-dir/_targets.R'
-#> ✔ Created '/tmp/Rtmpq10HDm/pipeline-dir/_targets.R'
+#> ✔ Created '/tmp/RtmpPrHWjb/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/RtmpPrHWjb/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -208,8 +215,8 @@ section:
 ``` r
 
 config <- list(
-  sas_paths = fastreg::list_sas_files(fs::path_temp("sas-dir")),
-  output_dir = fs::path(pipeline_dir, "parquet-registers")
+  sas_paths = fastreg::list_sas_files(rawdata_dir),
+  output_dir = workdata_dir
 )
 ```
 
@@ -238,8 +245,7 @@ and
 functions. These look in the `fastreg.project_workdata_dir` and
 `fastreg.project_rawdata_dir` directories (set with
 [`options()`](https://rdrr.io/r/base/options.html)) for any Parquet
-files following a specific pattern. See the reference documentation for
-more details.
+files following a specific pattern.
 
 You can use them interactively in the Console:
 
@@ -248,9 +254,9 @@ You can use them interactively in the Console:
 ``` r
 
 # For individual files
-list_parquet_files()
+fastreg::list_parquet_files()
 # For datasets (registers with all years).
-list_parquet_datasets()
+fastreg::list_parquet_datasets()
 ```
 
 ## Reading a Parquet register
@@ -265,22 +271,43 @@ path to read a single Parquet file:
 
 ``` r
 
-file <- fastreg::read_register(output_file_dir)
-file
+# Partitioned register
+full_register <- fastreg::list_parquet_datasets()[1] |>
+  fastreg::read_register()
+full_register
 #> # Source:   table<arrow_001> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
-#>     koen pnr          foed_dato source_file                               year
-#>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     1 108684730664 19320112  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 982144017357 20070716  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  3     1 672580814975 19800805  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  4     1 439008110445 20090628  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 489714666740 20170225  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  6     1 155331797020 19730330  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  7     1 777951655096 19341022  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 167007504860 20010318  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  9     1 132473802596 19530901  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 876820784981 19310817  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
+#>     koen pnr          foed_dato source_file                                 year
+#>    <dbl> <chr>        <chr>     <chr>                                      <int>
+#>  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  2     1 982144017357 20070716  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  3     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  4     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  5     1 489714666740 20170225  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  6     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  7     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  8     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  9     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#> 10     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#> # ℹ more rows
+# Single file
+single_register <- fastreg::list_parquet_files()[1] |>
+  fastreg::read_register()
+single_register
+#> # Source:   table<arrow_002> [?? x 4]
+#> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
+#>     koen pnr          foed_dato source_file                                     
+#>    <dbl> <chr>        <chr>     <chr>                                           
+#>  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  2     1 982144017357 20070716  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  3     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  4     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  5     1 489714666740 20170225  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  6     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  7     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  8     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#>  9     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
+#> 10     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.sas7bd…
 #> # ℹ more rows
 ```
 
@@ -289,23 +316,23 @@ For example, you can filter the data:
 
 ``` r
 
-file |>
+full_register |>
   dplyr::filter(koen == 2) |>
   dplyr::compute()
 #> # Source:   table<dbplyr_TDD6kZ7SxR> [?? x 5]
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]
-#>     koen pnr          foed_dato source_file                               year
-#>    <dbl> <chr>        <chr>     <chr>                                    <int>
-#>  1     2 982144017357 20070716  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  2     2 489714666740 20170225  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  3     2 167007504860 20010318  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  4     2 876820784981 19310817  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  5     2 527918979807 19540605  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  6     2 932479108596 19490511  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  7     2 983125164454 19011009  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  8     2 618090662466 19430309  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#>  9     2 702393367207 19600605  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
-#> 10     2 736071599339 19830621  /tmp/Rtmpq10HDm/sas-dir/bef2020.sas7bdat  2020
+#>     koen pnr          foed_dato source_file                                 year
+#>    <dbl> <chr>        <chr>     <chr>                                      <int>
+#>  1     2 108684730664 19320112  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  2     2 672580814975 19800805  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  3     2 439008110445 20090628  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  4     2 155331797020 19730330  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  5     2 777951655096 19341022  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  6     2 167007504860 20010318  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  7     2 132473802596 19530901  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  8     2 876820784981 19310817  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#>  9     2 527918979807 19540605  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
+#> 10     2 932479108596 19490511  /tmp/RtmpPrHWjb/E/rawdata/701020/bef1999.…  1999
 #> # ℹ more rows
 ```
 

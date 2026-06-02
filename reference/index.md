@@ -19,10 +19,10 @@
   : List Parquet datasets or files in a project
 - [`list_sas_files()`](https://dp-next.github.io/fastreg/reference/list_sas_files.md)
   : List SAS files in a directory
-- [`save_as_sas()`](https://dp-next.github.io/fastreg/reference/save_as_sas.md)
-  : Save a list of data frames as SAS files
-- [`simulate_register()`](https://dp-next.github.io/fastreg/reference/simulate_register.md)
-  : Simulate an example register
+- [`write_to_sas()`](https://dp-next.github.io/fastreg/reference/write_to_sas.md)
+  : Write simulated data to a SAS file
+- [`simulate_registers_with_paths()`](https://dp-next.github.io/fastreg/reference/simulate_registers_with_paths.md)
+  : Simulate example registers along with output paths for SAS files
 
 ## Log functions
 
