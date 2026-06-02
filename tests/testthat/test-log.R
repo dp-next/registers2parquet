@@ -51,7 +51,7 @@ log_lmdb <- lmdb$output_path |>
   purrr::list_rbind()
 
 # Output.
-log_row_count <- capture.output(print_log_row_count(log))
+log_row_count <- capture.output(print_log_row_count(log_bef))
 log_schema_no_diff <- capture.output(print_log_schema(log_bef))
 log_schema_diff <- capture.output(print_log_schema(log_lmdb))
 
@@ -59,14 +59,14 @@ log_schema_diff <- capture.output(print_log_schema(log_lmdb))
 # Test print_log_row_count() --------------------------------------------------------
 
 test_that("print_log_row_count() returns input invisibly", {
-  actual <- expect_invisible(print_log_row_count(log))
-  expect_equal(actual, log)
+  actual <- expect_invisible(print_log_row_count(log_bef))
+  expect_equal(actual, log_bef)
 })
 
-test_that("print_log_row_count() renders path values in output", {
+test_that("print_log_row_count() renders SAS paths in output", {
   expect_match(
     log_row_count,
-    "extdata/test.sas7bdat",
+    ".sas7bdat",
     all = FALSE,
     fixed = TRUE
   )
