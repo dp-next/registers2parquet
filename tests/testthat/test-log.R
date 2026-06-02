@@ -10,24 +10,34 @@ log <- convert(
 log <- log |> rbind(log)
 
 # Output.
-actual <- log_as_table(log)
-combined <- paste(as.character(actual), collapse = "")
+log_row_count <- capture.output(print_log_row_count(log))
 
-# Test log_chunk_info() --------------------------------------------------------
+# Test print_log_row_count() --------------------------------------------------------
 
-test_that("log_as_table() returns a kable object", {
-  expect_s3_class(actual, "knitr_kable")
+test_that("print_log_row_count() returns input invisibly", {
+  actual <- expect_invisible(print_log_row_count(log))
+  expect_equal(actual, log)
 })
 
-test_that("log_as_table() renders path values in output", {
-  expect_match(combined, "extdata/test.sas7bdat", fixed = TRUE)
+test_that("print_log_row_count() renders path values in output", {
+  expect_match(
+    log_row_count,
+    "extdata/test.sas7bdat",
+    all = FALSE,
+    fixed = TRUE
+  )
 })
 
-test_that("log_as_table() renders row count values in output", {
-  expect_match(combined, as.character(log$row_count[[1]]), fixed = TRUE)
+test_that("print_log_row_count() renders row count values in output", {
+  expect_match(
+    log_row_count,
+    "1000",
+    all = FALSE,
+    fixed = TRUE
+  )
 })
 
-test_that("log_as_table() excludes register_name and columns column", {
-  expect_no_match(combined, "register_name")
-  expect_no_match(combined, "columns")
+test_that("print_log_row_count() excludes register_name and columns column", {
+  expect_no_match(log_row_count, "register_name")
+  expect_no_match(log_row_count, "columns")
 })
