@@ -8,7 +8,7 @@ bef_list <- simulate_registers_with_paths(
 sas_paths <- bef_list |>
   purrr::pwalk(write_to_sas)
 
-# Test convert() ----------------------------------------------------------
+# Test convert() ---------------------------------------------------------------
 
 # Setup: Convert single file
 single_file_path <- fs::path_temp("parquet_single_file")
@@ -126,4 +126,35 @@ test_that("convert() creates expected n parts when chunk_size < nrow", {
     type = "file"
   ))
   expect_equal(n_actual, n_expected)
+})
+
+
+test_that("convert() handles very large files without integer overflow", {
+  chunk_size <- 1073741824L # Two chunks overflow int32 max.
+  total_rows <- 2500000000
+
+  # Replace read_sas_chunk so it returns an empty tibble that "reports" the
+  # right number of rows.
+  local_mocked_bindings(
+    read_sas_chunk = function(path, skip, chunk_size) {
+      # Return 0 rows if `skip` becomes NA to catch the expected integer
+      # overflow with int32.
+      rows_remaining <- if (is.na(skip)) 0 else total_rows - skip
+      tibble::new_tibble(
+        list(),
+        nrow = as.integer(min(chunk_size, rows_remaining))
+      )
+    },
+    .package = "fastreg"
+  )
+
+  result <- expect_no_warning(
+    convert(
+      path = sas_paths$output_path[1],
+      output_dir = fs::path_temp("large_overflow_test"),
+      chunk_size = chunk_size
+    )
+  )
+
+  expect_equal(sum(result$row_count), total_rows)
 })
