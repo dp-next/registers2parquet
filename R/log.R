@@ -66,6 +66,7 @@ print_log_schema <- function(register_log) {
   if (has_diffs) {
     description <- glue::glue(
       "The most common schema occurs in {n_reference}/{n_total} files."
+    )
 
     schema_differences <- c(
       "### Schema differences",
