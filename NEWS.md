@@ -26,7 +26,8 @@ each release.
 
 ### Fix
 
-- :bug: change `skip` to `double` to avoid integer overflow with very large files (#309)
+- :bug: change `skip` to `double` to avoid integer overflow with very
+  large files (#309)
 
 ## 0.12.5 (2026-06-02)
 
