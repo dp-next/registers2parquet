@@ -34,7 +34,7 @@ convert <- function(
   # Prepare variables used in repeat below.
   partition_path <- create_partition_path(path, output_dir)
   part <- create_part_uuid()
-  skip <- 0L
+  skip <- 0 # Not integer (0L) since they overflow at ~2.1B rows, doubles don't.
   conversion_log <- tibble::tribble(~register_name, ~input_path, ~output_path, ~row_count, ~schema)
 
   # Read first chunk to establish schema.
