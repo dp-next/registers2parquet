@@ -19,15 +19,19 @@ If you experience any problems or bugs with `fastreg`, please add an
 
 ```{r}
 #| echo: false
+#| message: false
 #| results: asis
 
 conversion_log <- targets::tar_read(conversion_log)
 
 for (register in unique(conversion_log$register_name)) {
+  register_log <- conversion_log |>
+    dplyr::filter(register_name == register)
+
   cat("## ", register, "\n\n")
 
-  conversion_log |>
-    dplyr::filter(register_name == register) |>
-    fastreg::print_log_row_count()
+  register_log |>
+    fastreg::print_log_row_count() |>
+    fastreg::print_log_schema()
 }
 ```
