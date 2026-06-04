@@ -33,5 +33,5 @@ print_log_row_count(conversion_log)
 #> 
 #> |input_path                                              |output_path                                                                                         | row_count|
 #> |:-------------------------------------------------------|:---------------------------------------------------------------------------------------------------|---------:|
-#> |../../../../_temp/Library/fastreg/extdata/test.sas7bdat |../../../../../../../tmp/RtmpsRzEzl/output/test/year=__HIVE_DEFAULT_PARTITION__/part-3411c6.parquet |      1000|
+#> |../../../../_temp/Library/fastreg/extdata/test.sas7bdat |../../../../../../../tmp/RtmpG0zlkD/output/test/year=__HIVE_DEFAULT_PARTITION__/part-dc5129.parquet |      1000|
 ```
