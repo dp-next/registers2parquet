@@ -54,20 +54,19 @@ print_log_schema <- function(register_log) {
   # If two schemas occur with the same frequency, only one is chosen as ref.
   reference <- dplyr::count(file_schemas, .data$schema) |>
     dplyr::slice_max(.data$n, with_ties = FALSE)
-  reference_schema <- reference$schema[[1]] # Get schema tibble, instead of list.
+  # Get schema tibble, instead of list.
+  reference_schema <- reference$schema[[1]]
   n_reference <- reference$n
   n_total <- nrow(file_schemas)
   has_diffs <- n_reference < n_total
 
   # Prepare schema difference lines.
   description <- "All files in this register share the same schema."
+  schema_differences <- ""
   if (has_diffs) {
     description <- glue::glue(
       "The most common schema occurs in {n_reference}/{n_total} files."
-    )
-  }
-  schema_differences <- ""
-  if (has_diffs) {
+
     schema_differences <- c(
       "### Schema differences",
       "",
