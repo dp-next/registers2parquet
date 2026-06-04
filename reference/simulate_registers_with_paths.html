@@ -104,10 +104,10 @@ to write each simulated dataset to a SAS file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   output_path                                        data             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fs::path&gt;</span>                                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/RtmpWdOmGR/E/rawdata/701010/bef1999.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/RtmpWdOmGR/E/rawdata/701010/bef2000.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/RtmpWdOmGR/E/rawdata/701010/lmdb1999.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /tmp/RtmpWdOmGR/E/rawdata/701010/lmdb2000.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/RtmpIkZOmd/E/rawdata/701010/bef1999.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/RtmpIkZOmd/E/rawdata/701010/bef2000.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/RtmpIkZOmd/E/rawdata/701010/lmdb1999.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /tmp/RtmpIkZOmd/E/rawdata/701010/lmdb2000.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_regs</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html" class="external-link">pwalk</a></span><span class="op">(</span><span class="va">write_to_sas</span><span class="op">)</span></span></span>
