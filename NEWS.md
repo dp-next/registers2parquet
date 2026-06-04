@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.12.6 (2026-06-04)
+
+### Fix
+
+- :bug: change `skip` to `double` to avoid integer overflow with very large files (#309)
+
 ## 0.12.5 (2026-06-02)
 
 ### Refactor
