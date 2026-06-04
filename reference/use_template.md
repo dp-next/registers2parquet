@@ -28,7 +28,7 @@ The path to the created `_targets.R` file, invisibly.
 
 ``` r
 use_template(path = fs::path_temp(""))
-#> ✔ Created /tmp/Rtmptoed1I/_targets.R
-#> ✔ Created /tmp/Rtmptoed1I/_targets.R
+#> ✔ Created /tmp/RtmpqdHUy0/_targets.R
+#> ✔ Created /tmp/RtmpqdHUy0/_targets.R
 #> ℹ Edit the `config` section to set your paths.
 ```

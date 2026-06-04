@@ -28,3 +28,5 @@
 
 - [`print_log_row_count()`](https://dp-next.github.io/fastreg/reference/print_log_row_count.md)
   : Log chunk information as a table
+- [`print_log_schema()`](https://dp-next.github.io/fastreg/reference/print_log_schema.md)
+  : Print log schema comparison
