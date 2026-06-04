@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -172,7 +172,7 @@
 <span><span class="co">#&gt; # A tibble: 1 × 5</span></span>
 <span><span class="co">#&gt;   register_name input_path                        output_path row_count schema  </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;         &lt;fs::path&gt;                        &lt;fs::path&gt;      &lt;int&gt; &lt;list&gt;  </span></span>
-<span><span class="co">#&gt; 1 bef           …xg/E/rawdata/701020/bef.sas7bdat …18.parquet      1000 &lt;tibble&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 bef           …kk/E/rawdata/701020/bef.sas7bdat …04.parquet      1000 &lt;tibble&gt;</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/convert.html">convert()</a></code> reads files in chunks (to be able to handle larger-than-memory data) with a default of reading 1 million rows, extracts 4-digit years from filenames for partitioning, and lowercases column names. See <code><a href="../reference/convert.html">?convert</a></code> for more details.</p>
 <div>
@@ -201,7 +201,7 @@
 <span><span class="co">#&gt;         └── parquet-registers</span></span>
 <span><span class="co">#&gt;             └── bef</span></span>
 <span><span class="co">#&gt;                 └── year=__HIVE_DEFAULT_PARTITION__</span></span>
-<span><span class="co">#&gt;                     └── part-764618.parquet</span></span></code></pre>
+<span><span class="co">#&gt;                     └── part-33cd04.parquet</span></span></code></pre>
 </div>
 </section><section class="level2"><h2 id="converting-multiple-registers-in-parallel">Converting multiple registers in parallel<a class="anchor" aria-label="anchor" href="#converting-multiple-registers-in-parallel"></a>
 </h2>
@@ -214,8 +214,8 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">pipeline_dir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/use_template.html">use_template</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">pipeline_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
-<span><span class="co">#&gt; ✔ Created '/tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
+<span><span class="co">#&gt; ✔ Created '/tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'</span></span>
 <span><span class="co">#&gt; ℹ Edit the `config` section to set your paths.</span></span></code></pre></div>
 </div>
 <p>Once the <code>_targets.R</code> file is created, open it and edit the <code>config</code> section:</p>
@@ -245,21 +245,21 @@
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># For individual files</span></span>
 <span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_files</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=1999/part-908d6b.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=1999/part-a09d7b.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=2020/part-526341.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=2021/part-34c12f.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-764618.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-cafbb1.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb/year=1999/part-38e8aa.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb/year=1999/part-f99e18.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb/year=2020/part-c72845.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb/year=2021/part-86e95e.parquet</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-a90e06.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=1999/part-0fe0d8.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=1999/part-fe3458.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=2020/part-1e31e4.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=2021/part-ad1299.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-33cd04.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-ca461a.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb/year=1999/part-121a3f.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb/year=1999/part-84d6c8.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb/year=2020/part-330855.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb/year=2021/part-f4a190.parquet</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-36d1ff.parquet</span></span>
 <span><span class="co"># For datasets (registers with all years).</span></span>
 <span><span class="fu">fastreg</span><span class="fu">::</span><span class="fu"><a href="../reference/list_parquet.html">list_parquet_datasets</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/bef</span></span>
-<span><span class="co">#&gt; /tmp/RtmpLNAbxg/E/workdata/701020/parquet-registers/lmdb</span></span></code></pre></div>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/bef</span></span>
+<span><span class="co">#&gt; /tmp/RtmpEiQTkk/E/workdata/701020/parquet-registers/lmdb</span></span></code></pre></div>
 </div>
 </div>
 </section><section class="level2"><h2 id="reading-a-parquet-register">Reading a Parquet register<a class="anchor" aria-label="anchor" href="#reading-a-parquet-register"></a>
@@ -274,16 +274,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>Or directly with <code><a href="../reference/read_parquet.html">read_parquet_dataset()</a></code> or <code><a href="../reference/read_parquet.html">read_parquet_file()</a></code>:</p>
@@ -295,16 +295,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span>
 <span></span>
 <span><span class="co"># Or a single file</span></span>
@@ -314,16 +314,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                                     </span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                           </span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
-<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  2     1 982144017357 20070716  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  3     2 672580814975 19800805  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  4     2 439008110445 20090628  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  5     1 489714666740 20170225  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  6     2 155331797020 19730330  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  7     2 777951655096 19341022  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  8     2 167007504860 20010318  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt;  9     2 132473802596 19530901  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
+<span><span class="co">#&gt; 10     2 876820784981 19310817  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_1.sas7…</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>The resulting DuckDB table can be filtered and transformed with <code>dplyr</code>. For example, you can filter the data:</p>
@@ -336,16 +336,16 @@
 <span><span class="co">#&gt; # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1015-azure:R 4.6.0/:memory:]</span></span>
 <span><span class="co">#&gt;     koen pnr          foed_dato source_file                                 year</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;                                      &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  2     2 672580814975 19800805  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  3     2 439008110445 20090628  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  4     2 155331797020 19730330  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  5     2 777951655096 19341022  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  6     2 167007504860 20010318  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  7     2 132473802596 19530901  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  8     2 876820784981 19310817  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt;  9     2 527918979807 19540605  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
-<span><span class="co">#&gt; 10     2 932479108596 19490511  /tmp/RtmpLNAbxg/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  1     2 108684730664 19320112  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  2     2 672580814975 19800805  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  3     2 439008110445 20090628  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  4     2 155331797020 19730330  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  5     2 777951655096 19341022  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  6     2 167007504860 20010318  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  7     2 132473802596 19530901  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  8     2 876820784981 19310817  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt;  9     2 527918979807 19540605  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
+<span><span class="co">#&gt; 10     2 932479108596 19490511  /tmp/RtmpEiQTkk/E/rawdata/701020/bef1999_…  1999</span></span>
 <span><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
 </div>
 <p>After the query (filer and mutate), we execute it with <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">dplyr::compute()</a></code>. This save the result as a temporary table inside DuckDB, without loading it into R memory.</p>
