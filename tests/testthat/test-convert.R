@@ -181,3 +181,20 @@ test_that("convert()'s conversion log handles data types with class vectors of l
 
   expect_equal(foed_dato_type, "POSIXct")
 })
+
+test_that("convert() only keep lowercased letters and underscores in register names", {
+  df <- simulate_registers_with_paths("bef", n = 10)
+  df$output_path <- df$output_path |>
+    fs::path_dir() |>
+    fs::path("r€EG|i-s$ter-_NAME.sas7bdat")
+
+  sas_path <- df |>
+    purrr::pwalk(write_to_sas)
+
+  result <- expect_no_error(convert(
+    path = sas_path$output_path,
+    output_dir = fs::path_temp("register-name")
+  ))
+
+  expect_equal(result$register_name, "register_name")
+})
