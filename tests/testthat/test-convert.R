@@ -176,7 +176,8 @@ test_that("convert()'s conversion log handles data types with class vectors of l
 
   foed_dato_type <- result$schema[[1]] |>
     dplyr::filter(column_name == "foed_dato") |>
-    dplyr::pull(data_type)
+    dplyr::pull(data_type) |>
+    unname()
 
   expect_equal(foed_dato_type, "POSIXct")
 })
