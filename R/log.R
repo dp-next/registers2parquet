@@ -161,3 +161,27 @@ chunk_diff_table <- function(diff_table, max_file_cols = 6L) {
     dplyr::select(diff_table, "column_name", dplyr::all_of(cols))
   })
 }
+
+#' Get conversion logs from Targets pipeline output
+#'
+#' @returns A tibble with the conversion logs.
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' get_conversion_log()
+#' }
+get_conversion_log <- function() {
+  log_names <- targets::tar_objects() |>
+    stringr::str_subset("^conversion_log")
+
+  if (length(log_names) == 0) {
+    cli::cli_abort(c(
+      "No conversion log found. Have you run the targets pipeline in _targets.R?",
+      "i" = "To get a targets pipeline template, run `fastreg::use_template()`."
+    ))
+  }
+
+  purrr::map(log_names, targets::tar_read_raw) |>
+    dplyr::bind_rows()
+}
