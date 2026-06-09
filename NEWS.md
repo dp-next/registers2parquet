@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- 🐛 handle data types with class vectors of length > 1 in `convert()` (#314)
+- 🐛 handle data types with class vectors of length > 1 in `convert()`
+  (#314)
 
 ## 0.13.0 (2026-06-04)
 
