@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.13.1 (2026-06-09)
+
+### Fix
+
+- 🐛 handle data types with class vectors of length > 1 in `convert()` (#314)
+
 ## 0.13.0 (2026-06-04)
 
 ### Feat
