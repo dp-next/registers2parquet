@@ -186,7 +186,7 @@ test_that("convert() only keep lowercased letters and underscores in register na
   df <- simulate_registers_with_paths("bef", n = 10)
   df$output_path <- df$output_path |>
     fs::path_dir() |>
-    fs::path("r€EG|i-s$ter-_NAME.sas7bdat")
+    fs::path("r€EGI-s$ter-_NAME.sas7bdat")
 
   sas_path <- df |>
     purrr::pwalk(write_to_sas)
