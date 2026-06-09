@@ -21,7 +21,7 @@ library(tarchetypes)
 
 config <- list(
   # Paths to SAS files
-  sas_paths = list_sas_files("/path/to/sas/directory"),
+  sas_paths = fastreg::list_sas_files("/path/to/sas/directory"),
   # Path to output Parquet files in. Parquet files will be located in
   # subdirectories of this directory.
   output_dir = "/path/to/output/directory"
