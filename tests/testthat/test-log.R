@@ -121,3 +121,26 @@ test_that("print_log_schema() includes expected elements with diffs", {
     sum()
   expect_equal(n_tables, 3)
 })
+
+test_that("get_conversion_log() gets the logs as expected", {
+  log <- tibble::tibble(file = "bef.sas7bdat")
+
+  local_mocked_bindings(
+    tar_objects = function() {
+      c("conversion_log_bef", "conversion_log_lmdb", "other_target")
+    },
+    tar_read_raw = function(name) log,
+    .package = "targets"
+  )
+
+  expect_equal(get_conversion_log(), dplyr::bind_rows(log, log))
+})
+
+test_that("get_conversion_log() errors if no logs are found", {
+  local_mocked_bindings(
+    tar_objects = function() c("not_expected_log_name_pattern", "other_target"),
+    .package = "targets"
+  )
+
+  expect_error(get_conversion_log(), regexp = "conversion log")
+})
