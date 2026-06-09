@@ -65,7 +65,8 @@ convert <- function(
         row_count = nrow(chunk),
         schema = list(tibble::tibble(
           column_name = colnames(chunk),
-          data_type = purrr::map_chr(chunk, class)
+          # Choose first class in case there's multiple (e.g., POSIXct and POSIXt).
+          data_type = purrr::map_chr(chunk, \(x) class(x)[1])
         ))
       )
     )
