@@ -22,7 +22,7 @@ If you experience any problems or bugs with `fastreg`, please add an
 #| message: false
 #| results: asis
 
-conversion_log <- targets::tar_read(conversion_log)
+conversion_log <- fastreg::get_conversion_log()
 
 for (register in unique(conversion_log$register_name)) {
   register_log <- conversion_log |>
