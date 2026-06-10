@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.13.2 (2026-06-09)
+
+### Fix
+
+- :bug: import `list_sas_files()` from `fastreg` in template (#315)
+
 ## 0.13.1 (2026-06-09)
 
 ### Fix
