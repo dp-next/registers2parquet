@@ -15,9 +15,10 @@
 #' print_log_row_count(conversion_log)
 print_log_row_count <- function(log) {
   log |>
-    dplyr::mutate(
-      dplyr::across(c("input_path", "output_path"), fs::path_rel)
-    ) |>
+    dplyr::mutate(dplyr::across(c("input_path", "output_path"), \(path) {
+      fs::path_rel(path) |>
+        stringr::str_trunc(width = 50, side = "left")
+    })) |>
     dplyr::select("input_path", "output_path", "row_count") |>
     knitr::kable() |>
     print()
