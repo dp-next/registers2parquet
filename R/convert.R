@@ -221,8 +221,9 @@ get_register_names <- function(path) {
   path |>
     fs::path_file() |>
     fs::path_ext_remove() |>
-    # Remove everything that's not a letter.
-    stringr::str_remove_all("[^[:alpha:]]")
+    # Remove everything that's not a letter except underscores.
+    stringr::str_remove_all("[^[:alpha:]_]") |>
+    stringr::str_to_lower()
 }
 
 #' Get register name from a group of file paths
