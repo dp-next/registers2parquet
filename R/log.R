@@ -17,6 +17,7 @@ print_log_row_count <- function(log) {
   log |>
     dplyr::mutate(dplyr::across(c("input_path", "output_path"), \(path) {
       fs::path_rel(path) |>
+        fs::path_ext_remove() |>
         stringr::str_trunc(width = 50, side = "left")
     })) |>
     dplyr::select("input_path", "output_path", "row_count") |>
