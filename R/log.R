@@ -21,7 +21,9 @@ print_log_row_count <- function(log) {
         stringr::str_trunc(width = 50, side = "left")
     })) |>
     dplyr::select("input_path", "output_path", "row_count") |>
-    knitr::kable() |>
+    knitr::kable(
+      col.names = c("Input (.sas7bdat)", "Output (.parquet)", "Row count")
+    ) |>
     print()
 
   invisible(log)
