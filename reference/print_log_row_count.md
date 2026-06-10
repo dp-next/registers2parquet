@@ -31,7 +31,7 @@ conversion_log <- convert(sas_file, output_dir = fs::path_temp("output"))
 print_log_row_count(conversion_log)
 #> 
 #> 
-#> |input_path                                              |output_path                                                                                         | row_count|
-#> |:-------------------------------------------------------|:---------------------------------------------------------------------------------------------------|---------:|
-#> |../../../../_temp/Library/fastreg/extdata/test.sas7bdat |../../../../../../../tmp/RtmpPmNIMG/output/test/year=__HIVE_DEFAULT_PARTITION__/part-3cfb50.parquet |      1000|
+#> |Input (.sas7bdat)                              |Output (.parquet)                                  | Row count|
+#> |:----------------------------------------------|:--------------------------------------------------|---------:|
+#> |../../../../_temp/Library/fastreg/extdata/test |...est/year=__HIVE_DEFAULT_PARTITION__/part-ba45ef |      1000|
 ```
