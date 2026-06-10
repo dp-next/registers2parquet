@@ -63,13 +63,13 @@ test_that("print_log_row_count() returns input invisibly", {
   expect_equal(actual, log_bef)
 })
 
-test_that("print_log_row_count() renders SAS paths in output", {
-  expect_match(
-    log_row_count,
-    ".sas7bdat",
-    all = FALSE,
-    fixed = TRUE
-  )
+test_that("print_log_row_count() includes SAS file names (no ext) in table rows", {
+  file_names <- bef$output_path |> fs::path_file() |> fs::path_ext_remove()
+  table_rows <- stringr::str_subset(log_row_count, "\\|")[-c(1:2)]
+
+  purrr::walk(file_names, \(file_name) {
+    expect_match(table_rows, file_name, all = FALSE, fixed = TRUE)
+  })
 })
 
 test_that("print_log_row_count() renders row count values in output", {
