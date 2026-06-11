@@ -48,7 +48,7 @@ use_template <- function(
     cli::cli_alert_info("Edit the {.code config} section to set your paths.")
   }
 
-  if (open) {
+  if (open && Sys.getenv("Rstudio") != "1") {
     utils::file.edit(target_file)
   }
 
