@@ -16,6 +16,13 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.13.6 (2026-06-11)
+
+### Refactor
+
+- ♻️ use raw link to new fastreg issue in conversion log qmd (#324)
+- 💄 prettify log table column names (#321)
+
 ## 0.13.5 (2026-06-11)
 
 ### Fix
