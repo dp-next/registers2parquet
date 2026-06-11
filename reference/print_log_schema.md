@@ -31,7 +31,7 @@ log <- convert(sas_file, output_dir = fs::path_temp("output"))
 print_log_schema(log)
 #> All files in this register share the same schema.
 #> 
-#> |column_name       |data_type |
+#> |Column name       |Data type |
 #> |:-----------------|:---------|
 #> |cpr               |character |
 #> |dw_ek_kontakt     |character |
