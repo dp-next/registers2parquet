@@ -15,7 +15,8 @@ For each register, this log includes two sections:
    schema is shown alongside the differences.
 
 If you experience any problems or bugs with `fastreg`, please add an
-[issue on GitHub](https://github.com/dp-next/fastreg/issues/new).
+issue on GitHub by following this link:
+<https://github.com/dp-next/fastreg/issues/new>.
 
 ```{r}
 #| echo: false
