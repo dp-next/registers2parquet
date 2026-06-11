@@ -79,6 +79,9 @@ print_log_schema <- function(register_log) {
       "",
       get_schema_diffs(file_schemas, reference_schema) |>
         chunk_diff_table() |>
+        purrr::map(\(chunk) {
+          dplyr::rename(chunk, "Column name" = "column_name")
+        }) |>
         purrr::map_chr(collapse_kable)
     )
   }
@@ -87,7 +90,9 @@ print_log_schema <- function(register_log) {
     # Description.
     description,
     # Reference schema.
-    collapse_kable(reference_schema),
+    reference_schema |>
+      dplyr::rename("Column name" = "column_name", "Data type" = "data_type") |>
+      collapse_kable(),
     # Schema differences.
     schema_differences
   )
