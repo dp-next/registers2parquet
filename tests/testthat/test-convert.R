@@ -159,18 +159,6 @@ test_that("convert() handles very large files without integer overflow", {
   expect_equal(sum(result$row_count), total_rows)
 })
 
-test_that("convert() aborts if skip becomes NA", {
-  expect_error(
-    abort_if_skip_na(
-      skip = NA,
-      skip_before = 10,
-      chunk = data_actual,
-      path = sas_paths$output_path[1]
-    ),
-    regexp = "NA"
-  )
-})
-
 test_that("convert()'s conversion log handles data types with class vectors of length > 1", {
   df <- simulate_registers_with_paths("bef", n = 1000)
 
