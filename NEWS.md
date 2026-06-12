@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.13.7 (2026-06-12)
+
+### Refactor
+
+- :recycle: don't open targets pipeline in Rstudio (#322)
+
 ## 0.13.6 (2026-06-11)
 
 ### Refactor
