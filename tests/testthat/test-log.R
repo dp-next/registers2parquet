@@ -64,7 +64,9 @@ test_that("print_log_row_count() returns input invisibly", {
 })
 
 test_that("print_log_row_count() includes SAS file names (no ext) in table rows", {
-  file_names <- bef$output_path |> fs::path_file() |> fs::path_ext_remove()
+  file_names <- bef$output_path |>
+    fs::path_file() |>
+    fs::path_ext_remove()
   table_rows <- stringr::str_subset(log_row_count, "\\|")[-c(1:2)]
 
   purrr::walk(file_names, \(file_name) {
