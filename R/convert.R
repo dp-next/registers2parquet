@@ -71,7 +71,18 @@ convert <- function(
       )
     )
 
+    skip_before <- skip
     skip <- skip + nrow(chunk)
+
+    if (is.na(skip)) {
+      cli::cli_warn(c(
+        "The conversion ended early because of an issue with {.path {path}}.",
+        "i" = "{skip_before} rows of this file were converted before the issue occurred.",
+        "i" = "If the issue persists, please file a bug report here: {.url https://github.com/dp-next/fastreg}."
+      ))
+      break
+    }
+
     part <- create_part_uuid()
 
     chunk <- read_sas_chunk(path, skip, chunk_size)
@@ -81,7 +92,6 @@ convert <- function(
 
   conversion_log
 }
-
 #' Read SAS chunk
 #'
 #' @param skip Number of rows to skip.
