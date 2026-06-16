@@ -39,7 +39,7 @@ if (nrow(pipeline_warnings) > 0) {
 }
 ```
 
-```{r}
+```{r register-log}
 #| results: asis
 
 conversion_log <- tar_read(conversion_log)
