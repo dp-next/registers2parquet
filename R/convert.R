@@ -94,17 +94,33 @@ convert <- function(
 }
 #' Read SAS chunk
 #'
+#' On Windows, skip > 2,147,483,647 overflows readstat's 32-bit row position,
+#' causing it (and thereby haven's read_sas() function) to read from row 0.
+#' This function returns an empty tibble instead.
+#'
 #' @param skip Number of rows to skip.
 #' @inheritParams convert
 #'
 #' @returns A tibble.
 #'
-#' @keywords internal
 #' @noRd
 read_sas_chunk <- function(path, skip, chunk_size) {
-  haven::read_sas(path, skip = skip, n_max = chunk_size) |>
-    column_names_to_lower() |>
-    dplyr::mutate(source_file = as.character(path))
+  if (skip > 2147483647 && .Platform$OS.type == "windows") {
+    cli::cli_warn(
+      c(
+        "Could not read {.path {fs::path_file(path)}} from row {format(skip, big.mark = ',')} onwards.",
+        "i" = "This is a Windows limitation: row positions above the 32-bit limit (2,147,483,647) cannot be read.",
+        "i" = "If your file has more than 2,147,483,647 rows, the output is incomplete. Consider splitting the file before converting."
+      )
+    )
+    haven::read_sas(path, n_max = 0) |>
+      column_names_to_lower() |>
+      dplyr::mutate(source_file = as.character(path))
+  } else {
+    haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+      column_names_to_lower() |>
+      dplyr::mutate(source_file = as.character(path))
+  }
 }
 
 #' Create partition path
