@@ -186,6 +186,24 @@ test_that("read_sas_chunk() returns 0 rows when skip is exactly the 32-bit limit
 })
 
 
+test_that("read_sas_chunk() data is the same for skip NA and skip exceeding 32-bit limit", {
+  path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+  data <- haven::read_sas(path)
+  max_32_bit <- 2147483647
+  chunk_skip_na <- read_sas_chunk(
+    path,
+    skip = NA,
+    chunk_size = 100L
+  )
+  chunk_skip_over_32_bit <- read_sas_chunk(
+    path,
+    skip = max_32_bit + 1,
+    chunk_size = 100L
+  )
+
+  expect_equal(chunk_skip_na, chunk_skip_over_32_bit)
+})
+
 test_that("convert()'s conversion log handles data types with class vectors of length > 1", {
   df <- simulate_registers_with_paths("bef", n = 1000)
 
