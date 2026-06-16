@@ -129,8 +129,8 @@ test_that("convert() creates expected n parts when chunk_size < nrow", {
 })
 
 
-test_that("convert() handles very large files without integer overflow", {
-  chunk_size <- 1073741824L # Two chunks overflow int32 max.
+test_that("convert()'s skip doesn't become NA when passing the 32-bit integer limit", {
+  chunk_size <- 1073741824L # Two chunks exceed 32 bit integer max (2,147,483,647).
   total_rows <- 2500000000
 
   # Replace read_sas_chunk so it returns an empty tibble that "reports" the
@@ -157,6 +157,21 @@ test_that("convert() handles very large files without integer overflow", {
   )
 
   expect_equal(sum(result$row_count), total_rows)
+})
+
+test_that("read_sas_chunk() returns 0 rows when skip exceeds 32-bit limit", {
+  # The current hypothesis is that on Windows, `skip` values above the 32-bit
+  # max overflow C's 32-bit `long`, causing readstat to read from row 0 (as
+  # observed on DST/Windows) instead of returning 0 rows, causing an infinite
+  # repeat loop in convert()
+  path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+  max_32_bit <- 2147483647
+  chunk <- read_sas_chunk(
+    path,
+    skip = max_32_bit + 1,
+    chunk_size = 1000L
+  )
+  expect_equal(nrow(chunk), 0L)
 })
 
 test_that("convert()'s conversion log handles data types with class vectors of length > 1", {
