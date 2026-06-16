@@ -105,7 +105,7 @@ convert <- function(
 #'
 #' @noRd
 read_sas_chunk <- function(path, skip, chunk_size) {
-  if (skip > 2147483647 && .Platform$OS.type == "windows") {
+  if (!is.na(skip) && skip > 2147483647 && .Platform$OS.type == "windows") {
     cli::cli_warn(
       c(
         "Could not read {.path {fs::path_file(path)}} from row {format(skip, big.mark = ',')} onwards.",
