@@ -150,6 +150,11 @@ only means you may see more Parquet files in the output than input SAS
 files.
 :::
 
+::: callout-warning
+If you're handling very large SAS files, please refer to the
+[When SAS files become too big](#sec-large-sas-files) section below.
+:::
+
 Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
 
@@ -220,6 +225,11 @@ The pipeline will find all SAS files from `input_dir` and convert each
 file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
 pipeline itself has been edited.
+
+::: callout-warning
+If you're handling very large SAS files, please refer to the
+[When SAS files become too big](#sec-large-sas-files) section below.
+:::
 
 ## Listing available Parquet files and datasets
 
