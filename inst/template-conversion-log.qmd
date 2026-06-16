@@ -3,6 +3,9 @@ title: Conversion log
 format:
    pdf:
       toc: true
+execute:
+  echo: false
+  message: false
 ---
 
 ## About this log
@@ -23,8 +26,6 @@ library(targets)
 ```
 
 ```{r pipeline-warnings}
-#| echo: false
-#| message: false
 #| results: asis
 
 pipeline_warnings <- tar_meta(fields = warnings, complete_only = TRUE)
@@ -39,8 +40,6 @@ if (nrow(pipeline_warnings) > 0) {
 ```
 
 ```{r}
-#| echo: false
-#| message: false
 #| results: asis
 
 conversion_log <- tar_read(conversion_log)
