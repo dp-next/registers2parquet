@@ -186,7 +186,9 @@ test_that("read_sas_chunk() returns 0 rows when skip is exactly the 32-bit limit
 })
 
 
-test_that("read_sas_chunk() data is the same for skip NA and skip exceeding 32-bit limit", {
+test_that("read_sas_chunk() data is the same for skip NA and skip exceeding 32-bit limit on Windows", {
+  # Only run on Windows.
+  skip_on_os(c("linux", "mac", "solaris"))
   path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
   data <- haven::read_sas(path)
   max_32_bit <- 2147483647
