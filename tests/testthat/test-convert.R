@@ -160,10 +160,9 @@ test_that("convert()'s skip doesn't become NA when passing the 32-bit integer li
 })
 
 test_that("read_sas_chunk() returns 0 rows when skip exceeds 32-bit limit", {
-  # The current hypothesis is that on Windows, `skip` values above the 32-bit
-  # max overflow C's 32-bit `long`, causing readstat to read from row 0 (as
-  # observed on DST/Windows) instead of returning 0 rows, causing an infinite
-  # repeat loop in convert()
+  # Passes on all operating systems now. Without the fix in read_sas_chunk() to
+  # handle this, readstat overflows and starts to read from row 0 instead when
+  # run on Windows (as observed on DST).
   path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
   max_32_bit <- 2147483647
   chunk <- read_sas_chunk(
@@ -175,6 +174,10 @@ test_that("read_sas_chunk() returns 0 rows when skip exceeds 32-bit limit", {
 })
 
 test_that("read_sas_chunk() returns 0 rows when skip is exactly the 32-bit limit", {
+  # Was created to test that the overflow observed on Windows only happened when
+  # skip exceeds the 32-bit limit.
+  # The fix uses `>`, not `>=`, so skip = max_32_bit does not trigger it.
+  # This returns 0 rows because the test file has fewer rows than max_32_bit.
   path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
   max_32_bit <- 2147483647
   chunk <- read_sas_chunk(
