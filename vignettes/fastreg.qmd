@@ -294,3 +294,46 @@ If you need to load the data into memory in R, you can use
 time, so only do this when it's absolutely necessary and make sure to
 filter the data before collecting.
 :::
+
+## When SAS files become too big (> 2,147,483,647 rows) {#sec-large-sas-files}
+
+When developing this package, we encountered an issue on Windows where
+[`haven::read_sas()`](https://haven.tidyverse.org/reference/read_sas.html)
+fails when the `skip` parameter is set to more than 2,147,483,647 (the
+32-bit integer limit, 2^31 − 1). Instead of reading the expected rows,
+the function reads the first part of the SAS file again.
+
+fastreg currently handles this by stopping the conversion after
+2,147,483,647 rows and returning a warning. This means that
+**fastreg does not convert the rest of the data in that file**.
+
+You can get around this by handling the original SAS file in two ways:
+
+1. Split the large SAS file into two. Name them something like
+   `<register_name>01.sas7bdat`,`<register_name>02.sas7bdat`, etc.
+   (avoid extra `_` as they are kept as a part of the name of the
+   partitioned Parquet register). If you use the `_targets.R` pipeline,
+   add the paths of these files in the `sas_paths` (see section on
+   converting multiple registers in parallel above).
+
+2. Convert the large SAS file to another format, e.g., `.csv`, and
+   convert it separately, as shown in the code block below. You can
+   either keep this as a separate script or add it to your targets
+   pipeline.
+
+```{r convert-large-csv}
+#| eval: false
+large_csv_path <- fs::path("path/to/large_register2020.csv")
+output_dir <- fs::path("path/to/output/dir")
+
+arrow::open_dataset(large_csv_path, format = "csv") |>
+  dplyr::rename_with(tolower) |>
+  arrow::write_dataset(
+    path = fs::path(output_dir, "large_register", "year=2020"),
+    format = "parquet"
+  )
+```
+
+To follow the default Parquet partitioning name, use
+`"year=__HIVE_DEFAULT_PARTIION__"` if the file doesn't contain a year in
+the name.
