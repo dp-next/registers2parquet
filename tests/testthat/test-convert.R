@@ -185,12 +185,10 @@ test_that("read_sas_chunk() returns 0 rows when skip is exactly the 32-bit limit
   expect_equal(nrow(chunk), 0L)
 })
 
-
-test_that("read_sas_chunk() data is the same for skip NA and skip exceeding 32-bit limit", {
-  # This test should be the same on all operating systems now that we explicitly
-  # return an empty tibble when skip exceeds 32-bit limit in read_sas_chunk().
+test_that("read_sas_chunk() returns first chunk when skip is NA and empty tibble when skip exceeds the 32-bit limit", {
+  # Should be the same on all operating systems now that we explicitly return an
+  # empty tibble when skip exceeds 32-bit limit in read_sas_chunk().
   path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
-  data <- haven::read_sas(path)
   max_32_bit <- 2147483647
   chunk_skip_na <- read_sas_chunk(
     path,
@@ -203,7 +201,11 @@ test_that("read_sas_chunk() data is the same for skip NA and skip exceeding 32-b
     chunk_size = 100L
   )
 
-  expect_equal(chunk_skip_na, chunk_skip_over_32_bit)
+  expect_equal(
+    chunk_skip_na |> dplyr::select(-"source_file"),
+    haven::read_sas(path, n_max = 100L)
+  )
+  expect_equal(nrow(chunk_skip_over_32_bit), 0L)
 })
 
 test_that("convert()'s conversion log handles data types with class vectors of length > 1", {
