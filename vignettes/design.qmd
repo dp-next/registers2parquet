@@ -208,74 +208,46 @@ The purpose of the conversion log is to describe the details of the
 conversion to provide an audit trail. Since we can't be sure that the
 SAS files within the same register contain exactly the same columns and
 data types, the conversion log helps identify any differences between
-these files.
+these files. It also includes any warnings produced by the targets
+pipeline.
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
-files within the same register do not stop the conversion, but it will
-be included in the log.
+files within the same register do not stop the conversion, but they are
+included in the log.
 :::
 
 `convert()` returns a metadata tibble with one row per written chunk.
-This can be queried with dplyr directly or rendered into a Quarto log.
+The returned tibble can be queried with dplyr directly or rendered into
+a Quarto log.
 
-### Return value of `convert()`
+The tibble has the following format:
 
-`convert()` returns a tibble with one row per written chunk:
-
-| Column         | Description                                  |
-|----------------|----------------------------------------------|
-| `input_path`   | Path to the source SAS file                  |
-| `output_path`  | Path to the written Parquet part file        |
-| `row_count`    | Number of rows in the chunk                  |
-| `columns`      | Nested tibble with column `name` and `type`  |
+| Column        | Description                                  |
+|---------------|----------------------------------------------|
+| `input_path`  | Path to the source SAS file                  |
+| `output_path` | Path to the written Parquet part file        |
+| `row_count`   | Number of rows in the chunk                  |
+| `schema`      | Nested tibble with columns `name` and `type` |
 
 The information is derived from the chunk already in memory, not by
-reading the Parquet file back.
+reading the converted Parquet file, so the schema reflects the types as
+read by haven rather than as stored in Parquet.
 
-```r
-# Before repeat loop.
-chunk_info <- tibble::tribble(
-  ~input_path, ~output_path, ~row_count, ~columns
-)
+`use_template()` copies both a targets pipeline, `_targets.R`, and a
+conversion log template, `conversion-log.qmd`, into the current working
+directory. The conversion log (a PDF) is created as the final step of
+the targets pipeline.
 
-# Inside the repeat loop, after writing.
-chunk_info <- dplyr::bind_rows(
-  chunk_info,
-  tibble::tibble(
-    input_path   = path,
-    output_path  = fs::path(file_path),
-    row_count    = nrow(chunk),
-    columns      = tibble::tibble(
-      name = colnames(chunk),
-      type = purrr::map_chr(chunk, class)
-    )
-  )
-)
+The conversion log has the following sections:
 
-# After the loop, return the collected information.
-chunk_info
-```
+- A table of contents providing an overview of the converted registers.
+- A warnings section, if the targets pipeline produced any warnings.
+- One section per converted register, consisting of:
+  - A subsection listing each Parquet chunk and its row count.
+  - A subsection showing the most common schema and how many converted
+    files share it.
+  - A subsection showing schema differences, if any occur.
 
-### Quarto log template
-
-`use_template()` copies both `_targets.R` and `conversion_log.qmd` into
-the current working directory. The Quarto doc reads `chunk_info` via
-`targets::tar_read()` and produces an HTML or PDF log for review. The
-default is PDF, but it can easily be changed in the Quarto file.
-
-```r
-chunk_info <- targets::tar_read(chunk_info)
-
-# Nice overview of the info + schema comparison within registers.
-...
-```
-
-The log is added to the targets pipeline as a last target:
-
-```r
-tar_quarto(
-  name = log,
-  path = "conversion_log.qmd"
-)
-```
+If you want to customise the log, e.g., the output format or the
+sections, you can edit the `conversion-log.qmd`.
