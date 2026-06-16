@@ -46,13 +46,13 @@ overview of the main actions and objects within fastreg.
 
 The actions are:
 
-- `get`: Get project IDs or paths.
+- `get`: Get or guess some information, e.g., the project ID, workdata
+  directory, or rawdata directory from the current working directory, or
+  e.g., a register_name or year from a file name.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Set up `_targets.R` and a Quarto log template.
-- `get`: Get or guess some information, e.g., the project ID, workdata
-  directory, or rawdata directory from the current working directory.
 
 The objects are:
 
