@@ -44,16 +44,16 @@ formats like CSV), Parquet offers:
   [Python](https://www.python.org/), and beyond, making it easy to
   integrate into modern workflows.
 
-## Settings to correct paths
+## Configuring paths
 
 Many of fastreg's functions depend on the locations of the original SAS
-files and the eventual Parquet files including the conversion, writing,
-and reading functions. Through `options()` you can set these paths in
-two settings: `fastreg.project_rawdata_dir` and
-`fastreg.project_workdata_dir`. You can set these `options()` at the top
-of your R script or Quarto document, in your R Project's `.Rprofile`, or
-in your user-level `.Rprofile`. To add to the file, at the top of an R
-script, write (using a temporary directory here for these examples):
+files and the eventual Parquet files, including the conversion, writing,
+and reading functions. You can configure these paths via two options:
+`fastreg.project_rawdata_dir` and `fastreg.project_workdata_dir`. You
+can set these `options()` at the top of your R script or Quarto
+document, in your R Project's `.Rprofile`, or in your user-level
+`.Rprofile`. To add to the file, at the top of an R script, write (using
+a temporary directory here for these examples):
 
 ```{r options}
 options(
@@ -145,9 +145,8 @@ column names. See `?convert` for more details.
 When a SAS file contains more rows than the `chunk_size`, multiple
 Parquet files will be created from it. This doesn't affect how the data
 is loaded with `read_register()` (see
-[Reading a Parquet register](#reading-a-parquet-register) below), it
-only means you may see more Parquet files in the output than input SAS
-files.
+[Reading a Parquet register](#reading-a-parquet-register) below), you
+may see multiple Parquet files per source SAS file.
 :::
 
 ::: callout-warning
@@ -201,9 +200,9 @@ config <- list(
 )
 ```
 
-The `input_dir` is the directory that contains the SAS files (searched
-recursively). This directory can contain different registers. The
-`output_dir` directory is where the Parquet files will be written to.
+The `sas_paths` is a vector of paths to the SAS files to convert, found
+recursively via `list_sas_files()`. This can span different registers.
+The `output_dir` is where the Parquet files will be written.
 
 After you've updated the `config` section, you can run the pipeline:
 
@@ -290,9 +289,9 @@ bef |>
   dplyr::compute()
 ```
 
-After the query (filer and mutate), we execute it with
-`dplyr::compute()`. This save the result as a temporary table inside
-DuckDB, without loading it into R memory.
+After the query, we execute it with `dplyr::compute()`. This saves the
+result as a temporary table inside DuckDB, without loading it into R
+memory.
 
 Notice the `??` in the first line of the output. This shows us that the
 total number of matching rows is not yet known because the data isn't
