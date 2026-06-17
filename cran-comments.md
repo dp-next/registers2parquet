@@ -1,6 +1,14 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+0 errors | 0 warnings | 1 note
+
+❯ checking CRAN incoming feasibility... [4s/53s] NOTE Maintainer: ‘Signe
+Kirk Brødbæk <signekb@clin.au.dk>’
+
+  Days since last update: 5
+
+This release fixes bugs identified, when we used the package on large
+files on a Windows server. We expect future updates to be less frequent.
 
 ## Testing
 
