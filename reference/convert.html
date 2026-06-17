@@ -77,6 +77,19 @@ register folder.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble with a conversion log about each written chunk.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>On Windows, <code><a href="https://haven.tidyverse.org/reference/read_sas.html" class="external-link">haven::read_sas()</a></code> silently re-reads the first chunk when
+<code>skip</code> exceeds 2,147,483,647 (the 32-bit integer limit).
+<code>convert()</code> detects this and stops the conversion with a warning, so
+the remainder of the file is not converted.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><a href="https://dp-next.github.io/fastreg/articles/fastreg.html">Getting started</a>
+and the <a href="https://dp-next.github.io/fastreg/articles/fastreg.html#sec-large-sas-files">When SAS files become too big</a>
+section for handling SAS files with more than 2,147,483,647 rows.</p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -89,7 +102,7 @@ register folder.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   register_name input_path                        output_path row_count schema  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;fs::path&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;fs::path&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> test          …ry/fastreg/extdata/test.sas7bdat …04.parquet      <span style="text-decoration: underline;">1</span>000 <span style="color: #949494;">&lt;tibble&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> test          …ry/fastreg/extdata/test.sas7bdat …d6.parquet      <span style="text-decoration: underline;">1</span>000 <span style="color: #949494;">&lt;tibble&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

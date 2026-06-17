@@ -32,6 +32,22 @@ convert(path, output_dir, chunk_size = 10000000L)
 
 A tibble with a conversion log about each written chunk.
 
+## Details
+
+On Windows,
+[`haven::read_sas()`](https://haven.tidyverse.org/reference/read_sas.html)
+silently re-reads the first chunk when `skip` exceeds 2,147,483,647 (the
+32-bit integer limit). `convert()` detects this and stops the conversion
+with a warning, so the remainder of the file is not converted.
+
+## See also
+
+[Getting
+started](https://dp-next.github.io/fastreg/articles/fastreg.html) and
+the [When SAS files become too
+big](https://dp-next.github.io/fastreg/articles/fastreg.html#sec-large-sas-files)
+section for handling SAS files with more than 2,147,483,647 rows.
+
 ## Examples
 
 ``` r
@@ -44,5 +60,5 @@ convert(
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 test          …ry/fastreg/extdata/test.sas7bdat …04.parquet      1000 <tibble>
+#> 1 test          …ry/fastreg/extdata/test.sas7bdat …d6.parquet      1000 <tibble>
 ```
