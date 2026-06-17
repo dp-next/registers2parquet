@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.13.9 (2026-06-17)
+
+### Fix
+
+- 🐛 don't open a new targets pipeline in RStudio (#327)
+
 ## 0.13.8 (2026-06-12)
 
 ### Refactor
