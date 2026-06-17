@@ -7,7 +7,7 @@ Kirk Brødbæk <signekb@clin.au.dk>’
 
   Days since last update: 5
 
-This release fixes bugs identified, when we used the package on large
+This release fixes critical bugs we found when we used the package on very large
 files on a Windows server. We expect future updates to be less frequent.
 
 ## Testing
