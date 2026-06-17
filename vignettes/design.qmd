@@ -48,7 +48,7 @@ The actions are:
 
 - `get`: Get or guess some information, e.g., the project ID, workdata
   directory, or rawdata directory from the current working directory, or
-  e.g., a register_name or year from a file name.
+  e.g., a register name or year from a file name.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
@@ -232,7 +232,7 @@ The tibble has the following format:
 
 The information is derived from the chunk already in memory, not by
 reading the converted Parquet file, so the schema reflects the types as
-read by haven rather than as stored in Parquet.
+read by `{haven}` rather than as stored in Parquet.
 
 `use_template()` copies both a targets pipeline, `_targets.R`, and a
 conversion log template, `conversion-log.qmd`, into the current working
