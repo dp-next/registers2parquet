@@ -5,6 +5,11 @@
 #' Existing data will not be overwritten, but might be duplicated if it already
 #' exists in the directory, since files are saved with UUIDs in their names.
 #'
+#' On Windows, `haven::read_sas()` silently re-reads the first chunk when
+#' `skip` exceeds 2,147,483,647 (the 32-bit integer limit).
+#' `convert()` detects this and stops the conversion with a warning, so
+#' the remainder of the file is not converted.
+#'
 #' @param path Path to a single SAS file.
 #' @param output_dir Directory to save the Parquet output to. Must not include
 #'  the register name as this will be extracted from `path` to create the
@@ -14,6 +19,9 @@
 #' @returns A tibble with a conversion log about each written chunk.
 #'
 #' @export
+#' @seealso [Getting started](https://dp-next.github.io/fastreg/articles/fastreg.html)
+#'   and the [When SAS files become too big](https://dp-next.github.io/fastreg/articles/fastreg.html#sec-large-sas-files)
+#'   section for handling SAS files with more than 2,147,483,647 rows.
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
 #' convert(
@@ -94,17 +102,33 @@ convert <- function(
 }
 #' Read SAS chunk
 #'
+#' On Windows, skip > 2,147,483,647 overflows readstat's 32-bit row position,
+#' causing it (and thereby haven's read_sas() function) to read from row 0.
+#' This function returns an empty tibble instead.
+#'
 #' @param skip Number of rows to skip.
 #' @inheritParams convert
 #'
 #' @returns A tibble.
 #'
-#' @keywords internal
 #' @noRd
 read_sas_chunk <- function(path, skip, chunk_size) {
-  haven::read_sas(path, skip = skip, n_max = chunk_size) |>
-    column_names_to_lower() |>
-    dplyr::mutate(source_file = as.character(path))
+  if (!is.na(skip) && skip > 2147483647 && .Platform$OS.type == "windows") {
+    cli::cli_warn(
+      c(
+        "Could not read {.path {fs::path_file(path)}} from row {format(skip, big.mark = ',')} onwards.",
+        "i" = "This is a Windows limitation: row positions above the 32-bit limit (2,147,483,647) cannot be read.",
+        "i" = "If your file has more than 2,147,483,647 rows, the output is incomplete. Consider splitting the file before converting."
+      )
+    )
+    haven::read_sas(path, n_max = 0) |>
+      column_names_to_lower() |>
+      dplyr::mutate(source_file = as.character(path))
+  } else {
+    haven::read_sas(path, skip = skip, n_max = chunk_size) |>
+      column_names_to_lower() |>
+      dplyr::mutate(source_file = as.character(path))
+  }
 }
 
 #' Create partition path

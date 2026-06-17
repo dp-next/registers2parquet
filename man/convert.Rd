@@ -24,10 +24,21 @@ chunks. It does not check for existing files in the output directory.
 Existing data will not be overwritten, but might be duplicated if it already
 exists in the directory, since files are saved with UUIDs in their names.
 }
+\details{
+On Windows, \code{haven::read_sas()} silently re-reads the first chunk when
+\code{skip} exceeds 2,147,483,647 (the 32-bit integer limit).
+\code{convert()} detects this and stops the conversion with a warning, so
+the remainder of the file is not converted.
+}
 \examples{
 sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
 convert(
   path = sas_file,
   output_dir = fs::path_temp("path/to/output/file")
 )
+}
+\seealso{
+\href{https://dp-next.github.io/fastreg/articles/fastreg.html}{Getting started}
+and the \href{https://dp-next.github.io/fastreg/articles/fastreg.html#sec-large-sas-files}{When SAS files become too big}
+section for handling SAS files with more than 2,147,483,647 rows.
 }

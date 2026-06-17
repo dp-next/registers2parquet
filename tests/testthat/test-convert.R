@@ -129,8 +129,8 @@ test_that("convert() creates expected n parts when chunk_size < nrow", {
 })
 
 
-test_that("convert() handles very large files without integer overflow", {
-  chunk_size <- 1073741824L # Two chunks overflow int32 max.
+test_that("convert()'s skip doesn't become NA when passing the 32-bit integer limit", {
+  chunk_size <- 1073741824L # Two chunks exceed 32 bit integer max (2,147,483,647).
   total_rows <- 2500000000
 
   # Replace read_sas_chunk so it returns an empty tibble that "reports" the
@@ -157,6 +157,58 @@ test_that("convert() handles very large files without integer overflow", {
   )
 
   expect_equal(sum(result$row_count), total_rows)
+})
+
+test_that("read_sas_chunk() returns 0 rows when skip exceeds 32-bit limit", {
+  # Passes on all operating systems now. Without the fix in read_sas_chunk() to
+  # handle this, readstat overflows and starts to read from row 0 instead when
+  # run on Windows (as observed on DST).
+  path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+  max_32_bit <- 2147483647
+  chunk <- read_sas_chunk(
+    path,
+    skip = max_32_bit + 1,
+    chunk_size = 1000L
+  )
+  expect_equal(nrow(chunk), 0L)
+})
+
+test_that("read_sas_chunk() returns 0 rows when skip is exactly the 32-bit limit", {
+  # Was created to test that the overflow observed on Windows only happened when
+  # skip exceeds the 32-bit limit.
+  # The fix uses `>`, not `>=`, so skip = max_32_bit does not trigger it.
+  # This returns 0 rows because the test file has fewer rows than max_32_bit.
+  path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+  max_32_bit <- 2147483647
+  chunk <- read_sas_chunk(
+    path,
+    skip = 2147483647,
+    chunk_size = 1000L
+  )
+  expect_equal(nrow(chunk), 0L)
+})
+
+test_that("read_sas_chunk() returns first chunk when skip is NA and empty tibble when skip exceeds the 32-bit limit", {
+  # Should be the same on all operating systems now that we explicitly return an
+  # empty tibble when skip exceeds 32-bit limit in read_sas_chunk().
+  path <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
+  max_32_bit <- 2147483647
+  chunk_skip_na <- read_sas_chunk(
+    path,
+    skip = NA,
+    chunk_size = 100L
+  )
+  chunk_skip_over_32_bit <- read_sas_chunk(
+    path,
+    skip = max_32_bit + 1,
+    chunk_size = 100L
+  )
+
+  expect_equal(
+    chunk_skip_na |> dplyr::select(-"source_file"),
+    haven::read_sas(path, n_max = 100L)
+  )
+  expect_equal(nrow(chunk_skip_over_32_bit), 0L)
 })
 
 test_that("convert()'s conversion log handles data types with class vectors of length > 1", {
