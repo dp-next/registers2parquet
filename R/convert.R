@@ -5,6 +5,11 @@
 #' Existing data will not be overwritten, but might be duplicated if it already
 #' exists in the directory, since files are saved with UUIDs in their names.
 #'
+#' On Windows, `haven::read_sas()` silently re-reads the first chunk when
+#' `skip` exceeds 2,147,483,647 (the 32-bit integer limit).
+#' `convert()` detects this and stops the conversion with a warning, so
+#' the remainder of the file is not converted.
+#'
 #' @param path Path to a single SAS file.
 #' @param output_dir Directory to save the Parquet output to. Must not include
 #'  the register name as this will be extracted from `path` to create the
@@ -14,6 +19,9 @@
 #' @returns A tibble with a conversion log about each written chunk.
 #'
 #' @export
+#' @seealso [Getting started](https://dp-next.github.io/fastreg/articles/fastreg.html)
+#'   and the [When SAS files become too big](https://dp-next.github.io/fastreg/articles/fastreg.html#sec-large-sas-files)
+#'   section for handling SAS files with more than 2,147,483,647 rows.
 #' @examples
 #' sas_file <- fs::path_package("fastreg", "extdata", "test.sas7bdat")
 #' convert(
