@@ -65,10 +65,10 @@ sim_regs
 #> # A tibble: 4 × 2
 #>   output_path                                        data             
 #>   <fs::path>                                         <list>           
-#> 1 /tmp/RtmpJCvMq0/E/rawdata/701010/bef1999.sas7bdat  <tibble [10 × 3]>
-#> 2 /tmp/RtmpJCvMq0/E/rawdata/701010/bef2000.sas7bdat  <tibble [10 × 3]>
-#> 3 /tmp/RtmpJCvMq0/E/rawdata/701010/lmdb1999.sas7bdat <tibble [10 × 6]>
-#> 4 /tmp/RtmpJCvMq0/E/rawdata/701010/lmdb2000.sas7bdat <tibble [10 × 6]>
+#> 1 /tmp/RtmpDN81HC/E/rawdata/701010/bef1999.sas7bdat  <tibble [10 × 3]>
+#> 2 /tmp/RtmpDN81HC/E/rawdata/701010/bef2000.sas7bdat  <tibble [10 × 3]>
+#> 3 /tmp/RtmpDN81HC/E/rawdata/701010/lmdb1999.sas7bdat <tibble [10 × 6]>
+#> 4 /tmp/RtmpDN81HC/E/rawdata/701010/lmdb2000.sas7bdat <tibble [10 × 6]>
 
 sim_regs |>
   purrr::pwalk(write_to_sas)
