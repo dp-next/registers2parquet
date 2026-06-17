@@ -80,7 +80,7 @@
 <blockquote>
 <p><strong>Note</strong></p>
 <p>Using R to read SAS can’t guarantee perfect preservation of the SAS values, since reading SAS files in R relies on <a href="https://haven.tidyverse.org/index.html" class="external-link">haven</a>, which is based on <a href="https://github.com/WizardMac/ReadStat" class="external-link">ReadStat</a>, a reverse-engineered effort to read the proprietary SAS file format.</p>
-<p>However, haven and the underlying ReadStat are mature packages and explicitly support reading <code>sas7bdat</code> files, which is the register format used by Statistics Denmark.</p>
+<p>However, haven and the underlying ReadStat are mature packages and explicitly support reading <code>sas7bdat</code> files, which is the register format used by Statistics Denmark (DST).</p>
 </blockquote>
 </div>
 <section class="level2"><h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
@@ -93,11 +93,11 @@
 <li>Provide helper functions to list available SAS or Parquet register files directly from R.</li>
 </ol></section><section class="level2"><h2 id="interface">Interface<a class="anchor" aria-label="anchor" href="#interface"></a>
 </h2>
-<p>The interface (the functions and objects that are exposed to users) is based on some specific naming conventions. Specifically, we generally name function by the <strong>action</strong> they perform and the <strong>object(s)</strong> they perform it on in the format <code>{action}_{object}()</code>. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the objects that the functions operate on. Below is an overview of the main actions and objects within fastreg.</p>
+<p>The interface (the functions and objects that are exposed to users) is based on some specific naming conventions. Specifically, we generally name functions by the <strong>action</strong> they perform and the <strong>object(s)</strong> they perform it on in the format <code>{action}_{object}()</code>. <strong>Actions</strong> are verbs that describe what a function does, while <strong>objects</strong> are nouns that represent the objects that the functions operate on. Below is an overview of the main actions and objects within fastreg.</p>
 <p>The actions are:</p>
 <ul>
 <li>
-<code>get</code>: Get project IDs or paths.</li>
+<code>get</code>: Get or guess some information, e.g., the project ID, workdata directory, or rawdata directory from the current working directory, or e.g., a register name or year from a file name.</li>
 <li>
 <code>list</code>: List files in a directory, e.g., SAS or Parquet files.</li>
 <li>
@@ -106,8 +106,6 @@
 <code>read</code>: Read a Parquet register into R as a DuckDB table.</li>
 <li>
 <code>use</code>: Set up <code>_targets.R</code> and a Quarto log template.</li>
-<li>
-<code>get</code>: Get or guess some information, e.g., the project ID, workdata directory, or rawdata directory from the current working directory.</li>
 </ul>
 <p>The objects are:</p>
 <ul>
@@ -116,14 +114,14 @@
 <li>
 <code>path</code>: A character vector of one or more paths.</li>
 <li>
-<code>project_id</code>: A number indicating the project ID on Statistics Denmark.</li>
+<code>project_id</code>: A number indicating the project ID on DST.</li>
 <li>
 <code>output_dir</code>: The directory to save the Parquet output to.</li>
 </ul>
 <p>The settings are:</p>
 <ul>
 <li>
-<code>fastreg.project_rawdata_dir</code>: The directory where either the SAS or Parquet files are stored. The <code>rawdata/</code> directory is read-only on Statistics Denmark server and contains the original SAS files. A project manager with the correct permissions can move (or request to move) Parquet files into this directory.</li>
+<code>fastreg.project_rawdata_dir</code>: The directory where either the SAS or Parquet files are stored. The <code>rawdata/</code> directory is read-only on the DST server and contains the original SAS files. A project manager with the correct permissions can move (or request to move) Parquet files into this directory.</li>
 <li>
 <code>fastreg.project_workdata_dir</code>: The <code>workdata/</code> directory is where Parquet files are stored for projects without a project manager and where the users don’t have permissions to save the converted files into <code>rawdata/</code>. Usually, this directory is used to store and edit R scripts, documents, and other files, but it can also store data files (e.g., SAS or Parquet files).</li>
 </ul>
@@ -193,7 +191,7 @@ Figure 2: Expected workflow for converting multiple registers using the targets
 </section><section class="level3"><h3 id="reading-parquet-files">Reading Parquet files<a class="anchor" aria-label="anchor" href="#reading-parquet-files"></a>
 </h3>
 <p>fastreg provides three ways to read Parquet registers depending on the use case.</p>
-<p><code><a href="../reference/read_register.html">read_register()</a></code> is the main read function. We wanted a function that could make it really easy to use and read in a particular register (with data from all available years if it is in a partitioned Partition format). For example, to read in <code>bef</code> (population register) as a DuckDB table, we wanted it as simple as <code>read_register("bef")</code>. It should automatically find the relevant Parquet dataset (as partition) and read them in as a single DuckDB table.</p>
+<p><code><a href="../reference/read_register.html">read_register()</a></code> is the main read function. We wanted a function that could make it really easy to use and read in a particular register (with data from all available years if it is in a partitioned Parquet format). For example, to read in <code>bef</code> (population register) as a DuckDB table, we wanted it as simple as <code>read_register("bef")</code>. It should automatically find the relevant Parquet dataset (as partition) and read them in as a single DuckDB table.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div id="fig-flow-read-register" class="quarto-float quarto-figure quarto-figure-center">
@@ -217,27 +215,24 @@ Figure 3: Expected workflow for reading a Parquet register as a DuckDB table us
 </div>
 <p>However, we can’t guarantee that the <code><a href="../reference/read_register.html">read_register()</a></code> function will correctly guess and/or find the register as a Parquet dataset. So we also provide two more flexible functions: <code><a href="../reference/read_parquet.html">read_parquet_dataset()</a></code> and <code><a href="../reference/read_parquet.html">read_parquet_file()</a></code>.</p>
 <p><code><a href="../reference/read_parquet.html">read_parquet_dataset()</a></code> underlies <code><a href="../reference/read_register.html">read_register()</a></code>, but without guessing the path (or when the setting hasn’t been set). It takes a direct path to the Parquet dataset (the directory containing the Hive-partitioned Parquet files), applies some settings to more smoothly read in the datasets, and reads it as a DuckDB table. This function can be used if <code><a href="../reference/read_register.html">read_register()</a></code> failed to correctly read the right dataset.</p>
-<p><code><a href="../reference/read_parquet.html">read_parquet_file()</a></code> is the simplest read function. It takes a direct path to a <code>.parquet</code> file (not a partitioned dataset) and reads it as a DuckDB table. This can used if the register isn’t in a partitioned format.</p>
+<p><code><a href="../reference/read_parquet.html">read_parquet_file()</a></code> is the simplest read function. It takes a direct path to a <code>.parquet</code> file (not a partitioned dataset) and reads it as a DuckDB table. This can be used if the register isn’t in a partitioned format.</p>
 </section><section class="level3"><h3 id="list-sas-and-parquet-files">List SAS and Parquet files<a class="anchor" aria-label="anchor" href="#list-sas-and-parquet-files"></a>
 </h3>
 <p>To help with management as well as discovery of available registers, we also provide helper functions to list the available SAS and Parquet files and partitioned datasets.</p>
-<p><code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> takes the directories given within the settings and lists all Parquet files found within those directories that follow the <code>part-*.parquet</code> pattern. If no setting is given, the project ID will be guessed from the working directory path and the default location will be the <code>rawdata/</code> and <code>workdata/</code> directories, e.g. commonly looks like <code>E:/rawdata/&lt;project-id&gt;/</code> on DST. If those locations are different than the expected default, the setting must be set. That way, users can use <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> without any arguments and it will automatically find and list all the Parquet files within the project. We decided to look in both <code>rawdata/</code> (where the original SAS files are also kept) as well as <code>workdata/</code> because some projects have managers with access to saving files (like Parquet files) to <code>rawdata/</code> but other projects don’t, so they need to save files in <code>workdata/</code>.</p>
+<p><code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> takes the directories given within the settings and lists all Parquet files found within those directories that follow the <code>part-*.parquet</code> pattern. If no setting is given, the project ID will be guessed from the working directory path and the default location will be the <code>rawdata/</code> and <code>workdata/</code> directories (e.g., <code>E:/rawdata/&lt;project-id&gt;/</code> on DST). If those locations are different than the expected default, the setting must be set. That way, users can use <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code> without any arguments and it will automatically find and list all the Parquet files within the project. We decided to look in both <code>rawdata/</code> (where the original SAS files are also kept) as well as <code>workdata/</code> because some projects have managers with access to saving files (like Parquet files) to <code>rawdata/</code> but other projects don’t, so they need to save files in <code>workdata/</code>.</p>
 <p><code><a href="../reference/list_parquet.html">list_parquet_datasets()</a></code> builds on top of <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code>. It takes the output of <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code>, goes to the Parquet partition root (hard-coded to two levels back, before the folders with <code>year=</code>), and lists all the datasets. We use this function internally in <code><a href="../reference/read_register.html">read_register()</a></code> as a check to see whether the register name provided by the user matches any of the available Parquet datasets. But this function is also useful to interactively discover the different Parquet datasets that are available within the project.</p>
-<p><code><a href="../reference/list_sas_files.html">list_sas_files()</a></code> takes the directory of the project ID and lists all SAS files found within the <code>rawdata/</code> directories set in the settings. We only look in <code>rawdata</code> because DST stores the original SAS files there. Like <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code>, if the setting isn’t set, it will also guess the project ID and look in the <code>rawdata/</code> of that project for any SAS files.</p>
+<p><code><a href="../reference/list_sas_files.html">list_sas_files()</a></code> lists all SAS files found within the <code>rawdata/</code> directory set in the settings. We only look in <code>rawdata</code> because DST stores the original SAS files there. Like <code><a href="../reference/list_parquet.html">list_parquet_files()</a></code>, if the setting isn’t set, it will also guess the project ID and look in the <code>rawdata/</code> of that project for any SAS files.</p>
 </section></section><section class="level2"><h2 id="conversion-log">Conversion log<a class="anchor" aria-label="anchor" href="#conversion-log"></a>
 </h2>
-<p>The purpose of the conversion log is to describe the details of the conversion to provide an audit trail. Since we can’t be sure that the SAS files within the same register contain exactly the same columns and data types, the conversion log helps identify any differences between these files.</p>
+<p>The purpose of the conversion log is to describe the details of the conversion to provide an audit trail. Since we can’t be sure that the SAS files within the same register contain exactly the same columns and data types, the conversion log helps identify any differences between these files. It also includes any warnings produced by the targets pipeline.</p>
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p>Discrepancies (different columns or incompatible data types) between files within the same register do not stop the conversion, but it will be included in the log.</p>
+<p>Discrepancies (different columns or incompatible data types) between files within the same register do not stop the conversion, but they are included in the log.</p>
 </blockquote>
 </div>
-<p><code><a href="../reference/convert.html">convert()</a></code> returns a metadata tibble with one row per written chunk. This can be queried with dplyr directly or rendered into a Quarto log.</p>
-<section class="level3"><h3 id="return-value-of-convert">Return value of <code>convert()</code>
-<a class="anchor" aria-label="anchor" href="#return-value-of-convert"></a>
-</h3>
-<p><code><a href="../reference/convert.html">convert()</a></code> returns a tibble with one row per written chunk:</p>
+<p><code><a href="../reference/convert.html">convert()</a></code> returns a metadata tibble with one row per written chunk. The returned tibble can be queried with dplyr directly or rendered into a Quarto log.</p>
+<p>The tibble has the following format:</p>
 <table class="table caption-top">
 <thead><tr class="header">
 <th>Column</th>
@@ -257,50 +252,28 @@ Figure 3: Expected workflow for reading a Parquet register as a DuckDB table us
 <td>Number of rows in the chunk</td>
 </tr>
 <tr class="even">
-<td><code>columns</code></td>
-<td>Nested tibble with column <code>name</code> and <code>type</code>
+<td><code>schema</code></td>
+<td>Nested tibble with columns <code>name</code> and <code>type</code>
 </td>
 </tr>
 </tbody>
 </table>
-<p>The information is derived from the chunk already in memory, not by reading the Parquet file back.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Before repeat loop.</span></span>
-<span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
-<span>  <span class="op">~</span><span class="va">input_path</span>, <span class="op">~</span><span class="va">output_path</span>, <span class="op">~</span><span class="va">row_count</span>, <span class="op">~</span><span class="va">columns</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Inside the repeat loop, after writing.</span></span>
-<span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
-<span>  <span class="va">chunk_info</span>,</span>
-<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>    input_path   <span class="op">=</span> <span class="va">path</span>,</span>
-<span>    output_path  <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span>,</span>
-<span>    row_count    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">chunk</span><span class="op">)</span>,</span>
-<span>    columns      <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>      name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">chunk</span><span class="op">)</span>,</span>
-<span>      type <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">chunk</span>, <span class="va">class</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># After the loop, return the collected information.</span></span>
-<span><span class="va">chunk_info</span></span></code></pre></div>
-</section><section class="level3"><h3 id="quarto-log-template">Quarto log template<a class="anchor" aria-label="anchor" href="#quarto-log-template"></a>
-</h3>
-<p><code><a href="../reference/use_template.html">use_template()</a></code> copies both <code>_targets.R</code> and <code>conversion_log.qmd</code> into the current working directory. The Quarto doc reads <code>chunk_info</code> via <code><a href="https://docs.ropensci.org/targets/reference/tar_read.html" class="external-link">targets::tar_read()</a></code> and produces an HTML or PDF log for review. The default is PDF, but it can easily be changed in the Quarto file.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chunk_info</span> <span class="op">&lt;-</span> <span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_read.html" class="external-link">tar_read</a></span><span class="op">(</span><span class="va">chunk_info</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Nice overview of the info + schema comparison within registers.</span></span>
-<span><span class="va">...</span></span></code></pre></div>
-<p>The log is added to the targets pipeline as a last target:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">tar_quarto</span><span class="op">(</span></span>
-<span>  name <span class="op">=</span> <span class="va">log</span>,</span>
-<span>  path <span class="op">=</span> <span class="st">"conversion_log.qmd"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</section></section><script id="quarto-html-after-body" type="application/javascript">
+<p>The information is derived from the chunk already in memory, not by reading the converted Parquet file, so the schema reflects the types as read by <a href="https://haven.tidyverse.org" class="external-link">haven</a> rather than as stored in Parquet.</p>
+<p><code><a href="../reference/use_template.html">use_template()</a></code> copies both a targets pipeline, <code>_targets.R</code>, and a conversion log template, <code>conversion-log.qmd</code>, into the current working directory. The conversion log (a PDF) is created as the final step of the targets pipeline.</p>
+<p>The conversion log has the following sections:</p>
+<ul>
+<li>A table of contents providing an overview of the converted registers.</li>
+<li>A warnings section, if the targets pipeline produced any warnings.</li>
+<li>One section per converted register, consisting of:
+<ul>
+<li>A subsection listing each Parquet chunk and its row count.</li>
+<li>A subsection showing the most common schema and how many converted files share it.</li>
+<li>A subsection showing schema differences, if any occur.</li>
+</ul>
+</li>
+</ul>
+<p>If you want to customise the log, e.g., the output format or the sections, you can edit the <code>conversion-log.qmd</code>.</p>
+</section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
