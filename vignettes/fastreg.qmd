@@ -145,7 +145,7 @@ column names. See `?convert` for more details.
 When a SAS file contains more rows than the `chunk_size`, multiple
 Parquet files will be created from it. This doesn't affect how the data
 is loaded with `read_register()` (see
-[Reading a Parquet register](#reading-a-parquet-register) below), it you
+[Reading a Parquet register](#reading-a-parquet-register) below), you
 may see multiple Parquet files per source SAS file.
 :::
 
