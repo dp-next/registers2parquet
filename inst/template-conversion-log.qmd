@@ -32,7 +32,8 @@ pipeline_warnings <- tar_meta(fields = warnings, complete_only = TRUE)
 
 if (nrow(pipeline_warnings) > 0) {
   cat("## Warnings\n\n")
-  cat("The pipeline produced the following warning(s).",
+  cat(
+    "The pipeline produced the following warning(s).",
     "Please review them before proceeding:\n\n"
   )
   knitr::kable(pipeline_warnings)
