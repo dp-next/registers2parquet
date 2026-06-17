@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.14.0 (2026-06-17)
+
+### Feat
+
+- ✨ add pipeline warnings to conversion log template (#329)
+
 ## 0.13.9 (2026-06-17)
 
 ### Fix
