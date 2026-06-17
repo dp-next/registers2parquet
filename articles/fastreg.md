@@ -138,7 +138,7 @@ fastreg::convert(
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 bef           …HS/E/rawdata/701020/bef.sas7bdat …18.parquet      1000 <tibble>
+#> 1 bef           …iy/E/rawdata/701020/bef.sas7bdat …f5.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -157,6 +157,11 @@ more details.
 > (see [Reading a Parquet register](#reading-a-parquet-register) below),
 > it only means you may see more Parquet files in the output than input
 > SAS files.
+
+> **Warning**
+>
+> If you’re handling very large SAS files, please refer to the [When SAS
+> files become too big](#sec-large-sas-files) section below.
 
 Even though this only converts a single file, the output is partitioned
 by the year extracted from the file name as seen below:
@@ -179,7 +184,7 @@ by the year extracted from the file name as seen below:
     #>         └── parquet-registers
     #>             └── bef
     #>                 └── year=__HIVE_DEFAULT_PARTITION__
-    #>                     └── part-b03618.parquet
+    #>                     └── part-c137f5.parquet
 
 ## Converting multiple registers in parallel
 
@@ -204,8 +209,8 @@ pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
-#> ✔ Created '/tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -236,6 +241,11 @@ file into a Parquet file, all done in parallel. Re-running `tar_make()`
 only re-converts registers whose source files have changed or if the
 pipeline itself has been edited.
 
+> **Warning**
+>
+> If you’re handling very large SAS files, please refer to the [When SAS
+> files become too big](#sec-large-sas-files) section below.
+
 ## Listing available Parquet files and datasets
 
 To list what Parquet files or datasets are available, use the
@@ -256,23 +266,23 @@ temporary directory when rendered on the website):
 
 # For individual files
 fastreg::list_parquet_files()
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef/year=1999/part-bd705c.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef/year=2020/part-22bd61.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef/year=2021/part-3fe1a0.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-9d52c9.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-b03618.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef_/year=1999/part-d974e6.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb/year=1999/part-f78a5f.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb/year=2020/part-c39707.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb/year=2021/part-af77b0.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-da8b3d.parquet
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb_/year=1999/part-066c62.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef/year=1999/part-04f3d6.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef/year=2020/part-ea6bf6.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef/year=2021/part-094f8c.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-3c70a5.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-c137f5.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef_/year=1999/part-0ef32c.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb/year=1999/part-a88024.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb/year=2020/part-b3af98.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb/year=2021/part-c0618d.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-dd2071.parquet
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb_/year=1999/part-f8db3b.parquet
 # For datasets (registers with all years).
 fastreg::list_parquet_datasets()
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/bef_
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb
-#> /tmp/Rtmp7KKSHS/E/workdata/701020/parquet-registers/lmdb_
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/bef_
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb
+#> /tmp/RtmpCbKxiy/E/workdata/701020/parquet-registers/lmdb_
 ```
 
 ## Reading a Parquet register
@@ -302,16 +312,16 @@ bef
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1018-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <int>
-#>  1     1 108684730664 1932-01-12 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  2     1 982144017357 2007-07-16 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  3     2 672580814975 1980-08-05 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  4     2 439008110445 2009-06-28 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  5     1 489714666740 2017-02-25 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  6     2 155331797020 1973-03-30 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  7     2 777951655096 1934-10-22 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  8     2 167007504860 2001-03-18 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  9     1 132473802596 1953-09-01 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#> 10     2 876820784981 1931-08-17 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
+#>  1     1 108684730664 1932-01-12 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  2     1 982144017357 2007-07-16 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  3     2 672580814975 1980-08-05 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  4     2 439008110445 2009-06-28 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  5     1 489714666740 2017-02-25 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  6     2 155331797020 1973-03-30 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  7     2 777951655096 1934-10-22 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  8     2 167007504860 2001-03-18 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  9     1 132473802596 1953-09-01 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#> 10     2 876820784981 1931-08-17 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 ```
 
@@ -328,16 +338,16 @@ fastreg::list_parquet_datasets()[1] |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1018-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <int>
-#>  1     1 108684730664 1932-01-12 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  2     1 982144017357 2007-07-16 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  3     2 672580814975 1980-08-05 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  4     2 439008110445 2009-06-28 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  5     1 489714666740 2017-02-25 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  6     2 155331797020 1973-03-30 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  7     2 777951655096 1934-10-22 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  8     2 167007504860 2001-03-18 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  9     1 132473802596 1953-09-01 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#> 10     2 876820784981 1931-08-17 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
+#>  1     1 108684730664 1932-01-12 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  2     1 982144017357 2007-07-16 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  3     2 672580814975 1980-08-05 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  4     2 439008110445 2009-06-28 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  5     1 489714666740 2017-02-25 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  6     2 155331797020 1973-03-30 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  7     2 777951655096 1934-10-22 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  8     2 167007504860 2001-03-18 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  9     1 132473802596 1953-09-01 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#> 10     2 876820784981 1931-08-17 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 
 # Or a single file
@@ -347,16 +357,16 @@ fastreg::list_parquet_files()[1] |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1018-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato  source_file                                    
 #>    <dbl> <chr>        <date>     <chr>                                          
-#>  1     1 108684730664 1932-01-12 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  2     1 982144017357 2007-07-16 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  3     2 672580814975 1980-08-05 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  4     2 439008110445 2009-06-28 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  5     1 489714666740 2017-02-25 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  6     2 155331797020 1973-03-30 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  7     2 777951655096 1934-10-22 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  8     2 167007504860 2001-03-18 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#>  9     1 132473802596 1953-09-01 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
-#> 10     2 876820784981 1931-08-17 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999.sas7b…
+#>  1     1 108684730664 1932-01-12 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  2     1 982144017357 2007-07-16 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  3     2 672580814975 1980-08-05 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  4     2 439008110445 2009-06-28 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  5     1 489714666740 2017-02-25 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  6     2 155331797020 1973-03-30 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  7     2 777951655096 1934-10-22 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  8     2 167007504860 2001-03-18 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#>  9     1 132473802596 1953-09-01 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
+#> 10     2 876820784981 1931-08-17 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999.sas7b…
 #> # ℹ more rows
 ```
 
@@ -372,16 +382,16 @@ bef |>
 #> # Database: DuckDB 1.5.2 [unknown@Linux 6.17.0-1018-azure:R 4.6.0/:memory:]
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <int>
-#>  1     2 672580814975 1980-08-05 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  2     2 439008110445 2009-06-28 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  3     2 155331797020 1973-03-30 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  4     2 777951655096 1934-10-22 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  5     2 167007504860 2001-03-18 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  6     2 876820784981 1931-08-17 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  7     2 983125164454 1901-10-09 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  8     2 702393367207 1960-06-05 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#>  9     2 398008617406 2006-11-18 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
-#> 10     2 829139228682 1976-04-20 /tmp/Rtmp7KKSHS/E/rawdata/701020/bef1999…  1999
+#>  1     2 672580814975 1980-08-05 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  2     2 439008110445 2009-06-28 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  3     2 155331797020 1973-03-30 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  4     2 777951655096 1934-10-22 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  5     2 167007504860 2001-03-18 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  6     2 876820784981 1931-08-17 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  7     2 983125164454 1901-10-09 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  8     2 702393367207 1960-06-05 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#>  9     2 398008617406 2006-11-18 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
+#> 10     2 829139228682 1976-04-20 /tmp/RtmpCbKxiy/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 ```
 
@@ -401,3 +411,46 @@ loaded into memory.
 > However, for large registers this can take a long time, so only do
 > this when it’s absolutely necessary and make sure to filter the data
 > before collecting.
+
+## When SAS files become too big (\> 2,147,483,647 rows)
+
+When developing this package, we encountered an issue on Windows where
+[`haven::read_sas()`](https://haven.tidyverse.org/reference/read_sas.html)
+fails when the `skip` parameter is set to more than 2,147,483,647 (the
+32-bit integer limit, 2^31 − 1). Instead of reading the expected rows,
+the function reads the first part of the SAS file again.
+
+fastreg currently handles this by stopping the conversion after
+2,147,483,647 rows and returning a warning. This means that **fastreg
+does not convert the rest of the data in that file**.
+
+You can get around this by handling the original SAS file in two ways:
+
+1.  Split the large SAS file into two. Name them something like
+    `<register_name>01.sas7bdat`,`<register_name>02.sas7bdat`, etc.
+    (avoid extra `_` as they are kept as a part of the name of the
+    partitioned Parquet register). If you use the `_targets.R` pipeline,
+    add the paths of these files in the `sas_paths` (see section on
+    converting multiple registers in parallel above).
+
+2.  Convert the large SAS file to another format, e.g., `.csv`, and
+    convert it separately, as shown in the code block below. You can
+    either keep this as a separate script or add it to your targets
+    pipeline.
+
+``` r
+
+large_csv_path <- fs::path("path/to/large_register2020.csv")
+output_dir <- fs::path("path/to/output/dir")
+
+arrow::open_dataset(large_csv_path, format = "csv") |>
+  dplyr::rename_with(tolower) |>
+  arrow::write_dataset(
+    path = fs::path(output_dir, "large_register", "year=2020"),
+    format = "parquet"
+  )
+```
+
+To follow the default Parquet partitioning name, use
+`"year=__HIVE_DEFAULT_PARTIION__"` if the file doesn’t contain a year in
+the name.
