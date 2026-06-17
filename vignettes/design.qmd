@@ -19,7 +19,7 @@ effort to read the proprietary SAS file format.
 
 However, haven and the underlying ReadStat are mature packages and
 explicitly support reading `sas7bdat` files, which is the register
-format used by Statistics Denmark.
+format used by Statistics Denmark (DST).
 :::
 
 ## Requirements
@@ -38,7 +38,7 @@ The core requirements of fastreg are to:
 
 The interface (the functions and objects that are exposed to users) is
 based on some specific naming conventions. Specifically, we generally
-name function by the **action** they perform and the **object(s)** they
+name functions by the **action** they perform and the **object(s)** they
 perform it on in the format `{action}_{object}()`. **Actions** are verbs
 that describe what a function does, while **objects** are nouns that
 represent the objects that the functions operate on. Below is an
@@ -46,29 +46,28 @@ overview of the main actions and objects within fastreg.
 
 The actions are:
 
-- `get`: Get project IDs or paths.
+- `get`: Get or guess some information, e.g., the project ID, workdata
+  directory, or rawdata directory from the current working directory, or
+  e.g., a register name or year from a file name.
 - `list`: List files in a directory, e.g., SAS or Parquet files.
 - `convert`: Convert a register SAS file (or multiple) to Parquet.
 - `read`: Read a Parquet register into R as a DuckDB table.
 - `use`: Set up `_targets.R` and a Quarto log template.
-- `get`: Get or guess some information, e.g., the project ID, workdata
-  directory, or rawdata directory from the current working directory.
 
 The objects are:
 
 - `chunk_size`: Number of rows to read per chunk during conversion.
 - `path`: A character vector of one or more paths.
-- `project_id`: A number indicating the project ID on Statistics
-  Denmark.
+- `project_id`: A number indicating the project ID on DST.
 - `output_dir`: The directory to save the Parquet output to.
 
 The settings are:
 
 - `fastreg.project_rawdata_dir`: The directory where either the SAS or
-  Parquet files are stored. The `rawdata/` directory is read-only on
-  Statistics Denmark server and contains the original SAS files. A
-  project manager with the correct permissions can move (or request to
-  move) Parquet files into this directory.
+  Parquet files are stored. The `rawdata/` directory is read-only on the
+  DST server and contains the original SAS files. A project manager with
+  the correct permissions can move (or request to move) Parquet files
+  into this directory.
 - `fastreg.project_workdata_dir`: The `workdata/` directory is where
   Parquet files are stored for projects without a project manager and
   where the users don't have permissions to save the converted files
@@ -132,9 +131,9 @@ use case.
 
 `read_register()` is the main read function. We wanted a function that
 could make it really easy to use and read in a particular register (with
-data from all available years if it is in a partitioned Partition
-format). For example, to read in `bef` (population register) as a DuckDB
-table, we wanted it as simple as `read_register("bef")`. It should
+data from all available years if it is in a partitioned Parquet format).
+For example, to read in `bef` (population register) as a DuckDB table,
+we wanted it as simple as `read_register("bef")`. It should
 automatically find the relevant Parquet dataset (as partition) and read
 them in as a single DuckDB table.
 
@@ -165,7 +164,7 @@ be used if `read_register()` failed to correctly read the right dataset.
 
 `read_parquet_file()` is the simplest read function. It takes a direct
 path to a `.parquet` file (not a partitioned dataset) and reads it as a
-DuckDB table. This can used if the register isn't in a partitioned
+DuckDB table. This can be used if the register isn't in a partitioned
 format.
 
 ### List SAS and Parquet files
@@ -178,8 +177,8 @@ files and partitioned datasets.
 and lists all Parquet files found within those directories that follow
 the `part-*.parquet` pattern. If no setting is given, the project ID
 will be guessed from the working directory path and the default location
-will be the `rawdata/` and `workdata/` directories, e.g. commonly looks
-like `E:/rawdata/<project-id>/` on DST. If those locations are different
+will be the `rawdata/` and `workdata/` directories (e.g.,
+`E:/rawdata/<project-id>/` on DST). If those locations are different
 than the expected default, the setting must be set. That way, users can
 use `list_parquet_files()` without any arguments and it will
 automatically find and list all the Parquet files within the project. We
@@ -197,12 +196,11 @@ by the user matches any of the available Parquet datasets. But this
 function is also useful to interactively discover the different Parquet
 datasets that are available within the project.
 
-`list_sas_files()` takes the directory of the project ID and lists all
-SAS files found within the `rawdata/` directories set in the settings.
-We only look in `rawdata` because DST stores the original SAS files
-there. Like `list_parquet_files()`, if the setting isn't set, it will
-also guess the project ID and look in the `rawdata/` of that project for
-any SAS files.
+`list_sas_files()` lists all SAS files found within the `rawdata/`
+directory set in the settings. We only look in `rawdata` because DST
+stores the original SAS files there. Like `list_parquet_files()`, if the
+setting isn't set, it will also guess the project ID and look in the
+`rawdata/` of that project for any SAS files.
 
 ## Conversion log
 
@@ -210,74 +208,46 @@ The purpose of the conversion log is to describe the details of the
 conversion to provide an audit trail. Since we can't be sure that the
 SAS files within the same register contain exactly the same columns and
 data types, the conversion log helps identify any differences between
-these files.
+these files. It also includes any warnings produced by the targets
+pipeline.
 
 ::: callout-note
 Discrepancies (different columns or incompatible data types) between
-files within the same register do not stop the conversion, but it will
-be included in the log.
+files within the same register do not stop the conversion, but they are
+included in the log.
 :::
 
 `convert()` returns a metadata tibble with one row per written chunk.
-This can be queried with dplyr directly or rendered into a Quarto log.
+The returned tibble can be queried with dplyr directly or rendered into
+a Quarto log.
 
-### Return value of `convert()`
+The tibble has the following format:
 
-`convert()` returns a tibble with one row per written chunk:
-
-| Column         | Description                                  |
-|----------------|----------------------------------------------|
-| `input_path`   | Path to the source SAS file                  |
-| `output_path`  | Path to the written Parquet part file        |
-| `row_count`    | Number of rows in the chunk                  |
-| `columns`      | Nested tibble with column `name` and `type`  |
+| Column        | Description                                  |
+|---------------|----------------------------------------------|
+| `input_path`  | Path to the source SAS file                  |
+| `output_path` | Path to the written Parquet part file        |
+| `row_count`   | Number of rows in the chunk                  |
+| `schema`      | Nested tibble with columns `name` and `type` |
 
 The information is derived from the chunk already in memory, not by
-reading the Parquet file back.
+reading the converted Parquet file, so the schema reflects the types as
+read by `{haven}` rather than as stored in Parquet.
 
-```r
-# Before repeat loop.
-chunk_info <- tibble::tribble(
-  ~input_path, ~output_path, ~row_count, ~columns
-)
+`use_template()` copies both a targets pipeline, `_targets.R`, and a
+conversion log template, `conversion-log.qmd`, into the current working
+directory. The conversion log (a PDF) is created as the final step of
+the targets pipeline.
 
-# Inside the repeat loop, after writing.
-chunk_info <- dplyr::bind_rows(
-  chunk_info,
-  tibble::tibble(
-    input_path   = path,
-    output_path  = fs::path(file_path),
-    row_count    = nrow(chunk),
-    columns      = tibble::tibble(
-      name = colnames(chunk),
-      type = purrr::map_chr(chunk, class)
-    )
-  )
-)
+The conversion log has the following sections:
 
-# After the loop, return the collected information.
-chunk_info
-```
+- A table of contents providing an overview of the converted registers.
+- A warnings section, if the targets pipeline produced any warnings.
+- One section per converted register, consisting of:
+  - A subsection listing each Parquet chunk and its row count.
+  - A subsection showing the most common schema and how many converted
+    files share it.
+  - A subsection showing schema differences, if any occur.
 
-### Quarto log template
-
-`use_template()` copies both `_targets.R` and `conversion_log.qmd` into
-the current working directory. The Quarto doc reads `chunk_info` via
-`targets::tar_read()` and produces an HTML or PDF log for review. The
-default is PDF, but it can easily be changed in the Quarto file.
-
-```r
-chunk_info <- targets::tar_read(chunk_info)
-
-# Nice overview of the info + schema comparison within registers.
-...
-```
-
-The log is added to the targets pipeline as a last target:
-
-```r
-tar_quarto(
-  name = log,
-  path = "conversion_log.qmd"
-)
-```
+If you want to customise the log, e.g., the output format or the
+sections, you can edit the `conversion-log.qmd`.
