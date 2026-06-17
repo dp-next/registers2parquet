@@ -3,6 +3,9 @@ title: Conversion log
 format:
    pdf:
       toc: true
+execute:
+  echo: false
+  message: false
 ---
 
 ## About this log
@@ -18,11 +21,26 @@ If you experience any problems or bugs with `fastreg`, please add an
 issue on GitHub by following this link:
 <https://github.com/dp-next/fastreg/issues/new>.
 
-```{r}
-#| echo: false
-#| message: false
-#| results: asis
+```{r setup}
 library(targets)
+```
+
+```{r pipeline-warnings}
+#| results: asis
+
+pipeline_warnings <- tar_meta(fields = warnings, complete_only = TRUE)
+
+if (nrow(pipeline_warnings) > 0) {
+  cat("## Warnings\n\n")
+  cat("The pipeline produced the following warning(s).",
+    "Please review them before proceeding:\n\n"
+  )
+  knitr::kable(pipeline_warnings)
+}
+```
+
+```{r register-log}
+#| results: asis
 
 conversion_log <- tar_read(conversion_log)
 
