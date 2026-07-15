@@ -91,17 +91,35 @@ test_that("targets pipeline template converts SAS files to Parquet", {
     purrr::list_c() |>
     sum()
 
-  n_actual_bef <- arrow::open_dataset(fs::path(
+  n_actual_bef <- fs::path(
     test_output_dir,
     "bef"
-  )) |>
+  ) |>
+    duckplyr::read_parquet_duckdb(
+      prudence = "thrifty",
+      options = list(
+        union_by_name = TRUE,
+        hive_partitioning = TRUE
+      )
+    ) |>
+    duckplyr::as_duckdb_tibble() |>
+    duckplyr::as_tbl() |>
     dplyr::collect() |>
     nrow()
 
-  n_actual_lmdb <- arrow::open_dataset(fs::path(
+  n_actual_lmdb <- fs::path(
     test_output_dir,
     "lmdb"
-  )) |>
+  ) |>
+    duckplyr::read_parquet_duckdb(
+      prudence = "thrifty",
+      options = list(
+        union_by_name = TRUE,
+        hive_partitioning = TRUE
+      )
+    ) |>
+    duckplyr::as_duckdb_tibble() |>
+    duckplyr::as_tbl() |>
     dplyr::collect() |>
     nrow()
 

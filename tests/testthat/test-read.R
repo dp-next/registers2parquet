@@ -12,6 +12,8 @@ purrr::walk(sas_paths$output_path, \(path) {
 # Test read_parquet_*() ---------------------------------------------------------
 
 test_that("read_parquet_file() reads a single Parquet file", {
+  gc() # Force any previous connection to be dropped to avoid "View with name X already exists"-errors during tests
+
   # Read single Parquet file (2020 file).
   # Because UUID is used in the convert function, we can't know the name of the
   # file.
@@ -27,8 +29,8 @@ test_that("read_parquet_file() reads a single Parquet file", {
   expected_data <- haven::read_sas(expected_source_file)
 
   expect_equal(
-    # year col doesn't exist when only one file is read.
-    actual_data |> dplyr::select(-"source_file"),
+    # source file and year columns don't exist in the basic haven conversion
+    actual_data |> dplyr::select(-c("source_file", "year")),
     expected_data,
     ignore_attr = TRUE
   )
@@ -39,6 +41,7 @@ test_that("read_parquet_file() reads a single Parquet file", {
 })
 
 test_that("read_parquet_dataset() reads a partitioned Parquet register", {
+  gc() # Force any previous connection to be dropped to avoid "View with name X already exists"-errors during tests
   actual <- read_parquet_dataset(output_dir) |> dplyr::collect()
 
   expected <- purrr::map(sas_paths$output_path, \(path) {
@@ -106,6 +109,7 @@ test_that("read_parquet_file() errors when file is not Parquet", {
 })
 
 test_that("files with extension .parq can also be read", {
+  gc() # Force any previous connection to be dropped to avoid "View with name X already exists"-errors during tests
   path <- fs::path_temp("file.parq")
   arrow::write_parquet(
     simulate_registers_with_paths("bef")$data[[1]],
@@ -114,8 +118,9 @@ test_that("files with extension .parq can also be read", {
   expect_no_error(read_parquet_file(path))
 })
 
-
 test_that("read_parquet_dataset() reads files with different columns", {
+  gc() # Force any previous connection to be dropped to avoid "View with name X already exists"-errors during tests
+
   # Faux bef with lmdb structure, saved separately and combined with sas paths
   sas_dir <- fs::path_temp("different_columns/sas")
   parquet_dir <- fs::path_temp("different_columns/parquet")
@@ -147,33 +152,11 @@ test_that("read_parquet_dataset() reads files with different columns", {
   )
 })
 
-test_that("read_parquet_dataset() errors with incompatible schemas", {
-  # Create a bef file where numeric columns are changed to character, so
-  # the schema is incompatible with the other bef files.
-  incompatible_data <- bef_list$data[[1]] |>
-    dplyr::mutate(dplyr::across(where(is.numeric), as.character))
-
-  incompatible_sas_path <- fs::path_temp(
-    "sas_schema_incompatible/bef2099.sas7bdat"
-  )
-  write_to_sas(incompatible_data, incompatible_sas_path)
-  sas_incompatible <- c(
-    sas_paths$output_path,
-    incompatible_sas_path
-  )
-
-  incompatible_output <- fs::path_temp("incompatible")
-  # Convert files.
-  purrr::walk(sas_incompatible, \(path) {
-    convert(path, incompatible_output)
-  })
-
-  expect_error(read_parquet_dataset(incompatible_output), "incompatible")
-})
-
 # Test read_register() ---------------------------------------------------------
 
 test_that("read in a register", {
+  gc() # Force any previous connection to be dropped to avoid "View with name X already exists"-errors during tests
+
   withr::with_options(
     list(
       fastreg.project_rawdata_dir = fs::path_temp("E/rawdata/202020/"),

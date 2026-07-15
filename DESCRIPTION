@@ -20,6 +20,7 @@ BugReports: https://github.com/dp-next/fastreg/issues
 Depends:
     R (>= 4.1.0)
 Imports:
+    duckplyr (>= 1.2.1),
     arrow,
     checkmate,
     cli,
@@ -46,7 +47,8 @@ Suggests:
     testthat (>= 3.0.0),
     tidyselect,
     withr,
-    tarchetypes
+    tarchetypes,
+    duckdb (>= 1.5.4)
 VignetteBuilder:
     quarto
 Encoding: UTF-8
