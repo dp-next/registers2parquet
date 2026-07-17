@@ -17,7 +17,7 @@ A DuckDB table.
 This function uses the options \code{fastreg.project_rawdata_dir} and
 \code{fastreg.project_workdata_dir} when set in \code{\link[=options]{options()}} or will try to guess
 the path by using the project ID and the base directories
-\verb{E:/<project-id>/rawdata/} and \verb{E:/<project-id>/workdata/}. It only reads
+\verb{E:/rawdata/<project-id>/} and \verb{E:/workdata/<project-id>/}. It only reads
 Parquet datasets (those that are partitioned with the pattern \verb{year=}). If
 this function doesn't work, use \code{\link[=read_parquet_dataset]{read_parquet_dataset()}} or
 \code{\link[=read_parquet_file]{read_parquet_file()}} instead.
