@@ -37,7 +37,7 @@ get_project_id <- function() {
 #' Looks in the [options()] for `fastreg.project_rawdata_dir` and
 #' `fastreg.project_workdata_dir` first, and if not found, constructs a path
 #' based on the project ID using `get_project_id()`. The constructed path is
-#' `E:/<project_id>/rawdata/` for raw data and `E:/<project_id>/workdata/` for n
+#' `E:/rawdata/<project_id>/` for raw data and `E:/workdata/<project_id>/` for n
 #' work data.
 #'
 #' @returns A path object.
@@ -58,7 +58,7 @@ get_project_rawdata_dir <- function() {
     )
   }
 
-  glue::glue("E:/{id}/rawdata/") |>
+  glue::glue("E:/rawdata/{id}/") |>
     fs::path()
 }
 
@@ -79,6 +79,6 @@ get_project_workdata_dir <- function() {
       )
     )
   }
-  glue::glue("E:/{id}/workdata/") |>
+  glue::glue("E:/workdata/{id}/") |>
     fs::path()
 }
