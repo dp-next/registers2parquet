@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- 🐛 correct path part order so `workdata` or `rawdata` is before `<project-id>` (#350)
+- 🐛 correct path part order so `workdata` or `rawdata` is before
+  `<project-id>` (#350)
 
 ## 0.14.1 (2026-06-17)
 
