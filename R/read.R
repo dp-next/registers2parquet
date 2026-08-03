@@ -63,9 +63,7 @@ read_parquet_dataset <- function(path) {
         union_by_name = TRUE,
         hive_partitioning = TRUE
       )
-    ) |>
-    duckplyr::as_duckdb_tibble() |>
-    duckplyr::as_tbl()
+    )
 }
 
 #' @describeIn read_parquet Reads a single Parquet file.
@@ -77,9 +75,7 @@ read_parquet_file <- function(path) {
   path |>
     duckplyr::read_parquet_duckdb(
       prudence = "thrifty"
-    ) |>
-    duckplyr::as_duckdb_tibble() |>
-    duckplyr::as_tbl()
+    )
 }
 
 assert_is_parquet <- function(path) {

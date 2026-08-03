@@ -177,7 +177,7 @@ test_that("read in a register", {
         get_project_workdata_dir()
       )
 
-      expect_match(class(read_register("bef")), "duckdb", all = FALSE)
+      expect_match(class(read_register("bef")), "duckplyr_df", all = FALSE)
       expect_shape(dplyr::collect(read_register("bef")), nrow = 10)
       expect_error(
         # Warning about project id from internal `get_project_rawdata_dir()`.
