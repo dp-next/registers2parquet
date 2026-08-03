@@ -16,6 +16,13 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.14.2 (2026-07-17)
+
+### Fix
+
+- 🐛 correct path part order so `workdata` or `rawdata` is before
+  `<project-id>` (#350)
+
 ## 0.14.1 (2026-06-17)
 
 ### Fix

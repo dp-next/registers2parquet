@@ -3,7 +3,7 @@
 #' This function uses the options `fastreg.project_rawdata_dir` and
 #' `fastreg.project_workdata_dir` when set in [options()] or will try to guess
 #' the path by using the project ID and the base directories
-#' `E:/<project-id>/rawdata/` and `E:/<project-id>/workdata/`. It only reads
+#' `E:/rawdata/<project-id>/` and `E:/workdata/<project-id>/`. It only reads
 #' Parquet datasets (those that are partitioned with the pattern `year=`). If
 #' this function doesn't work, use [read_parquet_dataset()] or
 #' [read_parquet_file()] instead.
