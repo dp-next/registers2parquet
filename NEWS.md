@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.14.3 (2026-08-05)
+
+### Fix
+
+- 🐛 use duckplyr to read Parquet as DuckDB (#348)
+
 ## 0.14.2 (2026-07-17)
 
 ### Fix
