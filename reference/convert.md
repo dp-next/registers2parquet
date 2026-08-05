@@ -60,5 +60,5 @@ convert(
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 test          …ry/fastreg/extdata/test.sas7bdat …8e.parquet      1000 <tibble>
+#> 1 test          …ry/fastreg/extdata/test.sas7bdat …61.parquet      1000 <tibble>
 ```
