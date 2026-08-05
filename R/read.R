@@ -57,13 +57,13 @@ read_parquet_dataset <- function(path) {
   checkmate::assert_directory_exists(path)
   assert_directory_not_empty(path)
   path |>
-    arrow::open_dataset(
-      unify_schemas = TRUE,
-      # Explicitly set type of partition to int32 to handle when year is
-      # missing.
-      partitioning = arrow::hive_partition(year = arrow::int32())
-    ) |>
-    arrow::to_duckdb()
+    duckplyr::read_parquet_duckdb(
+      prudence = "thrifty",
+      options = list(
+        union_by_name = TRUE,
+        hive_partitioning = TRUE
+      )
+    )
 }
 
 #' @describeIn read_parquet Reads a single Parquet file.
@@ -73,8 +73,9 @@ read_parquet_file <- function(path) {
   checkmate::assert_file_exists(path)
   assert_is_parquet(path)
   path |>
-    arrow::read_parquet() |>
-    arrow::to_duckdb()
+    duckplyr::read_parquet_duckdb(
+      prudence = "thrifty"
+    )
 }
 
 assert_is_parquet <- function(path) {
