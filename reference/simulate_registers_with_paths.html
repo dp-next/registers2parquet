@@ -11,7 +11,7 @@ It simulates data for one or more registers and years."><meta property="og:image
 
     <a class="navbar-brand me-2" href="../index.html">fastreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,10 +104,10 @@ to write each simulated dataset to a SAS file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   output_path                                        data             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fs::path&gt;</span>                                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/RtmptM6n4Z/E/rawdata/701010/bef1999.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/RtmptM6n4Z/E/rawdata/701010/bef2000.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/RtmptM6n4Z/E/rawdata/701010/lmdb1999.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /tmp/RtmptM6n4Z/E/rawdata/701010/lmdb2000.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /tmp/Rtmpu4C4wE/E/rawdata/701010/bef1999.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /tmp/Rtmpu4C4wE/E/rawdata/701010/bef2000.sas7bdat  <span style="color: #949494;">&lt;tibble [10 × 3]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /tmp/Rtmpu4C4wE/E/rawdata/701010/lmdb1999.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /tmp/Rtmpu4C4wE/E/rawdata/701010/lmdb2000.sas7bdat <span style="color: #949494;">&lt;tibble [10 × 6]&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sim_regs</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html" class="external-link">pwalk</a></span><span class="op">(</span><span class="va">write_to_sas</span><span class="op">)</span></span></span>
