@@ -7,10 +7,7 @@
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
-# Note: on every `tar_make()` call, the output directory is cleared and all
-# SAS files are re-converted. The `sas_paths` target only re-runs when the
-# list of input files changes. The main benefit of targets here is parallel
-# execution across workers.
+# Note: The main benefit of targets is parallel conversion across workers.
 #
 # For more information on targets, see https://books.ropensci.org/targets/
 
