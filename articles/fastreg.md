@@ -137,7 +137,7 @@ fastreg::convert(
 #> # A tibble: 1 × 5
 #>   register_name input_path                        output_path row_count schema  
 #>   <chr>         <fs::path>                        <fs::path>      <int> <list>  
-#> 1 bef           …So/E/rawdata/701020/bef.sas7bdat …c6.parquet      1000 <tibble>
+#> 1 bef           …jT/E/rawdata/701020/bef.sas7bdat …c6.parquet      1000 <tibble>
 ```
 
 [`convert()`](https://dp-next.github.io/fastreg/reference/convert.md)
@@ -182,7 +182,7 @@ by the year extracted from the file name as seen below:
     #>         └── parquet-registers
     #>             └── bef
     #>                 └── year=__HIVE_DEFAULT_PARTITION__
-    #>                     └── part-76a8c6.parquet
+    #>                     └── part-3671c6.parquet
 
 ## Converting multiple registers in parallel
 
@@ -207,8 +207,8 @@ pipeline_dir <- fs::path(workdata_dir, "conversion_pipeline")
 fs::dir_create(pipeline_dir)
 
 fastreg::use_template(path = pipeline_dir)
-#> ✔ Created '/tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
-#> ✔ Created '/tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
+#> ✔ Created '/tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/conversion_pipeline/_targets.R'
 #> ℹ Edit the `config` section to set your paths.
 ```
 
@@ -266,23 +266,23 @@ temporary directory when rendered on the website):
 
 # For individual files
 fastreg::list_parquet_files()
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef/year=1999/part-953e5d.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef/year=2020/part-ab1164.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef/year=2021/part-80c474.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-76a8c6.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-d5e06f.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef_/year=1999/part-2dc39b.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb/year=1999/part-bae248.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb/year=2020/part-b5db72.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb/year=2021/part-09bba9.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-b1e84c.parquet
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb_/year=1999/part-82a1bf.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef/year=1999/part-b80a26.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef/year=2020/part-9590eb.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef/year=2021/part-c84c9f.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-082730.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef/year=__HIVE_DEFAULT_PARTITION__/part-3671c6.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef_/year=1999/part-33d7f1.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb/year=1999/part-49d093.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb/year=2020/part-ce0981.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb/year=2021/part-8ce063.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb/year=__HIVE_DEFAULT_PARTITION__/part-64ff8b.parquet
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb_/year=1999/part-ef2f3e.parquet
 # For datasets (registers with all years).
 fastreg::list_parquet_datasets()
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/bef_
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb
-#> /tmp/RtmpqyhmSo/E/workdata/701020/parquet-registers/lmdb_
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/bef_
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb
+#> /tmp/Rtmpgn9tjT/E/workdata/701020/parquet-registers/lmdb_
 ```
 
 ## Reading a Parquet register
@@ -308,7 +308,7 @@ functions to read from a specific directory or file path.
 
 bef <- fastreg::read_register("bef")
 #> duckdb keeps downloaded extensions and secrets in a temporary directory:
-#> ℹ /tmp/RtmpqyhmSo/duckdb
+#> ℹ /tmp/Rtmpgn9tjT/duckdb
 #> This is removed when the R session ends.
 #> • Extensions are re-downloaded each session.
 #> • Secrets are lost.
@@ -319,16 +319,16 @@ bef
 #> # A duckplyr data frame: 5 variables
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <dbl>
-#>  1     2 108684730664 1932-01-12 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  2     1 982144017357 2007-07-16 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  3     1 672580814975 1980-08-05 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  4     1 439008110445 2009-06-28 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  5     1 489714666740 2017-02-25 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  6     1 155331797020 1973-03-30 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  7     2 777951655096 1934-10-22 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  8     2 167007504860 2001-03-18 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  9     1 132473802596 1953-09-01 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#> 10     2 876820784981 1931-08-17 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
+#>  1     2 108684730664 1932-01-12 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  2     1 982144017357 2007-07-16 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  3     1 672580814975 1980-08-05 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  4     1 439008110445 2009-06-28 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  5     1 489714666740 2017-02-25 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  6     1 155331797020 1973-03-30 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  7     2 777951655096 1934-10-22 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  8     2 167007504860 2001-03-18 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  9     1 132473802596 1953-09-01 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#> 10     2 876820784981 1931-08-17 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 ```
 
@@ -344,16 +344,16 @@ fastreg::list_parquet_datasets()[1] |>
 #> # A duckplyr data frame: 5 variables
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <dbl>
-#>  1     2 108684730664 1932-01-12 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  2     1 982144017357 2007-07-16 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  3     1 672580814975 1980-08-05 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  4     1 439008110445 2009-06-28 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  5     1 489714666740 2017-02-25 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  6     1 155331797020 1973-03-30 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  7     2 777951655096 1934-10-22 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  8     2 167007504860 2001-03-18 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  9     1 132473802596 1953-09-01 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#> 10     2 876820784981 1931-08-17 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
+#>  1     2 108684730664 1932-01-12 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  2     1 982144017357 2007-07-16 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  3     1 672580814975 1980-08-05 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  4     1 439008110445 2009-06-28 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  5     1 489714666740 2017-02-25 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  6     1 155331797020 1973-03-30 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  7     2 777951655096 1934-10-22 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  8     2 167007504860 2001-03-18 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  9     1 132473802596 1953-09-01 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#> 10     2 876820784981 1931-08-17 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 
 # Or a single file
@@ -362,16 +362,16 @@ fastreg::list_parquet_files()[1] |>
 #> # A duckplyr data frame: 5 variables
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <dbl>
-#>  1     2 108684730664 1932-01-12 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  2     1 982144017357 2007-07-16 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  3     1 672580814975 1980-08-05 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  4     1 439008110445 2009-06-28 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  5     1 489714666740 2017-02-25 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  6     1 155331797020 1973-03-30 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  7     2 777951655096 1934-10-22 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  8     2 167007504860 2001-03-18 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  9     1 132473802596 1953-09-01 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#> 10     2 876820784981 1931-08-17 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
+#>  1     2 108684730664 1932-01-12 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  2     1 982144017357 2007-07-16 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  3     1 672580814975 1980-08-05 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  4     1 439008110445 2009-06-28 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  5     1 489714666740 2017-02-25 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  6     1 155331797020 1973-03-30 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  7     2 777951655096 1934-10-22 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  8     2 167007504860 2001-03-18 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  9     1 132473802596 1953-09-01 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#> 10     2 876820784981 1931-08-17 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 ```
 
@@ -386,16 +386,16 @@ bef |>
 #> # A duckplyr data frame: 5 variables
 #>     koen pnr          foed_dato  source_file                                year
 #>    <dbl> <chr>        <date>     <chr>                                     <dbl>
-#>  1     2 108684730664 1932-01-12 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  2     2 777951655096 1934-10-22 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  3     2 167007504860 2001-03-18 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  4     2 876820784981 1931-08-17 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  5     2 527918979807 1954-06-05 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  6     2 932479108596 1949-05-11 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  7     2 618090662466 1943-03-09 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  8     2 736071599339 1983-06-21 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#>  9     2 726574711240 1914-05-21 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
-#> 10     2 951923478371 1909-09-10 /tmp/RtmpqyhmSo/E/rawdata/701020/bef1999…  1999
+#>  1     2 108684730664 1932-01-12 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  2     2 777951655096 1934-10-22 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  3     2 167007504860 2001-03-18 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  4     2 876820784981 1931-08-17 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  5     2 527918979807 1954-06-05 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  6     2 932479108596 1949-05-11 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  7     2 618090662466 1943-03-09 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  8     2 736071599339 1983-06-21 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#>  9     2 726574711240 1914-05-21 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
+#> 10     2 951923478371 1909-09-10 /tmp/Rtmpgn9tjT/E/rawdata/701020/bef1999…  1999
 #> # ℹ more rows
 ```
 
