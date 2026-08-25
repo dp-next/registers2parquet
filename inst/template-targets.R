@@ -7,10 +7,7 @@
 # 2. Run `targets::tar_make()` (in the same directory) to convert
 #    registers to Parquet.
 #
-# Note: on every `tar_make()` call, the output directory is cleared and all
-# SAS files are re-converted. The `sas_paths` target only re-runs when the
-# list of input files changes. The main benefit of targets here is parallel
-# execution across workers.
+# Note: The main benefit of targets is parallel conversion across workers.
 #
 # For more information on targets, see https://books.ropensci.org/targets/
 
@@ -59,18 +56,27 @@ list(
     command = config$sas_paths
   ),
 
-  # Empty output directory before writing to avoid outdated Parquet files.
+  # Stop the pipeline if the output directory isn't empty to avoid duplicating
+  # data from a previous conversion. Create it, if it doesn't exist.
   tar_target(
     name = output_dir,
     command = {
-      if (fs::dir_exists(config$output_dir)) {
-        fs::dir_delete(config$output_dir)
+      if (
+        fs::dir_exists(config$output_dir) &&
+          !fs::is_dir_empty(config$output_dir)
+      ) {
+        stop(
+          "Output directory is not empty: ",
+          config$output_dir,
+          ". Remove it or choose a different `output_dir` before running the pipeline.",
+          call. = FALSE
+        )
       }
       fs::dir_create(config$output_dir)
       config$output_dir
     },
     deployment = "main",
-    # Always run to ensure a clean slate.
+    # Always check the output directory before proceeding.
     cue = tar_cue(mode = "always")
   ),
 
